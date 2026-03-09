@@ -360,7 +360,7 @@ const AdminSections = () => {
           const key = section.section_key;
           const edit = customEdits[key] || { title: "", subtitle: "", content: "", image_url: "", cta_text: "", cta_link: "" };
           const colors = customColors[key] || {};
-          const displayName = section.metadata?.display_name || section.title || key;
+          const displayName = (section.metadata as any)?.display_name || section.title || key;
           const isExpanded = expandedCustom[key];
 
           return (
