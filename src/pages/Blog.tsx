@@ -114,7 +114,7 @@ const Blog = () => {
                         )}
                         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-5">
                           <span className="flex items-center gap-1.5">
-                            <User className="h-3.5 w-3.5" /> {filteredPosts[0].author_name}
+                            <User className="h-3.5 w-3.5" /> {adminProfile?.display_name || filteredPosts[0].author_name}
                           </span>
                           <span className="flex items-center gap-1.5">
                             <Clock className="h-3.5 w-3.5" /> {filteredPosts[0].reading_time_min} min
