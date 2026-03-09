@@ -115,6 +115,9 @@ const AdminConfig = () => {
       </div>
 
       <div className="grid gap-6 max-w-2xl">
+        {/* Profile */}
+        <ProfileSection />
+
         {/* Menu Editor */}
         <Card>
           <CardHeader>

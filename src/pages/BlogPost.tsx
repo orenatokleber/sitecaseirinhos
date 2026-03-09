@@ -493,10 +493,14 @@ const BlogPost = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between py-5 border-y border-border/40 mb-12 gap-4">
             <div className="flex items-center gap-5 text-sm text-muted-foreground">
               <span className="flex items-center gap-2 font-medium text-foreground">
-                <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center">
-                  <User className="h-4 w-4 text-accent" />
-                </div>
-                {post.author_name}
+                {adminProfile?.avatar_url ? (
+                  <img src={adminProfile.avatar_url} alt={adminProfile.display_name || post.author_name} className="w-8 h-8 rounded-full object-cover" />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center">
+                    <User className="h-4 w-4 text-accent" />
+                  </div>
+                )}
+                {adminProfile?.display_name || post.author_name}
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="h-4 w-4" /> {post.reading_time_min} min de leitura
