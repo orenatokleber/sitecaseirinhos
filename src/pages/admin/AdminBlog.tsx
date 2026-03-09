@@ -77,6 +77,7 @@ const AdminBlog = () => {
       reading_time_min: post.reading_time_min || 3,
       is_published: post.is_published ?? false,
     });
+    setBlocks(deserializeBlocks(post.content || ""));
     setIsDialogOpen(true);
   };
 
