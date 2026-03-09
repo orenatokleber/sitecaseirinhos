@@ -5,7 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ColorPicker from "@/components/admin/ColorPicker";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Plus, Trash2, GripVertical } from "lucide-react";
+
+interface MenuItem {
+  label: string;
+  to: string;
+}
+
+const defaultMenuItems: MenuItem[] = [
+  { to: "/", label: "Home" },
+  { to: "/nossa-historia", label: "Nossa História" },
+  { to: "/cardapio", label: "Cardápio" },
+  { to: "/encomendas", label: "Encomendas" },
+  { to: "/contato", label: "Contato" },
+];
 
 const AdminConfig = () => {
   const { data: settings, isLoading } = useSiteSettings();
@@ -32,6 +45,8 @@ const AdminConfig = () => {
     foreground: "",
   });
 
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenuItems);
+
   useEffect(() => {
     if (settings?.contact) {
       setContact(settings.contact);
@@ -41,6 +56,9 @@ const AdminConfig = () => {
     }
     if (settings?.theme_colors) {
       setThemeColors(prev => ({ ...prev, ...settings.theme_colors }));
+    }
+    if (settings?.menu_items) {
+      setMenuItems(settings.menu_items as unknown as MenuItem[]);
     }
   }, [settings]);
 
@@ -56,6 +74,30 @@ const AdminConfig = () => {
     updateSetting.mutate({ key: 'theme_colors', value: themeColors });
   };
 
+  const handleSaveMenu = () => {
+    updateSetting.mutate({ key: 'menu_items', value: menuItems as any });
+  };
+
+  const addMenuItem = () => {
+    setMenuItems([...menuItems, { label: "", to: "/" }]);
+  };
+
+  const removeMenuItem = (index: number) => {
+    setMenuItems(menuItems.filter((_, i) => i !== index));
+  };
+
+  const updateMenuItem = (index: number, field: keyof MenuItem, value: string) => {
+    setMenuItems(menuItems.map((item, i) => i === index ? { ...item, [field]: value } : item));
+  };
+
+  const moveMenuItem = (index: number, direction: -1 | 1) => {
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= menuItems.length) return;
+    const items = [...menuItems];
+    [items[index], items[newIndex]] = [items[newIndex], items[index]];
+    setMenuItems(items);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -68,10 +110,69 @@ const AdminConfig = () => {
     <div>
       <div className="mb-8">
         <h1 className="font-heading text-3xl font-bold text-foreground">Configurações</h1>
-        <p className="text-muted-foreground">Atualize informações de contato, horários e cores do tema</p>
+        <p className="text-muted-foreground">Atualize informações de contato, horários, cores e menu</p>
       </div>
 
       <div className="grid gap-6 max-w-2xl">
+        {/* Menu Editor */}
+        <Card>
+          <CardHeader>
+            <CardTitle>📋 Menu do Site</CardTitle>
+            <CardDescription>Adicione, remova e reordene os itens do menu de navegação</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {menuItems.map((item, index) => (
+              <div key={index} className="flex items-center gap-2 p-3 border border-border rounded-md bg-muted/30">
+                <div className="flex flex-col gap-1">
+                  <button
+                    type="button"
+                    onClick={() => moveMenuItem(index, -1)}
+                    disabled={index === 0}
+                    className="text-muted-foreground hover:text-foreground disabled:opacity-30 text-xs"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveMenuItem(index, 1)}
+                    disabled={index === menuItems.length - 1}
+                    className="text-muted-foreground hover:text-foreground disabled:opacity-30 text-xs"
+                  >
+                    ▼
+                  </button>
+                </div>
+                <div className="flex-1 grid grid-cols-2 gap-2">
+                  <Input
+                    value={item.label}
+                    onChange={(e) => updateMenuItem(index, 'label', e.target.value)}
+                    placeholder="Nome do item"
+                    className="text-sm"
+                  />
+                  <Input
+                    value={item.to}
+                    onChange={(e) => updateMenuItem(index, 'to', e.target.value)}
+                    placeholder="/caminho"
+                    className="text-sm"
+                  />
+                </div>
+                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive shrink-0" onClick={() => removeMenuItem(index)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button variant="outline" size="sm" onClick={addMenuItem}>
+              <Plus className="mr-2 h-4 w-4" />
+              Adicionar Item
+            </Button>
+            <div>
+              <Button onClick={handleSaveMenu} disabled={updateSetting.isPending}>
+                {updateSetting.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                Salvar Menu
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Theme Colors */}
         <Card>
           <CardHeader>

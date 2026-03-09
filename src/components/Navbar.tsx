@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
-const links = [
+const defaultLinks = [
   { to: "/", label: "Home" },
   { to: "/nossa-historia", label: "Nossa História" },
   { to: "/cardapio", label: "Cardápio" },
@@ -14,6 +15,9 @@ const links = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const { data: settings } = useSiteSettings();
+
+  const links = (settings?.menu_items as unknown as { to: string; label: string }[]) || defaultLinks;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
