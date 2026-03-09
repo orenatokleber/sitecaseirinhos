@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
-import { useSiteSections, useProducts, useTestimonials, useSiteSettings } from "@/hooks/useSiteContent";
+import { useSiteSections, useSiteSectionsList, useProducts, useTestimonials, useSiteSettings } from "@/hooks/useSiteContent";
 
 // Fallback images
 import heroCakeFallback from "@/assets/caseirinhos-58.jpg";
