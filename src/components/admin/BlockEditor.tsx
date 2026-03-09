@@ -8,6 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import ImageUpload from "@/components/admin/ImageUpload";
+import InlineToolbar from "@/components/admin/InlineToolbar";
 import {
   Type,
   Heading1,
@@ -22,7 +23,6 @@ import {
   Trash2,
   GripVertical,
   Code,
-  Video,
   AlignLeft,
 } from "lucide-react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
@@ -168,6 +168,44 @@ const BlockInserter: React.FC<{
   );
 };
 
+/** Paragraph block with inline formatting toolbar */
+const ParagraphBlock: React.FC<{
+  block: Block;
+  index: number;
+  onUpdate: (index: number, updates: Partial<Block>) => void;
+  onFocus: (index: number) => void;
+  onBlur: () => void;
+  onKeyDown: (e: React.KeyboardEvent, index: number) => void;
+}> = ({ block, index, onUpdate, onFocus, onBlur, onKeyDown }) => {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  const autoResize = (el: HTMLTextAreaElement) => {
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
+  };
+
+  return (
+    <div className="relative">
+      <InlineToolbar
+        textareaRef={ref as React.RefObject<HTMLTextAreaElement>}
+        value={block.content}
+        onChange={(v) => onUpdate(index, { content: v })}
+      />
+      <Textarea
+        ref={ref}
+        value={block.content}
+        onChange={(e) => onUpdate(index, { content: e.target.value })}
+        onFocus={() => onFocus(index)}
+        onBlur={() => onBlur()}
+        onKeyDown={(e) => onKeyDown(e, index)}
+        placeholder="Escreva algo, ou pressione / para comandos..."
+        className="w-full border-none shadow-none resize-none bg-transparent text-base leading-7 focus-visible:ring-0 min-h-[44px] px-4 py-3"
+        onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
+      />
+    </div>
+  );
+};
+
 const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -200,9 +238,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
       e.preventDefault();
       removeBlock(index);
     }
-    if (e.key === "/" && block.content === "") {
-      // Slash command - could show inserter
-    }
   };
 
   const autoResize = (el: HTMLTextAreaElement) => {
@@ -212,7 +247,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
 
   return (
     <div className="min-h-[500px] bg-background">
-      {/* Empty state */}
       {blocks.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
@@ -230,13 +264,7 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
         </div>
       )}
 
-      {/* Blocks with drag and drop */}
-      <Reorder.Group
-        axis="y"
-        values={blocks}
-        onReorder={onChange}
-        className="space-y-0"
-      >
+      <Reorder.Group axis="y" values={blocks} onReorder={onChange} className="space-y-0">
         <AnimatePresence>
           {blocks.map((block, index) => (
             <Reorder.Item
@@ -247,7 +275,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
               onMouseLeave={() => setHoveredIndex(null)}
             >
               <div className="relative group">
-                {/* Block inserter line (appears between blocks on hover) */}
                 {hoveredIndex === index && index > 0 && (
                   <div className="absolute -top-3 left-0 right-0 flex items-center justify-center z-10">
                     <div className="h-0.5 bg-accent/30 flex-1" />
@@ -256,23 +283,19 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                   </div>
                 )}
 
-                {/* Block toolbar */}
                 <div
                   className={`absolute -left-12 top-0 flex items-center gap-1 transition-opacity ${
                     hoveredIndex === index || focusedIndex === index ? "opacity-100" : "opacity-0"
                   }`}
                 >
-                  {/* Drag handle */}
                   <div className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-muted">
                     <GripVertical className="h-4 w-4 text-muted-foreground" />
                   </div>
-                  {/* Block type indicator */}
                   <div className="p-1 rounded hover:bg-muted text-muted-foreground">
                     <BlockTypeIcon type={block.type} />
                   </div>
                 </div>
 
-                {/* Delete button */}
                 <button
                   type="button"
                   onClick={() => removeBlock(index)}
@@ -283,7 +306,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                   <Trash2 className="h-4 w-4" />
                 </button>
 
-                {/* Block content */}
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -292,21 +314,18 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     focusedIndex === index ? "bg-muted/30 ring-2 ring-accent/20" : ""
                   }`}
                 >
-                  {/* Paragraph */}
+                  {/* Paragraph with inline toolbar */}
                   {block.type === "paragraph" && (
-                    <Textarea
-                      value={block.content}
-                      onChange={(e) => updateBlock(index, { content: e.target.value })}
-                      onFocus={() => setFocusedIndex(index)}
+                    <ParagraphBlock
+                      block={block}
+                      index={index}
+                      onUpdate={updateBlock}
+                      onFocus={setFocusedIndex}
                       onBlur={() => setFocusedIndex(null)}
-                      onKeyDown={(e) => handleKeyDown(e, index)}
-                      placeholder="Escreva algo, ou pressione / para comandos..."
-                      className="w-full border-none shadow-none resize-none bg-transparent text-base leading-7 focus-visible:ring-0 min-h-[44px] px-4 py-3"
-                      onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
+                      onKeyDown={handleKeyDown}
                     />
                   )}
 
-                  {/* Heading 1 */}
                   {block.type === "heading" && (
                     <Input
                       value={block.content}
@@ -318,7 +337,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     />
                   )}
 
-                  {/* Heading 2 */}
                   {block.type === "heading2" && (
                     <Input
                       value={block.content}
@@ -330,7 +348,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     />
                   )}
 
-                  {/* Heading 3 */}
                   {block.type === "heading3" && (
                     <Input
                       value={block.content}
@@ -342,7 +359,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     />
                   )}
 
-                  {/* Image */}
                   {block.type === "image" && (
                     <div className="px-4 py-4">
                       <ImageUpload
@@ -363,7 +379,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     </div>
                   )}
 
-                  {/* Quote */}
                   {block.type === "quote" && (
                     <div className="px-4 py-3">
                       <div className="border-l-4 border-accent pl-4">
@@ -380,7 +395,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     </div>
                   )}
 
-                  {/* List */}
                   {(block.type === "list" || block.type === "ordered-list") && (
                     <div className="px-4 py-3">
                       <Textarea
@@ -398,14 +412,12 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     </div>
                   )}
 
-                  {/* Divider */}
                   {block.type === "divider" && (
                     <div className="px-4 py-6">
                       <hr className="border-border" />
                     </div>
                   )}
 
-                  {/* Code */}
                   {block.type === "code" && (
                     <div className="px-4 py-3">
                       <Textarea
@@ -420,7 +432,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     </div>
                   )}
 
-                  {/* Spacer */}
                   {block.type === "spacer" && (
                     <div className="px-4 py-8 flex items-center justify-center">
                       <div className="h-8 border-2 border-dashed border-muted rounded w-full flex items-center justify-center">
@@ -430,7 +441,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                   )}
                 </motion.div>
 
-                {/* Bottom inserter (last block) */}
                 {index === blocks.length - 1 && (
                   <div className="flex items-center justify-center py-6">
                     <BlockInserter
@@ -462,7 +472,6 @@ export function deserializeBlocks(content: string): Block[] {
   try {
     const parsed = JSON.parse(content);
     if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].type) {
-      // Migration: rename old types
       return parsed.map((b: any) => ({
         ...b,
         type: b.type === "subheading" ? "heading2" : b.type,
@@ -474,6 +483,26 @@ export function deserializeBlocks(content: string): Block[] {
   if (paragraphs.length === 0) return [{ id: generateId(), type: "paragraph", content: "" }];
 
   return paragraphs.map((p) => ({ id: generateId(), type: "paragraph" as const, content: p.trim() }));
+}
+
+/** Calculate reading time based on word count */
+export function calculateReadingTime(blocks: Block[]): number {
+  const wordsPerMinute = 200;
+  let totalWords = 0;
+  
+  blocks.forEach((block) => {
+    if (block.content) {
+      // Strip HTML tags for counting
+      const clean = block.content.replace(/<[^>]*>/g, "");
+      totalWords += clean.split(/\s+/).filter(Boolean).length;
+    }
+    // Images add ~12 seconds each
+    if (block.type === "image" && block.imageUrl) {
+      totalWords += 40; // ~12s equivalent
+    }
+  });
+
+  return Math.max(1, Math.ceil(totalWords / wordsPerMinute));
 }
 
 export default BlockEditor;
