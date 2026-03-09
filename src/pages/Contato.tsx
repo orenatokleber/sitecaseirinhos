@@ -1,15 +1,20 @@
 import { motion } from "framer-motion";
 import { MapPin, Clock, Phone, Instagram } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
-
-const infoItems = [
-  { icon: MapPin, title: "Endereço", text: "Rua Exemplo, 123 — Bairro, Cidade - Estado" },
-  { icon: Clock, title: "Horário", text: "Terça a Sábado: 11h às 18h\nDelivery a partir das 13h" },
-  { icon: Phone, title: "WhatsApp", text: "(00) 00000-0000", href: "https://wa.me/5500000000000" },
-  { icon: Instagram, title: "Instagram", text: "@caseirinhos", href: "https://instagram.com/caseirinhos" },
-];
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const Contato = () => {
+  const { data: settings } = useSiteSettings();
+  const contact = settings?.contact as any;
+  const hours = settings?.hours as any;
+
+  const infoItems = [
+    { icon: MapPin, title: "Endereço", text: contact?.address || "Sua cidade - Estado" },
+    { icon: Clock, title: "Horário", text: `${hours?.weekdays || "Ter a Sáb: 11h – 18h"}\n${hours?.delivery || "Delivery a partir das 13h"}` },
+    { icon: Phone, title: "WhatsApp", text: contact?.phone ? `(${contact.phone.slice(2,4)}) ${contact.phone.slice(4,9)}-${contact.phone.slice(9)}` : "(00) 00000-0000", href: `https://wa.me/${contact?.whatsapp || "5500000000000"}` },
+    { icon: Instagram, title: "Instagram", text: "@caseirinhos", href: contact?.instagram || "https://instagram.com/caseirinhos" },
+  ];
+
   return (
     <main className="pt-24">
       <section className="py-16 md:py-20">
@@ -44,7 +49,6 @@ const Contato = () => {
             ))}
           </div>
 
-          {/* Map placeholder */}
           <div className="mt-16 max-w-3xl mx-auto">
             <div className="aspect-video rounded-lg bg-muted flex items-center justify-center">
               <p className="text-muted-foreground text-sm">Mapa — Adicione seu iframe do Google Maps aqui</p>
