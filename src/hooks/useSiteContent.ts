@@ -65,7 +65,8 @@ export function useSiteSections() {
       });
       return sections;
     },
-    staleTime: 0, // Always fetch fresh data
+    staleTime: 0,
+    gcTime: 0, // Don't cache old data
     refetchOnWindowFocus: true
   });
 }
@@ -116,6 +117,7 @@ export function useProducts(activeOnly = true) {
       })) || [];
     },
     staleTime: 0,
+    gcTime: 0,
     refetchOnWindowFocus: true
   });
 }

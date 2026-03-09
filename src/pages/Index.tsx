@@ -27,7 +27,7 @@ const fallbackTestimonials = [
 ];
 
 const Index = () => {
-  const { data: sections } = useSiteSections();
+  const { data: sections, isLoading: sectionsLoading } = useSiteSections();
   const { data: dbProducts } = useProducts();
   const { data: dbTestimonials } = useTestimonials();
   const { data: settings } = useSiteSettings();
@@ -40,16 +40,21 @@ const Index = () => {
   const displayProducts = dbProducts && dbProducts.length > 0 ? dbProducts : null;
   const displayTestimonials = dbTestimonials && dbTestimonials.length > 0 ? dbTestimonials : null;
 
+  // Only show hero image after data is loaded to prevent flash of old image
+  const heroImageUrl = sectionsLoading ? heroCakeFallback : (hero?.image_url || heroCakeFallback);
+
   return (
     <main>
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={hero?.image_url || heroCakeFallback}
+            key={heroImageUrl}
+            src={heroImageUrl}
             alt="Bolo artesanal da Caseirinhos"
             className="w-full h-full object-cover"
           />
+          <div className="absolute inset-0 bg-chocolate/60" />
           <div className="absolute inset-0 bg-chocolate/60" />
         </div>
         <div className="relative z-10 text-center px-4 max-w-3xl">
