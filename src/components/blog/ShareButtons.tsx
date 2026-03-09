@@ -12,16 +12,8 @@ const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
 
   const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "");
-  
-  // OG share URL for crawlers — no site_url param needed (hardcoded in function)
-  const ogShareUrl = slug
-    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?slug=${encodeURIComponent(slug)}`
-    : shareUrl;
-
-  const encodedOgUrl = encodeURIComponent(ogShareUrl);
-  // For WhatsApp text, include title + clean post URL (readable)
+  const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
-  const encodedCleanUrl = encodeURIComponent(shareUrl);
 
   const handleCopy = async () => {
     try {
@@ -39,15 +31,13 @@ const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
     
     switch (platform) {
       case "whatsapp":
-        // WhatsApp: send the OG URL so WhatsApp fetches preview with image
-        shareLink = `https://api.whatsapp.com/send?text=${encodedOgUrl}`;
+        shareLink = `https://api.whatsapp.com/send?text=${encodedTitle}%0A${encodedUrl}`;
         break;
       case "facebook":
-        // Facebook: pass OG URL so Facebook reads og:title/og:image, and uses og:url for display domain
-        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}`;
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
         break;
       case "twitter":
-        shareLink = `https://twitter.com/intent/tweet?url=${encodedOgUrl}`;
+        shareLink = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
         break;
     }
 
