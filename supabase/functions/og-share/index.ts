@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 Deno.serve(async (req) => {
@@ -22,22 +22,6 @@ Deno.serve(async (req) => {
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  // Check if OG HTML already exists in storage
-  const ogPath = `og/${slug}.html`;
-  const { data: existingFile } = supabase.storage.from("site-images").getPublicUrl(ogPath);
-  
-  // Check if file exists by trying to fetch it
-  const checkResponse = await fetch(existingFile.publicUrl, { method: "HEAD" });
-  
-  if (checkResponse.ok && checkResponse.headers.get("content-length") !== "0") {
-    // File exists, redirect to it
-    return new Response(null, {
-      status: 302,
-      headers: { ...corsHeaders, Location: existingFile.publicUrl },
-    });
-  }
-
-  // File doesn't exist, generate it
   const { data: post, error } = await supabase
     .from("blog_posts")
     .select("title, excerpt, cover_image, author_name, published_at, slug")
@@ -60,7 +44,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  const siteUrl = url.searchParams.get("site_url") || "https://caseirinhos.lovable.app";
+  const siteUrl = "https://caseirinhos.lovable.app";
   const postUrl = `${siteUrl}/blog/${post.slug}`;
   const description = post.excerpt || "Confira este artigo no blog Caseirinhos";
   const siteName = "Caseirinhos";
@@ -68,63 +52,42 @@ Deno.serve(async (req) => {
   const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=${escapeHtml(postUrl)}" />
-  <title>${escapeHtml(post.title)} | ${siteName}</title>
-  <meta name="description" content="${escapeHtml(description)}" />
-  
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content="${escapeHtml(post.title)}" />
-  <meta property="og:description" content="${escapeHtml(description)}" />
-  ${imageUrl ? `<meta property="og:image" content="${escapeHtml(imageUrl)}" />` : ""}
-  ${imageUrl ? `<meta property="og:image:width" content="1200" />` : ""}
-  ${imageUrl ? `<meta property="og:image:height" content="630" />` : ""}
-  <meta property="og:url" content="${escapeHtml(postUrl)}" />
-  <meta property="og:site_name" content="${siteName}" />
-  ${post.published_at ? `<meta property="article:published_time" content="${post.published_at}" />` : ""}
-  <meta property="article:author" content="${escapeHtml(post.author_name)}" />
-  
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${escapeHtml(post.title)}" />
-  <meta name="twitter:description" content="${escapeHtml(description)}" />
-  ${imageUrl ? `<meta name="twitter:image" content="${escapeHtml(imageUrl)}" />` : ""}
-  
-  <link rel="canonical" href="${escapeHtml(postUrl)}" />
+<meta charset="UTF-8"/>
+<meta http-equiv="refresh" content="0;url=${esc(postUrl)}"/>
+<title>${esc(post.title)} | ${siteName}</title>
+<meta name="description" content="${esc(description)}"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="${esc(post.title)}"/>
+<meta property="og:description" content="${esc(description)}"/>
+${imageUrl ? `<meta property="og:image" content="${esc(imageUrl)}"/>` : ""}
+${imageUrl ? `<meta property="og:image:width" content="1200"/>` : ""}
+${imageUrl ? `<meta property="og:image:height" content="630"/>` : ""}
+<meta property="og:url" content="${esc(postUrl)}"/>
+<meta property="og:site_name" content="${siteName}"/>
+${post.published_at ? `<meta property="article:published_time" content="${post.published_at}"/>` : ""}
+<meta property="article:author" content="${esc(post.author_name)}"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="${esc(post.title)}"/>
+<meta name="twitter:description" content="${esc(description)}"/>
+${imageUrl ? `<meta name="twitter:image" content="${esc(imageUrl)}"/>` : ""}
+<link rel="canonical" href="${esc(postUrl)}"/>
 </head>
 <body>
-  <p>Redirecionando para <a href="${escapeHtml(postUrl)}">${escapeHtml(post.title)}</a>...</p>
+<p><a href="${esc(postUrl)}">${esc(post.title)}</a></p>
 </body>
 </html>`;
 
-  // Upload HTML to storage so it's served with correct Content-Type
-  const encoder = new TextEncoder();
-  const htmlBytes = encoder.encode(html);
-  
-  const { error: uploadError } = await supabase.storage
-    .from("site-images")
-    .upload(ogPath, htmlBytes, {
-      contentType: "text/html; charset=utf-8",
-      upsert: true,
-    });
-
-  if (uploadError) {
-    // Fallback: return HTML directly (may have wrong Content-Type but still works for some crawlers)
-    return new Response(html, {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
-    });
-  }
-
-  // Redirect to the storage-hosted HTML file
-  const { data: publicUrlData } = supabase.storage.from("site-images").getPublicUrl(ogPath);
-  
-  return new Response(null, {
-    status: 302,
-    headers: { ...corsHeaders, Location: publicUrlData.publicUrl },
+  return new Response(html, {
+    status: 200,
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "public, max-age=3600",
+    },
   });
 });
 
-function escapeHtml(str: string): string {
+function esc(str: string): string {
   return str
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
