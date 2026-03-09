@@ -125,6 +125,8 @@ const AdminProducts = () => {
                   value={formData.image_url}
                   onChange={(url) => setFormData({ ...formData, image_url: url })}
                   folder="products"
+                  aspectRatio={1}
+                  recommendedSize="800×800px (1:1)"
                 />
               </div>
               

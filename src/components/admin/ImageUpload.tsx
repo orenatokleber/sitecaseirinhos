@@ -13,6 +13,7 @@ interface ImageUploadProps {
   folder?: string;
   className?: string;
   aspectRatio?: number;
+  recommendedSize?: string;
 }
 
 function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: number) {
@@ -58,7 +59,7 @@ async function getCroppedImg(image: HTMLImageElement, crop: PixelCrop): Promise<
   });
 }
 
-const ImageUpload = ({ value, onChange, folder = "general", className, aspectRatio }: ImageUploadProps) => {
+const ImageUpload = ({ value, onChange, folder = "general", className, aspectRatio, recommendedSize }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [showCropper, setShowCropper] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
@@ -217,6 +218,9 @@ const ImageUpload = ({ value, onChange, folder = "general", className, aspectRat
               <>
                 <Upload className="h-8 w-8" />
                 <span className="text-sm">Clique para enviar imagem</span>
+                {recommendedSize && (
+                  <span className="text-xs opacity-70">Recomendado: {recommendedSize}</span>
+                )}
               </>
             )}
           </button>
@@ -234,7 +238,8 @@ const ImageUpload = ({ value, onChange, folder = "general", className, aspectRat
 
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Arraste para posicionar e redimensione a área de corte. Você também pode usar a imagem original.
+              Arraste para posicionar e redimensione a área de corte.
+              {recommendedSize && <span className="font-medium"> Tamanho recomendado: {recommendedSize}</span>}
             </p>
 
             {selectedFile && (

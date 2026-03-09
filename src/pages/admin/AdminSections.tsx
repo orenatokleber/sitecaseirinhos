@@ -84,6 +84,8 @@ const AdminSections = () => {
                 value={hero.image_url}
                 onChange={(url) => setHero({ ...hero, image_url: url })}
                 folder="hero"
+                aspectRatio={16 / 9}
+                recommendedSize="1920×1080px (16:9)"
               />
             </div>
 
