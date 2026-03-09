@@ -31,15 +31,13 @@ const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
     
     switch (platform) {
       case "whatsapp":
-        // WhatsApp: send the OG URL so WhatsApp fetches preview with image
-        shareLink = `https://api.whatsapp.com/send?text=${encodedOgUrl}`;
+        shareLink = `https://api.whatsapp.com/send?text=${encodedTitle}%0A${encodedUrl}`;
         break;
       case "facebook":
-        // Facebook: pass OG URL so Facebook reads og:title/og:image, and uses og:url for display domain
-        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}`;
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
         break;
       case "twitter":
-        shareLink = `https://twitter.com/intent/tweet?url=${encodedOgUrl}`;
+        shareLink = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
         break;
     }
 
