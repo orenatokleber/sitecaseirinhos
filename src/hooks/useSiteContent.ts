@@ -117,6 +117,7 @@ export function useProducts(activeOnly = true) {
       })) || [];
     },
     staleTime: 0,
+    gcTime: 0,
     refetchOnWindowFocus: true
   });
 }
