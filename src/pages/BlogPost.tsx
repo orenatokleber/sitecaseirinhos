@@ -1,13 +1,18 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useBlogPost } from "@/hooks/useBlog";
-import { Loader2, ArrowLeft, Clock, User, Calendar, Tag } from "lucide-react";
+import { Loader2, ArrowLeft, Clock, User, Calendar, Tag, MessageCircle, Send } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import ShareButtons from "@/components/blog/ShareButtons";
 import BlogSEO from "@/components/blog/BlogSEO";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface Block {
   id: string;
@@ -30,8 +35,11 @@ function parseContent(raw: string): Block[] | null {
 /** Render inline formatting: **bold**, *italic*, <mark>, <small>, <big> */
 function renderInlineFormatting(text: string): string {
   return text
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/\*\*(.+?)\*\*/g, "<strong class='font-semibold text-foreground'>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em class='italic'>$1</em>")
+    .replace(/<mark[^>]*>(.+?)<\/mark>/g, "<mark class='bg-yellow-200/80 dark:bg-yellow-500/30 px-1 rounded'>$1</mark>")
+    .replace(/<small>(.+?)<\/small>/g, "<span class='text-sm'>$1</span>")
+    .replace(/<big>(.+?)<\/big>/g, "<span class='text-xl'>$1</span>")
     .replace(/\n/g, "<br />");
 }
 
