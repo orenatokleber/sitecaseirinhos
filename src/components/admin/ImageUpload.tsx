@@ -238,7 +238,8 @@ const ImageUpload = ({ value, onChange, folder = "general", className, aspectRat
 
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Arraste para posicionar e redimensione a área de corte. Você também pode usar a imagem original.
+              Arraste para posicionar e redimensione a área de corte.
+              {recommendedSize && <span className="font-medium"> Tamanho recomendado: {recommendedSize}</span>}
             </p>
 
             {selectedFile && (
