@@ -56,12 +56,23 @@ function renderBlocks(blocks: Block[]) {
           </h2>
         );
 
+      case "heading2":
       case "subheading":
         return (
           <h3 key={block.id} className="text-xl md:text-2xl font-heading font-semibold text-foreground mt-8 mb-3">
             {block.content}
           </h3>
         );
+
+      case "heading3":
+        return (
+          <h4 key={block.id} className="text-lg md:text-xl font-heading font-medium text-foreground mt-6 mb-2">
+            {block.content}
+          </h4>
+        );
+
+      case "spacer":
+        return <div key={block.id} className="h-8" />;
 
       case "image": {
         const url = block.imageUrl
