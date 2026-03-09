@@ -224,7 +224,6 @@ const ImageUpload = ({ value, onChange, folder = "general", className, aspectRat
               </>
             )}
           </button>
-          </button>
         )}
       </div>
 
