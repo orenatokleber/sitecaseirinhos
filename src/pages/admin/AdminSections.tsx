@@ -423,6 +423,32 @@ const AdminSections = () => {
               {isExpanded && (
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
+                    <Label>Layout da Seção</Label>
+                    <Select
+                      value={(section.metadata as any)?.layout || "text-centered"}
+                      onValueChange={(v) => {
+                        const existing = sectionsList?.find(s => s.section_key === key);
+                        updateSection.mutate({
+                          sectionKey: key,
+                          updates: {
+                            metadata: { ...((existing?.metadata as Record<string, any>) || {}), layout: v }
+                          }
+                        });
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="text-centered">Texto Centralizado</SelectItem>
+                        <SelectItem value="hero-banner">Banner (estilo Hero)</SelectItem>
+                        <SelectItem value="image-left">Imagem à Esquerda</SelectItem>
+                        <SelectItem value="image-right">Imagem à Direita</SelectItem>
+                        <SelectItem value="product-grid">Grade de Cards</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
                     <Label>Imagem</Label>
                     <ImageUpload
                       value={edit.image_url}
