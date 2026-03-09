@@ -66,8 +66,9 @@ export function useSiteSections() {
       return sections;
     },
     staleTime: 0,
-    gcTime: 0, // Don't cache old data
-    refetchOnWindowFocus: true
+    gcTime: 0,
+    refetchOnWindowFocus: true,
+    placeholderData: undefined, // Never show stale data
   });
 }
 
