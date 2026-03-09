@@ -6,7 +6,7 @@ import heroCake from "@/assets/caseirinhos-58.jpg";
 import cakeChocolate from "@/assets/caseirinhos-85.jpg";
 import cakeSlice from "@/assets/caseirinhos-118.jpg";
 import docesFinos from "@/assets/caseirinhos-40.jpg";
-import sobremesaCopo from "@/assets/caseirinhos-93.jpg";
+import sobremesaCopo from "@/assets/caseirinhos-2.jpg";
 import boloPote from "@/assets/caseirinhos-4.jpg";
 
 const products = [
