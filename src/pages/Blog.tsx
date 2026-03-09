@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 
 const Blog = () => {
   const { data: posts, isLoading } = useBlogPosts(true);
+  const { data: adminProfile } = useAdminProfile();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const categories = useMemo(() => {
