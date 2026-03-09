@@ -7,14 +7,15 @@ interface ShareButtonsProps {
   title: string;
   slug?: string;
   description?: string;
+  imageUrl?: string;
 }
 
-const ShareButtons = ({ url, title, slug, description }: ShareButtonsProps) => {
+const ShareButtons = ({ url, title, slug, description, imageUrl }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
 
   const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "");
 
-  // Edge function URL for OG tags - Facebook/Twitter crawlers parse HTML even from text/plain
+  // Edge function URL for OG tags (Facebook/Twitter crawlers)
   const ogShareUrl = slug
     ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?slug=${encodeURIComponent(slug)}`
     : shareUrl;
@@ -35,23 +36,25 @@ const ShareButtons = ({ url, title, slug, description }: ShareButtonsProps) => {
 
     switch (platform) {
       case "whatsapp": {
-        // WhatsApp can't parse OG from text/plain, so send formatted message
+        // WhatsApp: image URL first (auto-preview), then bold title, excerpt, link
         const parts: string[] = [];
-        parts.push(`*${title}*`); // Bold title
+        if (imageUrl) {
+          parts.push(imageUrl); // WhatsApp auto-renders image URLs as previews
+        }
+        parts.push(`*${title}*`);
         if (description) {
           parts.push(description);
         }
-        parts.push(shareUrl); // Clean URL for the user to tap
+        parts.push(`🔗 ${shareUrl}`);
         const whatsappText = encodeURIComponent(parts.join("\n\n"));
         shareLink = `https://api.whatsapp.com/send?text=${whatsappText}`;
         break;
       }
       case "facebook":
-        // Facebook crawler parses OG tags from edge function even with text/plain
         shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(ogShareUrl)}`;
         break;
       case "twitter":
-        shareLink = `https://twitter.com/intent/tweet?url=${encodeURIComponent(ogShareUrl)}`;
+        shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(ogShareUrl)}`;
         break;
     }
 
