@@ -6,14 +6,18 @@ interface ShareButtonsProps {
   url: string;
   title: string;
   slug?: string;
+  description?: string;
 }
 
-const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
+const ShareButtons = ({ url, title, slug, description }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
 
   const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "");
-  const encodedUrl = encodeURIComponent(shareUrl);
-  const encodedTitle = encodeURIComponent(title);
+
+  // Edge function URL for OG tags - Facebook/Twitter crawlers parse HTML even from text/plain
+  const ogShareUrl = slug
+    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?slug=${encodeURIComponent(slug)}`
+    : shareUrl;
 
   const handleCopy = async () => {
     try {
@@ -28,16 +32,26 @@ const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
 
   const handleShare = (platform: string) => {
     let shareLink = "";
-    
+
     switch (platform) {
-      case "whatsapp":
-        shareLink = `https://api.whatsapp.com/send?text=${encodedTitle}%0A${encodedUrl}`;
+      case "whatsapp": {
+        // WhatsApp can't parse OG from text/plain, so send formatted message
+        const parts: string[] = [];
+        parts.push(`*${title}*`); // Bold title
+        if (description) {
+          parts.push(description);
+        }
+        parts.push(shareUrl); // Clean URL for the user to tap
+        const whatsappText = encodeURIComponent(parts.join("\n\n"));
+        shareLink = `https://api.whatsapp.com/send?text=${whatsappText}`;
         break;
+      }
       case "facebook":
-        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+        // Facebook crawler parses OG tags from edge function even with text/plain
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(ogShareUrl)}`;
         break;
       case "twitter":
-        shareLink = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+        shareLink = `https://twitter.com/intent/tweet?url=${encodeURIComponent(ogShareUrl)}`;
         break;
     }
 

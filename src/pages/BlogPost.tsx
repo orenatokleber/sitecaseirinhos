@@ -508,7 +508,7 @@ const BlogPost = () => {
                   <Clock className="h-4 w-4" /> {post.reading_time_min} min de leitura
                 </span>
               </div>
-              <ShareButtons url={currentUrl} title={post.title} slug={post.slug} />
+              <ShareButtons url={currentUrl} title={post.title} slug={post.slug} description={post.excerpt || undefined} />
             </div>
           </div>
 
@@ -532,7 +532,7 @@ const BlogPost = () => {
           {/* Share bar at bottom */}
           <div className="flex items-center justify-center gap-4 mt-10 py-6 border-y border-border/30">
             <span className="text-sm text-muted-foreground">Gostou? Compartilhe:</span>
-            <ShareButtons url={currentUrl} title={post.title} slug={post.slug} />
+            <ShareButtons url={currentUrl} title={post.title} slug={post.slug} description={post.excerpt || undefined} />
           </div>
 
           {/* Comments Section */}
