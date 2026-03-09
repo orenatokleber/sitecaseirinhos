@@ -6,6 +6,7 @@ import {
   MessageSquare, 
   Settings, 
   Image,
+  BookOpen,
   LogOut,
   ExternalLink
 } from "lucide-react";
