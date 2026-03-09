@@ -94,13 +94,6 @@ Deno.serve(async (req) => {
     },
   });
 
-  // For regular users, redirect to the actual post
-  return new Response(null, {
-    status: 302,
-    headers: { ...corsHeaders, Location: postUrl },
-  });
-});
-
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, "&amp;")
