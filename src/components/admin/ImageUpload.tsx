@@ -59,7 +59,7 @@ async function getCroppedImg(image: HTMLImageElement, crop: PixelCrop): Promise<
   });
 }
 
-const ImageUpload = ({ value, onChange, folder = "general", className, aspectRatio }: ImageUploadProps) => {
+const ImageUpload = ({ value, onChange, folder = "general", className, aspectRatio, recommendedSize }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [showCropper, setShowCropper] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
