@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import ImageUpload from "@/components/admin/ImageUpload";
-import InlineToolbar from "@/components/admin/InlineToolbar";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import {
   Type,
   Heading1,
