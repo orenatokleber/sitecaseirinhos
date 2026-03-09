@@ -14,6 +14,7 @@ import NossaHistoria from "./pages/NossaHistoria";
 import Cardapio from "./pages/Cardapio";
 import Encomendas from "./pages/Encomendas";
 import Contato from "./pages/Contato";
+import Galeria from "./pages/Galeria";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
@@ -62,6 +63,7 @@ const App = () => (
               <Route path="/cardapio" element={<Cardapio />} />
               <Route path="/encomendas" element={<Encomendas />} />
               <Route path="/contato" element={<Contato />} />
+              <Route path="/galeria" element={<Galeria />} />
 
               {/* Admin routes */}
               <Route path="/painel-admin/login" element={<AdminLogin />} />
