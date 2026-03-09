@@ -6,15 +6,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import ImageUpload from "@/components/admin/ImageUpload";
+import ColorPicker from "@/components/admin/ColorPicker";
 import { Loader2, Save } from "lucide-react";
+
+interface SectionColors {
+  bg_color?: string;
+  text_color?: string;
+  overlay_color?: string;
+  accent_color?: string;
+  title_color?: string;
+}
 
 const AdminSections = () => {
   const { data: sections, isLoading } = useSiteSections();
   const updateSection = useUpdateSiteSection();
 
   const [hero, setHero] = useState({ title: "", subtitle: "", image_url: "", cta_text: "", cta_link: "" });
+  const [heroColors, setHeroColors] = useState<SectionColors>({});
   const [aboutPreview, setAboutPreview] = useState({ title: "", content: "", cta_text: "", cta_link: "" });
+  const [aboutColors, setAboutColors] = useState<SectionColors>({});
   const [cta, setCta] = useState({ title: "", content: "", cta_text: "" });
+  const [ctaColors, setCtaColors] = useState<SectionColors>({});
 
   useEffect(() => {
     if (sections?.hero) {
@@ -25,6 +37,7 @@ const AdminSections = () => {
         cta_text: sections.hero.cta_text || "",
         cta_link: sections.hero.cta_link || ""
       });
+      setHeroColors(sections.hero.metadata?.colors || {});
     }
     if (sections?.about_preview) {
       setAboutPreview({
@@ -33,6 +46,7 @@ const AdminSections = () => {
         cta_text: sections.about_preview.cta_text || "",
         cta_link: sections.about_preview.cta_link || ""
       });
+      setAboutColors(sections.about_preview.metadata?.colors || {});
     }
     if (sections?.cta) {
       setCta({
@@ -40,19 +54,38 @@ const AdminSections = () => {
         content: sections.cta.content || "",
         cta_text: sections.cta.cta_text || ""
       });
+      setCtaColors(sections.cta.metadata?.colors || {});
     }
   }, [sections]);
 
   const handleSaveHero = () => {
-    updateSection.mutate({ sectionKey: 'hero', updates: hero });
+    updateSection.mutate({
+      sectionKey: 'hero',
+      updates: {
+        ...hero,
+        metadata: { ...(sections?.hero?.metadata || {}), colors: heroColors }
+      }
+    });
   };
 
   const handleSaveAbout = () => {
-    updateSection.mutate({ sectionKey: 'about_preview', updates: aboutPreview });
+    updateSection.mutate({
+      sectionKey: 'about_preview',
+      updates: {
+        ...aboutPreview,
+        metadata: { ...(sections?.about_preview?.metadata || {}), colors: aboutColors }
+      }
+    });
   };
 
   const handleSaveCta = () => {
-    updateSection.mutate({ sectionKey: 'cta', updates: cta });
+    updateSection.mutate({
+      sectionKey: 'cta',
+      updates: {
+        ...cta,
+        metadata: { ...(sections?.cta?.metadata || {}), colors: ctaColors }
+      }
+    });
   };
 
   if (isLoading) {
@@ -67,7 +100,7 @@ const AdminSections = () => {
     <div>
       <div className="mb-8">
         <h1 className="font-heading text-3xl font-bold text-foreground">Seções do Site</h1>
-        <p className="text-muted-foreground">Edite textos e imagens das principais seções</p>
+        <p className="text-muted-foreground">Edite textos, imagens e cores das principais seções</p>
       </div>
 
       <div className="space-y-6 max-w-2xl">
@@ -126,6 +159,37 @@ const AdminSections = () => {
                   value={hero.cta_link}
                   onChange={(e) => setHero({ ...hero, cta_link: e.target.value })}
                   placeholder="/cardapio"
+                />
+              </div>
+            </div>
+
+            {/* Hero Colors */}
+            <div className="border-t border-border pt-4 mt-4">
+              <p className="text-sm font-semibold text-foreground mb-3">🎨 Cores da Seção</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <ColorPicker
+                  label="Cor do Overlay"
+                  value={heroColors.overlay_color || ""}
+                  onChange={(c) => setHeroColors({ ...heroColors, overlay_color: c })}
+                  description="Sobreposição na imagem de fundo"
+                />
+                <ColorPicker
+                  label="Cor do Título"
+                  value={heroColors.title_color || ""}
+                  onChange={(c) => setHeroColors({ ...heroColors, title_color: c })}
+                  description="Cor do título 'Caseirinhos'"
+                />
+                <ColorPicker
+                  label="Cor do Texto"
+                  value={heroColors.text_color || ""}
+                  onChange={(c) => setHeroColors({ ...heroColors, text_color: c })}
+                  description="Cor do texto principal"
+                />
+                <ColorPicker
+                  label="Cor do Botão"
+                  value={heroColors.accent_color || ""}
+                  onChange={(c) => setHeroColors({ ...heroColors, accent_color: c })}
+                  description="Cor de fundo do botão CTA"
                 />
               </div>
             </div>
@@ -190,6 +254,31 @@ const AdminSections = () => {
               </div>
             </div>
 
+            {/* About Colors */}
+            <div className="border-t border-border pt-4 mt-4">
+              <p className="text-sm font-semibold text-foreground mb-3">🎨 Cores da Seção</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <ColorPicker
+                  label="Cor de Fundo"
+                  value={aboutColors.bg_color || ""}
+                  onChange={(c) => setAboutColors({ ...aboutColors, bg_color: c })}
+                  description="Fundo da seção"
+                />
+                <ColorPicker
+                  label="Cor do Texto"
+                  value={aboutColors.text_color || ""}
+                  onChange={(c) => setAboutColors({ ...aboutColors, text_color: c })}
+                  description="Cor do texto principal"
+                />
+                <ColorPicker
+                  label="Cor do Link"
+                  value={aboutColors.accent_color || ""}
+                  onChange={(c) => setAboutColors({ ...aboutColors, accent_color: c })}
+                  description="Cor do link 'Conheça nossa história'"
+                />
+              </div>
+            </div>
+
             <Button onClick={handleSaveAbout} disabled={updateSection.isPending}>
               {updateSection.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -237,6 +326,37 @@ const AdminSections = () => {
                 onChange={(e) => setCta({ ...cta, cta_text: e.target.value })}
                 placeholder="Fazer Pedido pelo WhatsApp"
               />
+            </div>
+
+            {/* CTA Colors */}
+            <div className="border-t border-border pt-4 mt-4">
+              <p className="text-sm font-semibold text-foreground mb-3">🎨 Cores da Seção</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <ColorPicker
+                  label="Cor de Fundo"
+                  value={ctaColors.bg_color || ""}
+                  onChange={(c) => setCtaColors({ ...ctaColors, bg_color: c })}
+                  description="Fundo da seção CTA"
+                />
+                <ColorPicker
+                  label="Cor do Título"
+                  value={ctaColors.title_color || ""}
+                  onChange={(c) => setCtaColors({ ...ctaColors, title_color: c })}
+                  description="Cor do título em script"
+                />
+                <ColorPicker
+                  label="Cor do Texto"
+                  value={ctaColors.text_color || ""}
+                  onChange={(c) => setCtaColors({ ...ctaColors, text_color: c })}
+                  description="Cor do texto descritivo"
+                />
+                <ColorPicker
+                  label="Cor do Botão"
+                  value={ctaColors.accent_color || ""}
+                  onChange={(c) => setCtaColors({ ...ctaColors, accent_color: c })}
+                  description="Cor de fundo do botão"
+                />
+              </div>
             </div>
 
             <Button onClick={handleSaveCta} disabled={updateSection.isPending}>
