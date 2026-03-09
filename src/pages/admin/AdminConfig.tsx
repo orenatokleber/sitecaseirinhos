@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ColorPicker from "@/components/admin/ColorPicker";
+import ProfileSection from "@/components/admin/ProfileSection";
 import { Loader2, Save, Plus, Trash2, GripVertical } from "lucide-react";
 
 interface MenuItem {
@@ -114,6 +115,9 @@ const AdminConfig = () => {
       </div>
 
       <div className="grid gap-6 max-w-2xl">
+        {/* Profile */}
+        <ProfileSection />
+
         {/* Menu Editor */}
         <Card>
           <CardHeader>
