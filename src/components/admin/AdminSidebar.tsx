@@ -7,6 +7,7 @@ import {
   Settings, 
   Image,
   BookOpen,
+  Search,
   LogOut,
   ExternalLink
 } from "lucide-react";
