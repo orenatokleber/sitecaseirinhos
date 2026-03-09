@@ -14,6 +14,7 @@ import NossaHistoria from "./pages/NossaHistoria";
 import Cardapio from "./pages/Cardapio";
 import Encomendas from "./pages/Encomendas";
 import Contato from "./pages/Contato";
+import Galeria from "./pages/Galeria";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
