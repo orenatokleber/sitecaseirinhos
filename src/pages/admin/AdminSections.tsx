@@ -143,11 +143,11 @@ const AdminSections = () => {
       section_key: sectionKey,
       title: newSection.title || newSection.name,
       content: newSection.content,
-      metadata: { display_name: newSection.name, colors: {} }
+      metadata: { display_name: newSection.name, layout: newSection.layout, colors: {} }
     }, {
       onSuccess: () => {
         setNewSectionOpen(false);
-        setNewSection({ name: "", title: "", content: "" });
+        setNewSection({ name: "", title: "", content: "", layout: "text-centered" });
       }
     });
   };
