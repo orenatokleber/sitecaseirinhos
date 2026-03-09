@@ -20,7 +20,6 @@ const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
     : shareUrl;
 
   const encodedOgUrl = encodeURIComponent(ogShareUrl);
-  const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
 
   const handleCopy = async () => {
@@ -39,13 +38,15 @@ const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
     
     switch (platform) {
       case "whatsapp":
-        shareLink = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedOgUrl}`;
+        // WhatsApp: send only the OG URL so WhatsApp fetches the preview (title + image from OG tags)
+        shareLink = `https://api.whatsapp.com/send?text=${encodedOgUrl}`;
         break;
       case "facebook":
-        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}&quote=${encodedTitle}`;
+        // Facebook: only pass the URL, Facebook will read og:title/og:description/og:image from the page
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}`;
         break;
       case "twitter":
-        shareLink = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedOgUrl}`;
+        shareLink = `https://twitter.com/intent/tweet?url=${encodedOgUrl}`;
         break;
     }
 
