@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import ImageUpload from "@/components/admin/ImageUpload";
 import ColorPicker from "@/components/admin/ColorPicker";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Save, Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 
 interface SectionColors {
@@ -42,7 +43,7 @@ const AdminSections = () => {
 
   // New section dialog
   const [newSectionOpen, setNewSectionOpen] = useState(false);
-  const [newSection, setNewSection] = useState({ name: "", title: "", content: "" });
+  const [newSection, setNewSection] = useState({ name: "", title: "", content: "", layout: "text-centered" });
 
   useEffect(() => {
     if (sections?.hero) {
@@ -142,11 +143,11 @@ const AdminSections = () => {
       section_key: sectionKey,
       title: newSection.title || newSection.name,
       content: newSection.content,
-      metadata: { display_name: newSection.name, colors: {} }
+      metadata: { display_name: newSection.name, layout: newSection.layout, colors: {} }
     }, {
       onSuccess: () => {
         setNewSectionOpen(false);
-        setNewSection({ name: "", title: "", content: "" });
+        setNewSection({ name: "", title: "", content: "", layout: "text-centered" });
       }
     });
   };
@@ -209,6 +210,22 @@ const AdminSections = () => {
                   placeholder="Texto da seção..."
                   rows={3}
                 />
+              </div>
+              <div className="space-y-2">
+                <Label>Layout da Seção</Label>
+                <Select value={newSection.layout} onValueChange={(v) => setNewSection({ ...newSection, layout: v })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text-centered">Texto Centralizado</SelectItem>
+                    <SelectItem value="hero-banner">Banner (estilo Hero)</SelectItem>
+                    <SelectItem value="image-left">Imagem à Esquerda</SelectItem>
+                    <SelectItem value="image-right">Imagem à Direita</SelectItem>
+                    <SelectItem value="product-grid">Grade de Cards</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">Define como a seção será exibida no site</p>
               </div>
             </div>
             <DialogFooter>
@@ -405,6 +422,32 @@ const AdminSections = () => {
               </CardHeader>
               {isExpanded && (
                 <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Layout da Seção</Label>
+                    <Select
+                      value={(section.metadata as any)?.layout || "text-centered"}
+                      onValueChange={(v) => {
+                        const existing = sectionsList?.find(s => s.section_key === key);
+                        updateSection.mutate({
+                          sectionKey: key,
+                          updates: {
+                            metadata: { ...((existing?.metadata as Record<string, any>) || {}), layout: v }
+                          }
+                        });
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="text-centered">Texto Centralizado</SelectItem>
+                        <SelectItem value="hero-banner">Banner (estilo Hero)</SelectItem>
+                        <SelectItem value="image-left">Imagem à Esquerda</SelectItem>
+                        <SelectItem value="image-right">Imagem à Direita</SelectItem>
+                        <SelectItem value="product-grid">Grade de Cards</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div className="space-y-2">
                     <Label>Imagem</Label>
                     <ImageUpload
