@@ -30,10 +30,19 @@ const AdminLogin = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    const { error } = await signInWithEmail(email, password);
+    let result;
+    if (isSignUp) {
+      result = await signUpWithEmail(email, password);
+      if (!result.error) {
+        toast.success("Conta criada! Fazendo login...");
+        result = await signInWithEmail(email, password);
+      }
+    } else {
+      result = await signInWithEmail(email, password);
+    }
     
-    if (error) {
-      toast.error(error.message || "Erro ao fazer login");
+    if (result.error) {
+      toast.error(result.error.message || "Erro ao fazer login");
     }
     
     setIsLoading(false);
