@@ -13,6 +13,7 @@ import ShareButtons from "@/components/blog/ShareButtons";
 import BlogSEO from "@/components/blog/BlogSEO";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useApprovedComments, useSubmitComment } from "@/hooks/useComments";
 
 interface Block {
   id: string;
