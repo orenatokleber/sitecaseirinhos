@@ -94,27 +94,27 @@ const AdminDashboard = () => {
             <CardDescription>Tarefas mais comuns</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <a
-              href="/painel-admin/config"
+            <Link
+              to="/painel-admin/config"
               className="block p-3 rounded-md border border-border hover:bg-muted transition-colors"
             >
               <p className="font-medium">Atualizar WhatsApp</p>
               <p className="text-sm text-muted-foreground">Mude o número de contato</p>
-            </a>
-            <a
-              href="/painel-admin/produtos"
+            </Link>
+            <Link
+              to="/painel-admin/produtos"
               className="block p-3 rounded-md border border-border hover:bg-muted transition-colors"
             >
               <p className="font-medium">Adicionar Produto</p>
               <p className="text-sm text-muted-foreground">Novo item no cardápio</p>
-            </a>
-            <a
-              href="/painel-admin/secoes"
+            </Link>
+            <Link
+              to="/painel-admin/secoes"
               className="block p-3 rounded-md border border-border hover:bg-muted transition-colors"
             >
               <p className="font-medium">Editar Textos</p>
               <p className="text-sm text-muted-foreground">Atualize o conteúdo do site</p>
-            </a>
+            </Link>
           </CardContent>
         </Card>
       </div>

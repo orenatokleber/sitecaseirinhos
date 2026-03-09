@@ -114,7 +114,9 @@ export function useProducts(activeOnly = true) {
         ...p,
         image_url: p.image_url ? getPublicImageUrl(p.image_url) : null
       })) || [];
-    }
+    },
+    staleTime: 0,
+    refetchOnWindowFocus: true
   });
 }
 
