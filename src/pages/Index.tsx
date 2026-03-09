@@ -49,6 +49,9 @@ const Index = () => {
   const aboutColors = aboutPreview?.metadata?.colors || {};
   const ctaColors = cta?.metadata?.colors || {};
 
+  // Custom sections (exclude fixed ones)
+  const FIXED_SECTIONS = ['hero', 'about_preview', 'cta'];
+  const customSections = sectionsList?.filter(s => !FIXED_SECTIONS.includes(s.section_key)) || [];
   return (
     <main>
       {/* Hero */}
