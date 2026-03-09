@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       blog_posts: {
         Row: {
+          allow_comments: boolean
           author_name: string
           category: string | null
           content: string
@@ -28,10 +29,12 @@ export type Database = {
           reading_time_min: number | null
           slug: string
           sort_order: number | null
+          tags: string[] | null
           title: string
           updated_at: string
         }
         Insert: {
+          allow_comments?: boolean
           author_name?: string
           category?: string | null
           content?: string
@@ -44,10 +47,12 @@ export type Database = {
           reading_time_min?: number | null
           slug: string
           sort_order?: number | null
+          tags?: string[] | null
           title: string
           updated_at?: string
         }
         Update: {
+          allow_comments?: boolean
           author_name?: string
           category?: string | null
           content?: string
@@ -60,6 +65,7 @@ export type Database = {
           reading_time_min?: number | null
           slug?: string
           sort_order?: number | null
+          tags?: string[] | null
           title?: string
           updated_at?: string
         }
