@@ -194,6 +194,15 @@ const BlogPost = () => {
 
   return (
     <main className="pt-24">
+      <BlogSEO
+        title={post.title}
+        description={post.excerpt || undefined}
+        image={post.cover_image || undefined}
+        url={currentUrl}
+        author={post.author_name}
+        publishedAt={post.published_at || undefined}
+        tags={tags}
+      />
       {/* Hero cover - full bleed */}
       {post.cover_image && (
         <div className="w-full h-72 md:h-[28rem] relative overflow-hidden">
