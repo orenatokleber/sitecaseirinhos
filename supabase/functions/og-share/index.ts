@@ -53,12 +53,12 @@ Deno.serve(async (req) => {
   const userAgent = (req.headers.get("user-agent") || "").toLowerCase();
   const isCrawler = /facebookexternalhit|twitterbot|whatsapp|linkedinbot|telegrambot|slackbot|discordbot|googlebot/i.test(userAgent);
 
-  if (isCrawler) {
-    // Serve static HTML with OG tags for crawlers
-    const html = `<!DOCTYPE html>
+  // Always serve static HTML with OG tags (works for all crawlers including WhatsApp)
+  const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0; url=${escapeHtml(postUrl)}" />
   <title>${escapeHtml(post.title)} | ${siteName}</title>
   <meta name="description" content="${escapeHtml(description)}" />
   
@@ -77,17 +77,22 @@ Deno.serve(async (req) => {
   <meta name="twitter:title" content="${escapeHtml(post.title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
   ${imageUrl ? `<meta name="twitter:image" content="${escapeHtml(imageUrl)}" />` : ""}
+  
+  <link rel="canonical" href="${escapeHtml(postUrl)}" />
 </head>
 <body>
-  <p>${escapeHtml(post.title)}</p>
-  <script>window.location.href="${escapeHtml(postUrl)}";</script>
+  <p>Redirecionando para <a href="${escapeHtml(postUrl)}">${escapeHtml(post.title)}</a>...</p>
 </body>
 </html>`;
 
-    return new Response(html, {
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
-    });
-  }
+  return new Response(html, {
+    status: 200,
+    headers: { 
+      ...corsHeaders, 
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "public, max-age=3600"
+    },
+  });
 
   // For regular users, redirect to the actual post
   return new Response(null, {
