@@ -190,9 +190,7 @@ const BlogPost = () => {
 
   const blocks = parseContent(post.content);
   const tags = post.tags || [];
-
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
-  const shareText = `${post.title} - Caseirinhos`;
+  const currentUrl = typeof window !== "undefined" ? window.location.href : "";
 
   return (
     <main className="pt-24">
