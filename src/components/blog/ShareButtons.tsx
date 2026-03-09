@@ -12,16 +12,8 @@ const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
 
   const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "");
-  
-  // OG share URL for crawlers — no site_url param needed (hardcoded in function)
-  const ogShareUrl = slug
-    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?slug=${encodeURIComponent(slug)}`
-    : shareUrl;
-
-  const encodedOgUrl = encodeURIComponent(ogShareUrl);
-  // For WhatsApp text, include title + clean post URL (readable)
+  const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
-  const encodedCleanUrl = encodeURIComponent(shareUrl);
 
   const handleCopy = async () => {
     try {
