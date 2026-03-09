@@ -218,8 +218,12 @@ const ImageUpload = ({ value, onChange, folder = "general", className, aspectRat
               <>
                 <Upload className="h-8 w-8" />
                 <span className="text-sm">Clique para enviar imagem</span>
+                {recommendedSize && (
+                  <span className="text-xs opacity-70">Recomendado: {recommendedSize}</span>
+                )}
               </>
             )}
+          </button>
           </button>
         )}
       </div>
