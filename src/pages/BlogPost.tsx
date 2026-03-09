@@ -393,6 +393,7 @@ function renderBlocks(blocks: Block[]) {
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: post, isLoading } = useBlogPost(slug || "");
+  const { data: adminProfile } = useAdminProfile();
 
   if (isLoading) {
     return (
