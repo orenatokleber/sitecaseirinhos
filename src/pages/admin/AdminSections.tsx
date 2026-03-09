@@ -43,7 +43,7 @@ const AdminSections = () => {
 
   // New section dialog
   const [newSectionOpen, setNewSectionOpen] = useState(false);
-  const [newSection, setNewSection] = useState({ name: "", title: "", content: "" });
+  const [newSection, setNewSection] = useState({ name: "", title: "", content: "", layout: "text-centered" });
 
   useEffect(() => {
     if (sections?.hero) {
