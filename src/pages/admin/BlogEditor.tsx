@@ -242,7 +242,11 @@ const BlogEditor = () => {
         </div>
 
         {/* Sidebar */}
-        <aside className="w-80 border-l border-border bg-card flex-shrink-0 hidden lg:flex flex-col">
+        <aside className="w-80 border-l border-border bg-card flex-shrink-0 flex flex-col">
+          {/* Mobile toggle hint */}
+          <div className="lg:hidden p-3 bg-accent/5 text-center text-xs text-muted-foreground border-b border-border">
+            Configurações do post
+          </div>
           <div className="flex border-b border-border">
             <button
               onClick={() => setSidebarTab("post")}
