@@ -73,6 +73,8 @@ const App = () => (
 
               {/* Admin routes */}
               <Route path="/painel-admin/login" element={<AdminLogin />} />
+              <Route path="/painel-admin/blog/novo" element={<BlogEditor />} />
+              <Route path="/painel-admin/blog/:id" element={<BlogEditor />} />
               <Route path="/painel-admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="secoes" element={<AdminSections />} />
