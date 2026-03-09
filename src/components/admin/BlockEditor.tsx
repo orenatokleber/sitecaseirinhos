@@ -217,7 +217,8 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
       e.preventDefault();
       addBlock("paragraph", index);
     }
-    if (e.key === "Backspace" && block.content === "" && blocks.length > 1) {
+    const isEmpty = !block.content || block.content === "" || block.content === "<br>" || block.content.replace(/<[^>]*>/g, "").trim() === "";
+    if (e.key === "Backspace" && isEmpty && blocks.length > 1) {
       e.preventDefault();
       removeBlock(index);
     }
