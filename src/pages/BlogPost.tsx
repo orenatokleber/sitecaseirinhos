@@ -35,14 +35,138 @@ function renderInlineFormatting(text: string): string {
     .replace(/\n/g, "<br />");
 }
 
+/**
+ * Render plain text that may contain markdown-style formatting.
+ * Handles: # headings, **bold**, *italic*, - lists, 1. ordered lists, > quotes, ---
+ */
 function renderPlainText(raw: string) {
-  const paragraphs = raw.split(/\n\s*\n/).filter(Boolean);
-  return paragraphs.map((p, i) => {
-    const html = renderInlineFormatting(p);
-    return (
-      <p key={i} className="mb-6 leading-[1.8] text-foreground/85 text-lg" dangerouslySetInnerHTML={{ __html: html }} />
-    );
-  });
+  const lines = raw.split("\n");
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+  let key = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    // Skip empty lines
+    if (!trimmed) {
+      i++;
+      continue;
+    }
+
+    // Headings
+    if (trimmed.startsWith("### ")) {
+      elements.push(
+        <h4 key={key++} className="text-lg md:text-xl font-heading font-medium text-foreground mt-8 mb-3">
+          {trimmed.slice(4)}
+        </h4>
+      );
+      i++;
+      continue;
+    }
+    if (trimmed.startsWith("## ")) {
+      elements.push(
+        <h3 key={key++} className="text-xl md:text-2xl font-heading font-semibold text-foreground mt-10 mb-4">
+          {trimmed.slice(3)}
+        </h3>
+      );
+      i++;
+      continue;
+    }
+    if (trimmed.startsWith("# ")) {
+      elements.push(
+        <h2 key={key++} className="text-2xl md:text-3xl font-heading font-bold text-foreground mt-12 mb-5 pb-2 border-b border-border/50">
+          {trimmed.slice(2)}
+        </h2>
+      );
+      i++;
+      continue;
+    }
+
+    // Divider
+    if (/^[-*_]{3,}$/.test(trimmed)) {
+      elements.push(
+        <div key={key++} className="my-10 flex items-center gap-4">
+          <div className="flex-1 h-px bg-border" />
+          <div className="flex gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent/50" />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent/50" />
+          </div>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // Blockquote
+    if (trimmed.startsWith("> ")) {
+      const quoteLines: string[] = [];
+      while (i < lines.length && lines[i].trim().startsWith("> ")) {
+        quoteLines.push(lines[i].trim().slice(2));
+        i++;
+      }
+      elements.push(
+        <blockquote key={key++} className="relative border-l-4 border-accent pl-6 py-4 my-8 bg-accent/5 rounded-r-lg">
+          <p className="text-lg italic text-foreground/80 leading-relaxed">{quoteLines.join(" ")}</p>
+        </blockquote>
+      );
+      continue;
+    }
+
+    // Unordered list
+    if (/^[-*•]\s/.test(trimmed)) {
+      const items: string[] = [];
+      while (i < lines.length && /^[-*•]\s/.test(lines[i].trim())) {
+        items.push(lines[i].trim().replace(/^[-*•]\s+/, ""));
+        i++;
+      }
+      elements.push(
+        <ul key={key++} className="space-y-2 mb-6 text-foreground/85 text-lg pl-6">
+          {items.map((item, j) => (
+            <li key={j} className="relative pl-4 before:absolute before:left-0 before:top-[0.6em] before:w-1.5 before:h-1.5 before:rounded-full before:bg-accent"
+              dangerouslySetInnerHTML={{ __html: renderInlineFormatting(item) }}
+            />
+          ))}
+        </ul>
+      );
+      continue;
+    }
+
+    // Ordered list
+    if (/^\d+[.)]\s/.test(trimmed)) {
+      const items: string[] = [];
+      while (i < lines.length && /^\d+[.)]\s/.test(lines[i].trim())) {
+        items.push(lines[i].trim().replace(/^\d+[.)]\s+/, ""));
+        i++;
+      }
+      elements.push(
+        <ol key={key++} className="list-decimal list-inside space-y-2 mb-6 text-foreground/85 text-lg pl-4">
+          {items.map((item, j) => (
+            <li key={j} className="pl-2" dangerouslySetInnerHTML={{ __html: renderInlineFormatting(item) }} />
+          ))}
+        </ol>
+      );
+      continue;
+    }
+
+    // Regular paragraph — collect consecutive non-empty lines
+    const paraLines: string[] = [];
+    while (i < lines.length && lines[i].trim() && !lines[i].trim().startsWith("#") && !lines[i].trim().startsWith("> ") && !/^[-*•]\s/.test(lines[i].trim()) && !/^\d+[.)]\s/.test(lines[i].trim()) && !/^[-*_]{3,}$/.test(lines[i].trim())) {
+      paraLines.push(lines[i]);
+      i++;
+    }
+    if (paraLines.length > 0) {
+      const html = renderInlineFormatting(paraLines.join("\n"));
+      elements.push(
+        <p key={key++} className="mb-6 leading-[1.9] text-foreground/80 text-lg font-body" dangerouslySetInnerHTML={{ __html: html }} />
+      );
+    }
+  }
+
+  return elements;
 }
 
 function renderBlocks(blocks: Block[]) {
@@ -53,14 +177,14 @@ function renderBlocks(blocks: Block[]) {
         return (
           <p
             key={block.id}
-            className="mb-6 leading-[1.8] text-foreground/85 text-lg"
+            className="mb-6 leading-[1.9] text-foreground/80 text-lg font-body"
             dangerouslySetInnerHTML={{ __html: renderInlineFormatting(block.content) }}
           />
         );
 
       case "heading":
         return (
-          <h2 key={block.id} className="text-2xl md:text-3xl font-heading font-bold text-foreground mt-12 mb-5 pb-2 border-b border-border/50">
+          <h2 key={block.id} className="text-2xl md:text-3xl font-heading font-bold text-foreground mt-14 mb-5 pb-3 border-b border-accent/20">
             {block.content}
           </h2>
         );
@@ -91,8 +215,8 @@ function renderBlocks(blocks: Block[]) {
           : null;
         if (!url) return null;
         return (
-          <figure key={block.id} className="my-10 -mx-4 md:-mx-8">
-            <div className="rounded-2xl overflow-hidden shadow-xl">
+          <figure key={block.id} className="my-12 -mx-4 md:-mx-8">
+            <div className="rounded-2xl overflow-hidden shadow-xl ring-1 ring-border/10">
               <img src={url} alt={block.imageCaption || ""} className="w-full h-auto" loading="lazy" />
             </div>
             {block.imageCaption && (
@@ -108,40 +232,40 @@ function renderBlocks(blocks: Block[]) {
         return (
           <blockquote
             key={block.id}
-            className="relative border-l-4 border-accent pl-6 py-4 my-8 bg-accent/5 rounded-r-lg"
+            className="relative border-l-4 border-accent pl-6 py-4 my-10 bg-accent/5 rounded-r-xl"
           >
-            <p className="text-lg italic text-foreground/80 leading-relaxed">{block.content}</p>
+            <p className="text-lg italic text-foreground/75 leading-relaxed font-body">{block.content}</p>
           </blockquote>
         );
 
       case "list":
         return (
-          <ul key={block.id} className="space-y-2 mb-6 text-foreground/85 text-lg pl-6">
+          <ul key={block.id} className="space-y-3 mb-8 text-foreground/80 text-lg pl-6">
             {block.content.split("\n").filter(Boolean).map((item, i) => (
-              <li key={i} className="relative pl-4 before:absolute before:left-0 before:top-[0.6em] before:w-1.5 before:h-1.5 before:rounded-full before:bg-accent">
-                {item}
-              </li>
+              <li key={i} className="relative pl-4 before:absolute before:left-0 before:top-[0.6em] before:w-2 before:h-2 before:rounded-full before:bg-accent/60"
+                dangerouslySetInnerHTML={{ __html: renderInlineFormatting(item) }}
+              />
             ))}
           </ul>
         );
 
       case "ordered-list":
         return (
-          <ol key={block.id} className="list-decimal list-inside space-y-2 mb-6 text-foreground/85 text-lg pl-4">
+          <ol key={block.id} className="list-decimal list-inside space-y-3 mb-8 text-foreground/80 text-lg pl-4 marker:text-accent marker:font-semibold">
             {block.content.split("\n").filter(Boolean).map((item, i) => (
-              <li key={i} className="pl-2">{item}</li>
+              <li key={i} className="pl-2" dangerouslySetInnerHTML={{ __html: renderInlineFormatting(item) }} />
             ))}
           </ol>
         );
 
       case "divider":
         return (
-          <div key={block.id} className="my-10 flex items-center gap-4">
+          <div key={block.id} className="my-12 flex items-center gap-4">
             <div className="flex-1 h-px bg-border" />
             <div className="flex gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent/50" />
-              <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-              <span className="w-1.5 h-1.5 rounded-full bg-accent/50" />
+              <span className="w-1.5 h-1.5 rounded-full bg-accent/40" />
+              <span className="w-2 h-2 rounded-full bg-accent" />
+              <span className="w-1.5 h-1.5 rounded-full bg-accent/40" />
             </div>
             <div className="flex-1 h-px bg-border" />
           </div>
@@ -149,8 +273,8 @@ function renderBlocks(blocks: Block[]) {
 
       case "code":
         return (
-          <pre key={block.id} className="bg-muted/80 rounded-2xl p-6 my-8 overflow-x-auto border border-border/50">
-            <code className="text-sm font-mono text-foreground/90 leading-relaxed">{block.content}</code>
+          <pre key={block.id} className="bg-muted/60 rounded-2xl p-6 my-10 overflow-x-auto border border-border/30">
+            <code className="text-sm font-mono text-foreground/85 leading-relaxed">{block.content}</code>
           </pre>
         );
 
@@ -193,7 +317,7 @@ const BlogPost = () => {
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
 
   return (
-    <main className="pt-24">
+    <main className="pt-24 bg-background">
       <BlogSEO
         title={post.title}
         description={post.excerpt || undefined}
@@ -203,37 +327,38 @@ const BlogPost = () => {
         publishedAt={post.published_at || undefined}
         tags={tags}
       />
-      {/* Hero cover - full bleed */}
+
+      {/* Hero cover - full bleed with parallax effect */}
       {post.cover_image && (
-        <div className="w-full h-72 md:h-[28rem] relative overflow-hidden">
+        <div className="w-full h-72 md:h-[32rem] relative overflow-hidden">
           <img
             src={post.cover_image}
             alt={post.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
         </div>
       )}
 
-      <article className="container mx-auto px-4 max-w-3xl">
+      <article className="container mx-auto px-4 max-w-[720px]">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className={post.cover_image ? "-mt-28 relative z-10" : "pt-12"}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className={post.cover_image ? "-mt-32 relative z-10" : "pt-12"}
         >
           {/* Back link */}
           <Link
             to="/blog"
-            className="inline-flex items-center gap-1.5 text-sm text-accent font-medium hover:underline mb-8 group"
+            className="inline-flex items-center gap-1.5 text-sm text-accent font-medium hover:underline mb-10 group"
           >
             <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" /> Voltar ao blog
           </Link>
 
-          {/* Category & Meta row */}
-          <div className="flex flex-wrap items-center gap-3 mb-5">
+          {/* Category & Date */}
+          <div className="flex flex-wrap items-center gap-3 mb-6">
             {post.category && (
-              <span className="text-xs font-semibold uppercase tracking-widest text-accent bg-accent/10 px-3.5 py-1.5 rounded-full">
+              <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-accent bg-accent/10 px-4 py-1.5 rounded-full">
                 {post.category}
               </span>
             )}
@@ -246,30 +371,31 @@ const BlogPost = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-6 leading-[1.15] tracking-tight">
+          <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] font-heading font-bold text-foreground mb-6 leading-[1.12] tracking-tight">
             {post.title}
           </h1>
 
           {/* Excerpt */}
           {post.excerpt && (
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8 font-light">
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 font-light border-l-2 border-accent/30 pl-5">
               {post.excerpt}
             </p>
           )}
 
           {/* Author / meta bar */}
-          <div className="flex items-center justify-between py-5 border-y border-border/60 mb-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between py-5 border-y border-border/40 mb-12 gap-4">
             <div className="flex items-center gap-5 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1.5 font-medium text-foreground">
-                <User className="h-4 w-4 text-accent" /> {post.author_name}
+              <span className="flex items-center gap-2 font-medium text-foreground">
+                <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center">
+                  <User className="h-4 w-4 text-accent" />
+                </div>
+                {post.author_name}
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="h-4 w-4" /> {post.reading_time_min} min de leitura
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <ShareButtons url={currentUrl} title={post.title} />
-            </div>
+            <ShareButtons url={currentUrl} title={post.title} />
           </div>
 
           {/* Content */}
@@ -279,24 +405,30 @@ const BlogPost = () => {
 
           {/* Tags */}
           {tags.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 mt-10 pt-6 border-t border-border/50">
+            <div className="flex flex-wrap items-center gap-2 mt-12 pt-8 border-t border-border/40">
               <Tag className="h-4 w-4 text-muted-foreground" />
               {tags.map((tag: string) => (
-                <Badge key={tag} variant="secondary" className="text-xs">
+                <Badge key={tag} variant="secondary" className="text-xs font-medium">
                   {tag}
                 </Badge>
               ))}
             </div>
           )}
 
-          {/* Footer */}
-          <div className="border-t border-border mt-10 pt-10 pb-16">
-            <div className="bg-muted/50 rounded-2xl p-8 text-center">
-              <p className="text-muted-foreground mb-2 text-sm">Gostou do conteúdo?</p>
-              <p className="font-heading text-xl font-semibold text-foreground mb-4">Explore mais receitas e dicas</p>
+          {/* Share bar at bottom */}
+          <div className="flex items-center justify-center gap-4 mt-10 py-6 border-y border-border/30">
+            <span className="text-sm text-muted-foreground">Gostou? Compartilhe:</span>
+            <ShareButtons url={currentUrl} title={post.title} />
+          </div>
+
+          {/* Footer CTA */}
+          <div className="mt-10 pb-20">
+            <div className="bg-gradient-to-br from-accent/5 to-accent/10 rounded-3xl p-10 text-center border border-accent/10">
+              <p className="font-script text-2xl text-accent mb-2">Caseirinhos</p>
+              <p className="font-heading text-xl font-semibold text-foreground mb-5">Explore mais receitas e dicas</p>
               <Link
                 to="/blog"
-                className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-6 py-2.5 rounded-full font-medium hover:opacity-90 transition-opacity text-sm"
+                className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-7 py-3 rounded-full font-medium hover:opacity-90 transition-opacity text-sm shadow-lg shadow-accent/20"
               >
                 <ArrowLeft className="h-4 w-4" /> Ver todos os posts
               </Link>

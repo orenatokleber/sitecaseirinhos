@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Loader2, Eye, Settings2, FileText, Clock, Save, X, Tag, MessageSquare } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, Settings2, FileText, Clock, Save, X, Tag, MessageSquare, PanelRightOpen, PanelRightClose } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import BlockEditor, { Block, serializeBlocks, deserializeBlocks, calculateReadingTime } from "@/components/admin/BlockEditor";
 import { useBlogPosts, useCreateBlogPost, useUpdateBlogPost } from "@/hooks/useBlog";
@@ -74,6 +74,7 @@ const BlogEditor = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [tagInput, setTagInput] = useState("");
+  const [showSidebar, setShowSidebar] = useState(true);
 
   // Load post data when editing
   useEffect(() => {
@@ -220,6 +221,14 @@ const BlogEditor = () => {
               Publicar
             </Button>
           )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowSidebar(!showSidebar)}
+            title={showSidebar ? "Ocultar painel" : "Mostrar painel"}
+          >
+            {showSidebar ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
+          </Button>
         </div>
       </header>
 
@@ -242,7 +251,8 @@ const BlogEditor = () => {
         </div>
 
         {/* Sidebar */}
-        <aside className="w-80 border-l border-border bg-card flex-shrink-0 hidden lg:flex flex-col">
+        {showSidebar && (
+        <aside className="w-80 border-l border-border bg-card flex-shrink-0 flex flex-col">
           <div className="flex border-b border-border">
             <button
               onClick={() => setSidebarTab("post")}
@@ -466,6 +476,7 @@ const BlogEditor = () => {
             </div>
           </ScrollArea>
         </aside>
+        )}
       </div>
     </div>
   );
