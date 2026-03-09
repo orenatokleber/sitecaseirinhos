@@ -240,6 +240,64 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Custom Sections */}
+      {customSections.map((section, i) => {
+        const colors = (section.metadata as any)?.colors || {};
+        return (
+          <motion.section
+            key={section.section_key}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className={`py-20 ${i % 2 === 0 ? '' : 'bg-secondary'}`}
+            style={{ backgroundColor: colors.bg_color || undefined }}
+          >
+            <div className="container mx-auto px-4 text-center max-w-3xl">
+              {section.image_url && (
+                <div className="mb-8 max-w-md mx-auto rounded-lg overflow-hidden">
+                  <img
+                    src={section.image_url}
+                    alt={section.title || ""}
+                    className="w-full h-auto object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              {section.title && (
+                <SectionTitle
+                  script={(section.metadata as any)?.display_name || ""}
+                  title={section.title}
+                  subtitle={section.subtitle || undefined}
+                />
+              )}
+              {section.content && (
+                <p
+                  className={`leading-relaxed mb-8 ${!colors.text_color ? 'text-muted-foreground' : ''}`}
+                  style={{ color: colors.text_color || undefined }}
+                >
+                  {section.content}
+                </p>
+              )}
+              {section.cta_text && section.cta_link && (
+                <Link
+                  to={section.cta_link}
+                  className={`inline-flex items-center justify-center px-8 py-3 rounded-md font-body text-sm uppercase tracking-wider hover:opacity-90 transition-opacity ${
+                    !colors.accent_color ? 'bg-accent text-accent-foreground' : ''
+                  }`}
+                  style={{
+                    backgroundColor: colors.accent_color || undefined,
+                    color: colors.accent_color ? '#ffffff' : undefined,
+                  }}
+                >
+                  {section.cta_text}
+                </Link>
+              )}
+            </div>
+          </motion.section>
+        );
+      })}
+
       {/* CTA */}
       <section
         className={`py-20 text-center ${!ctaColors.bg_color ? 'bg-primary text-primary-foreground' : ''}`}
