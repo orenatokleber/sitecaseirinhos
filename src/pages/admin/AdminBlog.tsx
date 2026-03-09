@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Loader2, FileText, Eye, EyeOff, Calendar } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
+import BlockEditor, { Block, serializeBlocks, deserializeBlocks } from "@/components/admin/BlockEditor";
 import { useBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost } from "@/hooks/useBlog";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
