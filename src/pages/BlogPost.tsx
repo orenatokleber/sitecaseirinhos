@@ -268,15 +268,7 @@ const BlogPost = () => {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-                title="Compartilhar no WhatsApp"
-              >
-                <Share2 className="h-4 w-4" />
-              </a>
+              <ShareButtons url={currentUrl} title={post.title} />
             </div>
           </div>
 
