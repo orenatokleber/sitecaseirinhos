@@ -25,6 +25,7 @@ import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminConfig from "./pages/admin/AdminConfig";
+import BlogEditor from "./pages/admin/BlogEditor";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 
@@ -72,6 +73,8 @@ const App = () => (
 
               {/* Admin routes */}
               <Route path="/painel-admin/login" element={<AdminLogin />} />
+              <Route path="/painel-admin/blog/novo" element={<BlogEditor />} />
+              <Route path="/painel-admin/blog/:id" element={<BlogEditor />} />
               <Route path="/painel-admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="secoes" element={<AdminSections />} />

@@ -1,12 +1,18 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import ImageUpload from "@/components/admin/ImageUpload";
 import {
   Type,
   Heading1,
   Heading2,
+  Heading3,
   ImageIcon,
   Quote,
   List,
@@ -15,16 +21,16 @@ import {
   Plus,
   Trash2,
   GripVertical,
-  ChevronUp,
-  ChevronDown,
   Code,
+  Video,
+  AlignLeft,
 } from "lucide-react";
+import { motion, AnimatePresence, Reorder } from "framer-motion";
 
 export interface Block {
   id: string;
-  type: "paragraph" | "heading" | "subheading" | "image" | "quote" | "list" | "ordered-list" | "divider" | "code";
+  type: "paragraph" | "heading" | "heading2" | "heading3" | "image" | "quote" | "list" | "ordered-list" | "divider" | "code" | "spacer";
   content: string;
-  /** For images */
   imageUrl?: string;
   imageCaption?: string;
 }
@@ -34,308 +40,440 @@ interface BlockEditorProps {
   onChange: (blocks: Block[]) => void;
 }
 
-const BLOCK_TYPES = [
-  { type: "paragraph" as const, icon: Type, label: "Parágrafo" },
-  { type: "heading" as const, icon: Heading1, label: "Título" },
-  { type: "subheading" as const, icon: Heading2, label: "Subtítulo" },
-  { type: "image" as const, icon: ImageIcon, label: "Imagem" },
-  { type: "quote" as const, icon: Quote, label: "Citação" },
-  { type: "list" as const, icon: List, label: "Lista" },
-  { type: "ordered-list" as const, icon: ListOrdered, label: "Lista Numerada" },
-  { type: "divider" as const, icon: Minus, label: "Divisor" },
-  { type: "code" as const, icon: Code, label: "Código" },
+const BLOCK_CATEGORIES = [
+  {
+    name: "Texto",
+    blocks: [
+      { type: "paragraph" as const, icon: Type, label: "Parágrafo", description: "Texto simples" },
+      { type: "heading" as const, icon: Heading1, label: "Título 1", description: "Título principal" },
+      { type: "heading2" as const, icon: Heading2, label: "Título 2", description: "Título de seção" },
+      { type: "heading3" as const, icon: Heading3, label: "Título 3", description: "Subtítulo" },
+      { type: "quote" as const, icon: Quote, label: "Citação", description: "Destaque de texto" },
+      { type: "code" as const, icon: Code, label: "Código", description: "Bloco de código" },
+    ],
+  },
+  {
+    name: "Mídia",
+    blocks: [
+      { type: "image" as const, icon: ImageIcon, label: "Imagem", description: "Upload de imagem" },
+    ],
+  },
+  {
+    name: "Layout",
+    blocks: [
+      { type: "list" as const, icon: List, label: "Lista", description: "Lista com marcadores" },
+      { type: "ordered-list" as const, icon: ListOrdered, label: "Lista Numerada", description: "Lista ordenada" },
+      { type: "divider" as const, icon: Minus, label: "Divisor", description: "Linha horizontal" },
+      { type: "spacer" as const, icon: AlignLeft, label: "Espaçador", description: "Espaço em branco" },
+    ],
+  },
 ];
 
 function generateId() {
   return Math.random().toString(36).substring(2, 10);
 }
 
+function BlockTypeIcon({ type }: { type: Block["type"] }) {
+  const icons: Record<string, any> = {
+    paragraph: Type,
+    heading: Heading1,
+    heading2: Heading2,
+    heading3: Heading3,
+    image: ImageIcon,
+    quote: Quote,
+    list: List,
+    "ordered-list": ListOrdered,
+    divider: Minus,
+    code: Code,
+    spacer: AlignLeft,
+  };
+  const Icon = icons[type] || Type;
+  return <Icon className="h-4 w-4" />;
+}
+
+const BlockInserter: React.FC<{
+  onSelect: (type: Block["type"]) => void;
+  trigger?: React.ReactNode;
+}> = ({ onSelect, trigger }) => {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filteredCategories = BLOCK_CATEGORIES.map((cat) => ({
+    ...cat,
+    blocks: cat.blocks.filter(
+      (b) =>
+        b.label.toLowerCase().includes(search.toLowerCase()) ||
+        b.description.toLowerCase().includes(search.toLowerCase())
+    ),
+  })).filter((cat) => cat.blocks.length > 0);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        {trigger || (
+          <button
+            type="button"
+            className="w-6 h-6 rounded-full bg-accent text-accent-foreground flex items-center justify-center hover:scale-110 transition-transform shadow-md"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        )}
+      </PopoverTrigger>
+      <PopoverContent className="w-72 p-0" align="start">
+        <div className="p-2 border-b border-border">
+          <Input
+            placeholder="Pesquisar blocos..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-8 text-sm"
+            autoFocus
+          />
+        </div>
+        <div className="max-h-80 overflow-y-auto p-2">
+          {filteredCategories.map((category) => (
+            <div key={category.name} className="mb-3">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-2 mb-1">
+                {category.name}
+              </p>
+              <div className="space-y-0.5">
+                {category.blocks.map((block) => (
+                  <button
+                    key={block.type}
+                    type="button"
+                    onClick={() => {
+                      onSelect(block.type);
+                      setOpen(false);
+                      setSearch("");
+                    }}
+                    className="w-full flex items-center gap-3 px-2 py-2 rounded-md hover:bg-muted transition-colors text-left"
+                  >
+                    <div className="w-8 h-8 rounded bg-accent/10 flex items-center justify-center text-accent flex-shrink-0">
+                      <block.icon className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-foreground">{block.label}</p>
+                      <p className="text-xs text-muted-foreground truncate">{block.description}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+          {filteredCategories.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-4">Nenhum bloco encontrado</p>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
-  const [showToolbar, setShowToolbar] = useState<number | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const addBlock = (type: Block["type"], afterIndex: number) => {
-    const newBlock: Block = {
-      id: generateId(),
-      type,
-      content: "",
-    };
+    const newBlock: Block = { id: generateId(), type, content: "" };
     const updated = [...blocks];
     updated.splice(afterIndex + 1, 0, newBlock);
     onChange(updated);
-    setShowToolbar(null);
+    setTimeout(() => setFocusedIndex(afterIndex + 1), 50);
   };
 
   const updateBlock = (index: number, updates: Partial<Block>) => {
-    const updated = blocks.map((b, i) => (i === index ? { ...b, ...updates } : b));
-    onChange(updated);
+    onChange(blocks.map((b, i) => (i === index ? { ...b, ...updates } : b)));
   };
 
   const removeBlock = (index: number) => {
     if (blocks.length <= 1) return;
     onChange(blocks.filter((_, i) => i !== index));
-  };
-
-  const moveBlock = (index: number, direction: -1 | 1) => {
-    const newIndex = index + direction;
-    if (newIndex < 0 || newIndex >= blocks.length) return;
-    const updated = [...blocks];
-    [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
-    onChange(updated);
+    setFocusedIndex(null);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === "Enter" && !e.shiftKey && blocks[index].type === "paragraph") {
+    const block = blocks[index];
+    if (e.key === "Enter" && !e.shiftKey && block.type === "paragraph") {
       e.preventDefault();
       addBlock("paragraph", index);
     }
-    if (e.key === "Backspace" && blocks[index].content === "" && blocks.length > 1) {
+    if (e.key === "Backspace" && block.content === "" && blocks.length > 1) {
       e.preventDefault();
       removeBlock(index);
     }
+    if (e.key === "/" && block.content === "") {
+      // Slash command - could show inserter
+    }
+  };
+
+  const autoResize = (el: HTMLTextAreaElement) => {
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
   };
 
   return (
-    <div className="border border-border rounded-lg bg-card overflow-hidden">
-      {/* Top toolbar */}
-      <div className="flex items-center gap-1 p-2 border-b border-border bg-muted/50 flex-wrap">
-        {BLOCK_TYPES.map(({ type, icon: Icon, label }) => (
-          <Button
-            key={type}
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-8 px-2 text-xs gap-1"
-            onClick={() => addBlock(type, blocks.length - 1)}
-            title={label}
-          >
-            <Icon className="h-3.5 w-3.5" />
-            <span className="hidden md:inline">{label}</span>
-          </Button>
-        ))}
-      </div>
-
-      {/* Blocks */}
-      <div className="p-4 space-y-1 min-h-[300px]">
-        {blocks.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            <p className="mb-3">Clique nos botões acima para adicionar blocos de conteúdo</p>
-            <Button variant="outline" size="sm" onClick={() => addBlock("paragraph", -1)}>
-              <Plus className="h-4 w-4 mr-1" /> Adicionar Parágrafo
-            </Button>
+    <div className="min-h-[500px] bg-background">
+      {/* Empty state */}
+      {blocks.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+            <Type className="h-8 w-8 text-muted-foreground" />
           </div>
-        )}
-
-        {blocks.map((block, index) => (
-          <div
-            key={block.id}
-            className="group relative flex gap-1 items-start"
-          >
-            {/* Side controls */}
-            <div className="flex flex-col items-center gap-0.5 pt-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity flex-shrink-0">
-              <button
-                type="button"
-                onClick={() => moveBlock(index, -1)}
-                className="p-0.5 rounded hover:bg-muted text-muted-foreground disabled:opacity-30"
-                disabled={index === 0}
-              >
-                <ChevronUp className="h-3.5 w-3.5" />
-              </button>
-              <GripVertical className="h-3.5 w-3.5 text-muted-foreground/50" />
-              <button
-                type="button"
-                onClick={() => moveBlock(index, 1)}
-                className="p-0.5 rounded hover:bg-muted text-muted-foreground disabled:opacity-30"
-                disabled={index === blocks.length - 1}
-              >
-                <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Block content */}
-            <div className="flex-1 min-w-0">
-              {block.type === "paragraph" && (
-                <Textarea
-                  value={block.content}
-                  onChange={(e) => updateBlock(index, { content: e.target.value })}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  placeholder="Escreva aqui..."
-                  className="border-none shadow-none resize-none bg-transparent text-base focus-visible:ring-0 min-h-[40px] p-2"
-                  rows={1}
-                  style={{ height: "auto" }}
-                  onInput={(e) => {
-                    const t = e.target as HTMLTextAreaElement;
-                    t.style.height = "auto";
-                    t.style.height = t.scrollHeight + "px";
-                  }}
-                />
-              )}
-
-              {block.type === "heading" && (
-                <Input
-                  value={block.content}
-                  onChange={(e) => updateBlock(index, { content: e.target.value })}
-                  placeholder="Título da seção"
-                  className="border-none shadow-none bg-transparent text-2xl font-heading font-bold focus-visible:ring-0 p-2 h-auto"
-                />
-              )}
-
-              {block.type === "subheading" && (
-                <Input
-                  value={block.content}
-                  onChange={(e) => updateBlock(index, { content: e.target.value })}
-                  placeholder="Subtítulo"
-                  className="border-none shadow-none bg-transparent text-xl font-heading font-semibold focus-visible:ring-0 p-2 h-auto"
-                />
-              )}
-
-              {block.type === "image" && (
-                <div className="p-2 space-y-2">
-                  <ImageUpload
-                    value={block.imageUrl || ""}
-                    onChange={(url) => updateBlock(index, { imageUrl: url })}
-                    folder="blog"
-                    aspectRatio={16 / 9}
-                    recommendedSize="1200x675"
-                  />
-                  <Input
-                    value={block.imageCaption || ""}
-                    onChange={(e) => updateBlock(index, { imageCaption: e.target.value })}
-                    placeholder="Legenda da imagem (opcional)"
-                    className="text-sm text-center border-dashed"
-                  />
-                </div>
-              )}
-
-              {block.type === "quote" && (
-                <div className="border-l-4 border-accent pl-4 py-1">
-                  <Textarea
-                    value={block.content}
-                    onChange={(e) => updateBlock(index, { content: e.target.value })}
-                    placeholder="Escreva a citação..."
-                    className="border-none shadow-none resize-none bg-transparent text-base italic focus-visible:ring-0 min-h-[40px] p-1"
-                    rows={1}
-                    onInput={(e) => {
-                      const t = e.target as HTMLTextAreaElement;
-                      t.style.height = "auto";
-                      t.style.height = t.scrollHeight + "px";
-                    }}
-                  />
-                </div>
-              )}
-
-              {(block.type === "list" || block.type === "ordered-list") && (
-                <Textarea
-                  value={block.content}
-                  onChange={(e) => updateBlock(index, { content: e.target.value })}
-                  placeholder="Um item por linha..."
-                  className="border-none shadow-none resize-none bg-transparent text-base focus-visible:ring-0 min-h-[60px] p-2"
-                  rows={3}
-                  onInput={(e) => {
-                    const t = e.target as HTMLTextAreaElement;
-                    t.style.height = "auto";
-                    t.style.height = t.scrollHeight + "px";
-                  }}
-                />
-              )}
-
-              {block.type === "divider" && (
-                <div className="py-4 px-2">
-                  <hr className="border-border" />
-                </div>
-              )}
-
-              {block.type === "code" && (
-                <Textarea
-                  value={block.content}
-                  onChange={(e) => updateBlock(index, { content: e.target.value })}
-                  placeholder="Código..."
-                  className="border-none shadow-none resize-none bg-muted rounded-md font-mono text-sm focus-visible:ring-0 min-h-[60px] p-3"
-                  rows={3}
-                  onInput={(e) => {
-                    const t = e.target as HTMLTextAreaElement;
-                    t.style.height = "auto";
-                    t.style.height = t.scrollHeight + "px";
-                  }}
-                />
-              )}
-            </div>
-
-            {/* Delete button */}
-            <button
-              type="button"
-              onClick={() => removeBlock(index)}
-              className="p-1.5 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity flex-shrink-0 mt-2"
-              title="Remover bloco"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        ))}
-
-        {/* Add block button at bottom */}
-        {blocks.length > 0 && (
-          <div className="flex justify-center pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs gap-1 border-dashed"
-              onClick={() => setShowToolbar(showToolbar === -1 ? null : -1)}
-            >
-              <Plus className="h-3.5 w-3.5" /> Adicionar bloco
-            </Button>
-          </div>
-        )}
-
-        {showToolbar === -1 && (
-          <div className="flex flex-wrap gap-1 justify-center p-2 bg-muted/50 rounded-lg">
-            {BLOCK_TYPES.map(({ type, icon: Icon, label }) => (
-              <Button
-                key={type}
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-8 px-2 text-xs gap-1"
-                onClick={() => addBlock(type, blocks.length - 1)}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                {label}
+          <p className="text-muted-foreground mb-4">Comece a escrever seu post</p>
+          <BlockInserter
+            onSelect={(type) => addBlock(type, -1)}
+            trigger={
+              <Button variant="outline" size="sm">
+                <Plus className="h-4 w-4 mr-2" /> Adicionar bloco
               </Button>
-            ))}
-          </div>
-        )}
-      </div>
+            }
+          />
+        </div>
+      )}
+
+      {/* Blocks with drag and drop */}
+      <Reorder.Group
+        axis="y"
+        values={blocks}
+        onReorder={onChange}
+        className="space-y-0"
+      >
+        <AnimatePresence>
+          {blocks.map((block, index) => (
+            <Reorder.Item
+              key={block.id}
+              value={block}
+              className="relative"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              <div className="relative group">
+                {/* Block inserter line (appears between blocks on hover) */}
+                {hoveredIndex === index && index > 0 && (
+                  <div className="absolute -top-3 left-0 right-0 flex items-center justify-center z-10">
+                    <div className="h-0.5 bg-accent/30 flex-1" />
+                    <BlockInserter onSelect={(type) => addBlock(type, index - 1)} />
+                    <div className="h-0.5 bg-accent/30 flex-1" />
+                  </div>
+                )}
+
+                {/* Block toolbar */}
+                <div
+                  className={`absolute -left-12 top-0 flex items-center gap-1 transition-opacity ${
+                    hoveredIndex === index || focusedIndex === index ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  {/* Drag handle */}
+                  <div className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-muted">
+                    <GripVertical className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  {/* Block type indicator */}
+                  <div className="p-1 rounded hover:bg-muted text-muted-foreground">
+                    <BlockTypeIcon type={block.type} />
+                  </div>
+                </div>
+
+                {/* Delete button */}
+                <button
+                  type="button"
+                  onClick={() => removeBlock(index)}
+                  className={`absolute -right-10 top-1 p-1.5 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all ${
+                    hoveredIndex === index || focusedIndex === index ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+
+                {/* Block content */}
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className={`relative rounded-lg transition-all ${
+                    focusedIndex === index ? "bg-muted/30 ring-2 ring-accent/20" : ""
+                  }`}
+                >
+                  {/* Paragraph */}
+                  {block.type === "paragraph" && (
+                    <Textarea
+                      value={block.content}
+                      onChange={(e) => updateBlock(index, { content: e.target.value })}
+                      onFocus={() => setFocusedIndex(index)}
+                      onBlur={() => setFocusedIndex(null)}
+                      onKeyDown={(e) => handleKeyDown(e, index)}
+                      placeholder="Escreva algo, ou pressione / para comandos..."
+                      className="w-full border-none shadow-none resize-none bg-transparent text-base leading-7 focus-visible:ring-0 min-h-[44px] px-4 py-3"
+                      onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
+                    />
+                  )}
+
+                  {/* Heading 1 */}
+                  {block.type === "heading" && (
+                    <Input
+                      value={block.content}
+                      onChange={(e) => updateBlock(index, { content: e.target.value })}
+                      onFocus={() => setFocusedIndex(index)}
+                      onBlur={() => setFocusedIndex(null)}
+                      placeholder="Título"
+                      className="w-full border-none shadow-none bg-transparent text-3xl font-heading font-bold focus-visible:ring-0 px-4 py-3 h-auto"
+                    />
+                  )}
+
+                  {/* Heading 2 */}
+                  {block.type === "heading2" && (
+                    <Input
+                      value={block.content}
+                      onChange={(e) => updateBlock(index, { content: e.target.value })}
+                      onFocus={() => setFocusedIndex(index)}
+                      onBlur={() => setFocusedIndex(null)}
+                      placeholder="Título de seção"
+                      className="w-full border-none shadow-none bg-transparent text-2xl font-heading font-semibold focus-visible:ring-0 px-4 py-2 h-auto"
+                    />
+                  )}
+
+                  {/* Heading 3 */}
+                  {block.type === "heading3" && (
+                    <Input
+                      value={block.content}
+                      onChange={(e) => updateBlock(index, { content: e.target.value })}
+                      onFocus={() => setFocusedIndex(index)}
+                      onBlur={() => setFocusedIndex(null)}
+                      placeholder="Subtítulo"
+                      className="w-full border-none shadow-none bg-transparent text-xl font-heading font-medium focus-visible:ring-0 px-4 py-2 h-auto"
+                    />
+                  )}
+
+                  {/* Image */}
+                  {block.type === "image" && (
+                    <div className="px-4 py-4">
+                      <ImageUpload
+                        value={block.imageUrl || ""}
+                        onChange={(url) => updateBlock(index, { imageUrl: url })}
+                        folder="blog"
+                        aspectRatio={16 / 9}
+                        recommendedSize="1200x675"
+                      />
+                      {block.imageUrl && (
+                        <Input
+                          value={block.imageCaption || ""}
+                          onChange={(e) => updateBlock(index, { imageCaption: e.target.value })}
+                          placeholder="Adicionar legenda..."
+                          className="mt-2 text-sm text-center border-dashed bg-transparent"
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {/* Quote */}
+                  {block.type === "quote" && (
+                    <div className="px-4 py-3">
+                      <div className="border-l-4 border-accent pl-4">
+                        <Textarea
+                          value={block.content}
+                          onChange={(e) => updateBlock(index, { content: e.target.value })}
+                          onFocus={() => setFocusedIndex(index)}
+                          onBlur={() => setFocusedIndex(null)}
+                          placeholder="Escreva uma citação..."
+                          className="w-full border-none shadow-none resize-none bg-transparent text-lg italic focus-visible:ring-0 min-h-[44px] p-0"
+                          onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* List */}
+                  {(block.type === "list" || block.type === "ordered-list") && (
+                    <div className="px-4 py-3">
+                      <Textarea
+                        value={block.content}
+                        onChange={(e) => updateBlock(index, { content: e.target.value })}
+                        onFocus={() => setFocusedIndex(index)}
+                        onBlur={() => setFocusedIndex(null)}
+                        placeholder="Um item por linha..."
+                        className="w-full border-none shadow-none resize-none bg-transparent text-base leading-7 focus-visible:ring-0 min-h-[80px] p-0"
+                        onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {block.type === "list" ? "• " : "1. "}Cada linha será um item da lista
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Divider */}
+                  {block.type === "divider" && (
+                    <div className="px-4 py-6">
+                      <hr className="border-border" />
+                    </div>
+                  )}
+
+                  {/* Code */}
+                  {block.type === "code" && (
+                    <div className="px-4 py-3">
+                      <Textarea
+                        value={block.content}
+                        onChange={(e) => updateBlock(index, { content: e.target.value })}
+                        onFocus={() => setFocusedIndex(index)}
+                        onBlur={() => setFocusedIndex(null)}
+                        placeholder="// Escreva seu código aqui..."
+                        className="w-full border-none shadow-none resize-none bg-muted/50 rounded-lg font-mono text-sm focus-visible:ring-0 min-h-[100px] p-4"
+                        onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
+                      />
+                    </div>
+                  )}
+
+                  {/* Spacer */}
+                  {block.type === "spacer" && (
+                    <div className="px-4 py-8 flex items-center justify-center">
+                      <div className="h-8 border-2 border-dashed border-muted rounded w-full flex items-center justify-center">
+                        <span className="text-xs text-muted-foreground">Espaçador</span>
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+
+                {/* Bottom inserter (last block) */}
+                {index === blocks.length - 1 && (
+                  <div className="flex items-center justify-center py-6">
+                    <BlockInserter
+                      onSelect={(type) => addBlock(type, index)}
+                      trigger={
+                        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-2">
+                          <Plus className="h-4 w-4" /> Adicionar bloco
+                        </Button>
+                      }
+                    />
+                  </div>
+                )}
+              </div>
+            </Reorder.Item>
+          ))}
+        </AnimatePresence>
+      </Reorder.Group>
     </div>
   );
 };
 
-/** Serialize blocks to JSON string for storage */
 export function serializeBlocks(blocks: Block[]): string {
   return JSON.stringify(blocks);
 }
 
-/** Deserialize JSON string to blocks, with fallback for plain text */
 export function deserializeBlocks(content: string): Block[] {
   if (!content) return [{ id: generateId(), type: "paragraph", content: "" }];
 
   try {
     const parsed = JSON.parse(content);
     if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].type) {
-      return parsed;
+      // Migration: rename old types
+      return parsed.map((b: any) => ({
+        ...b,
+        type: b.type === "subheading" ? "heading2" : b.type,
+      }));
     }
-  } catch {
-    // Fallback: convert plain text to paragraph blocks
-  }
+  } catch {}
 
-  // Convert plain text content into blocks
   const paragraphs = content.split(/\n\s*\n/).filter(Boolean);
   if (paragraphs.length === 0) return [{ id: generateId(), type: "paragraph", content: "" }];
 
-  return paragraphs.map((p) => ({
-    id: generateId(),
-    type: "paragraph" as const,
-    content: p.trim(),
-  }));
+  return paragraphs.map((p) => ({ id: generateId(), type: "paragraph" as const, content: p.trim() }));
 }
 
 export default BlockEditor;
