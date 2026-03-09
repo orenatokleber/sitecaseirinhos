@@ -55,6 +55,7 @@ const AdminBlog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>(defaultForm);
+  const [blocks, setBlocks] = useState<Block[]>(deserializeBlocks(""));
 
   const handleCreate = () => {
     setEditingId(null);
