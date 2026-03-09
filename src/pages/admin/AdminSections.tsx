@@ -91,7 +91,7 @@ const AdminSections = () => {
               cta_text: s.cta_text || "",
               cta_link: s.cta_link || "",
             };
-            colors[s.section_key] = s.metadata?.colors || {};
+            colors[s.section_key] = (s.metadata as any)?.colors || {};
           }
         });
       if (Object.keys(customs).length > 0) {
