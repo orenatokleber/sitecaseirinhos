@@ -221,6 +221,14 @@ const BlogEditor = () => {
               Publicar
             </Button>
           )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowSidebar(!showSidebar)}
+            title={showSidebar ? "Ocultar painel" : "Mostrar painel"}
+          >
+            {showSidebar ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
+          </Button>
         </div>
       </header>
 
