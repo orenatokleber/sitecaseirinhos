@@ -43,6 +43,11 @@ const Index = () => {
   // Don't show any image until data is loaded to prevent flash of old cached image
   const heroImageUrl = sectionsLoading ? null : (hero?.image_url || heroCakeFallback);
 
+  // Section colors from metadata
+  const heroColors = hero?.metadata?.colors || {};
+  const aboutColors = aboutPreview?.metadata?.colors || {};
+  const ctaColors = cta?.metadata?.colors || {};
+
   return (
     <main>
       {/* Hero */}
@@ -58,23 +63,36 @@ const Index = () => {
           ) : (
             <div className="w-full h-full bg-chocolate" />
           )}
-          <div className="absolute inset-0 bg-chocolate/60" />
-          <div className="absolute inset-0 bg-chocolate/60" />
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: heroColors.overlay_color ? `${heroColors.overlay_color}99` : undefined }}
+          >
+            {!heroColors.overlay_color && <div className="w-full h-full bg-chocolate/60" />}
+          </div>
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: heroColors.overlay_color ? `${heroColors.overlay_color}80` : undefined }}
+          >
+            {!heroColors.overlay_color && <div className="w-full h-full bg-chocolate/60" />}
+          </div>
         </div>
         <div className="relative z-10 text-center px-4 max-w-3xl">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="font-script text-4xl md:text-6xl text-gold mb-4"
+            className="font-script text-4xl md:text-6xl mb-4"
+            style={{ color: heroColors.title_color || undefined }}
           >
-            Caseirinhos
+            {!heroColors.title_color && <span className="text-gold">Caseirinhos</span>}
+            {heroColors.title_color && "Caseirinhos"}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-heading text-4xl md:text-6xl font-bold text-primary-foreground mb-6"
+            className={`font-heading text-4xl md:text-6xl font-bold mb-6 ${!heroColors.text_color ? 'text-primary-foreground' : ''}`}
+            style={{ color: heroColors.text_color || undefined }}
           >
             {hero?.title || "Mais do que doces, criamos memórias."}
           </motion.h1>
@@ -82,7 +100,8 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-primary-foreground/80 text-lg md:text-xl mb-8 font-body"
+            className={`text-lg md:text-xl mb-8 font-body ${!heroColors.text_color ? 'text-primary-foreground/80' : ''}`}
+            style={{ color: heroColors.text_color ? `${heroColors.text_color}cc` : undefined }}
           >
             {hero?.subtitle || "Confeitaria artesanal com amor em cada detalhe"}
           </motion.p>
@@ -94,15 +113,30 @@ const Index = () => {
           >
             <Link
               to={hero?.cta_link || "/cardapio"}
-              className="inline-flex items-center justify-center px-8 py-3 rounded-md bg-accent text-accent-foreground font-body text-sm uppercase tracking-wider hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center px-8 py-3 rounded-md font-body text-sm uppercase tracking-wider hover:opacity-90 transition-opacity"
+              style={{
+                backgroundColor: heroColors.accent_color || undefined,
+                color: heroColors.accent_color ? '#ffffff' : undefined,
+              }}
             >
-              {hero?.cta_text || "Ver Cardápio"}
+              {!heroColors.accent_color && (
+                <span className="bg-accent text-accent-foreground px-8 py-3 rounded-md -m-[12px]">
+                  {hero?.cta_text || "Ver Cardápio"}
+                </span>
+              )}
+              {heroColors.accent_color && (hero?.cta_text || "Ver Cardápio")}
             </Link>
             <a
               href={`https://wa.me/${whatsapp}?text=Olá! Gostaria de fazer um pedido.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-8 py-3 rounded-md border border-primary-foreground/40 text-primary-foreground font-body text-sm uppercase tracking-wider hover:bg-primary-foreground/10 transition-colors"
+              className={`inline-flex items-center justify-center px-8 py-3 rounded-md border font-body text-sm uppercase tracking-wider transition-colors ${
+                !heroColors.text_color ? 'border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10' : ''
+              }`}
+              style={{
+                borderColor: heroColors.text_color ? `${heroColors.text_color}66` : undefined,
+                color: heroColors.text_color || undefined,
+              }}
             >
               Fazer Pedido
             </a>
@@ -111,15 +145,24 @@ const Index = () => {
       </section>
 
       {/* About preview */}
-      <section className="py-20 md:py-28">
+      <section
+        className={`py-20 md:py-28 ${!aboutColors.bg_color ? '' : ''}`}
+        style={{ backgroundColor: aboutColors.bg_color || undefined }}
+      >
         <div className="container mx-auto px-4 text-center max-w-2xl">
           <SectionTitle script="Sobre nós" title={aboutPreview?.title || "Uma História de Amor pela Confeitaria"} />
-          <p className="text-muted-foreground leading-relaxed mb-8">
+          <p
+            className={`leading-relaxed mb-8 ${!aboutColors.text_color ? 'text-muted-foreground' : ''}`}
+            style={{ color: aboutColors.text_color || undefined }}
+          >
             {aboutPreview?.content || "A Caseirinhos nasceu do desejo de transformar momentos simples em memórias doces e inesquecíveis."}
           </p>
           <Link
             to={aboutPreview?.cta_link || "/nossa-historia"}
-            className="inline-flex items-center text-accent text-sm uppercase tracking-wider font-body hover:underline"
+            className={`inline-flex items-center text-sm uppercase tracking-wider font-body hover:underline ${
+              !aboutColors.accent_color ? 'text-accent' : ''
+            }`}
+            style={{ color: aboutColors.accent_color || undefined }}
           >
             {aboutPreview?.cta_text || "Conheça nossa história"} →
           </Link>
@@ -194,19 +237,39 @@ const Index = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-primary text-primary-foreground text-center">
+      <section
+        className={`py-20 text-center ${!ctaColors.bg_color ? 'bg-primary text-primary-foreground' : ''}`}
+        style={{
+          backgroundColor: ctaColors.bg_color || undefined,
+          color: ctaColors.text_color || undefined,
+        }}
+      >
         <div className="container mx-auto px-4">
-          <h2 className="font-script text-3xl md:text-4xl text-gold mb-4">{cta?.title || "Pronto para adoçar seu dia?"}</h2>
-          <p className="text-primary-foreground/70 mb-8 max-w-md mx-auto">
+          <h2
+            className={`font-script text-3xl md:text-4xl mb-4 ${!ctaColors.title_color ? 'text-gold' : ''}`}
+            style={{ color: ctaColors.title_color || undefined }}
+          >
+            {cta?.title || "Pronto para adoçar seu dia?"}
+          </h2>
+          <p
+            className={`mb-8 max-w-md mx-auto ${!ctaColors.text_color ? 'text-primary-foreground/70' : ''}`}
+            style={{ color: ctaColors.text_color ? `${ctaColors.text_color}b3` : undefined }}
+          >
             {cta?.content || "Entre em contato e faça sua encomenda. Transformamos seus momentos em memórias doces."}
           </p>
           <a
             href={`https://wa.me/${whatsapp}?text=Olá! Gostaria de fazer um pedido.`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-8 py-3 rounded-md bg-accent text-accent-foreground font-body text-sm uppercase tracking-wider hover:opacity-90 transition-opacity"
+            className={`inline-flex items-center justify-center px-8 py-3 rounded-md font-body text-sm uppercase tracking-wider hover:opacity-90 transition-opacity ${
+              !ctaColors.accent_color ? 'bg-accent text-accent-foreground' : ''
+            }`}
+            style={{
+              backgroundColor: ctaColors.accent_color || undefined,
+              color: ctaColors.accent_color ? '#ffffff' : undefined,
+            }}
           >
-            Fazer Pedido pelo WhatsApp
+            {cta?.cta_text || "Fazer Pedido pelo WhatsApp"}
           </a>
         </div>
       </section>

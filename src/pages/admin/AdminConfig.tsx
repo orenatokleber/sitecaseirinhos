@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import ColorPicker from "@/components/admin/ColorPicker";
 import { Loader2, Save } from "lucide-react";
 
 const AdminConfig = () => {
@@ -23,12 +24,23 @@ const AdminConfig = () => {
     delivery: ""
   });
 
+  const [themeColors, setThemeColors] = useState({
+    primary: "",
+    accent: "",
+    gold: "",
+    background: "",
+    foreground: "",
+  });
+
   useEffect(() => {
     if (settings?.contact) {
       setContact(settings.contact);
     }
     if (settings?.hours) {
       setHours(settings.hours);
+    }
+    if (settings?.theme_colors) {
+      setThemeColors(prev => ({ ...prev, ...settings.theme_colors }));
     }
   }, [settings]);
 
@@ -38,6 +50,10 @@ const AdminConfig = () => {
 
   const handleSaveHours = () => {
     updateSetting.mutate({ key: 'hours', value: hours });
+  };
+
+  const handleSaveThemeColors = () => {
+    updateSetting.mutate({ key: 'theme_colors', value: themeColors });
   };
 
   if (isLoading) {
@@ -52,10 +68,60 @@ const AdminConfig = () => {
     <div>
       <div className="mb-8">
         <h1 className="font-heading text-3xl font-bold text-foreground">Configurações</h1>
-        <p className="text-muted-foreground">Atualize informações de contato e horários</p>
+        <p className="text-muted-foreground">Atualize informações de contato, horários e cores do tema</p>
       </div>
 
       <div className="grid gap-6 max-w-2xl">
+        {/* Theme Colors */}
+        <Card>
+          <CardHeader>
+            <CardTitle>🎨 Cores do Tema</CardTitle>
+            <CardDescription>Personalize as cores globais do site. Deixe em branco para usar as cores padrão.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ColorPicker
+                label="Cor Principal"
+                value={themeColors.primary}
+                onChange={(c) => setThemeColors({ ...themeColors, primary: c })}
+                description="Usada em botões, fundos de destaque"
+              />
+              <ColorPicker
+                label="Cor de Destaque"
+                value={themeColors.accent}
+                onChange={(c) => setThemeColors({ ...themeColors, accent: c })}
+                description="Botões CTA, links de ação"
+              />
+              <ColorPicker
+                label="Cor Dourada"
+                value={themeColors.gold}
+                onChange={(c) => setThemeColors({ ...themeColors, gold: c })}
+                description="Títulos em script, estrelas"
+              />
+              <ColorPicker
+                label="Cor de Fundo"
+                value={themeColors.background}
+                onChange={(c) => setThemeColors({ ...themeColors, background: c })}
+                description="Fundo geral do site"
+              />
+              <ColorPicker
+                label="Cor do Texto"
+                value={themeColors.foreground}
+                onChange={(c) => setThemeColors({ ...themeColors, foreground: c })}
+                description="Cor padrão dos textos"
+              />
+            </div>
+            <Button onClick={handleSaveThemeColors} disabled={updateSetting.isPending}>
+              {updateSetting.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="mr-2 h-4 w-4" />
+              )}
+              Salvar Cores do Tema
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Contact Info */}
         <Card>
           <CardHeader>
