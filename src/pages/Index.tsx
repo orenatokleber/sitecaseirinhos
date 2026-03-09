@@ -31,6 +31,7 @@ const Index = () => {
   const { data: dbProducts } = useProducts();
   const { data: dbTestimonials } = useTestimonials();
   const { data: settings } = useSiteSettings();
+  const { data: sectionsList } = useSiteSectionsList();
 
   const hero = sections?.hero;
   const aboutPreview = sections?.about_preview;
