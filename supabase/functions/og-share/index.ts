@@ -49,11 +49,7 @@ Deno.serve(async (req) => {
   const description = post.excerpt || "Confira este artigo no blog Caseirinhos";
   const siteName = "Caseirinhos";
 
-  // Check user agent to determine if it's a crawler
-  const userAgent = (req.headers.get("user-agent") || "").toLowerCase();
-  const isCrawler = /facebookexternalhit|twitterbot|whatsapp|linkedinbot|telegrambot|slackbot|discordbot|googlebot/i.test(userAgent);
-
-  // Always serve static HTML with OG tags (works for all crawlers including WhatsApp)
+  // Serve static HTML with OG tags for all visitors (crawlers read meta, browsers get redirected)
   const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
