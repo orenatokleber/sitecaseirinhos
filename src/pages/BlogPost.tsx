@@ -246,7 +246,7 @@ function renderBlocks(blocks: Block[]) {
         return (
           <p
             key={block.id}
-            className="mb-6 leading-[1.9] text-foreground/80 text-lg font-body"
+            className="mb-6 leading-relaxed text-foreground/85 text-[1.125rem] font-body"
             dangerouslySetInnerHTML={{ __html: renderInlineFormatting(block.content) }}
           />
         );
