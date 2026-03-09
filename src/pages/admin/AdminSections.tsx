@@ -130,7 +130,7 @@ const AdminSections = () => {
       sectionKey,
       updates: {
         ...edit,
-        metadata: { ...(existing?.metadata || {}), colors }
+        metadata: { ...((existing?.metadata as Record<string, any>) || {}), colors }
       }
     });
   };
