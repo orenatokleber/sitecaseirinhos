@@ -13,6 +13,7 @@ interface ImageUploadProps {
   folder?: string;
   className?: string;
   aspectRatio?: number;
+  recommendedSize?: string;
 }
 
 function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: number) {
