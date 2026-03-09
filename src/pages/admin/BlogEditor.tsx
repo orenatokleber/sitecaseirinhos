@@ -7,9 +7,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Loader2, Eye, Settings2, FileText, Clock, Save, ExternalLink } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Loader2, Eye, Settings2, FileText, Clock, Save, X, Tag, MessageSquare } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
-import BlockEditor, { Block, serializeBlocks, deserializeBlocks } from "@/components/admin/BlockEditor";
+import BlockEditor, { Block, serializeBlocks, deserializeBlocks, calculateReadingTime } from "@/components/admin/BlockEditor";
 import { useBlogPosts, useCreateBlogPost, useUpdateBlogPost } from "@/hooks/useBlog";
 import { toast } from "sonner";
 
@@ -22,6 +23,16 @@ function generateSlug(title: string) {
     .replace(/(^-|-$)/g, "");
 }
 
+const CATEGORY_PRESETS = [
+  "Receitas",
+  "Dicas",
+  "Novidades",
+  "Confeitaria",
+  "Decoração",
+  "Ingredientes",
+  "Eventos",
+];
+
 interface FormData {
   title: string;
   slug: string;
@@ -31,6 +42,8 @@ interface FormData {
   author_name: string;
   reading_time_min: number;
   is_published: boolean;
+  tags: string[];
+  allow_comments: boolean;
 }
 
 const defaultForm: FormData = {
@@ -40,8 +53,10 @@ const defaultForm: FormData = {
   cover_image: "",
   category: "",
   author_name: "Caseirinhos",
-  reading_time_min: 3,
+  reading_time_min: 1,
   is_published: false,
+  tags: [],
+  allow_comments: true,
 };
 
 const BlogEditor = () => {
@@ -58,11 +73,12 @@ const BlogEditor = () => {
   const [sidebarTab, setSidebarTab] = useState<"post" | "block">("post");
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [tagInput, setTagInput] = useState("");
 
   // Load post data when editing
   useEffect(() => {
     if (isEditing && posts) {
-      const post = posts.find((p) => p.id === id);
+      const post = posts.find((p: any) => p.id === id);
       if (post) {
         setFormData({
           title: post.title || "",
@@ -71,13 +87,21 @@ const BlogEditor = () => {
           cover_image: post.cover_image || "",
           category: post.category || "",
           author_name: post.author_name || "Caseirinhos",
-          reading_time_min: post.reading_time_min || 3,
+          reading_time_min: post.reading_time_min || 1,
           is_published: post.is_published ?? false,
+          tags: post.tags || [],
+          allow_comments: post.allow_comments ?? true,
         });
         setBlocks(deserializeBlocks(post.content || ""));
       }
     }
   }, [id, isEditing, posts]);
+
+  // Auto-calculate reading time when blocks change
+  useEffect(() => {
+    const time = calculateReadingTime(blocks);
+    setFormData((prev) => ({ ...prev, reading_time_min: time }));
+  }, [blocks]);
 
   // Track changes
   useEffect(() => {
@@ -90,6 +114,18 @@ const BlogEditor = () => {
       title,
       slug: !isEditing ? generateSlug(title) : prev.slug,
     }));
+  };
+
+  const addTag = () => {
+    const tag = tagInput.trim();
+    if (tag && !formData.tags.includes(tag)) {
+      setFormData((prev) => ({ ...prev, tags: [...prev.tags, tag] }));
+    }
+    setTagInput("");
+  };
+
+  const removeTag = (tag: string) => {
+    setFormData((prev) => ({ ...prev, tags: prev.tags.filter((t) => t !== tag) }));
   };
 
   const handleSave = async (publish = false) => {
@@ -152,6 +188,10 @@ const BlogEditor = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <span className="hidden md:flex items-center gap-1 text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
+            <Clock className="h-3 w-3" />
+            {formData.reading_time_min} min de leitura
+          </span>
           {formData.is_published && formData.slug && (
             <Button variant="ghost" size="sm" asChild>
               <a href={`/blog/${formData.slug}`} target="_blank" rel="noopener noreferrer">
@@ -189,7 +229,6 @@ const BlogEditor = () => {
         <div className="flex-1 overflow-hidden flex flex-col">
           <ScrollArea className="flex-1">
             <div className="max-w-3xl mx-auto py-8 px-4">
-              {/* Title */}
               <input
                 type="text"
                 value={formData.title}
@@ -197,8 +236,6 @@ const BlogEditor = () => {
                 placeholder="Adicione um título"
                 className="w-full text-4xl font-heading font-bold text-foreground bg-transparent border-none outline-none placeholder:text-muted-foreground/50 mb-6"
               />
-
-              {/* Blocks */}
               <BlockEditor blocks={blocks} onChange={setBlocks} />
             </div>
           </ScrollArea>
@@ -206,7 +243,6 @@ const BlogEditor = () => {
 
         {/* Sidebar */}
         <aside className="w-80 border-l border-border bg-card flex-shrink-0 hidden lg:flex flex-col">
-          {/* Sidebar Tabs */}
           <div className="flex border-b border-border">
             <button
               onClick={() => setSidebarTab("post")}
@@ -231,11 +267,11 @@ const BlogEditor = () => {
           </div>
 
           <ScrollArea className="flex-1">
-            <div className="p-4 space-y-6">
+            <div className="p-4 space-y-5">
               {sidebarTab === "post" && (
                 <>
                   {/* Status */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
                       <Settings2 className="h-4 w-4" /> Status
                     </h3>
@@ -258,8 +294,8 @@ const BlogEditor = () => {
                   <Separator />
 
                   {/* Cover Image */}
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium">Imagem de Capa</Label>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Imagem de Destaque</Label>
                     <ImageUpload
                       value={formData.cover_image}
                       onChange={(url) => setFormData({ ...formData, cover_image: url })}
@@ -279,7 +315,7 @@ const BlogEditor = () => {
                       onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                       placeholder="Breve descrição do post..."
                       rows={3}
-                      className="resize-none"
+                      className="resize-none text-sm"
                     />
                     <p className="text-xs text-muted-foreground">
                       Exibido na listagem e em redes sociais
@@ -288,11 +324,80 @@ const BlogEditor = () => {
 
                   <Separator />
 
+                  {/* Category */}
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Categoria</Label>
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      {CATEGORY_PRESETS.map((cat) => (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, category: cat })}
+                          className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                            formData.category === cat
+                              ? "bg-accent text-accent-foreground border-accent"
+                              : "border-border text-muted-foreground hover:border-accent hover:text-accent"
+                          }`}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                    <Input
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      placeholder="Ou digite uma categoria"
+                      className="h-8 text-sm"
+                    />
+                  </div>
+
+                  <Separator />
+
+                  {/* Tags */}
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium flex items-center gap-1">
+                      <Tag className="h-3.5 w-3.5" /> Tags
+                    </Label>
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      {formData.tags.map((tag) => (
+                        <Badge key={tag} variant="secondary" className="text-xs gap-1 pr-1">
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => removeTag(tag)}
+                            className="hover:text-destructive transition-colors"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex gap-1">
+                      <Input
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            addTag();
+                          }
+                        }}
+                        placeholder="Adicionar tag..."
+                        className="h-8 text-sm"
+                      />
+                      <Button size="sm" variant="outline" className="h-8 px-2" onClick={addTag}>
+                        +
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Separator />
+
                   {/* URL / Slug */}
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">URL do Post</Label>
                     <div className="flex items-center gap-1 text-sm">
-                      <span className="text-muted-foreground">/blog/</span>
+                      <span className="text-muted-foreground text-xs">/blog/</span>
                       <Input
                         value={formData.slug}
                         onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
@@ -304,14 +409,20 @@ const BlogEditor = () => {
 
                   <Separator />
 
-                  {/* Category */}
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Categoria</Label>
-                    <Input
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      placeholder="Ex: Receitas, Dicas"
-                      className="h-9"
+                  {/* Comments */}
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Comentários</p>
+                        <p className="text-xs text-muted-foreground">
+                          {formData.allow_comments ? "Habilitados" : "Desabilitados"}
+                        </p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={formData.allow_comments}
+                      onCheckedChange={(v) => setFormData({ ...formData, allow_comments: v })}
                     />
                   </div>
 
@@ -324,7 +435,7 @@ const BlogEditor = () => {
                       <Input
                         value={formData.author_name}
                         onChange={(e) => setFormData({ ...formData, author_name: e.target.value })}
-                        className="h-9"
+                        className="h-9 text-sm"
                       />
                     </div>
                     <div className="space-y-2">
@@ -336,13 +447,12 @@ const BlogEditor = () => {
                           type="number"
                           min={1}
                           value={formData.reading_time_min}
-                          onChange={(e) =>
-                            setFormData({ ...formData, reading_time_min: parseInt(e.target.value) || 3 })
-                          }
-                          className="h-9"
+                          className="h-9 text-sm"
+                          disabled
                         />
-                        <span className="text-sm text-muted-foreground">min</span>
+                        <span className="text-xs text-muted-foreground">min</span>
                       </div>
+                      <p className="text-xs text-muted-foreground">Calculado automaticamente</p>
                     </div>
                   </div>
                 </>
