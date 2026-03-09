@@ -28,12 +28,16 @@ import AdminConfig from "./pages/admin/AdminConfig";
 import BlogEditor from "./pages/admin/BlogEditor";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import AdminSEO from "./pages/admin/AdminSEO";
+import { HelmetProvider } from "react-helmet-async";
+import { useTrackPageView } from "@/hooks/usePageViews";
 
 const queryClient = new QueryClient();
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/painel-admin');
+  useTrackPageView();
 
   if (isAdminRoute) {
     return <>{children}</>;
@@ -52,6 +56,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => (
+  <HelmetProvider>
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -81,7 +86,8 @@ const App = () => (
                 <Route path="produtos" element={<AdminProducts />} />
                 <Route path="depoimentos" element={<AdminTestimonials />} />
                 <Route path="galeria" element={<AdminGallery />} />
-                <Route path="blog" element={<AdminBlog />} />
+              <Route path="blog" element={<AdminBlog />} />
+                <Route path="seo" element={<AdminSEO />} />
                 <Route path="config" element={<AdminConfig />} />
               </Route>
 
@@ -92,6 +98,7 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;

@@ -1,11 +1,13 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useBlogPost } from "@/hooks/useBlog";
-import { Loader2, ArrowLeft, Clock, User, Calendar, Tag, Share2 } from "lucide-react";
+import { Loader2, ArrowLeft, Clock, User, Calendar, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { Badge } from "@/components/ui/badge";
+import ShareButtons from "@/components/blog/ShareButtons";
+import BlogSEO from "@/components/blog/BlogSEO";
 
 interface Block {
   id: string;
@@ -188,12 +190,19 @@ const BlogPost = () => {
 
   const blocks = parseContent(post.content);
   const tags = post.tags || [];
-
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
-  const shareText = `${post.title} - Caseirinhos`;
+  const currentUrl = typeof window !== "undefined" ? window.location.href : "";
 
   return (
     <main className="pt-24">
+      <BlogSEO
+        title={post.title}
+        description={post.excerpt || undefined}
+        image={post.cover_image || undefined}
+        url={currentUrl}
+        author={post.author_name}
+        publishedAt={post.published_at || undefined}
+        tags={tags}
+      />
       {/* Hero cover - full bleed */}
       {post.cover_image && (
         <div className="w-full h-72 md:h-[28rem] relative overflow-hidden">
@@ -259,15 +268,7 @@ const BlogPost = () => {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-                title="Compartilhar no WhatsApp"
-              >
-                <Share2 className="h-4 w-4" />
-              </a>
+              <ShareButtons url={currentUrl} title={post.title} />
             </div>
           </div>
 

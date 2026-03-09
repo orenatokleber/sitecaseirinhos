@@ -7,6 +7,7 @@ import {
   Settings, 
   Image,
   BookOpen,
+  Search,
   LogOut,
   ExternalLink
 } from "lucide-react";
@@ -20,6 +21,7 @@ const menuItems = [
   { icon: MessageSquare, label: "Depoimentos", path: "/painel-admin/depoimentos" },
   { icon: Image, label: "Galeria", path: "/painel-admin/galeria" },
   { icon: BookOpen, label: "Blog", path: "/painel-admin/blog" },
+  { icon: Search, label: "SEO", path: "/painel-admin/seo" },
   { icon: Settings, label: "Configurações", path: "/painel-admin/config" },
 ];
 
