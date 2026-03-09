@@ -74,6 +74,7 @@ const BlogEditor = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [tagInput, setTagInput] = useState("");
+  const [showSidebar, setShowSidebar] = useState(true);
 
   // Load post data when editing
   useEffect(() => {
