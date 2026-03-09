@@ -1,11 +1,13 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useBlogPost } from "@/hooks/useBlog";
-import { Loader2, ArrowLeft, Clock, User, Calendar, Tag, Share2 } from "lucide-react";
+import { Loader2, ArrowLeft, Clock, User, Calendar, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { Badge } from "@/components/ui/badge";
+import ShareButtons from "@/components/blog/ShareButtons";
+import BlogSEO from "@/components/blog/BlogSEO";
 
 interface Block {
   id: string;
