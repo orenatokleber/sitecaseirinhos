@@ -40,20 +40,24 @@ const Index = () => {
   const displayProducts = dbProducts && dbProducts.length > 0 ? dbProducts : null;
   const displayTestimonials = dbTestimonials && dbTestimonials.length > 0 ? dbTestimonials : null;
 
-  // Only show hero image after data is loaded to prevent flash of old image
-  const heroImageUrl = sectionsLoading ? heroCakeFallback : (hero?.image_url || heroCakeFallback);
+  // Don't show any image until data is loaded to prevent flash of old cached image
+  const heroImageUrl = sectionsLoading ? null : (hero?.image_url || heroCakeFallback);
 
   return (
     <main>
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <img
-            key={heroImageUrl}
-            src={heroImageUrl}
-            alt="Bolo artesanal da Caseirinhos"
-            className="w-full h-full object-cover"
-          />
+          {heroImageUrl ? (
+            <img
+              key={heroImageUrl}
+              src={heroImageUrl}
+              alt="Bolo artesanal da Caseirinhos"
+              className="w-full h-full object-cover animate-fade-in"
+            />
+          ) : (
+            <div className="w-full h-full bg-chocolate" />
+          )}
           <div className="absolute inset-0 bg-chocolate/60" />
           <div className="absolute inset-0 bg-chocolate/60" />
         </div>
