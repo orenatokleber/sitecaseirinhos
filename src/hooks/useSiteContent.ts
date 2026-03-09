@@ -72,6 +72,29 @@ export function useSiteSections() {
   });
 }
 
+// Returns sections as an array (useful for listing custom sections)
+export function useSiteSectionsList() {
+  return useQuery({
+    queryKey: ['site-sections-list'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('site_sections')
+        .select('*')
+        .order('updated_at', { ascending: false });
+      
+      if (error) throw error;
+      
+      return data?.map(item => ({
+        ...item,
+        image_url: item.image_url ? getPublicImageUrl(item.image_url) : null
+      })) || [];
+    },
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnWindowFocus: true,
+  });
+}
+
 export function useUpdateSiteSection() {
   const queryClient = useQueryClient();
   
@@ -86,10 +109,56 @@ export function useUpdateSiteSection() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['site-sections'] });
+      queryClient.invalidateQueries({ queryKey: ['site-sections-list'] });
       toast.success('Seção atualizada com sucesso!');
     },
     onError: () => {
       toast.error('Erro ao atualizar seção');
+    }
+  });
+}
+
+export function useCreateSiteSection() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (section: { section_key: string; title?: string; subtitle?: string; content?: string; image_url?: string; cta_text?: string; cta_link?: string; metadata?: any }) => {
+      const { error } = await supabase
+        .from('site_sections')
+        .insert(section);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['site-sections'] });
+      queryClient.invalidateQueries({ queryKey: ['site-sections-list'] });
+      toast.success('Seção criada com sucesso!');
+    },
+    onError: () => {
+      toast.error('Erro ao criar seção');
+    }
+  });
+}
+
+export function useDeleteSiteSection() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (sectionKey: string) => {
+      const { error } = await supabase
+        .from('site_sections')
+        .delete()
+        .eq('section_key', sectionKey);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['site-sections'] });
+      queryClient.invalidateQueries({ queryKey: ['site-sections-list'] });
+      toast.success('Seção excluída com sucesso!');
+    },
+    onError: () => {
+      toast.error('Erro ao excluir seção');
     }
   });
 }

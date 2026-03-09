@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
-import { useSiteSections, useProducts, useTestimonials, useSiteSettings } from "@/hooks/useSiteContent";
+import { useSiteSections, useSiteSectionsList, useProducts, useTestimonials, useSiteSettings } from "@/hooks/useSiteContent";
 
 // Fallback images
 import heroCakeFallback from "@/assets/caseirinhos-58.jpg";
@@ -31,6 +31,7 @@ const Index = () => {
   const { data: dbProducts } = useProducts();
   const { data: dbTestimonials } = useTestimonials();
   const { data: settings } = useSiteSettings();
+  const { data: sectionsList } = useSiteSectionsList();
 
   const hero = sections?.hero;
   const aboutPreview = sections?.about_preview;
@@ -48,6 +49,9 @@ const Index = () => {
   const aboutColors = aboutPreview?.metadata?.colors || {};
   const ctaColors = cta?.metadata?.colors || {};
 
+  // Custom sections (exclude fixed ones)
+  const FIXED_SECTIONS = ['hero', 'about_preview', 'cta'];
+  const customSections = sectionsList?.filter(s => !FIXED_SECTIONS.includes(s.section_key)) || [];
   return (
     <main>
       {/* Hero */}
@@ -235,6 +239,64 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Custom Sections */}
+      {customSections.map((section, i) => {
+        const colors = (section.metadata as any)?.colors || {};
+        return (
+          <motion.section
+            key={section.section_key}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className={`py-20 ${i % 2 === 0 ? '' : 'bg-secondary'}`}
+            style={{ backgroundColor: colors.bg_color || undefined }}
+          >
+            <div className="container mx-auto px-4 text-center max-w-3xl">
+              {section.image_url && (
+                <div className="mb-8 max-w-md mx-auto rounded-lg overflow-hidden">
+                  <img
+                    src={section.image_url}
+                    alt={section.title || ""}
+                    className="w-full h-auto object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              {section.title && (
+                <SectionTitle
+                  script={(section.metadata as any)?.display_name || ""}
+                  title={section.title}
+                  subtitle={section.subtitle || undefined}
+                />
+              )}
+              {section.content && (
+                <p
+                  className={`leading-relaxed mb-8 ${!colors.text_color ? 'text-muted-foreground' : ''}`}
+                  style={{ color: colors.text_color || undefined }}
+                >
+                  {section.content}
+                </p>
+              )}
+              {section.cta_text && section.cta_link && (
+                <Link
+                  to={section.cta_link}
+                  className={`inline-flex items-center justify-center px-8 py-3 rounded-md font-body text-sm uppercase tracking-wider hover:opacity-90 transition-opacity ${
+                    !colors.accent_color ? 'bg-accent text-accent-foreground' : ''
+                  }`}
+                  style={{
+                    backgroundColor: colors.accent_color || undefined,
+                    color: colors.accent_color ? '#ffffff' : undefined,
+                  }}
+                >
+                  {section.cta_text}
+                </Link>
+              )}
+            </div>
+          </motion.section>
+        );
+      })}
 
       {/* CTA */}
       <section
