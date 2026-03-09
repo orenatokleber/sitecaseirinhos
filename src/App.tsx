@@ -28,6 +28,9 @@ import AdminConfig from "./pages/admin/AdminConfig";
 import BlogEditor from "./pages/admin/BlogEditor";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import AdminSEO from "./pages/admin/AdminSEO";
+import { HelmetProvider } from "react-helmet-async";
+import { useTrackPageView } from "@/hooks/usePageViews";
 
 const queryClient = new QueryClient();
 
