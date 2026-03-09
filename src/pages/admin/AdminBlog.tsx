@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Loader2, FileText, Eye, EyeOff, Calendar } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
+import BlockEditor, { Block, serializeBlocks, deserializeBlocks } from "@/components/admin/BlockEditor";
 import { useBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost } from "@/hooks/useBlog";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -54,10 +55,12 @@ const AdminBlog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>(defaultForm);
+  const [blocks, setBlocks] = useState<Block[]>(deserializeBlocks(""));
 
   const handleCreate = () => {
     setEditingId(null);
     setFormData(defaultForm);
+    setBlocks(deserializeBlocks(""));
     setIsDialogOpen(true);
   };
 
@@ -74,6 +77,7 @@ const AdminBlog = () => {
       reading_time_min: post.reading_time_min || 3,
       is_published: post.is_published ?? false,
     });
+    setBlocks(deserializeBlocks(post.content || ""));
     setIsDialogOpen(true);
   };
 
@@ -88,8 +92,10 @@ const AdminBlog = () => {
   const handleSubmit = () => {
     if (!formData.title || !formData.slug) return;
 
+    const serializedContent = serializeBlocks(blocks);
     const payload = {
       ...formData,
+      content: serializedContent,
       published_at: formData.is_published ? new Date().toISOString() : null,
       updated_at: new Date().toISOString(),
     };
@@ -244,16 +250,7 @@ const AdminBlog = () => {
 
             <div>
               <Label>Conteúdo *</Label>
-              <Textarea
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                placeholder="Escreva o conteúdo do post aqui. Suporta parágrafos separados por linha em branco."
-                rows={12}
-                className="font-mono text-sm"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Dica: Separe parágrafos com uma linha em branco. Use **texto** para negrito e *texto* para itálico.
-              </p>
+              <BlockEditor blocks={blocks} onChange={setBlocks} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
