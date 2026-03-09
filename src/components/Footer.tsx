@@ -22,13 +22,13 @@ const Footer = () => {
           <div className="text-center">
             <h4 className="font-heading text-lg mb-4 tracking-wide">Navegação</h4>
             <ul className="space-y-2">
-              {[
+              {((settings?.menu_items as unknown as { to: string; label: string }[]) || [
                 { to: "/", label: "Home" },
                 { to: "/nossa-historia", label: "Nossa História" },
                 { to: "/cardapio", label: "Cardápio" },
                 { to: "/encomendas", label: "Encomendas" },
                 { to: "/contato", label: "Contato" },
-              ].map((link) => (
+              ]).map((link) => (
                 <li key={link.to}>
                   <Link to={link.to} className="text-sm opacity-70 hover:opacity-100 transition-opacity">
                     {link.label}
