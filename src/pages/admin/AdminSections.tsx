@@ -211,6 +211,22 @@ const AdminSections = () => {
                   rows={3}
                 />
               </div>
+              <div className="space-y-2">
+                <Label>Layout da Seção</Label>
+                <Select value={newSection.layout} onValueChange={(v) => setNewSection({ ...newSection, layout: v })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text-centered">Texto Centralizado</SelectItem>
+                    <SelectItem value="hero-banner">Banner (estilo Hero)</SelectItem>
+                    <SelectItem value="image-left">Imagem à Esquerda</SelectItem>
+                    <SelectItem value="image-right">Imagem à Direita</SelectItem>
+                    <SelectItem value="product-grid">Grade de Cards</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">Define como a seção será exibida no site</p>
+              </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setNewSectionOpen(false)}>Cancelar</Button>
