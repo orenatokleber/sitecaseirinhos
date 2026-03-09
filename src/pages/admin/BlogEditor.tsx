@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Loader2, Eye, Settings2, FileText, Clock, Save, X, Tag, MessageSquare } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, Settings2, FileText, Clock, Save, X, Tag, MessageSquare, PanelRightOpen, PanelRightClose } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import BlockEditor, { Block, serializeBlocks, deserializeBlocks, calculateReadingTime } from "@/components/admin/BlockEditor";
 import { useBlogPosts, useCreateBlogPost, useUpdateBlogPost } from "@/hooks/useBlog";
