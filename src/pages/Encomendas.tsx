@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
-import boloCasamento from "@/assets/bolo-casamento.jpg";
-import cakeChocolate from "@/assets/cake-chocolate.jpg";
+import boloCasamento from "@/assets/caseirinhos-85.jpg";
+import cakeChocolate from "@/assets/caseirinhos-83.jpg";
 
 const Encomendas = () => {
   const [form, setForm] = useState({ name: "", phone: "", event: "", date: "", details: "" });

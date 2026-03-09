@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
-import nossaHistoriaImg from "@/assets/nossa-historia.jpg";
+import nossaHistoriaImg from "@/assets/caseirinhos-103.jpg";
 
 const NossaHistoria = () => {
   return (

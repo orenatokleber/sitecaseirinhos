@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
-import heroCake from "@/assets/hero-cake.jpg";
-import cakeChocolate from "@/assets/cake-chocolate.jpg";
-import cakeSlice from "@/assets/cake-slice.jpg";
-import docesFinos from "@/assets/doces-finos.jpg";
-import sobremesaCopo from "@/assets/sobremesa-copo.jpg";
-import boloPote from "@/assets/bolo-pote.jpg";
+import heroCake from "@/assets/caseirinhos-58.jpg";
+import cakeChocolate from "@/assets/caseirinhos-85.jpg";
+import cakeSlice from "@/assets/caseirinhos-118.jpg";
+import docesFinos from "@/assets/caseirinhos-40.jpg";
+import sobremesaCopo from "@/assets/caseirinhos-93.jpg";
+import boloPote from "@/assets/caseirinhos-4.jpg";
 
 const products = [
   { img: cakeChocolate, name: "Bolos Caseiros", desc: "Receitas tradicionais feitas com amor e ingredientes selecionados" },
