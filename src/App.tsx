@@ -23,7 +23,10 @@ import AdminSections from "./pages/admin/AdminSections";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminGallery from "./pages/admin/AdminGallery";
+import AdminBlog from "./pages/admin/AdminBlog";
 import AdminConfig from "./pages/admin/AdminConfig";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
