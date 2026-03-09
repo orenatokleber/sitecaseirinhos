@@ -26,7 +26,11 @@ const menuItems = [
   { icon: Settings, label: "Configurações", path: "/painel-admin/config" },
 ];
 
-const AdminSidebar = () => {
+interface AdminSidebarProps {
+  onNavigate?: () => void;
+}
+
+const AdminSidebar = ({ onNavigate }: AdminSidebarProps) => {
   const location = useLocation();
   const { signOut, user } = useAuth();
 
@@ -34,14 +38,14 @@ const AdminSidebar = () => {
     <aside className="w-64 bg-card border-r border-border min-h-screen flex flex-col">
       {/* Header */}
       <div className="p-6 border-b border-border">
-        <Link to="/" className="flex flex-col items-center">
+        <Link to="/" className="flex flex-col items-center" onClick={onNavigate}>
           <span className="font-script text-2xl text-accent">Caseirinhos</span>
           <span className="text-xs tracking-wider uppercase text-muted-foreground">Admin</span>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 p-4 overflow-auto">
         <ul className="space-y-1">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -49,6 +53,7 @@ const AdminSidebar = () => {
               <li key={item.path}>
                 <Link
                   to={item.path}
+                  onClick={onNavigate}
                   className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm transition-colors ${
                     isActive 
                       ? "bg-accent text-accent-foreground font-medium" 
