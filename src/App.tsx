@@ -29,6 +29,7 @@ import BlogEditor from "./pages/admin/BlogEditor";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import AdminSEO from "./pages/admin/AdminSEO";
+import AdminComments from "./pages/admin/AdminComments";
 import { HelmetProvider } from "react-helmet-async";
 import { useTrackPageView } from "@/hooks/usePageViews";
 
