@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import nossaHistoriaImg from "@/assets/caseirinhos-103.jpg";
+import confeiteiraSorrindo from "@/assets/caseirinhos-19.jpg";
+import decorandoBolo from "@/assets/caseirinhos-83.jpg";
 
 const NossaHistoria = () => {
   return (
     <main className="pt-24">
       {/* Hero */}
       <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
-        <img src={nossaHistoriaImg} alt="Confeiteira decorando bolo" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={nossaHistoriaImg} alt="Confeiteira da Caseirinhos" className="absolute inset-0 w-full h-full object-cover object-top" />
         <div className="absolute inset-0 bg-chocolate/50" />
         <div className="relative z-10 text-center px-4">
           <p className="font-script text-3xl md:text-5xl text-gold mb-2">Nossa</p>
@@ -15,35 +17,75 @@ const NossaHistoria = () => {
         </div>
       </section>
 
-      {/* Content */}
+      {/* Content with photos */}
       <section className="py-20 md:py-28">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <SectionTitle script="O começo" title="De uma cozinha caseira para o seu coração" />
-          
-          <div className="space-y-6 text-muted-foreground leading-relaxed">
-            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              Tudo começou com uma paixão simples: a vontade de fazer bolos que trouxessem sorrisos. 
-              Em uma pequena cozinha, com receitas de família e muita dedicação, nasceu a Caseirinhos — 
-              uma confeitaria artesanal que acredita que cada doce conta uma história.
-            </motion.p>
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <img
+                src={confeiteiraSorrindo}
+                alt="Confeiteira Caseirinhos com fouet"
+                className="rounded-lg object-cover w-full h-[420px] shadow-md"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="space-y-6 text-muted-foreground leading-relaxed"
+            >
+              <SectionTitle script="O começo" title="De uma cozinha caseira para o seu coração" align="left" />
+              <p>
+                Tudo começou com uma paixão simples: a vontade de fazer bolos que trouxessem sorrisos. 
+                Em uma pequena cozinha, com receitas de família e muita dedicação, nasceu a Caseirinhos — 
+                uma confeitaria artesanal que acredita que cada doce conta uma história.
+              </p>
+              <p>
+                O que começou com bolos caseiros para amigos e familiares se transformou em algo maior: 
+                bolos de casamento que emocionam, sobremesas que surpreendem, doces finos que encantam. 
+                Cada encomenda é tratada com o mesmo carinho do primeiro bolo.
+              </p>
+            </motion.div>
+          </div>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
-              O que começou com bolos caseiros para amigos e familiares se transformou em algo maior: 
-              bolos de casamento que emocionam, sobremesas que surpreendem, doces finos que encantam. 
-              Cada encomenda é tratada com o mesmo carinho do primeiro bolo.
-            </motion.p>
-
-            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-              Hoje, a Caseirinhos é mais do que uma confeitaria. É um pedaço de afeto em forma de doce. 
-              É a certeza de que cada ingrediente foi escolhido com cuidado, cada decoração foi pensada 
-              com atenção, e cada entrega é feita com orgulho.
-            </motion.p>
-
-            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
-              Nosso propósito é claro: <strong className="text-foreground">transformar momentos em memórias doces</strong>. 
-              Seja um aniversário, um casamento, um chá de bebê ou simplesmente uma terça-feira que merece 
-              um bolo especial — estamos aqui para fazer parte da sua história.
-            </motion.p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="space-y-6 text-muted-foreground leading-relaxed md:order-1 order-2"
+            >
+              <p>
+                Hoje, a Caseirinhos é mais do que uma confeitaria. É um pedaço de afeto em forma de doce. 
+                É a certeza de que cada ingrediente foi escolhido com cuidado, cada decoração foi pensada 
+                com atenção, e cada entrega é feita com orgulho.
+              </p>
+              <p>
+                Nosso propósito é claro: <strong className="text-foreground">transformar momentos em memórias doces</strong>. 
+                Seja um aniversário, um casamento, um chá de bebê ou simplesmente uma terça-feira que merece 
+                um bolo especial — estamos aqui para fazer parte da sua história.
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="md:order-2 order-1"
+            >
+              <img
+                src={decorandoBolo}
+                alt="Confeiteira decorando bolo artesanal"
+                className="rounded-lg object-cover w-full h-[420px] shadow-md"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
