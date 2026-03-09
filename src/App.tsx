@@ -25,6 +25,7 @@ import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminConfig from "./pages/admin/AdminConfig";
+import BlogEditor from "./pages/admin/BlogEditor";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 
