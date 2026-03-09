@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 Deno.serve(async (req) => {
@@ -44,59 +44,50 @@ Deno.serve(async (req) => {
     }
   }
 
-  const siteUrl = url.searchParams.get("site_url") || "https://caseirinhos.lovable.app";
+  const siteUrl = "https://caseirinhos.lovable.app";
   const postUrl = `${siteUrl}/blog/${post.slug}`;
   const description = post.excerpt || "Confira este artigo no blog Caseirinhos";
   const siteName = "Caseirinhos";
 
-  // Check user agent to determine if it's a crawler
-  const userAgent = (req.headers.get("user-agent") || "").toLowerCase();
-  const isCrawler = /facebookexternalhit|twitterbot|whatsapp|linkedinbot|telegrambot|slackbot|discordbot|googlebot/i.test(userAgent);
-
-  if (isCrawler) {
-    // Serve static HTML with OG tags for crawlers
-    const html = `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>${escapeHtml(post.title)} | ${siteName}</title>
-  <meta name="description" content="${escapeHtml(description)}" />
-  
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content="${escapeHtml(post.title)}" />
-  <meta property="og:description" content="${escapeHtml(description)}" />
-  ${imageUrl ? `<meta property="og:image" content="${escapeHtml(imageUrl)}" />` : ""}
-  ${imageUrl ? `<meta property="og:image:width" content="1200" />` : ""}
-  ${imageUrl ? `<meta property="og:image:height" content="630" />` : ""}
-  <meta property="og:url" content="${escapeHtml(postUrl)}" />
-  <meta property="og:site_name" content="${siteName}" />
-  ${post.published_at ? `<meta property="article:published_time" content="${post.published_at}" />` : ""}
-  <meta property="article:author" content="${escapeHtml(post.author_name)}" />
-  
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${escapeHtml(post.title)}" />
-  <meta name="twitter:description" content="${escapeHtml(description)}" />
-  ${imageUrl ? `<meta name="twitter:image" content="${escapeHtml(imageUrl)}" />` : ""}
+<meta charset="UTF-8"/>
+<meta http-equiv="refresh" content="0;url=${esc(postUrl)}"/>
+<title>${esc(post.title)} | ${siteName}</title>
+<meta name="description" content="${esc(description)}"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="${esc(post.title)}"/>
+<meta property="og:description" content="${esc(description)}"/>
+${imageUrl ? `<meta property="og:image" content="${esc(imageUrl)}"/>` : ""}
+${imageUrl ? `<meta property="og:image:width" content="1200"/>` : ""}
+${imageUrl ? `<meta property="og:image:height" content="630"/>` : ""}
+<meta property="og:url" content="${esc(postUrl)}"/>
+<meta property="og:site_name" content="${siteName}"/>
+${post.published_at ? `<meta property="article:published_time" content="${post.published_at}"/>` : ""}
+<meta property="article:author" content="${esc(post.author_name)}"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="${esc(post.title)}"/>
+<meta name="twitter:description" content="${esc(description)}"/>
+${imageUrl ? `<meta name="twitter:image" content="${esc(imageUrl)}"/>` : ""}
+<link rel="canonical" href="${esc(postUrl)}"/>
 </head>
 <body>
-  <p>${escapeHtml(post.title)}</p>
-  <script>window.location.href="${escapeHtml(postUrl)}";</script>
+<p><a href="${esc(postUrl)}">${esc(post.title)}</a></p>
 </body>
 </html>`;
 
-    return new Response(html, {
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
-    });
-  }
-
-  // For regular users, redirect to the actual post
-  return new Response(null, {
-    status: 302,
-    headers: { ...corsHeaders, Location: postUrl },
+  return new Response(html, {
+    status: 200,
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "public, max-age=3600",
+    },
   });
 });
 
-function escapeHtml(str: string): string {
+function esc(str: string): string {
   return str
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")

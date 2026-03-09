@@ -13,14 +13,15 @@ const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
 
   const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "");
   
-  // Build OG share URL for crawlers (so social platforms see the image)
-  const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://caseirinhos.lovable.app";
+  // OG share URL for crawlers — no site_url param needed (hardcoded in function)
   const ogShareUrl = slug
-    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?slug=${encodeURIComponent(slug)}&site_url=${encodeURIComponent(siteUrl)}`
+    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?slug=${encodeURIComponent(slug)}`
     : shareUrl;
 
   const encodedOgUrl = encodeURIComponent(ogShareUrl);
+  // For WhatsApp text, include title + clean post URL (readable)
   const encodedTitle = encodeURIComponent(title);
+  const encodedCleanUrl = encodeURIComponent(shareUrl);
 
   const handleCopy = async () => {
     try {
@@ -38,11 +39,11 @@ const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
     
     switch (platform) {
       case "whatsapp":
-        // WhatsApp: send only the OG URL so WhatsApp fetches the preview (title + image from OG tags)
+        // WhatsApp: send the OG URL so WhatsApp fetches preview with image
         shareLink = `https://api.whatsapp.com/send?text=${encodedOgUrl}`;
         break;
       case "facebook":
-        // Facebook: only pass the URL, Facebook will read og:title/og:description/og:image from the page
+        // Facebook: pass OG URL so Facebook reads og:title/og:image, and uses og:url for display domain
         shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}`;
         break;
       case "twitter":
