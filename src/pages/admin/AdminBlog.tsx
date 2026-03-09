@@ -250,16 +250,7 @@ const AdminBlog = () => {
 
             <div>
               <Label>Conteúdo *</Label>
-              <Textarea
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                placeholder="Escreva o conteúdo do post aqui. Suporta parágrafos separados por linha em branco."
-                rows={12}
-                className="font-mono text-sm"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Dica: Separe parágrafos com uma linha em branco. Use **texto** para negrito e *texto* para itálico.
-              </p>
+              <BlockEditor blocks={blocks} onChange={setBlocks} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
