@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useBlogPosts } from "@/hooks/useBlog";
+import { useAdminProfile } from "@/hooks/useProfile";
 import { Loader2, Clock, ArrowRight, User, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
