@@ -435,7 +435,7 @@ const BlogPost = () => {
         tags={tags}
       />
 
-      {/* Hero cover - full bleed with parallax effect */}
+      {/* Hero cover - full bleed */}
       {post.cover_image && (
         <div className="w-full h-72 md:h-[32rem] relative overflow-hidden">
           <img
@@ -443,7 +443,7 @@ const BlogPost = () => {
             alt={post.title}
             className="w-full h-full object-cover scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
         </div>
       )}
 
@@ -452,61 +452,64 @@ const BlogPost = () => {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className={post.cover_image ? "-mt-32 relative z-10" : "pt-12"}
+          className={post.cover_image ? "-mt-40 relative z-10" : "pt-12"}
         >
           {/* Back link */}
           <Link
             to="/blog"
-            className="inline-flex items-center gap-1.5 text-sm text-accent font-medium hover:underline mb-10 group"
+            className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline mb-6 group text-foreground bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm border border-border/30"
           >
             <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" /> Voltar ao blog
           </Link>
 
-          {/* Category & Date */}
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            {post.category && (
-              <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-accent bg-accent/10 px-4 py-1.5 rounded-full">
-                {post.category}
-              </span>
-            )}
-            {post.published_at && (
-              <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <Calendar className="h-3.5 w-3.5" />
-                {format(new Date(post.published_at), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-              </span>
-            )}
-          </div>
-
-          {/* Title */}
-          <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] font-heading font-bold text-foreground mb-6 leading-[1.12] tracking-tight">
-            {post.title}
-          </h1>
-
-          {/* Excerpt */}
-          {post.excerpt && (
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 font-light border-l-2 border-accent/30 pl-5">
-              {post.excerpt}
-            </p>
-          )}
-
-          {/* Author / meta bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between py-5 border-y border-border/40 mb-12 gap-4">
-            <div className="flex items-center gap-5 text-sm text-muted-foreground">
-              <span className="flex items-center gap-2 font-medium text-foreground">
-                {adminProfile?.avatar_url ? (
-                  <img src={adminProfile.avatar_url} alt={adminProfile.display_name || post.author_name} className="w-8 h-8 rounded-full object-cover" />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center">
-                    <User className="h-4 w-4 text-accent" />
-                  </div>
-                )}
-                {adminProfile?.display_name || post.author_name}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4" /> {post.reading_time_min} min de leitura
-              </span>
+          {/* Header card */}
+          <div className="bg-background rounded-2xl shadow-lg border border-border/30 p-6 md:p-10 mb-12">
+            {/* Category & Date */}
+            <div className="flex flex-wrap items-center gap-3 mb-5">
+              {post.category && (
+                <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-accent bg-accent/10 px-4 py-1.5 rounded-full">
+                  {post.category}
+                </span>
+              )}
+              {post.published_at && (
+                <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {format(new Date(post.published_at), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                </span>
+              )}
             </div>
-            <ShareButtons url={currentUrl} title={post.title} />
+
+            {/* Title */}
+            <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] font-heading font-bold text-foreground mb-5 leading-[1.12] tracking-tight">
+              {post.title}
+            </h1>
+
+            {/* Excerpt */}
+            {post.excerpt && (
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-6 font-light border-l-2 border-accent/30 pl-5">
+                {post.excerpt}
+              </p>
+            )}
+
+            {/* Author / meta bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-5 border-t border-border/40 gap-4">
+              <div className="flex items-center gap-5 text-sm text-muted-foreground">
+                <span className="flex items-center gap-2.5 font-medium text-foreground">
+                  {adminProfile?.avatar_url ? (
+                    <img src={adminProfile.avatar_url} alt={adminProfile.display_name || post.author_name} className="w-9 h-9 rounded-full object-cover ring-2 ring-accent/20" />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-accent/15 flex items-center justify-center">
+                      <User className="h-4 w-4 text-accent" />
+                    </div>
+                  )}
+                  {adminProfile?.display_name || post.author_name}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" /> {post.reading_time_min} min de leitura
+                </span>
+              </div>
+              <ShareButtons url={currentUrl} title={post.title} />
+            </div>
           </div>
 
           {/* Content */}
