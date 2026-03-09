@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import ImageUpload from "@/components/admin/ImageUpload";
-import InlineToolbar from "@/components/admin/InlineToolbar";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import {
   Type,
   Heading1,
@@ -168,7 +168,7 @@ const BlockInserter: React.FC<{
   );
 };
 
-/** Paragraph block with inline formatting toolbar */
+/** Paragraph block with rich text editing */
 const ParagraphBlock: React.FC<{
   block: Block;
   index: number;
@@ -177,32 +177,15 @@ const ParagraphBlock: React.FC<{
   onBlur: () => void;
   onKeyDown: (e: React.KeyboardEvent, index: number) => void;
 }> = ({ block, index, onUpdate, onFocus, onBlur, onKeyDown }) => {
-  const ref = useRef<HTMLTextAreaElement>(null);
-
-  const autoResize = (el: HTMLTextAreaElement) => {
-    el.style.height = "auto";
-    el.style.height = el.scrollHeight + "px";
-  };
-
   return (
-    <div className="relative">
-      <InlineToolbar
-        textareaRef={ref as React.RefObject<HTMLTextAreaElement>}
-        value={block.content}
-        onChange={(v) => onUpdate(index, { content: v })}
-      />
-      <Textarea
-        ref={ref}
-        value={block.content}
-        onChange={(e) => onUpdate(index, { content: e.target.value })}
-        onFocus={() => onFocus(index)}
-        onBlur={() => onBlur()}
-        onKeyDown={(e) => onKeyDown(e, index)}
-        placeholder="Escreva algo, ou pressione / para comandos..."
-        className="w-full border-none shadow-none resize-none bg-transparent text-base leading-7 focus-visible:ring-0 min-h-[44px] px-4 py-3"
-        onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
-      />
-    </div>
+    <RichTextEditor
+      value={block.content}
+      onChange={(v) => onUpdate(index, { content: v })}
+      onFocus={() => onFocus(index)}
+      onBlur={() => onBlur()}
+      onKeyDown={(e) => onKeyDown(e, index)}
+      placeholder="Escreva algo, ou pressione / para comandos..."
+    />
   );
 };
 
@@ -234,7 +217,8 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
       e.preventDefault();
       addBlock("paragraph", index);
     }
-    if (e.key === "Backspace" && block.content === "" && blocks.length > 1) {
+    const isEmpty = !block.content || block.content === "" || block.content === "<br>" || block.content.replace(/<[^>]*>/g, "").trim() === "";
+    if (e.key === "Backspace" && isEmpty && blocks.length > 1) {
       e.preventDefault();
       removeBlock(index);
     }
