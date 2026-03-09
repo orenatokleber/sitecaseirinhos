@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useBlogPost } from "@/hooks/useBlog";
+import { useAdminProfile } from "@/hooks/useProfile";
 import { Loader2, ArrowLeft, Clock, User, Calendar, Tag, MessageCircle, Send } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
