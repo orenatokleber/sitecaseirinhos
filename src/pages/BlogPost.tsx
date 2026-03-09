@@ -508,7 +508,7 @@ const BlogPost = () => {
                   <Clock className="h-4 w-4" /> {post.reading_time_min} min de leitura
                 </span>
               </div>
-              <ShareButtons url={currentUrl} title={post.title} slug={post.slug} description={post.excerpt || undefined} />
+              <ShareButtons url={currentUrl} title={post.title} slug={post.slug} description={post.excerpt || undefined} imageUrl={post.cover_image || undefined} />
             </div>
           </div>
 
