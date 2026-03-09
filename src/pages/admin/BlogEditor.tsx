@@ -476,6 +476,7 @@ const BlogEditor = () => {
             </div>
           </ScrollArea>
         </aside>
+        )}
       </div>
     </div>
   );
