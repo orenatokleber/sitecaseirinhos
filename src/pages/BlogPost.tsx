@@ -159,15 +159,84 @@ function renderPlainText(raw: string) {
       i++;
     }
     if (paraLines.length > 0) {
-      const html = renderInlineFormatting(paraLines.join("\n"));
+      const html = renderInlineFormatting(paraLines.join(" "));
       elements.push(
-        <p key={key++} className="mb-6 leading-[1.9] text-foreground/80 text-lg font-body" dangerouslySetInnerHTML={{ __html: html }} />
+        <p key={key++} className="mb-6 leading-relaxed text-foreground/85 text-[1.125rem] font-body first-letter:text-2xl first-letter:font-semibold first-letter:text-foreground" dangerouslySetInnerHTML={{ __html: html }} />
       );
     }
   }
 
   return elements;
 }
+
+// Comments Section Component
+interface CommentsSectionProps {
+  postId: string;
+  allowComments: boolean;
+}
+
+const CommentsSection = ({ postId, allowComments }: CommentsSectionProps) => {
+  const [name, setName] = useState("");
+  const [comment, setComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (!allowComments) {
+    return null;
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !comment.trim()) {
+      toast.error("Preencha todos os campos");
+      return;
+    }
+
+    setIsSubmitting(true);
+    // Simulating comment submission - in production, save to database
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    toast.success("Comentário enviado! Aguarde aprovação.");
+    setName("");
+    setComment("");
+    setIsSubmitting(false);
+  };
+
+  return (
+    <section className="mt-16 pt-10 border-t border-border/40">
+      <h3 className="text-xl font-heading font-semibold text-foreground mb-6 flex items-center gap-2">
+        <MessageCircle className="h-5 w-5 text-accent" />
+        Deixe um comentário
+      </h3>
+      
+      <form onSubmit={handleSubmit} className="space-y-4 bg-muted/30 rounded-2xl p-6 border border-border/30">
+        <div>
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Seu nome"
+            className="bg-background"
+          />
+        </div>
+        <div>
+          <Textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Escreva seu comentário..."
+            rows={4}
+            className="bg-background resize-none"
+          />
+        </div>
+        <Button type="submit" disabled={isSubmitting} className="gap-2">
+          {isSubmitting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Send className="h-4 w-4" />
+          )}
+          Enviar comentário
+        </Button>
+      </form>
+    </section>
+  );
+};
 
 function renderBlocks(blocks: Block[]) {
   return blocks.map((block) => {
