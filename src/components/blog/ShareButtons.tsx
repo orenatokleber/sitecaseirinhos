@@ -5,13 +5,21 @@ import { toast } from "sonner";
 interface ShareButtonsProps {
   url: string;
   title: string;
+  slug?: string;
 }
 
-const ShareButtons = ({ url, title }: ShareButtonsProps) => {
+const ShareButtons = ({ url, title, slug }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
 
-  // Ensure we have a valid URL
   const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "");
+  
+  // Build OG share URL for crawlers (so social platforms see the image)
+  const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://caseirinhos.lovable.app";
+  const ogShareUrl = slug
+    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?slug=${encodeURIComponent(slug)}&site_url=${encodeURIComponent(siteUrl)}`
+    : shareUrl;
+
+  const encodedOgUrl = encodeURIComponent(ogShareUrl);
   const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
 
@@ -31,13 +39,13 @@ const ShareButtons = ({ url, title }: ShareButtonsProps) => {
     
     switch (platform) {
       case "whatsapp":
-        shareLink = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;
+        shareLink = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedOgUrl}`;
         break;
       case "facebook":
-        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}`;
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}&quote=${encodedTitle}`;
         break;
       case "twitter":
-        shareLink = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+        shareLink = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedOgUrl}`;
         break;
     }
 
