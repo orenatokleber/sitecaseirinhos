@@ -23,7 +23,10 @@ import AdminSections from "./pages/admin/AdminSections";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminGallery from "./pages/admin/AdminGallery";
+import AdminBlog from "./pages/admin/AdminBlog";
 import AdminConfig from "./pages/admin/AdminConfig";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +67,8 @@ const App = () => (
               <Route path="/encomendas" element={<Encomendas />} />
               <Route path="/contato" element={<Contato />} />
               <Route path="/galeria" element={<Galeria />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
 
               {/* Admin routes */}
               <Route path="/painel-admin/login" element={<AdminLogin />} />
@@ -73,6 +78,7 @@ const App = () => (
                 <Route path="produtos" element={<AdminProducts />} />
                 <Route path="depoimentos" element={<AdminTestimonials />} />
                 <Route path="galeria" element={<AdminGallery />} />
+                <Route path="blog" element={<AdminBlog />} />
                 <Route path="config" element={<AdminConfig />} />
               </Route>
 

@@ -6,6 +6,7 @@ import {
   MessageSquare, 
   Settings, 
   Image,
+  BookOpen,
   LogOut,
   ExternalLink
 } from "lucide-react";
@@ -18,6 +19,7 @@ const menuItems = [
   { icon: ShoppingBag, label: "Produtos", path: "/painel-admin/produtos" },
   { icon: MessageSquare, label: "Depoimentos", path: "/painel-admin/depoimentos" },
   { icon: Image, label: "Galeria", path: "/painel-admin/galeria" },
+  { icon: BookOpen, label: "Blog", path: "/painel-admin/blog" },
   { icon: Settings, label: "Configurações", path: "/painel-admin/config" },
 ];
 
