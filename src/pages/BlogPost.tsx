@@ -490,8 +490,11 @@ const BlogPost = () => {
             <ShareButtons url={currentUrl} title={post.title} />
           </div>
 
+          {/* Comments Section */}
+          <CommentsSection postId={post.id} allowComments={post.allow_comments} />
+
           {/* Footer CTA */}
-          <div className="mt-10 pb-20">
+          <div className="mt-12 pb-20">
             <div className="bg-gradient-to-br from-accent/5 to-accent/10 rounded-3xl p-10 text-center border border-accent/10">
               <p className="font-script text-2xl text-accent mb-2">Caseirinhos</p>
               <p className="font-heading text-xl font-semibold text-foreground mb-5">Explore mais receitas e dicas</p>
