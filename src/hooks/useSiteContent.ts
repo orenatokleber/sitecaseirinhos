@@ -64,7 +64,9 @@ export function useSiteSections() {
         };
       });
       return sections;
-    }
+    },
+    staleTime: 0, // Always fetch fresh data
+    refetchOnWindowFocus: true
   });
 }
 
