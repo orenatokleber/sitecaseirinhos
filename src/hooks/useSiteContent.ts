@@ -64,7 +64,9 @@ export function useSiteSections() {
         };
       });
       return sections;
-    }
+    },
+    staleTime: 0, // Always fetch fresh data
+    refetchOnWindowFocus: true
   });
 }
 
@@ -112,7 +114,9 @@ export function useProducts(activeOnly = true) {
         ...p,
         image_url: p.image_url ? getPublicImageUrl(p.image_url) : null
       })) || [];
-    }
+    },
+    staleTime: 0,
+    refetchOnWindowFocus: true
   });
 }
 
