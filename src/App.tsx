@@ -37,6 +37,7 @@ const queryClient = new QueryClient();
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/painel-admin');
+  useTrackPageView();
 
   if (isAdminRoute) {
     return <>{children}</>;
