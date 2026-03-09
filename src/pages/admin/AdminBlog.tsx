@@ -92,8 +92,10 @@ const AdminBlog = () => {
   const handleSubmit = () => {
     if (!formData.title || !formData.slug) return;
 
+    const serializedContent = serializeBlocks(blocks);
     const payload = {
       ...formData,
+      content: serializedContent,
       published_at: formData.is_published ? new Date().toISOString() : null,
       updated_at: new Date().toISOString(),
     };
