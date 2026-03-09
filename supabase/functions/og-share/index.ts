@@ -22,6 +22,22 @@ Deno.serve(async (req) => {
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
 
+  // Check if OG HTML already exists in storage
+  const ogPath = `og/${slug}.html`;
+  const { data: existingFile } = supabase.storage.from("site-images").getPublicUrl(ogPath);
+  
+  // Check if file exists by trying to fetch it
+  const checkResponse = await fetch(existingFile.publicUrl, { method: "HEAD" });
+  
+  if (checkResponse.ok && checkResponse.headers.get("content-length") !== "0") {
+    // File exists, redirect to it
+    return new Response(null, {
+      status: 302,
+      headers: { ...corsHeaders, Location: existingFile.publicUrl },
+    });
+  }
+
+  // File doesn't exist, generate it
   const { data: post, error } = await supabase
     .from("blog_posts")
     .select("title, excerpt, cover_image, author_name, published_at, slug")
@@ -49,7 +65,6 @@ Deno.serve(async (req) => {
   const description = post.excerpt || "Confira este artigo no blog Caseirinhos";
   const siteName = "Caseirinhos";
 
-  // Serve static HTML with OG tags for all visitors (crawlers read meta, browsers get redirected)
   const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -81,13 +96,31 @@ Deno.serve(async (req) => {
 </body>
 </html>`;
 
-  return new Response(html, {
-    status: 200,
-    headers: { 
-      ...corsHeaders, 
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=3600"
-    },
+  // Upload HTML to storage so it's served with correct Content-Type
+  const encoder = new TextEncoder();
+  const htmlBytes = encoder.encode(html);
+  
+  const { error: uploadError } = await supabase.storage
+    .from("site-images")
+    .upload(ogPath, htmlBytes, {
+      contentType: "text/html; charset=utf-8",
+      upsert: true,
+    });
+
+  if (uploadError) {
+    // Fallback: return HTML directly (may have wrong Content-Type but still works for some crawlers)
+    return new Response(html, {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+    });
+  }
+
+  // Redirect to the storage-hosted HTML file
+  const { data: publicUrlData } = supabase.storage.from("site-images").getPublicUrl(ogPath);
+  
+  return new Response(null, {
+    status: 302,
+    headers: { ...corsHeaders, Location: publicUrlData.publicUrl },
   });
 });
 
