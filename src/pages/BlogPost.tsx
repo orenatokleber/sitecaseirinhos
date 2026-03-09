@@ -8,7 +8,7 @@ import { getPublicImageUrl } from "@/lib/supabase";
 
 interface Block {
   id: string;
-  type: "paragraph" | "heading" | "subheading" | "image" | "quote" | "list" | "ordered-list" | "divider" | "code";
+  type: "paragraph" | "heading" | "heading2" | "heading3" | "subheading" | "image" | "quote" | "list" | "ordered-list" | "divider" | "code" | "spacer";
   content: string;
   imageUrl?: string;
   imageCaption?: string;
