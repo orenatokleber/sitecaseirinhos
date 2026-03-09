@@ -93,6 +93,7 @@ Deno.serve(async (req) => {
       "Cache-Control": "public, max-age=3600"
     },
   });
+});
 
 function escapeHtml(str: string): string {
   return str
