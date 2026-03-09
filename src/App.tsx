@@ -49,6 +49,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <ThemeColorInjector />
       <BrowserRouter>
         <AuthProvider>
           <MainLayout>
