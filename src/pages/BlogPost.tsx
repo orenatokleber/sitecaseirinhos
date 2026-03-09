@@ -13,6 +13,7 @@ import ShareButtons from "@/components/blog/ShareButtons";
 import BlogSEO from "@/components/blog/BlogSEO";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useApprovedComments, useSubmitComment } from "@/hooks/useComments";
 
 interface Block {
   id: string;
@@ -186,7 +187,8 @@ interface CommentsSectionProps {
 const CommentsSection = ({ postId, allowComments }: CommentsSectionProps) => {
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: approvedComments } = useApprovedComments(postId);
+  const submitComment = useSubmitComment();
 
   if (!allowComments) {
     return null;
@@ -199,23 +201,49 @@ const CommentsSection = ({ postId, allowComments }: CommentsSectionProps) => {
       return;
     }
 
-    setIsSubmitting(true);
-    // Simulating comment submission - in production, save to database
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    toast.success("Comentário enviado! Aguarde aprovação.");
-    setName("");
-    setComment("");
-    setIsSubmitting(false);
+    submitComment.mutate(
+      { post_id: postId, author_name: name.trim(), content: comment.trim() },
+      {
+        onSuccess: () => {
+          toast.success("Comentário enviado! Aguarde aprovação.");
+          setName("");
+          setComment("");
+        },
+        onError: () => toast.error("Erro ao enviar comentário."),
+      }
+    );
   };
 
   return (
     <section className="mt-16 pt-10 border-t border-border/40">
       <h3 className="text-xl font-heading font-semibold text-foreground mb-6 flex items-center gap-2">
         <MessageCircle className="h-5 w-5 text-accent" />
-        Deixe um comentário
+        Comentários {approvedComments && approvedComments.length > 0 && `(${approvedComments.length})`}
       </h3>
-      
+
+      {/* Approved comments */}
+      {approvedComments && approvedComments.length > 0 && (
+        <div className="space-y-4 mb-8">
+          {approvedComments.map((c: any) => (
+            <div key={c.id} className="bg-muted/30 rounded-xl p-4 border border-border/20">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center text-sm font-semibold text-accent">
+                  {c.author_name.charAt(0).toUpperCase()}
+                </div>
+                <span className="font-medium text-sm text-foreground">{c.author_name}</span>
+                <span className="text-xs text-muted-foreground">
+                  {new Date(c.created_at).toLocaleDateString("pt-BR")}
+                </span>
+              </div>
+              <p className="text-sm text-foreground/80 pl-10">{c.content}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Comment form */}
       <form onSubmit={handleSubmit} className="space-y-4 bg-muted/30 rounded-2xl p-6 border border-border/30">
+        <p className="text-sm text-muted-foreground">Deixe seu comentário — ele será publicado após aprovação.</p>
         <div>
           <Input
             value={name}
@@ -233,8 +261,8 @@ const CommentsSection = ({ postId, allowComments }: CommentsSectionProps) => {
             className="bg-background resize-none"
           />
         </div>
-        <Button type="submit" disabled={isSubmitting} className="gap-2">
-          {isSubmitting ? (
+        <Button type="submit" disabled={submitComment.isPending} className="gap-2">
+          {submitComment.isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Send className="h-4 w-4" />
