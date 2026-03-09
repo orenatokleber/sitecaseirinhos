@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useBlogPosts } from "@/hooks/useBlog";
+import { useAdminProfile } from "@/hooks/useProfile";
 import { Loader2, Clock, ArrowRight, User, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -10,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 
 const Blog = () => {
   const { data: posts, isLoading } = useBlogPosts(true);
+  const { data: adminProfile } = useAdminProfile();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const categories = useMemo(() => {
@@ -112,7 +114,7 @@ const Blog = () => {
                         )}
                         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-5">
                           <span className="flex items-center gap-1.5">
-                            <User className="h-3.5 w-3.5" /> {filteredPosts[0].author_name}
+                            <User className="h-3.5 w-3.5" /> {adminProfile?.display_name || filteredPosts[0].author_name}
                           </span>
                           <span className="flex items-center gap-1.5">
                             <Clock className="h-3.5 w-3.5" /> {filteredPosts[0].reading_time_min} min
