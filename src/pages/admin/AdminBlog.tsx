@@ -60,6 +60,7 @@ const AdminBlog = () => {
   const handleCreate = () => {
     setEditingId(null);
     setFormData(defaultForm);
+    setBlocks(deserializeBlocks(""));
     setIsDialogOpen(true);
   };
 
