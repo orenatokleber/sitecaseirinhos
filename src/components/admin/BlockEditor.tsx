@@ -7,6 +7,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import ImageUpload from "@/components/admin/ImageUpload";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import {
@@ -24,15 +34,29 @@ import {
   GripVertical,
   Code,
   AlignLeft,
+  AlertTriangle,
+  Info,
+  CheckCircle2,
+  Lightbulb,
+  Youtube,
+  Copy,
+  ArrowUp,
+  ArrowDown,
+  MoreVertical,
+  RefreshCw,
+  Columns,
 } from "lucide-react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 
 export interface Block {
   id: string;
-  type: "paragraph" | "heading" | "heading2" | "heading3" | "image" | "quote" | "list" | "ordered-list" | "divider" | "code" | "spacer";
+  type: "paragraph" | "heading" | "heading2" | "heading3" | "image" | "quote" | "list" | "ordered-list" | "divider" | "code" | "spacer" | "callout" | "embed" | "columns";
   content: string;
   imageUrl?: string;
   imageCaption?: string;
+  calloutType?: "info" | "warning" | "success" | "tip";
+  embedUrl?: string;
+  columnContent?: string; // second column content for columns block
 }
 
 interface BlockEditorProps {
@@ -44,18 +68,20 @@ const BLOCK_CATEGORIES = [
   {
     name: "Texto",
     blocks: [
-      { type: "paragraph" as const, icon: Type, label: "Parágrafo", description: "Texto simples" },
+      { type: "paragraph" as const, icon: Type, label: "Parágrafo", description: "Texto com formatação rica" },
       { type: "heading" as const, icon: Heading1, label: "Título 1", description: "Título principal" },
       { type: "heading2" as const, icon: Heading2, label: "Título 2", description: "Título de seção" },
       { type: "heading3" as const, icon: Heading3, label: "Título 3", description: "Subtítulo" },
       { type: "quote" as const, icon: Quote, label: "Citação", description: "Destaque de texto" },
       { type: "code" as const, icon: Code, label: "Código", description: "Bloco de código" },
+      { type: "callout" as const, icon: Info, label: "Callout", description: "Nota, aviso ou dica" },
     ],
   },
   {
     name: "Mídia",
     blocks: [
       { type: "image" as const, icon: ImageIcon, label: "Imagem", description: "Upload de imagem" },
+      { type: "embed" as const, icon: Youtube, label: "Embed", description: "YouTube, Vimeo, etc." },
     ],
   },
   {
@@ -63,6 +89,7 @@ const BLOCK_CATEGORIES = [
     blocks: [
       { type: "list" as const, icon: List, label: "Lista", description: "Lista com marcadores" },
       { type: "ordered-list" as const, icon: ListOrdered, label: "Lista Numerada", description: "Lista ordenada" },
+      { type: "columns" as const, icon: Columns, label: "2 Colunas", description: "Texto lado a lado" },
       { type: "divider" as const, icon: Minus, label: "Divisor", description: "Linha horizontal" },
       { type: "spacer" as const, icon: AlignLeft, label: "Espaçador", description: "Espaço em branco" },
     ],
@@ -73,23 +100,34 @@ function generateId() {
   return Math.random().toString(36).substring(2, 10);
 }
 
+const BLOCK_ICON_MAP: Record<string, any> = {
+  paragraph: Type,
+  heading: Heading1,
+  heading2: Heading2,
+  heading3: Heading3,
+  image: ImageIcon,
+  quote: Quote,
+  list: List,
+  "ordered-list": ListOrdered,
+  divider: Minus,
+  code: Code,
+  spacer: AlignLeft,
+  callout: Info,
+  embed: Youtube,
+  columns: Columns,
+};
+
 function BlockTypeIcon({ type }: { type: Block["type"] }) {
-  const icons: Record<string, any> = {
-    paragraph: Type,
-    heading: Heading1,
-    heading2: Heading2,
-    heading3: Heading3,
-    image: ImageIcon,
-    quote: Quote,
-    list: List,
-    "ordered-list": ListOrdered,
-    divider: Minus,
-    code: Code,
-    spacer: AlignLeft,
-  };
-  const Icon = icons[type] || Type;
+  const Icon = BLOCK_ICON_MAP[type] || Type;
   return <Icon className="h-4 w-4" />;
 }
+
+const CALLOUT_STYLES: Record<string, { icon: any; borderColor: string; bgColor: string; label: string }> = {
+  info: { icon: Info, borderColor: "border-blue-400", bgColor: "bg-blue-50 dark:bg-blue-950/30", label: "Informação" },
+  warning: { icon: AlertTriangle, borderColor: "border-amber-400", bgColor: "bg-amber-50 dark:bg-amber-950/30", label: "Aviso" },
+  success: { icon: CheckCircle2, borderColor: "border-green-400", bgColor: "bg-green-50 dark:bg-green-950/30", label: "Sucesso" },
+  tip: { icon: Lightbulb, borderColor: "border-purple-400", bgColor: "bg-purple-50 dark:bg-purple-950/30", label: "Dica" },
+};
 
 const BlockInserter: React.FC<{
   onSelect: (type: Block["type"]) => void;
@@ -168,7 +206,6 @@ const BlockInserter: React.FC<{
   );
 };
 
-/** Paragraph block with rich text editing */
 const ParagraphBlock: React.FC<{
   block: Block;
   index: number;
@@ -189,12 +226,35 @@ const ParagraphBlock: React.FC<{
   );
 };
 
+function extractEmbedUrl(url: string): string | null {
+  // YouTube
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/);
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  return url;
+}
+
+const CONVERTIBLE_TYPES: { type: Block["type"]; label: string }[] = [
+  { type: "paragraph", label: "Parágrafo" },
+  { type: "heading", label: "Título 1" },
+  { type: "heading2", label: "Título 2" },
+  { type: "heading3", label: "Título 3" },
+  { type: "quote", label: "Citação" },
+  { type: "code", label: "Código" },
+  { type: "callout", label: "Callout" },
+];
+
 const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const addBlock = (type: Block["type"], afterIndex: number) => {
-    const newBlock: Block = { id: generateId(), type, content: "" };
+    const newBlock: Block = {
+      id: generateId(), type, content: "",
+      ...(type === "callout" ? { calloutType: "info" } : {}),
+    };
     const updated = [...blocks];
     updated.splice(afterIndex + 1, 0, newBlock);
     onChange(updated);
@@ -209,6 +269,33 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
     if (blocks.length <= 1) return;
     onChange(blocks.filter((_, i) => i !== index));
     setFocusedIndex(null);
+  };
+
+  const duplicateBlock = (index: number) => {
+    const block = blocks[index];
+    const dup: Block = { ...block, id: generateId() };
+    const updated = [...blocks];
+    updated.splice(index + 1, 0, dup);
+    onChange(updated);
+  };
+
+  const moveBlock = (index: number, direction: "up" | "down") => {
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= blocks.length) return;
+    const updated = [...blocks];
+    [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
+    onChange(updated);
+    setFocusedIndex(newIndex);
+  };
+
+  const convertBlock = (index: number, newType: Block["type"]) => {
+    const block = blocks[index];
+    const stripped = block.content.replace(/<[^>]*>/g, "");
+    updateBlock(index, {
+      type: newType,
+      content: ["heading", "heading2", "heading3"].includes(newType) ? stripped : block.content,
+      ...(newType === "callout" ? { calloutType: block.calloutType || "info" } : {}),
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
@@ -267,8 +354,9 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                   </div>
                 )}
 
+                {/* Left controls: drag + type icon */}
                 <div
-                  className={`absolute -left-12 top-0 flex items-center gap-1 transition-opacity ${
+                  className={`absolute -left-14 top-0 flex items-center gap-0.5 transition-opacity ${
                     hoveredIndex === index || focusedIndex === index ? "opacity-100" : "opacity-0"
                   }`}
                 >
@@ -280,15 +368,48 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => removeBlock(index)}
-                  className={`absolute -right-10 top-1 p-1.5 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all ${
+                {/* Right controls: more menu */}
+                <div
+                  className={`absolute -right-12 top-0 transition-opacity ${
                     hoveredIndex === index || focusedIndex === index ? "opacity-100" : "opacity-0"
                   }`}
                 >
-                  <Trash2 className="h-4 w-4" />
-                </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button type="button" className="p-1.5 rounded hover:bg-muted text-muted-foreground">
+                        <MoreVertical className="h-4 w-4" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem onClick={() => moveBlock(index, "up")} disabled={index === 0}>
+                        <ArrowUp className="h-4 w-4 mr-2" /> Mover para cima
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => moveBlock(index, "down")} disabled={index === blocks.length - 1}>
+                        <ArrowDown className="h-4 w-4 mr-2" /> Mover para baixo
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => duplicateBlock(index)}>
+                        <Copy className="h-4 w-4 mr-2" /> Duplicar bloco
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          <RefreshCw className="h-4 w-4 mr-2" /> Converter para...
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {CONVERTIBLE_TYPES.filter((t) => t.type !== block.type).map((t) => (
+                            <DropdownMenuItem key={t.type} onClick={() => convertBlock(index, t.type)}>
+                              <BlockTypeIcon type={t.type} /> <span className="ml-2">{t.label}</span>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => removeBlock(index)} className="text-destructive focus:text-destructive" disabled={blocks.length <= 1}>
+                        <Trash2 className="h-4 w-4 mr-2" /> Excluir bloco
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
 
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
@@ -298,67 +419,36 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     focusedIndex === index ? "bg-muted/30 ring-2 ring-accent/20" : ""
                   }`}
                 >
-                  {/* Paragraph with inline toolbar */}
                   {block.type === "paragraph" && (
-                    <ParagraphBlock
-                      block={block}
-                      index={index}
-                      onUpdate={updateBlock}
-                      onFocus={setFocusedIndex}
-                      onBlur={() => setFocusedIndex(null)}
-                      onKeyDown={handleKeyDown}
-                    />
+                    <ParagraphBlock block={block} index={index} onUpdate={updateBlock}
+                      onFocus={setFocusedIndex} onBlur={() => setFocusedIndex(null)} onKeyDown={handleKeyDown} />
                   )}
 
                   {block.type === "heading" && (
-                    <Input
-                      value={block.content}
-                      onChange={(e) => updateBlock(index, { content: e.target.value })}
-                      onFocus={() => setFocusedIndex(index)}
-                      onBlur={() => setFocusedIndex(null)}
-                      placeholder="Título"
-                      className="w-full border-none shadow-none bg-transparent text-3xl font-heading font-bold focus-visible:ring-0 px-4 py-3 h-auto"
-                    />
+                    <Input value={block.content} onChange={(e) => updateBlock(index, { content: e.target.value })}
+                      onFocus={() => setFocusedIndex(index)} onBlur={() => setFocusedIndex(null)}
+                      placeholder="Título" className="w-full border-none shadow-none bg-transparent text-3xl font-heading font-bold focus-visible:ring-0 px-4 py-3 h-auto" />
                   )}
 
                   {block.type === "heading2" && (
-                    <Input
-                      value={block.content}
-                      onChange={(e) => updateBlock(index, { content: e.target.value })}
-                      onFocus={() => setFocusedIndex(index)}
-                      onBlur={() => setFocusedIndex(null)}
-                      placeholder="Título de seção"
-                      className="w-full border-none shadow-none bg-transparent text-2xl font-heading font-semibold focus-visible:ring-0 px-4 py-2 h-auto"
-                    />
+                    <Input value={block.content} onChange={(e) => updateBlock(index, { content: e.target.value })}
+                      onFocus={() => setFocusedIndex(index)} onBlur={() => setFocusedIndex(null)}
+                      placeholder="Título de seção" className="w-full border-none shadow-none bg-transparent text-2xl font-heading font-semibold focus-visible:ring-0 px-4 py-2 h-auto" />
                   )}
 
                   {block.type === "heading3" && (
-                    <Input
-                      value={block.content}
-                      onChange={(e) => updateBlock(index, { content: e.target.value })}
-                      onFocus={() => setFocusedIndex(index)}
-                      onBlur={() => setFocusedIndex(null)}
-                      placeholder="Subtítulo"
-                      className="w-full border-none shadow-none bg-transparent text-xl font-heading font-medium focus-visible:ring-0 px-4 py-2 h-auto"
-                    />
+                    <Input value={block.content} onChange={(e) => updateBlock(index, { content: e.target.value })}
+                      onFocus={() => setFocusedIndex(index)} onBlur={() => setFocusedIndex(null)}
+                      placeholder="Subtítulo" className="w-full border-none shadow-none bg-transparent text-xl font-heading font-medium focus-visible:ring-0 px-4 py-2 h-auto" />
                   )}
 
                   {block.type === "image" && (
                     <div className="px-4 py-4">
-                      <ImageUpload
-                        value={block.imageUrl || ""}
-                        onChange={(url) => updateBlock(index, { imageUrl: url })}
-                        folder="blog"
-                        aspectRatio={16 / 9}
-                        recommendedSize="1200x675"
-                      />
+                      <ImageUpload value={block.imageUrl || ""} onChange={(url) => updateBlock(index, { imageUrl: url })}
+                        folder="blog" aspectRatio={16 / 9} recommendedSize="1200x675" />
                       {block.imageUrl && (
-                        <Input
-                          value={block.imageCaption || ""}
-                          onChange={(e) => updateBlock(index, { imageCaption: e.target.value })}
-                          placeholder="Adicionar legenda..."
-                          className="mt-2 text-sm text-center border-dashed bg-transparent"
-                        />
+                        <Input value={block.imageCaption || ""} onChange={(e) => updateBlock(index, { imageCaption: e.target.value })}
+                          placeholder="Adicionar legenda..." className="mt-2 text-sm text-center border-dashed bg-transparent" />
                       )}
                     </div>
                   )}
@@ -366,30 +456,20 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                   {block.type === "quote" && (
                     <div className="px-4 py-3">
                       <div className="border-l-4 border-accent pl-4">
-                        <Textarea
-                          value={block.content}
-                          onChange={(e) => updateBlock(index, { content: e.target.value })}
-                          onFocus={() => setFocusedIndex(index)}
-                          onBlur={() => setFocusedIndex(null)}
-                          placeholder="Escreva uma citação..."
-                          className="w-full border-none shadow-none resize-none bg-transparent text-lg italic focus-visible:ring-0 min-h-[44px] p-0"
-                          onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
-                        />
+                        <Textarea value={block.content} onChange={(e) => updateBlock(index, { content: e.target.value })}
+                          onFocus={() => setFocusedIndex(index)} onBlur={() => setFocusedIndex(null)}
+                          placeholder="Escreva uma citação..." className="w-full border-none shadow-none resize-none bg-transparent text-lg italic focus-visible:ring-0 min-h-[44px] p-0"
+                          onInput={(e) => autoResize(e.target as HTMLTextAreaElement)} />
                       </div>
                     </div>
                   )}
 
                   {(block.type === "list" || block.type === "ordered-list") && (
                     <div className="px-4 py-3">
-                      <Textarea
-                        value={block.content}
-                        onChange={(e) => updateBlock(index, { content: e.target.value })}
-                        onFocus={() => setFocusedIndex(index)}
-                        onBlur={() => setFocusedIndex(null)}
-                        placeholder="Um item por linha..."
-                        className="w-full border-none shadow-none resize-none bg-transparent text-base leading-7 focus-visible:ring-0 min-h-[80px] p-0"
-                        onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
-                      />
+                      <Textarea value={block.content} onChange={(e) => updateBlock(index, { content: e.target.value })}
+                        onFocus={() => setFocusedIndex(index)} onBlur={() => setFocusedIndex(null)}
+                        placeholder="Um item por linha..." className="w-full border-none shadow-none resize-none bg-transparent text-base leading-7 focus-visible:ring-0 min-h-[80px] p-0"
+                        onInput={(e) => autoResize(e.target as HTMLTextAreaElement)} />
                       <p className="text-xs text-muted-foreground mt-1">
                         {block.type === "list" ? "• " : "1. "}Cada linha será um item da lista
                       </p>
@@ -404,15 +484,10 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
 
                   {block.type === "code" && (
                     <div className="px-4 py-3">
-                      <Textarea
-                        value={block.content}
-                        onChange={(e) => updateBlock(index, { content: e.target.value })}
-                        onFocus={() => setFocusedIndex(index)}
-                        onBlur={() => setFocusedIndex(null)}
-                        placeholder="// Escreva seu código aqui..."
-                        className="w-full border-none shadow-none resize-none bg-muted/50 rounded-lg font-mono text-sm focus-visible:ring-0 min-h-[100px] p-4"
-                        onInput={(e) => autoResize(e.target as HTMLTextAreaElement)}
-                      />
+                      <Textarea value={block.content} onChange={(e) => updateBlock(index, { content: e.target.value })}
+                        onFocus={() => setFocusedIndex(index)} onBlur={() => setFocusedIndex(null)}
+                        placeholder="// Escreva seu código aqui..." className="w-full border-none shadow-none resize-none bg-muted/50 rounded-lg font-mono text-sm focus-visible:ring-0 min-h-[100px] p-4"
+                        onInput={(e) => autoResize(e.target as HTMLTextAreaElement)} />
                     </div>
                   )}
 
@@ -420,6 +495,68 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) => {
                     <div className="px-4 py-8 flex items-center justify-center">
                       <div className="h-8 border-2 border-dashed border-muted rounded w-full flex items-center justify-center">
                         <span className="text-xs text-muted-foreground">Espaçador</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {block.type === "callout" && (() => {
+                    const style = CALLOUT_STYLES[block.calloutType || "info"];
+                    const CalloutIcon = style.icon;
+                    return (
+                      <div className={`mx-4 my-3 rounded-lg border-l-4 ${style.borderColor} ${style.bgColor} p-4`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <CalloutIcon className="h-4 w-4 flex-shrink-0" />
+                          <div className="flex gap-1">
+                            {Object.entries(CALLOUT_STYLES).map(([key, s]) => (
+                              <button key={key} type="button" onClick={() => updateBlock(index, { calloutType: key as Block["calloutType"] })}
+                                className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${block.calloutType === key ? "bg-foreground/10 border-foreground/20 font-medium" : "border-transparent hover:bg-foreground/5"}`}>
+                                {s.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <Textarea value={block.content} onChange={(e) => updateBlock(index, { content: e.target.value })}
+                          onFocus={() => setFocusedIndex(index)} onBlur={() => setFocusedIndex(null)}
+                          placeholder="Escreva uma nota..." className="w-full border-none shadow-none resize-none bg-transparent text-sm focus-visible:ring-0 min-h-[40px] p-0"
+                          onInput={(e) => autoResize(e.target as HTMLTextAreaElement)} />
+                      </div>
+                    );
+                  })()}
+
+                  {block.type === "embed" && (
+                    <div className="px-4 py-4 space-y-3">
+                      <div className="flex gap-2">
+                        <Input value={block.embedUrl || ""} onChange={(e) => updateBlock(index, { embedUrl: e.target.value })}
+                          placeholder="Cole a URL do YouTube, Vimeo..." className="text-sm" />
+                      </div>
+                      {block.embedUrl && extractEmbedUrl(block.embedUrl) && (
+                        <div className="aspect-video rounded-lg overflow-hidden bg-muted">
+                          <iframe src={extractEmbedUrl(block.embedUrl)!} className="w-full h-full" allowFullScreen
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" />
+                        </div>
+                      )}
+                      <Input value={block.content} onChange={(e) => updateBlock(index, { content: e.target.value })}
+                        placeholder="Legenda do vídeo (opcional)" className="text-sm border-dashed" />
+                    </div>
+                  )}
+
+                  {block.type === "columns" && (
+                    <div className="px-4 py-3">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Coluna 1</p>
+                          <Textarea value={block.content} onChange={(e) => updateBlock(index, { content: e.target.value })}
+                            onFocus={() => setFocusedIndex(index)} onBlur={() => setFocusedIndex(null)}
+                            placeholder="Conteúdo da coluna 1..." className="w-full border shadow-none resize-none bg-transparent text-sm focus-visible:ring-accent/30 min-h-[80px] rounded-lg"
+                            onInput={(e) => autoResize(e.target as HTMLTextAreaElement)} />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Coluna 2</p>
+                          <Textarea value={block.columnContent || ""} onChange={(e) => updateBlock(index, { columnContent: e.target.value })}
+                            onFocus={() => setFocusedIndex(index)} onBlur={() => setFocusedIndex(null)}
+                            placeholder="Conteúdo da coluna 2..." className="w-full border shadow-none resize-none bg-transparent text-sm focus-visible:ring-accent/30 min-h-[80px] rounded-lg"
+                            onInput={(e) => autoResize(e.target as HTMLTextAreaElement)} />
+                        </div>
                       </div>
                     </div>
                   )}
@@ -469,24 +606,48 @@ export function deserializeBlocks(content: string): Block[] {
   return paragraphs.map((p) => ({ id: generateId(), type: "paragraph" as const, content: p.trim() }));
 }
 
-/** Calculate reading time based on word count */
 export function calculateReadingTime(blocks: Block[]): number {
   const wordsPerMinute = 200;
   let totalWords = 0;
   
   blocks.forEach((block) => {
     if (block.content) {
-      // Strip HTML tags for counting
       const clean = block.content.replace(/<[^>]*>/g, "");
       totalWords += clean.split(/\s+/).filter(Boolean).length;
     }
-    // Images add ~12 seconds each
-    if (block.type === "image" && block.imageUrl) {
-      totalWords += 40; // ~12s equivalent
-    }
+    if (block.type === "image" && block.imageUrl) totalWords += 40;
+    if (block.type === "embed" && block.embedUrl) totalWords += 100;
   });
 
   return Math.max(1, Math.ceil(totalWords / wordsPerMinute));
+}
+
+export function getWordCount(blocks: Block[]): number {
+  let total = 0;
+  blocks.forEach((block) => {
+    if (block.content) {
+      const clean = block.content.replace(/<[^>]*>/g, "");
+      total += clean.split(/\s+/).filter(Boolean).length;
+    }
+    if (block.columnContent) {
+      const clean = block.columnContent.replace(/<[^>]*>/g, "");
+      total += clean.split(/\s+/).filter(Boolean).length;
+    }
+  });
+  return total;
+}
+
+export function getCharCount(blocks: Block[]): number {
+  let total = 0;
+  blocks.forEach((block) => {
+    if (block.content) {
+      total += block.content.replace(/<[^>]*>/g, "").length;
+    }
+    if (block.columnContent) {
+      total += block.columnContent.replace(/<[^>]*>/g, "").length;
+    }
+  });
+  return total;
 }
 
 export default BlockEditor;
