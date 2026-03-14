@@ -18,13 +18,14 @@ import {
 import {
   ArrowLeft, Loader2, Eye, EyeOff, Settings2, FileText, Clock, Save, X,
   Tag, MessageSquare, PanelRightOpen, PanelRightClose, CalendarIcon,
-  Search, Keyboard,
+  Search, Keyboard, Sparkles,
 } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import BlockEditor, { Block, serializeBlocks, deserializeBlocks, calculateReadingTime, getWordCount, getCharCount } from "@/components/admin/BlockEditor";
 import SEOPreview from "@/components/admin/blog/SEOPreview";
 import StatusBar from "@/components/admin/blog/StatusBar";
 import PostPreview from "@/components/admin/blog/PostPreview";
+import AIGenerateDialog from "@/components/admin/blog/AIGenerateDialog";
 import { useBlogPosts, useCreateBlogPost, useUpdateBlogPost } from "@/hooks/useBlog";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
@@ -89,6 +90,7 @@ const BlogEditor = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showAIDialog, setShowAIDialog] = useState(false);
 
   useEffect(() => {
     if (isEditing && posts) {
@@ -149,6 +151,39 @@ const BlogEditor = () => {
 
   const removeTag = (tag: string) => {
     setFormData((prev) => ({ ...prev, tags: prev.tags.filter((t) => t !== tag) }));
+  };
+
+  const handleAIGenerated = async (data: {
+    title: string; slug: string; excerpt: string; category: string;
+    tags: string[]; blocks: Block[]; coverImageBase64?: string; seoTips?: string[];
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      title: data.title,
+      slug: data.slug,
+      excerpt: data.excerpt,
+      category: data.category,
+      tags: data.tags,
+      cover_image: data.coverImageBase64 || prev.cover_image,
+    }));
+    setBlocks(data.blocks.length > 0 ? data.blocks : blocks);
+
+    // If AI generated an image, upload it to storage
+    if (data.coverImageBase64 && data.coverImageBase64.startsWith("data:image")) {
+      try {
+        const res = await fetch(data.coverImageBase64);
+        const blob = await res.blob();
+        const file = new File([blob], `ai-cover-${Date.now()}.png`, { type: "image/png" });
+        const { uploadImage } = await import("@/lib/supabase");
+        const path = await uploadImage(file, "blog");
+        if (path) {
+          const { getPublicImageUrl } = await import("@/lib/supabase");
+          setFormData((prev) => ({ ...prev, cover_image: getPublicImageUrl(path) }));
+        }
+      } catch (e) {
+        console.error("Failed to upload AI image:", e);
+      }
+    }
   };
 
   const handleSave = useCallback(async (publish = false, silent = false) => {
@@ -362,6 +397,12 @@ const BlogEditor = () => {
         </div>
 
         <div className="flex items-center gap-1 md:gap-1.5">
+          {/* AI Generate */}
+          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs text-accent hover:text-accent" onClick={() => setShowAIDialog(true)} title="Gerar com IA">
+            <Sparkles className="h-4 w-4" />
+            <span className="hidden sm:inline">IA</span>
+          </Button>
+
           {/* Preview toggle */}
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowPreview(!showPreview)}
             title={showPreview ? "Editar" : "Prévia"}>
@@ -480,6 +521,9 @@ const BlogEditor = () => {
           )
         )}
       </div>
+
+      {/* AI Generate Dialog */}
+      <AIGenerateDialog open={showAIDialog} onOpenChange={setShowAIDialog} onGenerated={handleAIGenerated} />
     </div>
   );
 };
