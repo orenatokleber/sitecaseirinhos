@@ -521,6 +521,9 @@ const BlogEditor = () => {
           )
         )}
       </div>
+
+      {/* AI Generate Dialog */}
+      <AIGenerateDialog open={showAIDialog} onOpenChange={setShowAIDialog} onGenerated={handleAIGenerated} />
     </div>
   );
 };
