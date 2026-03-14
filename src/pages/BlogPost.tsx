@@ -433,6 +433,7 @@ const BlogPost = () => {
         author={post.author_name}
         publishedAt={post.published_at || undefined}
         tags={tags}
+        slug={post.slug}
       />
 
       {/* Hero cover - full bleed */}
