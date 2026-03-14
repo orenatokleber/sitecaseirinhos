@@ -153,6 +153,39 @@ const BlogEditor = () => {
     setFormData((prev) => ({ ...prev, tags: prev.tags.filter((t) => t !== tag) }));
   };
 
+  const handleAIGenerated = async (data: {
+    title: string; slug: string; excerpt: string; category: string;
+    tags: string[]; blocks: Block[]; coverImageBase64?: string; seoTips?: string[];
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      title: data.title,
+      slug: data.slug,
+      excerpt: data.excerpt,
+      category: data.category,
+      tags: data.tags,
+      cover_image: data.coverImageBase64 || prev.cover_image,
+    }));
+    setBlocks(data.blocks.length > 0 ? data.blocks : blocks);
+
+    // If AI generated an image, upload it to storage
+    if (data.coverImageBase64 && data.coverImageBase64.startsWith("data:image")) {
+      try {
+        const res = await fetch(data.coverImageBase64);
+        const blob = await res.blob();
+        const file = new File([blob], `ai-cover-${Date.now()}.png`, { type: "image/png" });
+        const { uploadImage } = await import("@/lib/supabase");
+        const path = await uploadImage(file, "blog");
+        if (path) {
+          const { getPublicImageUrl } = await import("@/lib/supabase");
+          setFormData((prev) => ({ ...prev, cover_image: getPublicImageUrl(path) }));
+        }
+      } catch (e) {
+        console.error("Failed to upload AI image:", e);
+      }
+    }
+  };
+
   const handleSave = useCallback(async (publish = false, silent = false) => {
     if (!formData.title) {
       if (!silent) toast.error("Adicione um título ao post");
