@@ -397,6 +397,12 @@ const BlogEditor = () => {
         </div>
 
         <div className="flex items-center gap-1 md:gap-1.5">
+          {/* AI Generate */}
+          <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs text-accent hover:text-accent" onClick={() => setShowAIDialog(true)} title="Gerar com IA">
+            <Sparkles className="h-4 w-4" />
+            <span className="hidden sm:inline">IA</span>
+          </Button>
+
           {/* Preview toggle */}
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowPreview(!showPreview)}
             title={showPreview ? "Editar" : "Prévia"}>
