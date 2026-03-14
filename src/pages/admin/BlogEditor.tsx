@@ -18,7 +18,7 @@ import {
 import {
   ArrowLeft, Loader2, Eye, EyeOff, Settings2, FileText, Clock, Save, X,
   Tag, MessageSquare, PanelRightOpen, PanelRightClose, CalendarIcon,
-  Search, Keyboard,
+  Search, Keyboard, Sparkles,
 } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import BlockEditor, { Block, serializeBlocks, deserializeBlocks, calculateReadingTime, getWordCount, getCharCount } from "@/components/admin/BlockEditor";
