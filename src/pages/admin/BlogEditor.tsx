@@ -25,6 +25,7 @@ import BlockEditor, { Block, serializeBlocks, deserializeBlocks, calculateReadin
 import SEOPreview from "@/components/admin/blog/SEOPreview";
 import StatusBar from "@/components/admin/blog/StatusBar";
 import PostPreview from "@/components/admin/blog/PostPreview";
+import AIGenerateDialog from "@/components/admin/blog/AIGenerateDialog";
 import { useBlogPosts, useCreateBlogPost, useUpdateBlogPost } from "@/hooks/useBlog";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
