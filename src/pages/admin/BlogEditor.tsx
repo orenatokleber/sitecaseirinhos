@@ -90,6 +90,7 @@ const BlogEditor = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showAIDialog, setShowAIDialog] = useState(false);
 
   useEffect(() => {
     if (isEditing && posts) {
