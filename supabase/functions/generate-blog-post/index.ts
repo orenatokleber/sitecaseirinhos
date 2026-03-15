@@ -34,30 +34,9 @@ REGRAS DE SEO OBRIGATÓRIAS:
 - Inclua listas para featured snippets do Google
 - Conteúdo entre ${wordTarget} palavras
 - Tom: ${toneDesc}
+- LIMITE: máximo 12 blocos de conteúdo para manter o post conciso e focado
 
-FORMATO DE RESPOSTA (JSON válido):
-Retorne APENAS um objeto JSON com esta estrutura exata, sem markdown:
-{
-  "title": "Título SEO otimizado",
-  "slug": "url-amigavel-seo",
-  "excerpt": "Meta description otimizada entre 140-155 chars com CTA",
-  "category": "Categoria relevante",
-  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
-  "blocks": [
-    {"type": "heading2", "content": "Subtítulo H2 com keyword"},
-    {"type": "paragraph", "content": "Parágrafo com conteúdo rico..."},
-    {"type": "list", "content": "Item 1\\nItem 2\\nItem 3"},
-    {"type": "quote", "content": "Citação relevante"},
-    {"type": "heading3", "content": "Subtítulo H3"},
-    {"type": "paragraph", "content": "Mais conteúdo..."},
-    {"type": "callout", "content": "Dica importante", "calloutType": "tip"}
-  ],
-  "seo_score_tips": ["Dica SEO 1", "Dica SEO 2"],
-  "suggested_internal_links": ["Sugestão de link interno 1"],
-  "image_prompt": "Prompt descritivo em inglês para gerar imagem de destaque"
-}
-
-Tipos de bloco permitidos: paragraph, heading2, heading3, list, ordered-list, quote, code, callout, divider
+Tipos de bloco permitidos: paragraph, heading2, heading3, list, ordered-list, quote, callout, divider
 Para callout use calloutType: info, warning, success, tip`;
 
     const userPrompt = `Gere um post completo sobre: "${topic}"${keywords ? `\n\nKeywords para incluir: ${keywords}` : ""}`;
@@ -74,6 +53,43 @@ Para callout use calloutType: info, warning, success, tip`;
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
+        tools: [
+          {
+            type: "function",
+            function: {
+              name: "create_blog_post",
+              description: "Create a complete SEO-optimized blog post with all metadata and content blocks.",
+              parameters: {
+                type: "object",
+                properties: {
+                  title: { type: "string", description: "SEO title, 50-60 chars, keyword at start" },
+                  slug: { type: "string", description: "URL-friendly slug" },
+                  excerpt: { type: "string", description: "Meta description, 140-155 chars with CTA" },
+                  category: { type: "string", description: "Post category" },
+                  tags: { type: "array", items: { type: "string" }, description: "5 SEO tags" },
+                  blocks: {
+                    type: "array",
+                    description: "Content blocks (max 12)",
+                    items: {
+                      type: "object",
+                      properties: {
+                        type: { type: "string", enum: ["paragraph", "heading2", "heading3", "list", "ordered-list", "quote", "callout", "divider"] },
+                        content: { type: "string" },
+                        calloutType: { type: "string", enum: ["info", "warning", "success", "tip"] },
+                      },
+                      required: ["type", "content"],
+                      additionalProperties: false,
+                    },
+                  },
+                  image_prompt: { type: "string", description: "English prompt for cover image generation" },
+                },
+                required: ["title", "slug", "excerpt", "category", "tags", "blocks", "image_prompt"],
+                additionalProperties: false,
+              },
+            },
+          },
+        ],
+        tool_choice: { type: "function", function: { name: "create_blog_post" } },
       }),
     });
 
@@ -96,15 +112,24 @@ Para callout use calloutType: info, warning, success, tip`;
     }
 
     const data = await response.json();
-    const rawContent = data.choices?.[0]?.message?.content || "";
 
-    // Parse JSON from response (handle markdown code blocks)
+    // Extract structured output from tool call
     let parsed;
     try {
-      const jsonStr = rawContent.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      parsed = JSON.parse(jsonStr);
-    } catch {
-      console.error("Failed to parse AI response:", rawContent);
+      const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+      if (!toolCall) {
+        // Fallback: try parsing from content
+        const rawContent = data.choices?.[0]?.message?.content || "";
+        const jsonStr = rawContent.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+        parsed = JSON.parse(jsonStr);
+      } else {
+        const args = typeof toolCall.function.arguments === "string"
+          ? JSON.parse(toolCall.function.arguments)
+          : toolCall.function.arguments;
+        parsed = args;
+      }
+    } catch (e) {
+      console.error("Failed to parse AI response:", JSON.stringify(data.choices?.[0]?.message).substring(0, 500));
       throw new Error("Falha ao processar resposta da IA");
     }
 
@@ -139,7 +164,6 @@ Para callout use calloutType: info, warning, success, tip`;
         }
       } catch (e) {
         console.error("Image generation failed:", e);
-        // Continue without image
       }
     }
 
