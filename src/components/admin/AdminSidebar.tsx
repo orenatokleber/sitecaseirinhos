@@ -9,7 +9,8 @@ import {
   BookOpen,
   Search,
   LogOut,
-  ExternalLink
+  ExternalLink,
+  Link as LinkIcon
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ const menuItems = [
   { icon: BookOpen, label: "Blog", path: "/painel-admin/blog" },
   { icon: MessageSquare, label: "Comentários", path: "/painel-admin/comentarios" },
   { icon: Search, label: "SEO", path: "/painel-admin/seo" },
+  { icon: LinkIcon, label: "Links", path: "/painel-admin/links" },
   { icon: Settings, label: "Configurações", path: "/painel-admin/config" },
 ];
 
