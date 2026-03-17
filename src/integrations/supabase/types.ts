@@ -238,6 +238,71 @@ export type Database = {
         }
         Relationships: []
       }
+      redirect_clicks: {
+        Row: {
+          clicked_at: string
+          id: string
+          redirect_id: string
+          referrer: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          clicked_at?: string
+          id?: string
+          redirect_id: string
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          clicked_at?: string
+          id?: string
+          redirect_id?: string
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "redirect_clicks_redirect_id_fkey"
+            columns: ["redirect_id"]
+            isOneToOne: false
+            referencedRelation: "redirects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      redirects: {
+        Row: {
+          created_at: string
+          destination_url: string
+          id: string
+          is_active: boolean
+          slug: string
+          title: string | null
+          total_clicks: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          destination_url: string
+          id?: string
+          is_active?: boolean
+          slug: string
+          title?: string | null
+          total_clicks?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          destination_url?: string
+          id?: string
+          is_active?: boolean
+          slug?: string
+          title?: string | null
+          total_clicks?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_sections: {
         Row: {
           content: string | null
@@ -360,6 +425,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_redirect_clicks: {
+        Args: { redirect_id: string }
+        Returns: undefined
       }
     }
     Enums: {
