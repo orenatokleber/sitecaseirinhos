@@ -9,7 +9,8 @@ import {
   BookOpen,
   Search,
   LogOut,
-  ExternalLink
+  ExternalLink,
+  Link
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
