@@ -62,7 +62,7 @@ const AdminLinks = () => {
   };
 
   const handleCopy = (slug: string) => {
-    navigator.clipboard.writeText(`${BASE_URL}/go/${slug}`);
+    navigator.clipboard.writeText(`${BASE_URL}/${slug}`);
     toast({ title: "Link copiado!" });
   };
 
@@ -93,7 +93,7 @@ const AdminLinks = () => {
               <div className="space-y-2">
                 <Label>Slug</Label>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground whitespace-nowrap">/go/</span>
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">{BASE_URL}/</span>
                   <Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="instagram" required />
                 </div>
               </div>
@@ -162,7 +162,7 @@ const AdminLinks = () => {
                     <TableCell>
                       <div>
                         <p className="font-medium text-foreground">{r.title || r.slug}</p>
-                        <p className="text-xs text-muted-foreground">/go/{r.slug}</p>
+                        <p className="text-xs text-muted-foreground">/{r.slug}</p>
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
