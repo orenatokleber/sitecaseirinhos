@@ -162,7 +162,7 @@ const AdminLinks = () => {
                     <TableCell>
                       <div>
                         <p className="font-medium text-foreground">{r.title || r.slug}</p>
-                        <p className="text-xs text-muted-foreground">/go/{r.slug}</p>
+                        <p className="text-xs text-muted-foreground">/{r.slug}</p>
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
