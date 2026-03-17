@@ -93,6 +93,7 @@ const App = () => (
               <Route path="blog" element={<AdminBlog />} />
                 <Route path="comentarios" element={<AdminComments />} />
                 <Route path="seo" element={<AdminSEO />} />
+                <Route path="links" element={<AdminLinks />} />
                 <Route path="config" element={<AdminConfig />} />
               </Route>
 
