@@ -24,7 +24,7 @@ const menuItems = [
   { icon: BookOpen, label: "Blog", path: "/painel-admin/blog" },
   { icon: MessageSquare, label: "Comentários", path: "/painel-admin/comentarios" },
   { icon: Search, label: "SEO", path: "/painel-admin/seo" },
-  { icon: Link, label: "Links", path: "/painel-admin/links" },
+  { icon: LinkIcon, label: "Links", path: "/painel-admin/links" },
   { icon: Settings, label: "Configurações", path: "/painel-admin/config" },
 ];
 
