@@ -62,7 +62,7 @@ const AdminLinks = () => {
   };
 
   const handleCopy = (slug: string) => {
-    navigator.clipboard.writeText(`${BASE_URL}/go/${slug}`);
+    navigator.clipboard.writeText(`${BASE_URL}/${slug}`);
     toast({ title: "Link copiado!" });
   };
 
