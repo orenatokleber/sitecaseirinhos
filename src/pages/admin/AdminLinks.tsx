@@ -93,7 +93,7 @@ const AdminLinks = () => {
               <div className="space-y-2">
                 <Label>Slug</Label>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground whitespace-nowrap">/go/</span>
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">{BASE_URL}/</span>
                   <Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="instagram" required />
                 </div>
               </div>
