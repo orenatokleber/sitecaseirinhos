@@ -12,11 +12,11 @@ import ImageUpload from "@/components/admin/ImageUpload";
 import { Loader2, Plus, Pencil, Trash2 } from "lucide-react";
 
 const categories = [
-  { value: "caseiros", label: "Bolos Caseiros" },
-  { value: "fatias", label: "Fatias Gourmet" },
-  { value: "pote", label: "Bolos de Pote" },
-  { value: "doces", label: "Doces Finos" },
-  { value: "sobremesas", label: "Sobremesas no Copo" },
+  { value: "bolos-decorados", label: "Bolos Decorados" },
+  { value: "bolos-retangulares", label: "Bolos Retangulares" },
+  { value: "doces", label: "Doces" },
+  { value: "complementos", label: "Complementos de Festa" },
+  { value: "inspiracoes", label: "Fotos de Inspiração" },
 ];
 
 interface ProductFormData {
