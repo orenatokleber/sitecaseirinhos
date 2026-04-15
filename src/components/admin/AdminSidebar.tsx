@@ -10,7 +10,8 @@ import {
   Search,
   LogOut,
   ExternalLink,
-  Link as LinkIcon
+  Link as LinkIcon,
+  UtensilsCrossed
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ const menuItems = [
   { icon: Home, label: "Dashboard", path: "/painel-admin" },
   { icon: FileText, label: "Seções do Site", path: "/painel-admin/secoes" },
   { icon: ShoppingBag, label: "Produtos", path: "/painel-admin/produtos" },
+  { icon: UtensilsCrossed, label: "Cardápio", path: "/painel-admin/cardapio" },
   { icon: MessageSquare, label: "Depoimentos", path: "/painel-admin/depoimentos" },
   { icon: Image, label: "Galeria", path: "/painel-admin/galeria" },
   { icon: BookOpen, label: "Blog", path: "/painel-admin/blog" },
