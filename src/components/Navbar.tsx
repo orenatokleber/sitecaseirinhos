@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import logo from "@/assets/logo.png";
 
 const defaultLinks = [
   { to: "/", label: "Home" },
@@ -25,13 +26,7 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between py-3 px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-            <span className="font-script text-xl text-primary">C</span>
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-script text-xl md:text-2xl text-chocolate">Caseirinhos</span>
-            <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground font-body">confeitaria artesanal</span>
-          </div>
+          <img src={logo} alt="Caseirinhos a Confeitaria" className="h-10 md:h-12 w-auto" />
         </Link>
 
         {/* Desktop */}
