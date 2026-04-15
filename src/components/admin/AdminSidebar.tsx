@@ -22,6 +22,7 @@ const menuItems = [
   { icon: FileText, label: "Seções do Site", path: "/painel-admin/secoes" },
   { icon: ShoppingBag, label: "Produtos", path: "/painel-admin/produtos" },
   { icon: UtensilsCrossed, label: "Cardápio", path: "/painel-admin/cardapio" },
+  { icon: Truck, label: "Delivery", path: "/painel-admin/delivery" },
   { icon: MessageSquare, label: "Depoimentos", path: "/painel-admin/depoimentos" },
   { icon: Image, label: "Galeria", path: "/painel-admin/galeria" },
   { icon: BookOpen, label: "Blog", path: "/painel-admin/blog" },
