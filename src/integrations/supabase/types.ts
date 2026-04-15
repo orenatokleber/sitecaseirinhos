@@ -106,6 +106,54 @@ export type Database = {
         }
         Relationships: []
       }
+      delivery_popups: {
+        Row: {
+          bg_color: string | null
+          coupon_code: string | null
+          created_at: string
+          description: string | null
+          discount_text: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          popup_type: string
+          sort_order: number | null
+          text_color: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          bg_color?: string | null
+          coupon_code?: string | null
+          created_at?: string
+          description?: string | null
+          discount_text?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          popup_type?: string
+          sort_order?: number | null
+          text_color?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          bg_color?: string | null
+          coupon_code?: string | null
+          created_at?: string
+          description?: string | null
+          discount_text?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          popup_type?: string
+          sort_order?: number | null
+          text_color?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       gallery_images: {
         Row: {
           alt_text: string | null

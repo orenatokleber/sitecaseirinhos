@@ -9,6 +9,7 @@ const defaultLinks = [
   { to: "/", label: "Home" },
   { to: "/nossa-historia", label: "Nossa História" },
   { to: "/cardapio", label: "Cardápio" },
+  { to: "/delivery", label: "Delivery" },
   { to: "/encomendas", label: "Encomendas" },
   { to: "/contato", label: "Contato" },
 ];
