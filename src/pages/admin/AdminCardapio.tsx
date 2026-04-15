@@ -145,23 +145,37 @@ const AdminCardapio = () => {
             <AccordionItem value="massas">
               <AccordionTrigger>Massas</AccordionTrigger>
               <AccordionContent>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {menu.bolos_redondos.massas.map((m: any, i: number) => (
-                    <div key={i} className="grid grid-cols-3 gap-2 items-end">
-                      <div>
-                        <Label className="text-xs">Nome</Label>
-                        <Input value={m.nome} onChange={(e) => { const arr = [...menu.bolos_redondos.massas]; arr[i] = { ...m, nome: e.target.value }; update(["bolos_redondos", "massas"], arr); }} />
+                    <Card key={i} className="p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4">
+                        <div>
+                          <Label className="text-xs mb-1 block">Imagem</Label>
+                          <ImageUpload
+                            value={m.imagem || ""}
+                            onChange={(url) => { const arr = [...menu.bolos_redondos.massas]; arr[i] = { ...m, imagem: url }; update(["bolos_redondos", "massas"], arr); }}
+                            folder="cardapio/massas"
+                            aspectRatio={1}
+                            recommendedSize="400x400"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <div>
+                            <Label className="text-xs">Nome</Label>
+                            <Input value={m.nome} onChange={(e) => { const arr = [...menu.bolos_redondos.massas]; arr[i] = { ...m, nome: e.target.value }; update(["bolos_redondos", "massas"], arr); }} />
+                          </div>
+                          <div>
+                            <Label className="text-xs">Acréscimo (R$)</Label>
+                            <Input type="number" step="0.01" value={m.acrescimo} onChange={(e) => { const arr = [...menu.bolos_redondos.massas]; arr[i] = { ...m, acrescimo: parseFloat(e.target.value) || 0 }; update(["bolos_redondos", "massas"], arr); }} />
+                          </div>
+                          <Button variant="destructive" size="sm" onClick={() => update(["bolos_redondos", "massas"], menu.bolos_redondos.massas.filter((_: any, j: number) => j !== i))}>
+                            <Trash2 className="h-4 w-4 mr-1" /> Remover
+                          </Button>
+                        </div>
                       </div>
-                      <div>
-                        <Label className="text-xs">Acréscimo (R$)</Label>
-                        <Input type="number" step="0.01" value={m.acrescimo} onChange={(e) => { const arr = [...menu.bolos_redondos.massas]; arr[i] = { ...m, acrescimo: parseFloat(e.target.value) || 0 }; update(["bolos_redondos", "massas"], arr); }} />
-                      </div>
-                      <Button variant="destructive" size="icon" onClick={() => update(["bolos_redondos", "massas"], menu.bolos_redondos.massas.filter((_: any, j: number) => j !== i))}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    </Card>
                   ))}
-                  <Button variant="outline" size="sm" onClick={() => update(["bolos_redondos", "massas"], [...menu.bolos_redondos.massas, { nome: "", acrescimo: 0 }])}>
+                  <Button variant="outline" size="sm" onClick={() => update(["bolos_redondos", "massas"], [...menu.bolos_redondos.massas, { nome: "", acrescimo: 0, imagem: "" }])}>
                     <Plus className="h-4 w-4 mr-1" /> Adicionar Massa
                   </Button>
                 </div>
