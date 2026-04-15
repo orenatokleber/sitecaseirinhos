@@ -4,6 +4,9 @@ import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings, useProducts } from "@/hooks/useSiteContent";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { Cake, Cookie, Sparkles, ChefHat, MessageCircle, Star, CircleDot, Crown } from "lucide-react";
+import massaBrancaDefault from "@/assets/massa-branca.jpg";
+import massaChocolateDefault from "@/assets/massa-chocolate.jpg";
+import massaRedVelvetDefault from "@/assets/massa-red-velvet.jpg";
 
 const formatPrice = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 
@@ -295,18 +298,40 @@ const Cardapio = () => {
 
                   {/* Massas */}
                   <ElegantCard title="Massas" subtitle="Base da sua criação" icon={<Cake className="w-5 h-5" />}>
-                    <div className="flex flex-wrap justify-center gap-4">
-                      {bolosRedondos.massas.map((m: any) => (
-                        <div
-                          key={m.nome}
-                          className="bg-gradient-to-br from-background to-secondary/40 border border-border/60 rounded-2xl px-6 py-4 text-center min-w-[140px] hover:border-accent/30 transition-colors"
-                        >
-                          <span className="font-heading font-semibold text-foreground text-sm">{m.nome}</span>
-                          {m.acrescimo > 0 && (
-                            <p className="text-xs text-accent font-medium mt-1">+R$ {m.acrescimo.toFixed(2).replace(".", ",")}</p>
-                          )}
-                        </div>
-                      ))}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                      {bolosRedondos.massas.map((m: any) => {
+                        const defaultImages: Record<string, string> = {
+                          "Massa Branca": massaBrancaDefault,
+                          "Massa Chocolate": massaChocolateDefault,
+                          "Red Velvet": massaRedVelvetDefault,
+                        };
+                        const imgUrl = m.imagem ? getPublicImageUrl(m.imagem) : defaultImages[m.nome] || null;
+                        return (
+                          <div
+                            key={m.nome}
+                            className="group rounded-2xl overflow-hidden border border-border/40 bg-gradient-to-b from-background to-secondary/20 hover:shadow-lg hover:shadow-accent/5 transition-all duration-500"
+                          >
+                            {imgUrl && (
+                              <div className="aspect-square overflow-hidden">
+                                <img
+                                  src={imgUrl}
+                                  alt={m.nome}
+                                  loading="lazy"
+                                  width={400}
+                                  height={400}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                />
+                              </div>
+                            )}
+                            <div className="p-4 text-center">
+                              <span className="font-heading font-semibold text-foreground">{m.nome}</span>
+                              {m.acrescimo > 0 && (
+                                <p className="text-sm text-accent font-medium mt-1">+R$ {m.acrescimo.toFixed(2).replace(".", ",")}</p>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </ElegantCard>
 
