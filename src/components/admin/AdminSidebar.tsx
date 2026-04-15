@@ -11,7 +11,8 @@ import {
   LogOut,
   ExternalLink,
   Link as LinkIcon,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Truck
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
