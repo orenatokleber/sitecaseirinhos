@@ -26,6 +26,7 @@ import AdminGallery from "./pages/admin/AdminGallery";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminConfig from "./pages/admin/AdminConfig";
 import BlogEditor from "./pages/admin/BlogEditor";
+import AdminCardapio from "./pages/admin/AdminCardapio";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import AdminSEO from "./pages/admin/AdminSEO";
@@ -88,6 +89,7 @@ const App = () => (
                 <Route index element={<AdminDashboard />} />
                 <Route path="secoes" element={<AdminSections />} />
                 <Route path="produtos" element={<AdminProducts />} />
+                <Route path="cardapio" element={<AdminCardapio />} />
                 <Route path="depoimentos" element={<AdminTestimonials />} />
                 <Route path="galeria" element={<AdminGallery />} />
               <Route path="blog" element={<AdminBlog />} />
