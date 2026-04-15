@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings, useProducts } from "@/hooks/useSiteContent";
-import { Cake, Cookie, Sparkles, ChefHat, MessageCircle, Star, CircleDot } from "lucide-react";
+import { getPublicImageUrl } from "@/lib/supabase";
+import { Cake, Cookie, Sparkles, ChefHat, MessageCircle, Star, CircleDot, Crown } from "lucide-react";
 
 const formatPrice = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 
@@ -45,8 +46,8 @@ const defaultMenu = {
       { sigla: "GG", dimensao: "36×26cm", porcoes: "60 a 65" },
     ],
     estilos: [
-      { nome: "Bolo de Corte", descricao: "Coberto com chantininho e decoração simples. Embalagem simples." },
-      { nome: "Bolo Retangular Decorado", descricao: "2 camadas de recheio, decoração personalizada. Vai no cakeboard." },
+      { nome: "Bolo de Corte", descricao: "Coberto com chantininho e decoração simples." },
+      { nome: "Bolo Retangular Decorado", descricao: "2 camadas de recheio, decoração personalizada." },
       { nome: "Bolo em Fatias", descricao: "Fatias em embalagem com etiqueta personalizada." },
     ],
     precos: {
@@ -149,7 +150,6 @@ const Cardapio = () => {
   const doces = menu.doces || defaultMenu.doces;
   const complementos = menu.complementos || defaultMenu.complementos;
 
-  // Filter products for gallery
   const galleryProducts = products?.filter((p: any) => p.image_url) || [];
 
   const whatsappLink = `https://wa.me/${whatsapp}?text=${encodeURIComponent("Olá! Gostaria de fazer uma encomenda. Pode me ajudar?")}`;
@@ -157,333 +157,456 @@ const Cardapio = () => {
   return (
     <main className="pt-24 pb-8">
       {/* Hero */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4 text-center">
-          <SectionTitle
-            script="Nossas delícias"
-            title="Cardápio de Encomendas"
-            subtitle="Conheça nossos sabores, estilos e valores. Cada bolo é feito com amor e ingredientes selecionados."
-          />
+      <section className="py-16 md:py-20 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-3xl" />
+          <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-accent/5 blur-3xl" />
+        </div>
+
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="font-script text-2xl md:text-3xl text-primary">Nossas delícias</span>
+            <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mt-2 mb-4">
+              Cardápio de Encomendas
+            </h1>
+            <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mb-4" />
+            <p className="text-muted-foreground max-w-lg mx-auto font-body leading-relaxed">
+              Cada criação é feita artesanalmente com ingredientes selecionados.
+              Escolha o estilo perfeito para sua celebração.
+            </p>
+          </motion.div>
 
           {/* Section tabs */}
-          <div className="flex flex-wrap justify-center gap-2 mt-8">
+          <div className="flex flex-wrap justify-center gap-3 mt-10">
             {sectionTabs.map((tab) => (
-              <button
+              <motion.button
                 key={tab.key}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => setActiveSection(tab.key)}
-                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-300 ${
+                className={`inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-body font-semibold transition-all duration-300 border ${
                   activeSection === tab.key
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-card text-muted-foreground hover:bg-secondary border border-border"
+                    ? "bg-chocolate text-white border-chocolate shadow-lg shadow-chocolate/20"
+                    : "bg-card text-chocolate/70 hover:bg-secondary border-border hover:border-chocolate/30"
                 }`}
               >
                 {tab.icon}
                 {tab.label}
-              </button>
+              </motion.button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════ BOLOS ══════════════════════════════ */}
-      {activeSection === "bolos" && (
-        <section className="pb-16">
-          <div className="container mx-auto px-4 max-w-5xl">
-            {/* Sub-tabs: Redondos / Retangulares */}
-            <div className="flex justify-center gap-2 mb-10">
-              {[
-                { key: "redondos" as const, label: "Redondos" },
-                { key: "retangulares" as const, label: "Retangulares" },
-              ].map((t) => (
-                <button
-                  key={t.key}
-                  onClick={() => setBoloTab(t.key)}
-                  className={`px-4 py-2 rounded-full text-sm font-body transition-colors ${
-                    boloTab === t.key
-                      ? "bg-accent text-accent-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-muted"
-                  }`}
+      <AnimatePresence mode="wait">
+        {/* ══════════════════════════════ BOLOS ══════════════════════════════ */}
+        {activeSection === "bolos" && (
+          <motion.section
+            key="bolos"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.35 }}
+            className="pb-16"
+          >
+            <div className="container mx-auto px-4 max-w-5xl">
+              {/* Sub-tabs */}
+              <div className="flex justify-center gap-3 mb-12">
+                {[
+                  { key: "redondos" as const, label: "Redondos" },
+                  { key: "retangulares" as const, label: "Retangulares" },
+                ].map((t) => (
+                  <button
+                    key={t.key}
+                    onClick={() => setBoloTab(t.key)}
+                    className={`px-5 py-2 rounded-full text-sm font-body font-medium transition-all duration-300 border ${
+                      boloTab === t.key
+                        ? "bg-accent/15 text-accent border-accent/30 font-semibold"
+                        : "bg-transparent text-muted-foreground border-border hover:border-accent/20"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* ─── Bolos Redondos ─── */}
+              {boloTab === "redondos" && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                  {/* Estilos com imagem */}
+                  <ElegantCard title="Nossos Estilos" subtitle="Escolha a cobertura perfeita" icon={<ChefHat className="w-5 h-5" />} accent>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                      {bolosRedondos.estilos.map((e: any) => {
+                        const imgUrl = e.imagem ? getPublicImageUrl(e.imagem) : null;
+                        return (
+                          <motion.div
+                            key={e.nome}
+                            whileHover={{ y: -4 }}
+                            className="group rounded-2xl overflow-hidden bg-background border border-border/60 shadow-sm hover:shadow-md transition-all duration-300"
+                          >
+                            {imgUrl && (
+                              <div className="aspect-square overflow-hidden">
+                                <img
+                                  src={imgUrl}
+                                  alt={e.nome}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                  loading="lazy"
+                                />
+                              </div>
+                            )}
+                            <div className="p-4 text-center">
+                              <h4 className="font-heading font-bold text-foreground text-base">{e.nome}</h4>
+                              <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{e.descricao}</p>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </ElegantCard>
+
+                  {/* Tamanhos */}
+                  <ElegantCard title="Tamanhos" subtitle="Dimensões e porções" icon={<CircleDot className="w-5 h-5" />}>
+                    <div className="overflow-x-auto -mx-2">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b-2 border-accent/20">
+                            <th className="text-left py-3 px-4 font-heading text-chocolate text-xs uppercase tracking-wider">Tamanho</th>
+                            <th className="text-center py-3 px-4 font-heading text-chocolate text-xs uppercase tracking-wider">Diâmetro</th>
+                            <th className="text-center py-3 px-4 font-heading text-chocolate text-xs uppercase tracking-wider">Porções</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bolosRedondos.tamanhos.map((t: any, i: number) => (
+                            <tr key={t.sigla} className={`${i % 2 === 0 ? "bg-accent/[0.04]" : ""} hover:bg-accent/[0.08] transition-colors`}>
+                              <td className="py-3 px-4 font-heading font-bold text-foreground">{t.sigla}</td>
+                              <td className="py-3 px-4 text-center text-muted-foreground">{t.dimensao}</td>
+                              <td className="py-3 px-4 text-center text-muted-foreground">{t.porcoes} fatias</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </ElegantCard>
+
+                  {/* Massas */}
+                  <ElegantCard title="Massas" subtitle="Base da sua criação" icon={<Cake className="w-5 h-5" />}>
+                    <div className="flex flex-wrap justify-center gap-4">
+                      {bolosRedondos.massas.map((m: any) => (
+                        <div
+                          key={m.nome}
+                          className="bg-gradient-to-br from-background to-secondary/40 border border-border/60 rounded-2xl px-6 py-4 text-center min-w-[140px] hover:border-accent/30 transition-colors"
+                        >
+                          <span className="font-heading font-semibold text-foreground text-sm">{m.nome}</span>
+                          {m.acrescimo > 0 && (
+                            <p className="text-xs text-accent font-medium mt-1">+R$ {m.acrescimo.toFixed(2).replace(".", ",")}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </ElegantCard>
+
+                  {/* Sabores */}
+                  <ElegantCard title="Sabores" subtitle="Escolha seu preferido" icon={<Star className="w-5 h-5" />}>
+                    <FlavorTier
+                      title="Tradicionais"
+                      flavors={bolosRedondos.sabores_tradicionais}
+                      badgeClass="bg-primary/8 text-primary border border-primary/15"
+                      icon={<Star className="w-3 h-3" />}
+                    />
+                    <FlavorTier
+                      title="Premium"
+                      flavors={bolosRedondos.sabores_premium}
+                      badgeClass="bg-accent/10 text-accent border border-accent/20"
+                      icon={<Crown className="w-3 h-3" />}
+                    />
+                    <FlavorTier
+                      title="Supreme"
+                      flavors={bolosRedondos.sabores_supreme}
+                      badgeClass="bg-chocolate/8 text-chocolate border border-chocolate/15"
+                      icon={<Sparkles className="w-3 h-3" />}
+                    />
+                  </ElegantCard>
+
+                  {/* Tabela de Preços */}
+                  <ElegantCard title="Investimento" subtitle="Valores por tamanho e categoria" icon={<Sparkles className="w-5 h-5" />} accent>
+                    <PriceTable sizes={bolosRedondos.tamanhos} prices={bolosRedondos.precos} />
+                    <p className="text-xs text-muted-foreground mt-4 text-center italic">
+                      * Cobertura de ganache pode ter valores diferenciados — consulte.
+                    </p>
+                  </ElegantCard>
+                </motion.div>
+              )}
+
+              {/* ─── Bolos Retangulares ─── */}
+              {boloTab === "retangulares" && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                  {/* Estilos com imagem */}
+                  <ElegantCard title="Estilos" subtitle="Retangulares" icon={<ChefHat className="w-5 h-5" />} accent>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                      {bolosRetangulares.estilos.map((e: any) => {
+                        const imgUrl = e.imagem ? getPublicImageUrl(e.imagem) : null;
+                        return (
+                          <motion.div
+                            key={e.nome}
+                            whileHover={{ y: -4 }}
+                            className="group rounded-2xl overflow-hidden bg-background border border-border/60 shadow-sm hover:shadow-md transition-all duration-300"
+                          >
+                            {imgUrl && (
+                              <div className="aspect-square overflow-hidden">
+                                <img
+                                  src={imgUrl}
+                                  alt={e.nome}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                  loading="lazy"
+                                />
+                              </div>
+                            )}
+                            <div className="p-4 text-center">
+                              <h4 className="font-heading font-bold text-foreground text-sm">{e.nome}</h4>
+                              <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{e.descricao}</p>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </ElegantCard>
+
+                  <ElegantCard title="Tamanhos" subtitle="Retangulares" icon={<CircleDot className="w-5 h-5" />}>
+                    <div className="overflow-x-auto -mx-2">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b-2 border-accent/20">
+                            <th className="text-left py-3 px-4 font-heading text-chocolate text-xs uppercase tracking-wider">Tamanho</th>
+                            <th className="text-center py-3 px-4 font-heading text-chocolate text-xs uppercase tracking-wider">Dimensão</th>
+                            <th className="text-center py-3 px-4 font-heading text-chocolate text-xs uppercase tracking-wider">Porções</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bolosRetangulares.tamanhos.map((t: any, i: number) => (
+                            <tr key={t.sigla} className={`${i % 2 === 0 ? "bg-accent/[0.04]" : ""} hover:bg-accent/[0.08] transition-colors`}>
+                              <td className="py-3 px-4 font-heading font-bold text-foreground">{t.sigla}</td>
+                              <td className="py-3 px-4 text-center text-muted-foreground">{t.dimensao}</td>
+                              <td className="py-3 px-4 text-center text-muted-foreground">{t.porcoes} fatias</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </ElegantCard>
+
+                  <ElegantCard title="Investimento" subtitle="Retangulares" icon={<Sparkles className="w-5 h-5" />} accent>
+                    <PriceTable sizes={bolosRetangulares.tamanhos} prices={bolosRetangulares.precos} />
+                    {bolosRetangulares.obs && (
+                      <p className="text-xs text-muted-foreground mt-4 text-center italic">* {bolosRetangulares.obs}</p>
+                    )}
+                  </ElegantCard>
+                </motion.div>
+              )}
+
+              {/* Decoração */}
+              <ElegantCard title="Adicionais" subtitle="Decoração & Personalizações" icon={<Sparkles className="w-5 h-5" />}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {decoracao.map((d: any, i: number) => (
+                    <div
+                      key={d.item}
+                      className="flex justify-between items-center rounded-xl px-4 py-3 text-sm hover:bg-accent/[0.05] transition-colors border-b border-border/30 last:border-0"
+                    >
+                      <span className="text-foreground font-body">{d.item}</span>
+                      <span className="text-accent font-heading font-semibold text-xs ml-3 whitespace-nowrap">{d.preco}</span>
+                    </div>
+                  ))}
+                </div>
+              </ElegantCard>
+
+              {/* Gallery */}
+              {galleryProducts.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-12"
                 >
-                  {t.label}
-                </button>
-              ))}
+                  <div className="text-center mb-8">
+                    <span className="font-script text-2xl text-primary">Inspirações</span>
+                    <div className="w-12 h-0.5 bg-accent/40 mx-auto mt-2" />
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {galleryProducts.slice(0, 8).map((p: any) => (
+                      <div key={p.id} className="aspect-square rounded-2xl overflow-hidden group shadow-sm">
+                        <img
+                          src={p.image_url}
+                          alt={p.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          loading="lazy"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </div>
+          </motion.section>
+        )}
 
-            {/* ─── Bolos Redondos ─── */}
-            {boloTab === "redondos" && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-                {/* Passo 1: Tamanhos */}
-                <MenuCard title="Passo 1" subtitle="Escolha o tamanho" icon={<CircleDot className="w-5 h-5 text-primary" />}>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left py-2 px-3 font-heading text-foreground">Tamanho</th>
-                          <th className="text-center py-2 px-3 font-heading text-foreground">Diâmetro</th>
-                          <th className="text-center py-2 px-3 font-heading text-foreground">Porções</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {bolosRedondos.tamanhos.map((t: any, i: number) => (
-                          <tr key={t.sigla} className={i % 2 === 0 ? "bg-secondary/30" : ""}>
-                            <td className="py-2.5 px-3 font-semibold text-foreground">{t.sigla}</td>
-                            <td className="py-2.5 px-3 text-center text-muted-foreground">{t.dimensao}</td>
-                            <td className="py-2.5 px-3 text-center text-muted-foreground">{t.porcoes} fatias</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </MenuCard>
-
-                {/* Passo 2: Estilos */}
-                <MenuCard title="Passo 2" subtitle="Escolha o estilo" icon={<ChefHat className="w-5 h-5 text-primary" />}>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {bolosRedondos.estilos.map((e: any) => (
-                      <div key={e.nome} className="bg-secondary/40 rounded-2xl p-4 text-center">
-                        <h4 className="font-heading font-semibold text-foreground mb-1">{e.nome}</h4>
-                        <p className="text-xs text-muted-foreground">{e.descricao}</p>
+        {/* ══════════════════════════════ DOCES ══════════════════════════════ */}
+        {activeSection === "doces" && (
+          <motion.section
+            key="doces"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.35 }}
+            className="pb-16"
+          >
+            <div className="container mx-auto px-4 max-w-5xl">
+              {/* Tradicionais */}
+              <ElegantCard title="Docinhos" subtitle="Tradicionais" icon={<Cookie className="w-5 h-5" />}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <h4 className="font-heading text-xs uppercase tracking-wider text-chocolate mb-4">Pacotes</h4>
+                    {doces.tradicionais.pacotes.map((p: any, i: number) => (
+                      <div key={p.qtd} className={`flex justify-between items-center py-3 ${i < doces.tradicionais.pacotes.length - 1 ? 'border-b border-border/40' : ''}`}>
+                        <span className="text-sm text-foreground font-body">{p.qtd}</span>
+                        <span className="text-sm font-heading font-bold text-accent">{formatPrice(p.preco)}</span>
                       </div>
                     ))}
+                    <p className="text-xs text-muted-foreground mt-3 italic">{doces.tradicionais.obs}</p>
                   </div>
-                </MenuCard>
+                  <div>
+                    <h4 className="font-heading text-xs uppercase tracking-wider text-chocolate mb-4">Sabores</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {doces.tradicionais.sabores.map((s: string) => (
+                        <span key={s} className="bg-primary/8 text-primary text-xs px-3 py-1.5 rounded-full border border-primary/15 font-medium">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </ElegantCard>
 
-                {/* Passo 3: Massas */}
-                <MenuCard title="Passo 3" subtitle="Escolha a massa" icon={<Cake className="w-5 h-5 text-primary" />}>
-                  <div className="flex flex-wrap justify-center gap-3">
-                    {bolosRedondos.massas.map((m: any) => (
-                      <div key={m.nome} className="bg-secondary/40 rounded-full px-5 py-2.5 text-sm text-center">
-                        <span className="font-medium text-foreground">{m.nome}</span>
-                        {m.acrescimo > 0 && (
-                          <span className="text-xs text-accent ml-1">(+R$ {m.acrescimo.toFixed(2).replace(".", ",")})</span>
-                        )}
+              {/* Gourmet */}
+              <ElegantCard title="Docinhos" subtitle="Gourmet" icon={<Crown className="w-5 h-5" />} accent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <h4 className="font-heading text-xs uppercase tracking-wider text-chocolate mb-4">Pacotes</h4>
+                    {doces.gourmet.pacotes.map((p: any, i: number) => (
+                      <div key={p.qtd} className={`flex justify-between items-center py-3 ${i < doces.gourmet.pacotes.length - 1 ? 'border-b border-border/40' : ''}`}>
+                        <span className="text-sm text-foreground font-body">{p.qtd}</span>
+                        <span className="text-sm font-heading font-bold text-accent">{formatPrice(p.preco)}</span>
                       </div>
                     ))}
+                    <p className="text-xs text-muted-foreground mt-3 italic">{doces.gourmet.obs}</p>
                   </div>
-                </MenuCard>
-
-                {/* Passo 4: Sabores */}
-                <MenuCard title="Passo 4" subtitle="Escolha o sabor" icon={<Star className="w-5 h-5 text-primary" />}>
-                  <FlavorTier title="Tradicionais" flavors={bolosRedondos.sabores_tradicionais} color="bg-primary/10 text-primary" />
-                  <FlavorTier title="Premium" flavors={bolosRedondos.sabores_premium} color="bg-accent/15 text-accent" />
-                  <FlavorTier title="Supreme" flavors={bolosRedondos.sabores_supreme} color="bg-chocolate/10 text-chocolate" />
-                </MenuCard>
-
-                {/* Tabela de Preços */}
-                <MenuCard title="Valores" subtitle="Bolos Redondos Decorados" icon={<Sparkles className="w-5 h-5 text-primary" />}>
-                  <PriceTable sizes={bolosRedondos.tamanhos} prices={bolosRedondos.precos} />
-                  <p className="text-xs text-muted-foreground mt-3 text-center italic">
-                    * Valores diferentes para cobertura de ganache — consulte antes.
-                  </p>
-                </MenuCard>
-              </motion.div>
-            )}
-
-            {/* ─── Bolos Retangulares ─── */}
-            {boloTab === "retangulares" && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-                <MenuCard title="Tamanhos" subtitle="Bolos Retangulares" icon={<CircleDot className="w-5 h-5 text-primary" />}>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left py-2 px-3 font-heading text-foreground">Tamanho</th>
-                          <th className="text-center py-2 px-3 font-heading text-foreground">Dimensão</th>
-                          <th className="text-center py-2 px-3 font-heading text-foreground">Porções</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {bolosRetangulares.tamanhos.map((t: any, i: number) => (
-                          <tr key={t.sigla} className={i % 2 === 0 ? "bg-secondary/30" : ""}>
-                            <td className="py-2.5 px-3 font-semibold text-foreground">{t.sigla}</td>
-                            <td className="py-2.5 px-3 text-center text-muted-foreground">{t.dimensao}</td>
-                            <td className="py-2.5 px-3 text-center text-muted-foreground">{t.porcoes} fatias</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div>
+                    <h4 className="font-heading text-xs uppercase tracking-wider text-chocolate mb-4">Sabores</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {doces.gourmet.sabores.map((s: string) => (
+                        <span key={s} className="bg-accent/10 text-accent text-xs px-3 py-1.5 rounded-full border border-accent/20 font-medium">{s}</span>
+                      ))}
+                    </div>
                   </div>
-                </MenuCard>
+                </div>
+              </ElegantCard>
 
-                <MenuCard title="Estilos" subtitle="Retangulares" icon={<ChefHat className="w-5 h-5 text-primary" />}>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {bolosRetangulares.estilos.map((e: any) => (
-                      <div key={e.nome} className="bg-secondary/40 rounded-2xl p-4 text-center">
-                        <h4 className="font-heading font-semibold text-foreground mb-1 text-sm">{e.nome}</h4>
-                        <p className="text-xs text-muted-foreground">{e.descricao}</p>
-                      </div>
-                    ))}
-                  </div>
-                </MenuCard>
-
-                <MenuCard title="Valores" subtitle="Bolos Retangulares" icon={<Sparkles className="w-5 h-5 text-primary" />}>
-                  <PriceTable sizes={bolosRetangulares.tamanhos} prices={bolosRetangulares.precos} />
-                  {bolosRetangulares.obs && (
-                    <p className="text-xs text-muted-foreground mt-3 text-center italic">* {bolosRetangulares.obs}</p>
-                  )}
-                </MenuCard>
-              </motion.div>
-            )}
-
-            {/* Decoração */}
-            <MenuCard title="Adicionais" subtitle="Decoração" icon={<Sparkles className="w-5 h-5 text-primary" />}>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {decoracao.map((d: any) => (
-                  <div key={d.item} className="flex justify-between items-center bg-secondary/30 rounded-xl px-3 py-2.5 text-sm">
-                    <span className="text-foreground">{d.item}</span>
-                    <span className="text-accent font-semibold text-xs ml-2 whitespace-nowrap">{d.preco}</span>
-                  </div>
-                ))}
-              </div>
-            </MenuCard>
-
-            {/* Gallery */}
-            {galleryProducts.length > 0 && (
-              <div className="mt-10">
-                <h3 className="font-script text-2xl text-primary text-center mb-6">Algumas inspirações</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                  {galleryProducts.slice(0, 8).map((p: any) => (
-                    <div key={p.id} className="aspect-square rounded-2xl overflow-hidden group">
-                      <img
-                        src={p.image_url}
-                        alt={p.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                      />
+              {/* Especiais */}
+              <ElegantCard title="Docinhos" subtitle="Especiais & Personalizados" icon={<Sparkles className="w-5 h-5" />}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {doces.especiais.map((d: any) => (
+                    <div key={d.item} className="flex justify-between items-center rounded-xl px-4 py-3 text-sm hover:bg-accent/[0.05] transition-colors border-b border-border/30 last:border-0">
+                      <span className="text-foreground">{d.item}</span>
+                      <span className="text-accent font-heading font-semibold text-xs ml-3 whitespace-nowrap">{d.preco}</span>
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
+                <p className="text-xs text-muted-foreground mt-4 text-center italic">
+                  * Pedido mínimo: 50 unidades. Pedir com 20 dias de antecedência.
+                </p>
+              </ElegantCard>
+            </div>
+          </motion.section>
+        )}
 
-      {/* ══════════════════════════════ DOCES ══════════════════════════════ */}
-      {activeSection === "doces" && (
-        <section className="pb-16">
-          <div className="container mx-auto px-4 max-w-5xl">
-            {/* Tradicionais */}
-            <MenuCard title="Docinhos" subtitle="Tradicionais" icon={<Cookie className="w-5 h-5 text-primary" />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-heading text-sm font-semibold text-foreground mb-3">Pacotes</h4>
-                  {doces.tradicionais.pacotes.map((p: any) => (
-                    <div key={p.qtd} className="flex justify-between items-center py-2 border-b border-border/50 last:border-0">
-                      <span className="text-sm text-muted-foreground">{p.qtd}</span>
-                      <span className="text-sm font-semibold text-accent">{formatPrice(p.preco)}</span>
+        {/* ══════════════════════════════ COMPLEMENTOS ══════════════════════════════ */}
+        {activeSection === "complementos" && (
+          <motion.section
+            key="complementos"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.35 }}
+            className="pb-16"
+          >
+            <div className="container mx-auto px-4 max-w-5xl">
+              <ElegantCard title="Complementos" subtitle="Individuais" icon={<Cookie className="w-5 h-5" />}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {complementos.simples.map((c: any) => (
+                    <div key={c.item} className="flex justify-between items-center rounded-xl px-4 py-3 hover:bg-accent/[0.05] transition-colors border-b border-border/30 last:border-0">
+                      <span className="text-sm text-foreground font-body">{c.item}</span>
+                      <span className="text-sm font-heading font-bold text-accent">{formatPrice(c.preco)}</span>
                     </div>
                   ))}
-                  <p className="text-xs text-muted-foreground mt-2 italic">{doces.tradicionais.obs}</p>
                 </div>
-                <div>
-                  <h4 className="font-heading text-sm font-semibold text-foreground mb-3">Sabores</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {doces.tradicionais.sabores.map((s: string) => (
-                      <span key={s} className="bg-primary/10 text-primary text-xs px-3 py-1.5 rounded-full">{s}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </MenuCard>
+              </ElegantCard>
 
-            {/* Gourmet */}
-            <MenuCard title="Docinhos" subtitle="Gourmet" icon={<Star className="w-5 h-5 text-accent" />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-heading text-sm font-semibold text-foreground mb-3">Pacotes</h4>
-                  {doces.gourmet.pacotes.map((p: any) => (
-                    <div key={p.qtd} className="flex justify-between items-center py-2 border-b border-border/50 last:border-0">
-                      <span className="text-sm text-muted-foreground">{p.qtd}</span>
-                      <span className="text-sm font-semibold text-accent">{formatPrice(p.preco)}</span>
+              <ElegantCard title="Complementos" subtitle="Com Pasta Americana" icon={<Sparkles className="w-5 h-5" />} accent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {complementos.pasta_americana.map((c: any) => (
+                    <div key={c.item} className="flex justify-between items-center rounded-xl px-4 py-3 hover:bg-accent/[0.05] transition-colors border-b border-border/30 last:border-0">
+                      <span className="text-sm text-foreground font-body">{c.item}</span>
+                      <span className="text-sm font-heading font-bold text-accent">{formatPrice(c.preco)}</span>
                     </div>
                   ))}
-                  <p className="text-xs text-muted-foreground mt-2 italic">{doces.gourmet.obs}</p>
                 </div>
-                <div>
-                  <h4 className="font-heading text-sm font-semibold text-foreground mb-3">Sabores</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {doces.gourmet.sabores.map((s: string) => (
-                      <span key={s} className="bg-accent/15 text-accent text-xs px-3 py-1.5 rounded-full">{s}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </MenuCard>
+              </ElegantCard>
 
-            {/* Especiais */}
-            <MenuCard title="Docinhos" subtitle="Especiais" icon={<Sparkles className="w-5 h-5 text-primary" />}>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {doces.especiais.map((d: any) => (
-                  <div key={d.item} className="flex justify-between items-center bg-secondary/30 rounded-xl px-3 py-2.5 text-sm">
-                    <span className="text-foreground">{d.item}</span>
-                    <span className="text-accent font-semibold text-xs ml-2 whitespace-nowrap">{d.preco}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-muted-foreground mt-3 text-center italic">
-                * Pedido mínimo: 50 unidades. Pedir com 20 dias de antecedência.
-              </p>
-            </MenuCard>
-          </div>
-        </section>
-      )}
-
-      {/* ══════════════════════════════ COMPLEMENTOS ══════════════════════════════ */}
-      {activeSection === "complementos" && (
-        <section className="pb-16">
-          <div className="container mx-auto px-4 max-w-5xl">
-            <MenuCard title="Complementos" subtitle="Simples" icon={<Cookie className="w-5 h-5 text-primary" />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {complementos.simples.map((c: any) => (
-                  <div key={c.item} className="flex justify-between items-center bg-secondary/30 rounded-xl px-4 py-3">
-                    <span className="text-sm text-foreground">{c.item}</span>
-                    <span className="text-sm font-semibold text-accent">{formatPrice(c.preco)}</span>
-                  </div>
-                ))}
-              </div>
-            </MenuCard>
-
-            <MenuCard title="Complementos" subtitle="Pasta Americana" icon={<Sparkles className="w-5 h-5 text-accent" />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {complementos.pasta_americana.map((c: any) => (
-                  <div key={c.item} className="flex justify-between items-center bg-secondary/30 rounded-xl px-4 py-3">
-                    <span className="text-sm text-foreground">{c.item}</span>
-                    <span className="text-sm font-semibold text-accent">{formatPrice(c.preco)}</span>
-                  </div>
-                ))}
-              </div>
-            </MenuCard>
-
-            {complementos.obs && (
-              <p className="text-xs text-muted-foreground text-center italic mt-4">* {complementos.obs}</p>
-            )}
-          </div>
-        </section>
-      )}
+              {complementos.obs && (
+                <p className="text-xs text-muted-foreground text-center italic mt-6">* {complementos.obs}</p>
+              )}
+            </div>
+          </motion.section>
+        )}
+      </AnimatePresence>
 
       {/* ══════════════════════════════ CTA ══════════════════════════════ */}
-      <section className="py-12">
+      <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto bg-card rounded-3xl p-8 md:p-12 text-center shadow-sm border border-border">
-            <h3 className="font-script text-3xl text-primary mb-2">Faça sua encomenda!</h3>
-            <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
-              Mínimo de 3 dias de antecedência. Pagamento: PIX, dinheiro ou cartão. 
-              Confirmação com 50% do valor total.
-            </p>
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#25D366] text-white px-8 py-3.5 rounded-full font-body font-semibold text-sm hover:opacity-90 transition-opacity shadow-md"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Pedir via WhatsApp
-            </a>
-            <p className="text-xs text-muted-foreground mt-4">
-              Retirada: Rua José Vila Busquets, 240 — Jardim dos Álamos
-            </p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-2xl mx-auto relative overflow-hidden rounded-3xl"
+          >
+            {/* Decorative gradient bg */}
+            <div className="absolute inset-0 bg-gradient-to-br from-chocolate/5 via-accent/5 to-primary/5" />
+            <div className="absolute top-0 right-0 w-40 h-40 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+
+            <div className="relative bg-card/80 backdrop-blur-sm border border-border/60 rounded-3xl p-10 md:p-14 text-center">
+              <span className="font-script text-3xl md:text-4xl text-primary">Faça sua encomenda!</span>
+              <div className="w-16 h-0.5 bg-accent/40 mx-auto my-4" />
+              <p className="text-muted-foreground text-sm mb-8 max-w-md mx-auto leading-relaxed">
+                Mínimo de 3 dias de antecedência. Pagamento: PIX, dinheiro ou cartão.
+                Confirmação com 50% do valor total.
+              </p>
+              <motion.a
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 bg-[#25D366] text-white px-9 py-4 rounded-full font-body font-bold text-sm hover:shadow-lg hover:shadow-[#25D366]/20 transition-all duration-300"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Pedir via WhatsApp
+              </motion.a>
+              <p className="text-xs text-muted-foreground mt-5">
+                Retirada: Rua José Vila Busquets, 240 — Jardim dos Álamos
+              </p>
+            </div>
+          </motion.div>
         </div>
       </section>
     </main>
@@ -492,31 +615,63 @@ const Cardapio = () => {
 
 /* ═══════════════════════════════ Sub-components ═══════════════════════════════ */
 
-const MenuCard = ({ title, subtitle, icon, children }: { title: string; subtitle: string; icon: React.ReactNode; children: React.ReactNode }) => (
+const ElegantCard = ({
+  title,
+  subtitle,
+  icon,
+  children,
+  accent,
+}: {
+  title: string;
+  subtitle: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+  accent?: boolean;
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 16 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.4 }}
-    className="bg-card rounded-3xl p-6 md:p-8 mb-6 shadow-sm border border-border"
+    viewport={{ once: true, margin: "-40px" }}
+    transition={{ duration: 0.45 }}
+    className={`rounded-3xl p-7 md:p-9 mb-7 border transition-colors ${
+      accent
+        ? "bg-gradient-to-br from-card to-accent/[0.03] border-accent/15 shadow-sm"
+        : "bg-card border-border/60 shadow-sm"
+    }`}
   >
-    <div className="flex items-center gap-3 mb-5">
-      {icon}
+    <div className="flex items-center gap-3 mb-6">
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${accent ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
+        {icon}
+      </div>
       <div>
-        <span className="text-xs uppercase tracking-widest text-muted-foreground font-body">{title}</span>
-        <h3 className="font-heading text-lg font-semibold text-foreground leading-tight">{subtitle}</h3>
+        <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-body font-semibold">{title}</span>
+        <h3 className="font-heading text-lg font-bold text-foreground leading-tight">{subtitle}</h3>
       </div>
     </div>
     {children}
   </motion.div>
 );
 
-const FlavorTier = ({ title, flavors, color }: { title: string; flavors: string[]; color: string }) => (
-  <div className="mb-4 last:mb-0">
-    <h4 className="font-heading text-sm font-semibold text-foreground mb-2">{title}</h4>
+const FlavorTier = ({
+  title,
+  flavors,
+  badgeClass,
+  icon,
+}: {
+  title: string;
+  flavors: string[];
+  badgeClass: string;
+  icon: React.ReactNode;
+}) => (
+  <div className="mb-5 last:mb-0">
+    <div className="flex items-center gap-2 mb-3">
+      <span className="text-muted-foreground">{icon}</span>
+      <h4 className="font-heading text-xs uppercase tracking-wider font-bold text-chocolate">{title}</h4>
+      <div className="flex-1 h-px bg-border/40" />
+    </div>
     <div className="flex flex-wrap gap-2">
       {flavors.map((f: string) => (
-        <span key={f} className={`${color} text-xs px-3 py-1.5 rounded-full`}>
+        <span key={f} className={`${badgeClass} text-xs px-3 py-1.5 rounded-full font-medium`}>
           {f}
         </span>
       ))}
@@ -525,25 +680,31 @@ const FlavorTier = ({ title, flavors, color }: { title: string; flavors: string[
 );
 
 const PriceTable = ({ sizes, prices }: { sizes: any[]; prices: any }) => (
-  <div className="overflow-x-auto">
+  <div className="overflow-x-auto -mx-2">
     <table className="w-full text-sm">
       <thead>
-        <tr className="border-b-2 border-primary/20">
-          <th className="text-left py-2.5 px-3 font-heading text-foreground">Tam.</th>
-          <th className="text-center py-2.5 px-3 font-heading text-primary">Tradicional</th>
-          <th className="text-center py-2.5 px-3 font-heading text-accent">Premium</th>
-          <th className="text-center py-2.5 px-3 font-heading text-chocolate">Supreme</th>
+        <tr className="border-b-2 border-chocolate/15">
+          <th className="text-left py-3 px-4 font-heading text-chocolate text-xs uppercase tracking-wider">Tam.</th>
+          <th className="text-center py-3 px-4">
+            <span className="font-heading text-xs uppercase tracking-wider text-primary">Tradicional</span>
+          </th>
+          <th className="text-center py-3 px-4">
+            <span className="font-heading text-xs uppercase tracking-wider text-accent">Premium</span>
+          </th>
+          <th className="text-center py-3 px-4">
+            <span className="font-heading text-xs uppercase tracking-wider text-chocolate">Supreme</span>
+          </th>
         </tr>
       </thead>
       <tbody>
         {sizes.map((s: any, i: number) => {
           const p = prices[s.sigla];
           return (
-            <tr key={s.sigla} className={i % 2 === 0 ? "bg-secondary/30" : ""}>
-              <td className="py-2.5 px-3 font-semibold text-foreground">{s.sigla}</td>
-              <td className="py-2.5 px-3 text-center text-muted-foreground">{p ? formatPrice(p.tradicional) : "—"}</td>
-              <td className="py-2.5 px-3 text-center text-muted-foreground">{p ? formatPrice(p.premium) : "—"}</td>
-              <td className="py-2.5 px-3 text-center text-muted-foreground">{p ? formatPrice(p.supreme) : "—"}</td>
+            <tr key={s.sigla} className={`${i % 2 === 0 ? "bg-accent/[0.03]" : ""} hover:bg-accent/[0.07] transition-colors`}>
+              <td className="py-3.5 px-4 font-heading font-bold text-foreground">{s.sigla}</td>
+              <td className="py-3.5 px-4 text-center font-body font-semibold text-foreground/80">{p ? formatPrice(p.tradicional) : "—"}</td>
+              <td className="py-3.5 px-4 text-center font-body font-semibold text-foreground/80">{p ? formatPrice(p.premium) : "—"}</td>
+              <td className="py-3.5 px-4 text-center font-body font-semibold text-foreground/80">{p ? formatPrice(p.supreme) : "—"}</td>
             </tr>
           );
         })}
