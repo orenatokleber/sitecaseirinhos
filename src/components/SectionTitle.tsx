@@ -20,7 +20,7 @@ const SectionTitle = ({ script, title, subtitle, light, align = "center" }: Sect
       className={`mb-12 ${isCenter ? "text-center" : "text-left"}`}
     >
       {script && (
-        <span className={`font-script text-2xl md:text-3xl ${light ? "text-rose" : "text-primary"}`}>
+        <span className={`font-script text-2xl md:text-3xl ${light ? "text-accent" : "text-primary"}`}>
           {script}
         </span>
       )}
@@ -33,9 +33,9 @@ const SectionTitle = ({ script, title, subtitle, light, align = "center" }: Sect
         </p>
       )}
       <div className={`flex items-center gap-2 mt-4 ${isCenter ? "justify-center" : ""}`}>
-        <div className={`w-8 h-[2px] ${light ? "bg-rose" : "bg-primary/40"}`} />
-        <div className={`w-3 h-3 rounded-full ${light ? "bg-rose" : "bg-primary"}`} />
-        <div className={`w-8 h-[2px] ${light ? "bg-rose" : "bg-primary/40"}`} />
+        <div className={`w-8 h-[2px] ${light ? "bg-accent" : "bg-primary/40"}`} />
+        <div className={`w-3 h-3 rounded-full ${light ? "bg-accent" : "bg-primary"}`} />
+        <div className={`w-8 h-[2px] ${light ? "bg-accent" : "bg-primary/40"}`} />
       </div>
     </motion.div>
   );

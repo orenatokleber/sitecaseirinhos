@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Instagram, Phone, MapPin, Clock, Heart } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const { data: settings } = useSiteSettings();
@@ -20,9 +21,8 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {/* Brand */}
-            <div className="text-center md:text-left">
-              <h3 className="font-script text-3xl mb-1 text-rose">Caseirinhos</h3>
-              <p className="text-[10px] tracking-[0.3em] uppercase opacity-60 mb-4">confeitaria artesanal</p>
+            <div className="text-center md:text-left flex flex-col items-center md:items-start">
+              <img src={logo} alt="Caseirinhos a Confeitaria" className="h-14 w-auto mb-4 brightness-0 invert" />
               <p className="text-sm opacity-70 leading-relaxed">
                 Mais do que doces, criamos memórias. Cada bolo é feito com amor, dedicação e ingredientes selecionados.
               </p>
@@ -30,7 +30,7 @@ const Footer = () => {
 
             {/* Nav */}
             <div className="text-center">
-              <h4 className="font-heading text-lg mb-4 text-rose">Navegação</h4>
+              <h4 className="font-heading text-lg mb-4 text-accent">Navegação</h4>
               <ul className="space-y-2">
                 {((settings?.menu_items as unknown as { to: string; label: string }[]) || [
                   { to: "/", label: "Home" },
@@ -40,7 +40,7 @@ const Footer = () => {
                   { to: "/contato", label: "Contato" },
                 ]).map((link) => (
                   <li key={link.to}>
-                    <Link to={link.to} className="text-sm opacity-60 hover:opacity-100 hover:text-rose transition-all">
+                    <Link to={link.to} className="text-sm opacity-60 hover:opacity-100 hover:text-accent transition-all">
                       {link.label}
                     </Link>
                   </li>
@@ -50,7 +50,7 @@ const Footer = () => {
 
             {/* Contact */}
             <div className="text-center md:text-right">
-              <h4 className="font-heading text-lg mb-4 text-rose">Informações</h4>
+              <h4 className="font-heading text-lg mb-4 text-accent">Informações</h4>
               <div className="space-y-3 text-sm opacity-70">
                 <p className="flex items-center justify-center md:justify-end gap-2">
                   <Clock size={14} /> {hours?.weekdays || "Ter a Sáb: 11h – 18h"}
@@ -66,7 +66,7 @@ const Footer = () => {
                     href={contact?.instagram || "https://instagram.com/caseirinhos"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-rose transition-colors"
+                    className="hover:text-accent transition-colors"
                     aria-label="Instagram"
                   >
                     <Instagram size={20} />
@@ -77,7 +77,7 @@ const Footer = () => {
           </div>
 
           <div className="border-t border-primary-foreground/10 mt-10 pt-5 text-center text-xs opacity-40 flex items-center justify-center gap-1">
-            Feito com <Heart size={12} className="text-rose fill-rose" /> © {new Date().getFullYear()} Caseirinhos
+            Feito com <Heart size={12} className="text-primary fill-primary" /> © {new Date().getFullYear()} Caseirinhos
           </div>
         </div>
       </div>
