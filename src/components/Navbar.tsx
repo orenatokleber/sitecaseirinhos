@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ShoppingBag } from "lucide-react";
+import { Menu, X, Cake, Truck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import logo from "@/assets/logo.png";
 
-const defaultLinks = [
+const navLinks = [
   { to: "/", label: "Home" },
   { to: "/nossa-historia", label: "Nossa História" },
-  { to: "/cardapio", label: "Cardápio" },
-  { to: "/delivery", label: "Delivery" },
-  { to: "/encomendas", label: "Encomendas" },
+  { to: "/galeria", label: "Galeria" },
+  { to: "/blog", label: "Blog" },
   { to: "/contato", label: "Contato" },
 ];
 
@@ -19,8 +18,8 @@ const Navbar = () => {
   const location = useLocation();
   const { data: settings } = useSiteSettings();
 
-  const links = (settings?.menu_items as unknown as { to: string; label: string }[]) || defaultLinks;
-  const whatsapp = (settings?.contact as any)?.whatsapp || "5500000000000";
+  const menuItems = (settings?.menu_items as unknown as { to: string; label: string }[]) || null;
+  const links = menuItems || navLinks;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md shadow-sm">
@@ -30,8 +29,8 @@ const Navbar = () => {
           <img src={logo} alt="Caseirinhos a Confeitaria" className="h-10 md:h-12 w-auto" />
         </Link>
 
-        {/* Desktop */}
-        <ul className="hidden md:flex items-center gap-6">
+        {/* Desktop nav */}
+        <ul className="hidden lg:flex items-center gap-5">
           {links.map((link) => (
             <li key={link.to}>
               <Link
@@ -46,19 +45,36 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* CTA + Mobile toggle */}
-        <div className="flex items-center gap-3">
-          <a
-            href={`https://wa.me/${whatsapp}?text=Olá! Gostaria de fazer um pedido.`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary text-primary-foreground text-sm font-semibold font-body hover:opacity-90 transition-opacity shadow-md"
+        {/* 2 CTA buttons + Mobile toggle */}
+        <div className="flex items-center gap-2">
+          {/* Bolos & Encomendas */}
+          <Link
+            to="/cardapio"
+            className={`hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-body transition-all duration-300 shadow-sm border ${
+              location.pathname === "/cardapio"
+                ? "bg-accent text-accent-foreground border-accent"
+                : "bg-accent/10 text-accent border-accent/30 hover:bg-accent/20"
+            }`}
           >
-            <ShoppingBag size={16} />
-            Pedir Agora
-          </a>
+            <Cake size={16} />
+            Bolos & Encomendas
+          </Link>
+
+          {/* Delivery */}
+          <Link
+            to="/delivery"
+            className={`hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-body transition-all duration-300 shadow-sm border ${
+              location.pathname === "/delivery"
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
+            }`}
+          >
+            <Truck size={16} />
+            Peça pelo Delivery
+          </Link>
+
           <button
-            className="md:hidden text-foreground p-2 rounded-full hover:bg-muted transition-colors"
+            className="lg:hidden text-foreground p-2 rounded-full hover:bg-muted transition-colors"
             onClick={() => setOpen(!open)}
             aria-label="Menu"
           >
@@ -74,7 +90,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background border-t border-border overflow-hidden"
+            className="lg:hidden bg-background border-t border-border overflow-hidden"
           >
             <ul className="flex flex-col items-center gap-4 py-6">
               {links.map((link) => (
@@ -90,16 +106,24 @@ const Navbar = () => {
                   </Link>
                 </li>
               ))}
-              <li>
-                <a
-                  href={`https://wa.me/${whatsapp}?text=Olá! Gostaria de fazer um pedido.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold font-body"
+              {/* Mobile CTAs */}
+              <li className="flex flex-col gap-3 mt-2 w-full px-8">
+                <Link
+                  to="/cardapio"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent text-accent-foreground text-sm font-semibold font-body"
                 >
-                  <ShoppingBag size={16} />
-                  Pedir Agora
-                </a>
+                  <Cake size={16} />
+                  Bolos & Encomendas
+                </Link>
+                <Link
+                  to="/delivery"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground text-sm font-semibold font-body"
+                >
+                  <Truck size={16} />
+                  Peça pelo Delivery
+                </Link>
               </li>
             </ul>
           </motion.div>

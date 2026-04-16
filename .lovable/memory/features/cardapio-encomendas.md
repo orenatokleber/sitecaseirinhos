@@ -1,12 +1,11 @@
 ---
-name: Cardápio de Encomendas
-description: Structured menu page with cake styles, flavors, sizes, pricing tables, and WhatsApp ordering
+name: Cardápio & Encomendas (Unified)
+description: Single page /cardapio with menu + order form; /encomendas removed; floating CTA button
 type: feature
 ---
-- Menu data stored in `site_settings` key `menu_cardapio` as JSON
-- Sections: Bolos Festivos (redondos/retangulares), Doces (tradicionais/gourmet/especiais), Complementos (simples/pasta americana)
-- Each bolo follows steps: tamanho → estilo → massa → sabor → preço
-- Sabor tiers: Tradicional, Premium, Supreme
-- Products table used for photo gallery with categories: bolos-decorados, bolos-retangulares, doces, complementos, inspiracoes
-- WhatsApp CTA for ordering, not an online ordering system
-- Pickup address: Rua José Vila Busquets, 240 — Jardim dos Álamos
+- Cardápio and Encomendas unified into single `/cardapio` page
+- `/encomendas` route removed
+- Order form at bottom of cardápio page with scroll-to via floating button
+- Navbar has 2 highlighted CTAs: "Bolos & Encomendas" (accent/gold) and "Peça pelo Delivery" (primary/turquoise)
+- Regular nav links: Home, Nossa História, Galeria, Blog, Contato
+- WhatsApp CTA removed from navbar (replaced by the 2 buttons)

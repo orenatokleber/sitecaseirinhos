@@ -12,7 +12,7 @@ import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
 import NossaHistoria from "./pages/NossaHistoria";
 import Cardapio from "./pages/Cardapio";
-import Encomendas from "./pages/Encomendas";
+
 import Contato from "./pages/Contato";
 import Galeria from "./pages/Galeria";
 import NotFound from "./pages/NotFound";
@@ -76,7 +76,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/nossa-historia" element={<NossaHistoria />} />
               <Route path="/cardapio" element={<Cardapio />} />
-              <Route path="/encomendas" element={<Encomendas />} />
+              
               <Route path="/contato" element={<Contato />} />
               <Route path="/galeria" element={<Galeria />} />
               <Route path="/blog" element={<Blog />} />
