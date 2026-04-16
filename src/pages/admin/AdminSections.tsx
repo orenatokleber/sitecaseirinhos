@@ -265,8 +265,19 @@ const AdminSections = () => {
         {/* Hero Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Seção Hero (Banner Principal)</CardTitle>
-            <CardDescription>A primeira coisa que os visitantes veem</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Seção Hero (Banner Principal)</CardTitle>
+                <CardDescription>A primeira coisa que os visitantes veem</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('hero')}
+                  onCheckedChange={() => handleToggleVisibility('hero', getSectionMetadata('hero'), isSectionVisible('hero'))}
+                />
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -316,8 +327,19 @@ const AdminSections = () => {
         {/* About Preview */}
         <Card>
           <CardHeader>
-            <CardTitle>Seção Sobre Nós (Preview)</CardTitle>
-            <CardDescription>Resumo na home que leva para página completa</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Seção Sobre Nós (Preview)</CardTitle>
+                <CardDescription>Resumo na home que leva para página completa</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('about_preview')}
+                  onCheckedChange={() => handleToggleVisibility('about_preview', getSectionMetadata('about_preview'), isSectionVisible('about_preview'))}
+                />
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -356,8 +378,19 @@ const AdminSections = () => {
         {/* CTA Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Seção CTA (Chamada para Ação)</CardTitle>
-            <CardDescription>Seção final da home incentivando o contato</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Seção CTA (Chamada para Ação)</CardTitle>
+                <CardDescription>Seção final da home incentivando o contato</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('cta')}
+                  onCheckedChange={() => handleToggleVisibility('cta', getSectionMetadata('cta'), isSectionVisible('cta'))}
+                />
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
