@@ -421,6 +421,56 @@ const AdminSections = () => {
           </CardContent>
         </Card>
 
+        {/* Products Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>🧁 Seção Nossos Produtos</CardTitle>
+                <CardDescription>Grade de produtos exibida na página inicial</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('products')}
+                  onCheckedChange={() => handleToggleVisibility('products', getSectionMetadata('products'), isSectionVisible('products'))}
+                />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Os produtos são gerenciados na seção <strong>Produtos</strong> do painel. 
+              Use este toggle para mostrar ou ocultar a seção inteira na página inicial.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Testimonials Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>⭐ Seção Depoimentos</CardTitle>
+                <CardDescription>Avaliações dos clientes na página inicial</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('testimonials')}
+                  onCheckedChange={() => handleToggleVisibility('testimonials', getSectionMetadata('testimonials'), isSectionVisible('testimonials'))}
+                />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Os depoimentos são gerenciados na seção <strong>Depoimentos</strong> do painel. 
+              Use este toggle para mostrar ou ocultar a seção inteira na página inicial.
+            </p>
+          </CardContent>
+        </Card>
+
         {/* Custom Sections */}
         {customSections.length > 0 && (
           <div className="border-t border-border pt-6">
