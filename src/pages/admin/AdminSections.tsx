@@ -501,7 +501,14 @@ const AdminSections = () => {
                     </CardTitle>
                     <CardDescription>Seção personalizada</CardDescription>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                      <Label className="text-xs text-muted-foreground">Visível</Label>
+                      <Switch
+                        checked={isSectionVisible(key)}
+                        onCheckedChange={() => handleToggleVisibility(key, getSectionMetadata(key), isSectionVisible(key))}
+                      />
+                    </div>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={(e) => e.stopPropagation()}>
