@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import ImageUpload from "@/components/admin/ImageUpload";
@@ -20,7 +21,7 @@ interface SectionColors {
   title_color?: string;
 }
 
-const FIXED_SECTIONS = ['hero', 'about_preview', 'cta'];
+const FIXED_SECTIONS = ['hero', 'about_preview', 'products', 'testimonials', 'cta'];
 
 const AdminSections = () => {
   const { data: sections, isLoading } = useSiteSections();
