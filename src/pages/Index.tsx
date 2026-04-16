@@ -54,8 +54,14 @@ const Index = () => {
   const aboutColors = aboutPreview?.metadata?.colors || {};
   const ctaColors = cta?.metadata?.colors || {};
 
-  const FIXED_SECTIONS = ['hero', 'about_preview', 'cta'];
-  const customSections = sectionsList?.filter(s => !FIXED_SECTIONS.includes(s.section_key)) || [];
+  const isSectionVisible = (key: string) => {
+    const section = sectionsList?.find(s => s.section_key === key);
+    if (!section) return true;
+    return (section.metadata as any)?.is_visible !== false;
+  };
+
+  const FIXED_SECTIONS = ['hero', 'about_preview', 'products', 'testimonials', 'cta'];
+  const customSections = sectionsList?.filter(s => !FIXED_SECTIONS.includes(s.section_key) && (s.metadata as any)?.is_visible !== false) || [];
 
   return (
     <main className="overflow-hidden">
