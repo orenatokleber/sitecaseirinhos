@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import ImageUpload from "@/components/admin/ImageUpload";
@@ -20,7 +21,7 @@ interface SectionColors {
   title_color?: string;
 }
 
-const FIXED_SECTIONS = ['hero', 'about_preview', 'cta'];
+const FIXED_SECTIONS = ['hero', 'about_preview', 'products', 'testimonials', 'cta'];
 
 const AdminSections = () => {
   const { data: sections, isLoading } = useSiteSections();
@@ -156,6 +157,27 @@ const AdminSections = () => {
     deleteSection.mutate(sectionKey);
   };
 
+  const handleToggleVisibility = (sectionKey: string, currentMetadata: any, currentVisible: boolean) => {
+    updateSection.mutate({
+      sectionKey,
+      updates: {
+        metadata: { ...(currentMetadata || {}), is_visible: !currentVisible }
+      }
+    });
+  };
+
+  const isSectionVisible = (sectionKey: string) => {
+    const section = sectionsList?.find(s => s.section_key === sectionKey);
+    if (!section) return true;
+    const meta = section.metadata as any;
+    return meta?.is_visible !== false;
+  };
+
+  const getSectionMetadata = (sectionKey: string) => {
+    const section = sectionsList?.find(s => s.section_key === sectionKey);
+    return (section?.metadata as Record<string, any>) || {};
+  };
+
   const customSections = sectionsList?.filter(s => !FIXED_SECTIONS.includes(s.section_key)) || [];
 
   if (isLoading) {
@@ -243,8 +265,19 @@ const AdminSections = () => {
         {/* Hero Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Seção Hero (Banner Principal)</CardTitle>
-            <CardDescription>A primeira coisa que os visitantes veem</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Seção Hero (Banner Principal)</CardTitle>
+                <CardDescription>A primeira coisa que os visitantes veem</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('hero')}
+                  onCheckedChange={() => handleToggleVisibility('hero', getSectionMetadata('hero'), isSectionVisible('hero'))}
+                />
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -294,8 +327,19 @@ const AdminSections = () => {
         {/* About Preview */}
         <Card>
           <CardHeader>
-            <CardTitle>Seção Sobre Nós (Preview)</CardTitle>
-            <CardDescription>Resumo na home que leva para página completa</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Seção Sobre Nós (Preview)</CardTitle>
+                <CardDescription>Resumo na home que leva para página completa</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('about_preview')}
+                  onCheckedChange={() => handleToggleVisibility('about_preview', getSectionMetadata('about_preview'), isSectionVisible('about_preview'))}
+                />
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -334,8 +378,19 @@ const AdminSections = () => {
         {/* CTA Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Seção CTA (Chamada para Ação)</CardTitle>
-            <CardDescription>Seção final da home incentivando o contato</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Seção CTA (Chamada para Ação)</CardTitle>
+                <CardDescription>Seção final da home incentivando o contato</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('cta')}
+                  onCheckedChange={() => handleToggleVisibility('cta', getSectionMetadata('cta'), isSectionVisible('cta'))}
+                />
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -363,6 +418,56 @@ const AdminSections = () => {
               {updateSection.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               Salvar CTA
             </Button>
+          </CardContent>
+        </Card>
+
+        {/* Products Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>🧁 Seção Nossos Produtos</CardTitle>
+                <CardDescription>Grade de produtos exibida na página inicial</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('products')}
+                  onCheckedChange={() => handleToggleVisibility('products', getSectionMetadata('products'), isSectionVisible('products'))}
+                />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Os produtos são gerenciados na seção <strong>Produtos</strong> do painel. 
+              Use este toggle para mostrar ou ocultar a seção inteira na página inicial.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Testimonials Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>⭐ Seção Depoimentos</CardTitle>
+                <CardDescription>Avaliações dos clientes na página inicial</CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-xs text-muted-foreground">Visível</Label>
+                <Switch
+                  checked={isSectionVisible('testimonials')}
+                  onCheckedChange={() => handleToggleVisibility('testimonials', getSectionMetadata('testimonials'), isSectionVisible('testimonials'))}
+                />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Os depoimentos são gerenciados na seção <strong>Depoimentos</strong> do painel. 
+              Use este toggle para mostrar ou ocultar a seção inteira na página inicial.
+            </p>
           </CardContent>
         </Card>
 
@@ -396,7 +501,14 @@ const AdminSections = () => {
                     </CardTitle>
                     <CardDescription>Seção personalizada</CardDescription>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                      <Label className="text-xs text-muted-foreground">Visível</Label>
+                      <Switch
+                        checked={isSectionVisible(key)}
+                        onCheckedChange={() => handleToggleVisibility(key, getSectionMetadata(key), isSectionVisible(key))}
+                      />
+                    </div>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={(e) => e.stopPropagation()}>
