@@ -157,6 +157,27 @@ const AdminSections = () => {
     deleteSection.mutate(sectionKey);
   };
 
+  const handleToggleVisibility = (sectionKey: string, currentMetadata: any, currentVisible: boolean) => {
+    updateSection.mutate({
+      sectionKey,
+      updates: {
+        metadata: { ...(currentMetadata || {}), is_visible: !currentVisible }
+      }
+    });
+  };
+
+  const isSectionVisible = (sectionKey: string) => {
+    const section = sectionsList?.find(s => s.section_key === sectionKey);
+    if (!section) return true;
+    const meta = section.metadata as any;
+    return meta?.is_visible !== false;
+  };
+
+  const getSectionMetadata = (sectionKey: string) => {
+    const section = sectionsList?.find(s => s.section_key === sectionKey);
+    return (section?.metadata as Record<string, any>) || {};
+  };
+
   const customSections = sectionsList?.filter(s => !FIXED_SECTIONS.includes(s.section_key)) || [];
 
   if (isLoading) {
