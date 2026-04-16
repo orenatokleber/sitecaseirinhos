@@ -205,6 +205,8 @@ const Index = () => {
       </>
       )}
 
+      {isSectionVisible('products') && (
+      <>
       {/* Products */}
       <section className="py-16 md:py-24 relative">
         <ConfettiDots />
@@ -247,7 +249,11 @@ const Index = () => {
           </div>
         </div>
       </section>
+      </>
+      )}
 
+      {isSectionVisible('testimonials') && (
+      <>
       <WaveDivider color="hsl(var(--secondary))" />
 
       {/* Testimonials */}
@@ -281,6 +287,8 @@ const Index = () => {
       </section>
 
       <WaveDivider color="hsl(var(--secondary))" flip />
+      </>
+      )}
 
       {/* Custom Sections */}
       {customSections.map((section, i) => {
