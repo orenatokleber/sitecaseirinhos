@@ -174,6 +174,8 @@ const Index = () => {
         </div>
       </section>
 
+      {isSectionVisible('about_preview') && (
+      <>
       <WaveDivider color="hsl(var(--pink-light))" />
 
       {/* About preview */}
@@ -200,6 +202,8 @@ const Index = () => {
       </section>
 
       <WaveDivider color="hsl(var(--pink-light))" flip />
+      </>
+      )}
 
       {/* Products */}
       <section className="py-16 md:py-24 relative">
