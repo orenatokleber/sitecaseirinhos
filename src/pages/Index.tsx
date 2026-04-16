@@ -416,7 +416,7 @@ const Index = () => {
         );
       })}
 
-      {/* CTA */}
+      {isSectionVisible('cta') && (
       <section className="relative py-20 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-accent to-rose" />
         <ConfettiDots className="opacity-30" />
@@ -442,6 +442,7 @@ const Index = () => {
           </a>
         </div>
       </section>
+      )}
     </main>
   );
 };
