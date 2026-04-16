@@ -596,44 +596,81 @@ const Cardapio = () => {
         )}
       </AnimatePresence>
 
-      {/* ══════════════════════════════ CTA ══════════════════════════════ */}
-      <section className="py-16">
+      {/* ══════════════════════════════ ENCOMENDAS ══════════════════════════════ */}
+      <section id="encomenda" className="py-16">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-2xl mx-auto relative overflow-hidden rounded-3xl"
-          >
-            {/* Decorative gradient bg */}
-            <div className="absolute inset-0 bg-gradient-to-br from-chocolate/5 via-accent/5 to-primary/5" />
-            <div className="absolute top-0 right-0 w-40 h-40 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          {/* Showcase cards */}
+          <SectionTitle script="Sob medida" title="Encomendas Especiais" subtitle="Bolos e doces personalizados para tornar seu evento inesquecível" />
 
-            <div className="relative bg-card/80 backdrop-blur-sm border border-border/60 rounded-3xl p-10 md:p-14 text-center">
-              <span className="font-script text-3xl md:text-4xl text-primary">Faça sua encomenda!</span>
-              <div className="w-16 h-0.5 bg-accent/40 mx-auto my-4" />
-              <p className="text-muted-foreground text-sm mb-8 max-w-md mx-auto leading-relaxed">
-                Mínimo de 3 dias de antecedência. Pagamento: PIX, dinheiro ou cartão.
-                Confirmação com 50% do valor total.
-              </p>
-              <motion.a
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 bg-[#25D366] text-white px-9 py-4 rounded-full font-body font-bold text-sm hover:shadow-lg hover:shadow-[#25D366]/20 transition-all duration-300"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Pedir via WhatsApp
-              </motion.a>
-              <p className="text-xs text-muted-foreground mt-5">
-                Retirada: Rua José Vila Busquets, 240 — Jardim dos Álamos
-              </p>
-            </div>
-          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
+            {[
+              { img: boloCasamento, title: "Bolos de Casamento", desc: "Criações exclusivas e elegantes para o dia mais especial da sua vida." },
+              { img: cakeChocolate, title: "Aniversários & Eventos", desc: "Bolos temáticos, mesas de doces e sobremesas para celebrações únicas." },
+            ].map((item, i) => (
+              <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-2xl overflow-hidden shadow-sm bg-card border border-border/60">
+                <div className="aspect-video overflow-hidden">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-heading text-xl font-semibold text-foreground mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Order form */}
+          <div className="max-w-xl mx-auto">
+            <SectionTitle script="Orçamento" title="Solicite seu orçamento" />
+            <form onSubmit={handleOrderSubmit} className="space-y-4">
+              {[
+                { label: "Nome", key: "name" as const, type: "text" },
+                { label: "Telefone", key: "phone" as const, type: "tel" },
+                { label: "Tipo de Evento", key: "event" as const, type: "text" },
+                { label: "Data do Evento", key: "date" as const, type: "date" },
+              ].map((field) => (
+                <div key={field.key}>
+                  <label className="block text-sm font-body text-foreground mb-1">{field.label}</label>
+                  <input
+                    type={field.type}
+                    required
+                    value={orderForm[field.key]}
+                    onChange={(e) => setOrderForm({ ...orderForm, [field.key]: e.target.value })}
+                    className="w-full px-4 py-3 rounded-md border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent/50"
+                  />
+                </div>
+              ))}
+              <div>
+                <label className="block text-sm font-body text-foreground mb-1">Detalhes do pedido</label>
+                <textarea
+                  rows={4}
+                  value={orderForm.details}
+                  onChange={(e) => setOrderForm({ ...orderForm, details: e.target.value })}
+                  className="w-full px-4 py-3 rounded-md border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 resize-none"
+                  placeholder="Descreva o que você precisa..."
+                />
+              </div>
+              <button type="submit" className="w-full py-3 rounded-full bg-accent text-accent-foreground font-body text-sm font-semibold uppercase tracking-wider hover:opacity-90 transition-opacity">
+                Enviar Orçamento via WhatsApp
+              </button>
+            </form>
+          </div>
         </div>
       </section>
+
+      {/* Floating CTA button */}
+      <motion.button
+        onClick={() => document.getElementById("encomenda")?.scrollIntoView({ behavior: "smooth" })}
+        className="fixed bottom-20 right-6 z-40 bg-accent text-accent-foreground px-5 py-3 rounded-full shadow-lg font-body font-bold text-sm flex items-center gap-2 hover:shadow-xl transition-shadow"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Cake className="w-4 h-4" />
+        Fazer Encomenda
+      </motion.button>
     </main>
   );
 };
