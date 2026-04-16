@@ -7,6 +7,8 @@ import { Cake, Cookie, Sparkles, ChefHat, MessageCircle, Star, CircleDot, Crown 
 import massaBrancaDefault from "@/assets/massa-branca.jpg";
 import massaChocolateDefault from "@/assets/massa-chocolate.jpg";
 import massaRedVelvetDefault from "@/assets/massa-red-velvet.jpg";
+import boloCasamento from "@/assets/caseirinhos-85.jpg";
+import cakeChocolate from "@/assets/caseirinhos-83.jpg";
 
 const formatPrice = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 
@@ -146,6 +148,13 @@ const Cardapio = () => {
 
   const [activeSection, setActiveSection] = useState<MenuSection>("bolos");
   const [boloTab, setBoloTab] = useState<"redondos" | "retangulares">("redondos");
+  const [orderForm, setOrderForm] = useState({ name: "", phone: "", event: "", date: "", details: "" });
+
+  const handleOrderSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const msg = `Olá! Gostaria de um orçamento.\n\nNome: ${orderForm.name}\nTelefone: ${orderForm.phone}\nEvento: ${orderForm.event}\nData: ${orderForm.date}\nDetalhes: ${orderForm.details}`;
+    window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
+  };
 
   const bolosRedondos = menu.bolos_redondos || defaultMenu.bolos_redondos;
   const bolosRetangulares = menu.bolos_retangulares || defaultMenu.bolos_retangulares;
