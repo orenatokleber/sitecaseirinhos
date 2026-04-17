@@ -56,7 +56,8 @@ const AdminConfig = () => {
     email: "",
     address: "",
     instagram: "",
-    whatsapp: ""
+    whatsapp: "",
+    maps_iframe: ""
   });
 
   const [hours, setHours] = useState({
@@ -446,6 +447,20 @@ const AdminConfig = () => {
                 onChange={(e) => setContact({ ...contact, instagram: e.target.value })}
                 placeholder="https://instagram.com/caseirinhos"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="maps_iframe">Google Maps (iframe embed)</Label>
+              <Textarea
+                id="maps_iframe"
+                value={contact.maps_iframe || ""}
+                onChange={(e) => setContact({ ...contact, maps_iframe: e.target.value })}
+                placeholder='<iframe src="https://www.google.com/maps/embed..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>'
+                rows={4}
+              />
+              <p className="text-xs text-muted-foreground">
+                Cole o código de incorporação do Google Maps. <a href="https://google.com/maps" target="_blank" rel="noopener noreferrer" className="underline text-accent">Abrir Google Maps</a>
+              </p>
             </div>
 
             <Button onClick={handleSaveContact} disabled={updateSetting.isPending}>
