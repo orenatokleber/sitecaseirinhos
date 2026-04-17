@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ColorPicker from "@/components/admin/ColorPicker";
 import ProfileSection from "@/components/admin/ProfileSection";
-import { Loader2, Save, Plus, Trash2, GripVertical } from "lucide-react";
+import { Loader2, Save, Plus, Trash2, GripVertical, Instagram } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface MenuItem {
   label: string;
@@ -47,6 +48,7 @@ const AdminConfig = () => {
   });
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenuItems);
+  const [instagramPosts, setInstagramPosts] = useState<string[]>([]);
 
   useEffect(() => {
     if (settings?.contact) {
@@ -61,7 +63,21 @@ const AdminConfig = () => {
     if (settings?.menu_items) {
       setMenuItems(settings.menu_items as unknown as MenuItem[]);
     }
+    if (settings?.instagram_posts) {
+      setInstagramPosts(settings.instagram_posts as unknown as string[]);
+    }
   }, [settings]);
+
+  const handleSaveInstagramPosts = () => {
+    const cleaned = instagramPosts.map((u) => u.trim()).filter(Boolean);
+    updateSetting.mutate({ key: 'instagram_posts', value: cleaned as any });
+  };
+
+  const addInstagramPost = () => setInstagramPosts([...instagramPosts, ""]);
+  const removeInstagramPost = (i: number) =>
+    setInstagramPosts(instagramPosts.filter((_, idx) => idx !== i));
+  const updateInstagramPost = (i: number, v: string) =>
+    setInstagramPosts(instagramPosts.map((u, idx) => (idx === i ? v : u)));
 
   const handleSaveContact = () => {
     updateSetting.mutate({ key: 'contact', value: contact });
