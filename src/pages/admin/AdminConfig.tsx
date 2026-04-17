@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ColorPicker from "@/components/admin/ColorPicker";
 import ProfileSection from "@/components/admin/ProfileSection";
-import { Loader2, Save, Plus, Trash2, GripVertical } from "lucide-react";
+import { Loader2, Save, Plus, Trash2, GripVertical, Instagram } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface MenuItem {
   label: string;
@@ -47,6 +48,7 @@ const AdminConfig = () => {
   });
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenuItems);
+  const [instagramPosts, setInstagramPosts] = useState<string[]>([]);
 
   useEffect(() => {
     if (settings?.contact) {
@@ -61,7 +63,21 @@ const AdminConfig = () => {
     if (settings?.menu_items) {
       setMenuItems(settings.menu_items as unknown as MenuItem[]);
     }
+    if (settings?.instagram_posts) {
+      setInstagramPosts(settings.instagram_posts as unknown as string[]);
+    }
   }, [settings]);
+
+  const handleSaveInstagramPosts = () => {
+    const cleaned = instagramPosts.map((u) => u.trim()).filter(Boolean);
+    updateSetting.mutate({ key: 'instagram_posts', value: cleaned as any });
+  };
+
+  const addInstagramPost = () => setInstagramPosts([...instagramPosts, ""]);
+  const removeInstagramPost = (i: number) =>
+    setInstagramPosts(instagramPosts.filter((_, idx) => idx !== i));
+  const updateInstagramPost = (i: number, v: string) =>
+    setInstagramPosts(instagramPosts.map((u, idx) => (idx === i ? v : u)));
 
   const handleSaveContact = () => {
     updateSetting.mutate({ key: 'contact', value: contact });
@@ -298,7 +314,54 @@ const AdminConfig = () => {
           </CardContent>
         </Card>
 
-        {/* Hours */}
+        {/* Instagram Posts */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Instagram className="h-5 w-5 text-accent" />
+              Posts do Instagram (Cardápio)
+            </CardTitle>
+            <CardDescription>
+              Cole as URLs dos posts que aparecerão na seção Instagram do Cardápio. Ex.: <code className="text-xs">https://www.instagram.com/p/ABC123/</code>. Exibe até 6 posts.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {instagramPosts.length === 0 && (
+              <p className="text-sm text-muted-foreground italic">
+                Nenhum post adicionado. O perfil será exibido como link.
+              </p>
+            )}
+            {instagramPosts.map((url, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <Input
+                  value={url}
+                  onChange={(e) => updateInstagramPost(index, e.target.value)}
+                  placeholder="https://www.instagram.com/p/SHORTCODE/"
+                  className="text-sm"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-destructive hover:text-destructive shrink-0"
+                  onClick={() => removeInstagramPost(index)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={addInstagramPost} disabled={instagramPosts.length >= 6}>
+                <Plus className="mr-2 h-4 w-4" />
+                Adicionar Post
+              </Button>
+              <Button onClick={handleSaveInstagramPosts} disabled={updateSetting.isPending} size="sm">
+                {updateSetting.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                Salvar Posts
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Horário de Funcionamento</CardTitle>
