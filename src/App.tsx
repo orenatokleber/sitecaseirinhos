@@ -43,7 +43,7 @@ const queryClient = new QueryClient();
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/painel-admin');
-  const hideWhatsApp = location.pathname.startsWith('/cardapio');
+  const hideWhatsApp = location.pathname === '/' || location.pathname.startsWith('/cardapio');
   useTrackPageView();
 
   if (isAdminRoute) {
