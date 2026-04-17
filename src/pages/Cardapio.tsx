@@ -4,6 +4,7 @@ import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings, useProducts } from "@/hooks/useSiteContent";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { Cake, Cookie, Sparkles, ChefHat, MessageCircle, Star, CircleDot, Crown } from "lucide-react";
+import InstagramFeed from "@/components/InstagramFeed";
 import massaBrancaDefault from "@/assets/massa-branca.jpg";
 import massaChocolateDefault from "@/assets/massa-chocolate.jpg";
 import massaRedVelvetDefault from "@/assets/massa-red-velvet.jpg";
@@ -457,32 +458,11 @@ const Cardapio = () => {
                 </div>
               </ElegantCard>
 
-              {/* Gallery */}
-              {galleryProducts.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="mt-12"
-                >
-                  <div className="text-center mb-8">
-                    <span className="font-script text-2xl text-primary">Inspirações</span>
-                    <div className="w-12 h-0.5 bg-accent/40 mx-auto mt-2" />
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                    {galleryProducts.slice(0, 8).map((p: any) => (
-                      <div key={p.id} className="aspect-square rounded-2xl overflow-hidden group shadow-sm">
-                        <img
-                          src={p.image_url}
-                          alt={p.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                          loading="lazy"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
+              {/* Instagram Feed */}
+              <InstagramFeed
+                profileUrl={settings?.contact?.instagram}
+                postUrls={settings?.instagram_posts || []}
+              />
             </div>
           </motion.section>
         )}
