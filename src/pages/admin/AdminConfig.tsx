@@ -4,10 +4,35 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import ColorPicker from "@/components/admin/ColorPicker";
 import ProfileSection from "@/components/admin/ProfileSection";
-import { Loader2, Save, Plus, Trash2, GripVertical, Instagram } from "lucide-react";
+import ImageUpload from "@/components/admin/ImageUpload";
+import { Loader2, Save, Plus, Trash2, GripVertical, Instagram, Cake } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+
+interface EncomendaCard {
+  image_url: string;
+  title: string;
+  description: string;
+}
+interface EncomendasSection {
+  is_active: boolean;
+  script: string;
+  title: string;
+  subtitle: string;
+  cards: EncomendaCard[];
+}
+const defaultEncomendas: EncomendasSection = {
+  is_active: true,
+  script: "Sob medida",
+  title: "Encomendas Especiais",
+  subtitle: "Bolos e doces personalizados para tornar seu evento inesquecível",
+  cards: [
+    { image_url: "", title: "Bolos de Casamento", description: "Criações exclusivas e elegantes para o dia mais especial da sua vida." },
+    { image_url: "", title: "Aniversários & Eventos", description: "Bolos temáticos, mesas de doces e sobremesas para celebrações únicas." },
+  ],
+};
 
 interface MenuItem {
   label: string;
