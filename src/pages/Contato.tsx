@@ -50,9 +50,16 @@ const Contato = () => {
           </div>
 
           <div className="mt-16 max-w-3xl mx-auto">
-            <div className="aspect-video rounded-lg bg-muted flex items-center justify-center">
-              <p className="text-muted-foreground text-sm">Mapa — Adicione seu iframe do Google Maps aqui</p>
-            </div>
+            {contact?.maps_iframe ? (
+              <div 
+                className="w-full rounded-lg overflow-hidden shadow-lg"
+                dangerouslySetInnerHTML={{ __html: contact.maps_iframe }}
+              />
+            ) : (
+              <div className="aspect-video rounded-lg bg-muted flex items-center justify-center">
+                <p className="text-muted-foreground text-sm">Mapa — Adicione seu iframe do Google Maps no painel admin</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
