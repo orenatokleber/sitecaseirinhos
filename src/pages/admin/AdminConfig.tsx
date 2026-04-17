@@ -179,6 +179,106 @@ const AdminConfig = () => {
         {/* Profile */}
         <ProfileSection />
 
+        {/* Encomendas Especiais Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Cake className="h-5 w-5 text-accent" />
+                  Seção "Encomendas Especiais"
+                </CardTitle>
+                <CardDescription>
+                  Edite os textos, imagens e visibilidade da seção exibida ao final do Cardápio.
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Switch
+                  checked={encomendas.is_active}
+                  onCheckedChange={(v) => setEncomendas({ ...encomendas, is_active: v })}
+                />
+                <Label className="text-xs text-muted-foreground">
+                  {encomendas.is_active ? "Ativa" : "Oculta"}
+                </Label>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="space-y-2">
+                <Label>Script (acima do título)</Label>
+                <Input
+                  value={encomendas.script}
+                  onChange={(e) => setEncomendas({ ...encomendas, script: e.target.value })}
+                  placeholder="Sob medida"
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label>Título</Label>
+                <Input
+                  value={encomendas.title}
+                  onChange={(e) => setEncomendas({ ...encomendas, title: e.target.value })}
+                  placeholder="Encomendas Especiais"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Subtítulo</Label>
+              <Textarea
+                rows={2}
+                value={encomendas.subtitle}
+                onChange={(e) => setEncomendas({ ...encomendas, subtitle: e.target.value })}
+                placeholder="Bolos e doces personalizados..."
+              />
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <Label className="text-sm font-semibold">Cards de destaque</Label>
+              {encomendas.cards.map((card, idx) => (
+                <div key={idx} className="border border-border rounded-md p-3 space-y-3 bg-muted/30">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-muted-foreground">Card {idx + 1}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive hover:text-destructive h-7 w-7"
+                      onClick={() => removeEncomendaCard(idx)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <ImageUpload
+                    value={card.image_url}
+                    onChange={(url) => updateEncomendaCard(idx, "image_url", url)}
+                    folder="encomendas"
+                    aspectRatio={16 / 9}
+                    recommendedSize="16:9 (ex: 1280x720)"
+                  />
+                  <Input
+                    value={card.title}
+                    onChange={(e) => updateEncomendaCard(idx, "title", e.target.value)}
+                    placeholder="Título do card"
+                  />
+                  <Textarea
+                    rows={2}
+                    value={card.description}
+                    onChange={(e) => updateEncomendaCard(idx, "description", e.target.value)}
+                    placeholder="Descrição curta"
+                  />
+                </div>
+              ))}
+              <Button variant="outline" size="sm" onClick={addEncomendaCard}>
+                <Plus className="mr-2 h-4 w-4" /> Adicionar Card
+              </Button>
+            </div>
+
+            <Button onClick={handleSaveEncomendas} disabled={updateSetting.isPending}>
+              {updateSetting.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+              Salvar Seção Encomendas
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Menu Editor */}
         <Card>
           <CardHeader>
