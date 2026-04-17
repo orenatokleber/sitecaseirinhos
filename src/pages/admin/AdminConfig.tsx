@@ -74,6 +74,7 @@ const AdminConfig = () => {
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenuItems);
   const [instagramPosts, setInstagramPosts] = useState<string[]>([]);
+  const [encomendas, setEncomendas] = useState<EncomendasSection>(defaultEncomendas);
 
   useEffect(() => {
     if (settings?.contact) {
@@ -91,7 +92,26 @@ const AdminConfig = () => {
     if (settings?.instagram_posts) {
       setInstagramPosts(settings.instagram_posts as unknown as string[]);
     }
+    if (settings?.encomendas_section) {
+      setEncomendas({ ...defaultEncomendas, ...(settings.encomendas_section as any) });
+    }
   }, [settings]);
+
+  const handleSaveEncomendas = () => {
+    updateSetting.mutate({ key: 'encomendas_section', value: encomendas as any });
+  };
+  const updateEncomendaCard = (idx: number, field: keyof EncomendaCard, value: string) => {
+    setEncomendas({
+      ...encomendas,
+      cards: encomendas.cards.map((c, i) => (i === idx ? { ...c, [field]: value } : c)),
+    });
+  };
+  const addEncomendaCard = () => {
+    setEncomendas({ ...encomendas, cards: [...encomendas.cards, { image_url: "", title: "", description: "" }] });
+  };
+  const removeEncomendaCard = (idx: number) => {
+    setEncomendas({ ...encomendas, cards: encomendas.cards.filter((_, i) => i !== idx) });
+  };
 
   const handleSaveInstagramPosts = () => {
     const cleaned = instagramPosts.map((u) => u.trim()).filter(Boolean);
