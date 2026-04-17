@@ -588,25 +588,42 @@ const Cardapio = () => {
       {/* ══════════════════════════════ ENCOMENDAS ══════════════════════════════ */}
       <section id="encomenda" className="py-16">
         <div className="container mx-auto px-4">
-          {/* Showcase cards */}
-          <SectionTitle script="Sob medida" title="Encomendas Especiais" subtitle="Bolos e doces personalizados para tornar seu evento inesquecível" />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
-            {[
-              { img: boloCasamento, title: "Bolos de Casamento", desc: "Criações exclusivas e elegantes para o dia mais especial da sua vida." },
-              { img: cakeChocolate, title: "Aniversários & Eventos", desc: "Bolos temáticos, mesas de doces e sobremesas para celebrações únicas." },
-            ].map((item, i) => (
-              <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-2xl overflow-hidden shadow-sm bg-card border border-border/60">
-                <div className="aspect-video overflow-hidden">
-                  <img src={item.img} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
+          {/* Showcase cards (configurable) */}
+          {(() => {
+            const enc = (settings?.encomendas_section as any) || {};
+            const isActive = enc.is_active !== false; // default true
+            if (!isActive) return null;
+            const cards = Array.isArray(enc.cards) && enc.cards.length > 0
+              ? enc.cards
+              : [
+                  { image_url: boloCasamento, title: "Bolos de Casamento", description: "Criações exclusivas e elegantes para o dia mais especial da sua vida." },
+                  { image_url: cakeChocolate, title: "Aniversários & Eventos", description: "Bolos temáticos, mesas de doces e sobremesas para celebrações únicas." },
+                ];
+            return (
+              <>
+                <SectionTitle
+                  script={enc.script || "Sob medida"}
+                  title={enc.title || "Encomendas Especiais"}
+                  subtitle={enc.subtitle || "Bolos e doces personalizados para tornar seu evento inesquecível"}
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
+                  {cards.map((item: any, i: number) => (
+                    <motion.div key={`${item.title}-${i}`} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-2xl overflow-hidden shadow-sm bg-card border border-border/60">
+                      <div className="aspect-video overflow-hidden bg-muted">
+                        {item.image_url && (
+                          <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
+                        )}
+                      </div>
+                      <div className="p-6">
+                        <h3 className="font-heading text-xl font-semibold text-foreground mb-2">{item.title}</h3>
+                        <p className="text-muted-foreground text-sm">{item.description}</p>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
-                <div className="p-6">
-                  <h3 className="font-heading text-xl font-semibold text-foreground mb-2">{item.title}</h3>
-                  <p className="text-muted-foreground text-sm">{item.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              </>
+            );
+          })()}
 
           {/* Order form */}
           <div className="max-w-xl mx-auto">

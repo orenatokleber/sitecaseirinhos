@@ -4,10 +4,35 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import ColorPicker from "@/components/admin/ColorPicker";
 import ProfileSection from "@/components/admin/ProfileSection";
-import { Loader2, Save, Plus, Trash2, GripVertical, Instagram } from "lucide-react";
+import ImageUpload from "@/components/admin/ImageUpload";
+import { Loader2, Save, Plus, Trash2, GripVertical, Instagram, Cake } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+
+interface EncomendaCard {
+  image_url: string;
+  title: string;
+  description: string;
+}
+interface EncomendasSection {
+  is_active: boolean;
+  script: string;
+  title: string;
+  subtitle: string;
+  cards: EncomendaCard[];
+}
+const defaultEncomendas: EncomendasSection = {
+  is_active: true,
+  script: "Sob medida",
+  title: "Encomendas Especiais",
+  subtitle: "Bolos e doces personalizados para tornar seu evento inesquecível",
+  cards: [
+    { image_url: "", title: "Bolos de Casamento", description: "Criações exclusivas e elegantes para o dia mais especial da sua vida." },
+    { image_url: "", title: "Aniversários & Eventos", description: "Bolos temáticos, mesas de doces e sobremesas para celebrações únicas." },
+  ],
+};
 
 interface MenuItem {
   label: string;
@@ -49,6 +74,7 @@ const AdminConfig = () => {
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenuItems);
   const [instagramPosts, setInstagramPosts] = useState<string[]>([]);
+  const [encomendas, setEncomendas] = useState<EncomendasSection>(defaultEncomendas);
 
   useEffect(() => {
     if (settings?.contact) {
@@ -66,7 +92,26 @@ const AdminConfig = () => {
     if (settings?.instagram_posts) {
       setInstagramPosts(settings.instagram_posts as unknown as string[]);
     }
+    if (settings?.encomendas_section) {
+      setEncomendas({ ...defaultEncomendas, ...(settings.encomendas_section as any) });
+    }
   }, [settings]);
+
+  const handleSaveEncomendas = () => {
+    updateSetting.mutate({ key: 'encomendas_section', value: encomendas as any });
+  };
+  const updateEncomendaCard = (idx: number, field: keyof EncomendaCard, value: string) => {
+    setEncomendas({
+      ...encomendas,
+      cards: encomendas.cards.map((c, i) => (i === idx ? { ...c, [field]: value } : c)),
+    });
+  };
+  const addEncomendaCard = () => {
+    setEncomendas({ ...encomendas, cards: [...encomendas.cards, { image_url: "", title: "", description: "" }] });
+  };
+  const removeEncomendaCard = (idx: number) => {
+    setEncomendas({ ...encomendas, cards: encomendas.cards.filter((_, i) => i !== idx) });
+  };
 
   const handleSaveInstagramPosts = () => {
     const cleaned = instagramPosts.map((u) => u.trim()).filter(Boolean);
@@ -133,6 +178,106 @@ const AdminConfig = () => {
       <div className="grid gap-6 max-w-2xl">
         {/* Profile */}
         <ProfileSection />
+
+        {/* Encomendas Especiais Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Cake className="h-5 w-5 text-accent" />
+                  Seção "Encomendas Especiais"
+                </CardTitle>
+                <CardDescription>
+                  Edite os textos, imagens e visibilidade da seção exibida ao final do Cardápio.
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Switch
+                  checked={encomendas.is_active}
+                  onCheckedChange={(v) => setEncomendas({ ...encomendas, is_active: v })}
+                />
+                <Label className="text-xs text-muted-foreground">
+                  {encomendas.is_active ? "Ativa" : "Oculta"}
+                </Label>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="space-y-2">
+                <Label>Script (acima do título)</Label>
+                <Input
+                  value={encomendas.script}
+                  onChange={(e) => setEncomendas({ ...encomendas, script: e.target.value })}
+                  placeholder="Sob medida"
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label>Título</Label>
+                <Input
+                  value={encomendas.title}
+                  onChange={(e) => setEncomendas({ ...encomendas, title: e.target.value })}
+                  placeholder="Encomendas Especiais"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Subtítulo</Label>
+              <Textarea
+                rows={2}
+                value={encomendas.subtitle}
+                onChange={(e) => setEncomendas({ ...encomendas, subtitle: e.target.value })}
+                placeholder="Bolos e doces personalizados..."
+              />
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <Label className="text-sm font-semibold">Cards de destaque</Label>
+              {encomendas.cards.map((card, idx) => (
+                <div key={idx} className="border border-border rounded-md p-3 space-y-3 bg-muted/30">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-muted-foreground">Card {idx + 1}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive hover:text-destructive h-7 w-7"
+                      onClick={() => removeEncomendaCard(idx)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <ImageUpload
+                    value={card.image_url}
+                    onChange={(url) => updateEncomendaCard(idx, "image_url", url)}
+                    folder="encomendas"
+                    aspectRatio={16 / 9}
+                    recommendedSize="16:9 (ex: 1280x720)"
+                  />
+                  <Input
+                    value={card.title}
+                    onChange={(e) => updateEncomendaCard(idx, "title", e.target.value)}
+                    placeholder="Título do card"
+                  />
+                  <Textarea
+                    rows={2}
+                    value={card.description}
+                    onChange={(e) => updateEncomendaCard(idx, "description", e.target.value)}
+                    placeholder="Descrição curta"
+                  />
+                </div>
+              ))}
+              <Button variant="outline" size="sm" onClick={addEncomendaCard}>
+                <Plus className="mr-2 h-4 w-4" /> Adicionar Card
+              </Button>
+            </div>
+
+            <Button onClick={handleSaveEncomendas} disabled={updateSetting.isPending}>
+              {updateSetting.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+              Salvar Seção Encomendas
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Menu Editor */}
         <Card>
