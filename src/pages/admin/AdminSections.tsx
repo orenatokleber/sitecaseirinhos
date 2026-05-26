@@ -32,9 +32,9 @@ const AdminSections = () => {
 
   const [hero, setHero] = useState({ title: "", subtitle: "", image_url: "", cta_text: "", cta_link: "" });
   const [heroColors, setHeroColors] = useState<SectionColors>({});
-  const [aboutPreview, setAboutPreview] = useState({ title: "", content: "", cta_text: "", cta_link: "" });
+  const [aboutPreview, setAboutPreview] = useState({ title: "", content: "", cta_text: "", cta_link: "", image_url: "" });
   const [aboutColors, setAboutColors] = useState<SectionColors>({});
-  const [cta, setCta] = useState({ title: "", content: "", cta_text: "" });
+  const [cta, setCta] = useState({ title: "", content: "", cta_text: "", cta_link: "", image_url: "" });
   const [ctaColors, setCtaColors] = useState<SectionColors>({});
 
   // Custom sections editing state
@@ -62,7 +62,8 @@ const AdminSections = () => {
         title: sections.about_preview.title || "",
         content: sections.about_preview.content || "",
         cta_text: sections.about_preview.cta_text || "",
-        cta_link: sections.about_preview.cta_link || ""
+        cta_link: sections.about_preview.cta_link || "",
+        image_url: sections.about_preview.image_url || ""
       });
       setAboutColors(sections.about_preview.metadata?.colors || {});
     }
@@ -70,7 +71,9 @@ const AdminSections = () => {
       setCta({
         title: sections.cta.title || "",
         content: sections.cta.content || "",
-        cta_text: sections.cta.cta_text || ""
+        cta_text: sections.cta.cta_text || "",
+        cta_link: sections.cta.cta_link || "",
+        image_url: sections.cta.image_url || ""
       });
       setCtaColors(sections.cta.metadata?.colors || {});
     }
@@ -343,6 +346,16 @@ const AdminSections = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
+              <Label>Imagem de Fundo</Label>
+              <ImageUpload
+                value={aboutPreview.image_url}
+                onChange={(url) => setAboutPreview({ ...aboutPreview, image_url: url })}
+                folder="about"
+                aspectRatio={16 / 9}
+                recommendedSize="1920×1080px (16:9)"
+              />
+            </div>
+            <div className="space-y-2">
               <Label>Título</Label>
               <Input value={aboutPreview.title} onChange={(e) => setAboutPreview({ ...aboutPreview, title: e.target.value })} placeholder="Uma História de Amor pela Confeitaria" />
             </div>
@@ -380,8 +393,8 @@ const AdminSections = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Seção CTA (Chamada para Ação)</CardTitle>
-                <CardDescription>Seção final da home incentivando o contato</CardDescription>
+                <CardTitle>Seção Delivery</CardTitle>
+                <CardDescription>Seção final da home incentivando o pedido pelo delivery</CardDescription>
               </div>
               <div className="flex items-center gap-2">
                 <Label className="text-xs text-muted-foreground">Visível</Label>
@@ -394,6 +407,16 @@ const AdminSections = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
+              <Label>Imagem de Fundo</Label>
+              <ImageUpload
+                value={cta.image_url}
+                onChange={(url) => setCta({ ...cta, image_url: url })}
+                folder="cta"
+                aspectRatio={16 / 9}
+                recommendedSize="1920×1080px (16:9)"
+              />
+            </div>
+            <div className="space-y-2">
               <Label>Título</Label>
               <Input value={cta.title} onChange={(e) => setCta({ ...cta, title: e.target.value })} placeholder="Pronto para adoçar seu dia?" />
             </div>
@@ -401,9 +424,15 @@ const AdminSections = () => {
               <Label>Texto</Label>
               <Textarea value={cta.content} onChange={(e) => setCta({ ...cta, content: e.target.value })} placeholder="Entre em contato..." rows={2} />
             </div>
-            <div className="space-y-2">
-              <Label>Texto do Botão</Label>
-              <Input value={cta.cta_text} onChange={(e) => setCta({ ...cta, cta_text: e.target.value })} placeholder="Fazer Pedido pelo WhatsApp" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Texto do Botão</Label>
+                <Input value={cta.cta_text} onChange={(e) => setCta({ ...cta, cta_text: e.target.value })} placeholder="Fazer Pedido Online" />
+              </div>
+              <div className="space-y-2">
+                <Label>Link do Botão</Label>
+                <Input value={cta.cta_link} onChange={(e) => setCta({ ...cta, cta_link: e.target.value })} placeholder="https://... ou /cardapio" />
+              </div>
             </div>
             <div className="border-t border-border pt-4 mt-4">
               <p className="text-sm font-semibold text-foreground mb-3">🎨 Cores da Seção</p>
@@ -416,7 +445,7 @@ const AdminSections = () => {
             </div>
             <Button onClick={handleSaveCta} disabled={updateSection.isPending}>
               {updateSection.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-              Salvar CTA
+              Salvar Delivery
             </Button>
           </CardContent>
         </Card>
