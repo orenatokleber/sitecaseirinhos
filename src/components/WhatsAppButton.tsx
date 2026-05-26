@@ -1,9 +1,10 @@
 import { MessageCircle } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { normalizeWhatsApp } from "@/lib/utils";
 
 const WhatsAppButton = () => {
   const { data: settings } = useSiteSettings();
-  const whatsapp = (settings?.contact as any)?.whatsapp || "5500000000000";
+  const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
 
   return (
     <a

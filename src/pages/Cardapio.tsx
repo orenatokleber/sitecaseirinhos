@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings, useProducts } from "@/hooks/useSiteContent";
+import { normalizeWhatsApp } from "@/lib/utils";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { Cake, Cookie, Sparkles, ChefHat, MessageCircle, Star, CircleDot, Crown } from "lucide-react";
 import InstagramFeed from "@/components/InstagramFeed";
@@ -144,7 +145,7 @@ const sectionTabs: { key: MenuSection; label: string; icon: React.ReactNode }[] 
 const Cardapio = () => {
   const { data: settings } = useSiteSettings();
   const { data: products } = useProducts();
-  const whatsapp = (settings?.contact as any)?.whatsapp || "5500000000000";
+  const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
   const menu = (settings?.menu_cardapio as any) || defaultMenu;
 
   const [activeSection, setActiveSection] = useState<MenuSection>("bolos");

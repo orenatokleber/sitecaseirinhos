@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Instagram, Phone, MapPin, Clock, Heart } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { normalizeInstagramUrl } from "@/lib/utils";
 import logo from "@/assets/logo.png";
 
 const Footer = () => {
@@ -64,7 +65,7 @@ const Footer = () => {
                 </p>
                 <div className="flex items-center justify-center md:justify-end gap-4 pt-2">
                   <a
-                    href={contact?.instagram || "https://instagram.com/caseirinhos"}
+                    href={normalizeInstagramUrl(contact?.instagram) || "https://instagram.com/caseirinhos"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-accent transition-colors"

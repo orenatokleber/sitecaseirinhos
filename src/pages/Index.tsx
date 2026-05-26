@@ -5,6 +5,7 @@ import SectionTitle from "@/components/SectionTitle";
 import WaveDivider from "@/components/WaveDivider";
 import ConfettiDots from "@/components/ConfettiDots";
 import { useSiteSections, useSiteSectionsList, useProducts, useTestimonials, useSiteSettings } from "@/hooks/useSiteContent";
+import { normalizeWhatsApp } from "@/lib/utils";
 
 import heroCakeFallback from "@/assets/caseirinhos-58.webp";
 import cakeChocolate from "@/assets/caseirinhos-85.webp";
@@ -43,7 +44,7 @@ const Index = () => {
   const hero = sections?.hero;
   const aboutPreview = sections?.about_preview;
   const cta = sections?.cta;
-  const whatsapp = (settings?.contact as any)?.whatsapp || "5500000000000";
+  const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
 
   const displayProducts = dbProducts && dbProducts.length > 0 ? dbProducts : null;
   const displayTestimonials = dbTestimonials && dbTestimonials.length > 0 ? dbTestimonials : null;
