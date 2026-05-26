@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSections } from "@/hooks/useSiteContent";
+import { useFooterWaveBg } from "@/hooks/useFooterWaveBg";
 import nossaHistoriaImg from "@/assets/caseirinhos-103.webp";
 import confeiteiraSorrindo from "@/assets/caseirinhos-19.webp";
 import decorandoBolo from "@/assets/caseirinhos-83.webp";
 
 const NossaHistoria = () => {
   const { data: sections } = useSiteSections();
+  useFooterWaveBg("hsl(var(--secondary))");
   // Could use sections for dynamic content in the future
 
   return (
