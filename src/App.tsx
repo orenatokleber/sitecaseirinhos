@@ -21,6 +21,7 @@ import AdminLayout from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminSections from "./pages/admin/AdminSections";
 import AdminNossaHistoria from "./pages/admin/AdminNossaHistoria";
+import AdminPages from "./pages/admin/AdminPages";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminGallery from "./pages/admin/AdminGallery";
@@ -90,6 +91,8 @@ const App = () => (
               <Route path="/painel-admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="secoes" element={<AdminSections />} />
+                <Route path="paginas" element={<AdminPages />} />
+                <Route path="paginas/nossa-historia" element={<AdminNossaHistoria />} />
                 <Route path="nossa-historia" element={<AdminNossaHistoria />} />
                 <Route path="produtos" element={<AdminProducts />} />
                 <Route path="cardapio" element={<AdminCardapio />} />
