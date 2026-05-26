@@ -62,7 +62,8 @@ const AdminSections = () => {
         title: sections.about_preview.title || "",
         content: sections.about_preview.content || "",
         cta_text: sections.about_preview.cta_text || "",
-        cta_link: sections.about_preview.cta_link || ""
+        cta_link: sections.about_preview.cta_link || "",
+        image_url: sections.about_preview.image_url || ""
       });
       setAboutColors(sections.about_preview.metadata?.colors || {});
     }
@@ -70,7 +71,9 @@ const AdminSections = () => {
       setCta({
         title: sections.cta.title || "",
         content: sections.cta.content || "",
-        cta_text: sections.cta.cta_text || ""
+        cta_text: sections.cta.cta_text || "",
+        cta_link: sections.cta.cta_link || "",
+        image_url: sections.cta.image_url || ""
       });
       setCtaColors(sections.cta.metadata?.colors || {});
     }
