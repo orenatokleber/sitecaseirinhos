@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Cake, Truck } from "lucide-react";
+import { Menu, X, Cake } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import logo from "@/assets/logo.png";
