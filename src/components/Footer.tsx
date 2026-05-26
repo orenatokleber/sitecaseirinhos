@@ -65,7 +65,7 @@ const Footer = () => {
                 </p>
                 <div className="flex items-center justify-center md:justify-end gap-4 pt-2">
                   <a
-                    href={contact?.instagram || "https://instagram.com/caseirinhos"}
+                    href={normalizeInstagramUrl(contact?.instagram) || "https://instagram.com/caseirinhos"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-accent transition-colors"
