@@ -346,6 +346,16 @@ const AdminSections = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
+              <Label>Imagem de Fundo</Label>
+              <ImageUpload
+                value={aboutPreview.image_url}
+                onChange={(url) => setAboutPreview({ ...aboutPreview, image_url: url })}
+                folder="about"
+                aspectRatio={16 / 9}
+                recommendedSize="1920×1080px (16:9)"
+              />
+            </div>
+            <div className="space-y-2">
               <Label>Título</Label>
               <Input value={aboutPreview.title} onChange={(e) => setAboutPreview({ ...aboutPreview, title: e.target.value })} placeholder="Uma História de Amor pela Confeitaria" />
             </div>
