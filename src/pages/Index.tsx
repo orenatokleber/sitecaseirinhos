@@ -175,10 +175,6 @@ const Index = () => {
       </section>
 
       {isSectionVisible('about_preview') && (
-      <>
-      <WaveDivider color="hsl(var(--pink-light))" />
-
-      {/* About preview */}
       <section
         className="py-16 md:py-24 bg-pink-light"
         style={{ backgroundColor: aboutColors.bg_color || undefined }}
@@ -200,9 +196,6 @@ const Index = () => {
           </Link>
         </div>
       </section>
-
-      <WaveDivider color="hsl(var(--pink-light))" flip />
-      </>
       )}
 
       {isSectionVisible('products') && (
@@ -253,10 +246,6 @@ const Index = () => {
       )}
 
       {isSectionVisible('testimonials') && (
-      <>
-      <WaveDivider color="hsl(var(--secondary))" />
-
-      {/* Testimonials */}
       <section className="py-16 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
           <SectionTitle script="Amor em cada feedback" title="O que nossos clientes dizem" />
@@ -285,9 +274,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      <WaveDivider color="hsl(var(--secondary))" flip />
-      </>
       )}
 
       {/* Custom Sections */}
