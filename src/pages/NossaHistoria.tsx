@@ -12,7 +12,7 @@ const NossaHistoria = () => {
   return (
     <main className="pt-24">
       <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
-        <img src={nossaHistoriaImg} alt="Confeiteira da Caseirinhos" className="absolute inset-0 w-full h-full object-cover object-top" />
+        <img src={nossaHistoriaImg} alt="Confeiteira da Caseirinhos" className="absolute inset-0 w-full h-full object-cover object-top" decoding="async" fetchPriority="high" />
         <div className="absolute inset-0 bg-chocolate/50" />
         <div className="relative z-10 text-center px-4">
           <p className="font-script text-3xl md:text-5xl text-gold mb-2">Nossa</p>
