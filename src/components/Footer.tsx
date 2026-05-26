@@ -10,14 +10,15 @@ const Footer = () => {
 
   return (
     <footer className="relative overflow-hidden">
-      {/* Wave top */}
-      <div className="w-full overflow-hidden leading-[0]">
+      {/* Wave top — sits on the previous (delivery/chocolate) section, wave shape is the deeper footer color */}
+      <div className="w-full overflow-hidden leading-[0] bg-chocolate -mb-px">
         <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto" preserveAspectRatio="none">
-          <path d="M0 40C360 80 720 0 1080 40C1260 60 1380 50 1440 40V80H0V40Z" fill="hsl(var(--chocolate))" />
+          <path d="M0 40C360 80 720 0 1080 40C1260 60 1380 50 1440 40V80H0V40Z" fill="hsl(var(--chocolate-deep))" />
         </svg>
       </div>
 
-      <div className="bg-chocolate text-primary-foreground">
+      <div className="bg-chocolate-deep text-primary-foreground">
+
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {/* Brand */}
