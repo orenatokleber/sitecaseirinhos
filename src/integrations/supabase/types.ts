@@ -106,6 +106,239 @@ export type Database = {
         }
         Relationships: []
       }
+      cake_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          sort_order: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cake_category_prices: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          price: number
+          size_id: string
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          price?: number
+          size_id: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          price?: number
+          size_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cake_category_prices_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "cake_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cake_category_prices_size_id_fkey"
+            columns: ["size_id"]
+            isOneToOne: false
+            referencedRelation: "cake_sizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cake_decorations: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          is_active: boolean
+          sort_order: number
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          is_active?: boolean
+          sort_order?: number
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          sort_order?: number
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cake_flavors: {
+        Row: {
+          category_id: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cake_flavors_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "cake_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cake_rectangular: {
+        Row: {
+          class1_price: number | null
+          class2_price: number | null
+          created_at: string
+          dimensions: string | null
+          id: string
+          is_active: boolean
+          name: string
+          note: string | null
+          slices: number | null
+          sort_order: number
+          updated_at: string
+          weight_kg: number | null
+        }
+        Insert: {
+          class1_price?: number | null
+          class2_price?: number | null
+          created_at?: string
+          dimensions?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          note?: string | null
+          slices?: number | null
+          sort_order?: number
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Update: {
+          class1_price?: number | null
+          class2_price?: number | null
+          created_at?: string
+          dimensions?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          note?: string | null
+          slices?: number | null
+          sort_order?: number
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      cake_sizes: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          ring_size: string | null
+          slices: number | null
+          sort_order: number
+          updated_at: string
+          weight_kg: number | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          ring_size?: string | null
+          slices?: number | null
+          sort_order?: number
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          ring_size?: string | null
+          slices?: number | null
+          sort_order?: number
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
       delivery_popups: {
         Row: {
           bg_color: string | null
