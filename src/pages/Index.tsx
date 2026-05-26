@@ -42,6 +42,8 @@ const Index = () => {
   const { data: settings } = useSiteSettings();
   const { data: sectionsList } = useSiteSectionsList();
 
+  useFooterWaveBg("hsl(var(--chocolate))");
+
   const hero = sections?.hero;
   const aboutPreview = sections?.about_preview;
   const cta = sections?.cta;
