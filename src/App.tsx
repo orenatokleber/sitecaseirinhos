@@ -21,6 +21,7 @@ import AdminLayout from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminSections from "./pages/admin/AdminSections";
 import AdminNossaHistoria from "./pages/admin/AdminNossaHistoria";
+import AdminPages from "./pages/admin/AdminPages";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminGallery from "./pages/admin/AdminGallery";
