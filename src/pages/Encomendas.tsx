@@ -2,12 +2,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { normalizeWhatsApp } from "@/lib/utils";
 import boloCasamento from "@/assets/caseirinhos-85.webp";
 import cakeChocolate from "@/assets/caseirinhos-83.webp";
 
 const Encomendas = () => {
   const { data: settings } = useSiteSettings();
-  const whatsapp = (settings?.contact as any)?.whatsapp || "5500000000000";
+  const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
   const [form, setForm] = useState({ name: "", phone: "", event: "", date: "", details: "" });
 
   const handleSubmit = (e: React.FormEvent) => {
