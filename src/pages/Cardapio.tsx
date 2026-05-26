@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings, useProducts } from "@/hooks/useSiteContent";
+import { normalizeWhatsApp } from "@/lib/utils";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { Cake, Cookie, Sparkles, ChefHat, MessageCircle, Star, CircleDot, Crown } from "lucide-react";
 import InstagramFeed from "@/components/InstagramFeed";
