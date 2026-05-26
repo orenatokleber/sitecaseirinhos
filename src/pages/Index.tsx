@@ -43,7 +43,7 @@ const Index = () => {
   const hero = sections?.hero;
   const aboutPreview = sections?.about_preview;
   const cta = sections?.cta;
-  const whatsapp = (settings?.contact as any)?.whatsapp || "5500000000000";
+  const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
 
   const displayProducts = dbProducts && dbProducts.length > 0 ? dbProducts : null;
   const displayTestimonials = dbTestimonials && dbTestimonials.length > 0 ? dbTestimonials : null;
