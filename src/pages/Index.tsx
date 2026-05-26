@@ -107,20 +107,14 @@ const Index = () => {
               transition={{ duration: 0.6, delay: 0.45 }}
               className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start"
             >
-              <Link
-                to={hero?.cta_link || "/cardapio"}
-                className="inline-flex items-center justify-center px-7 py-3 rounded-full bg-primary text-primary-foreground font-body text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-              >
-                {hero?.cta_text || "Ver Cardápio"} 🧁
-              </Link>
-              <a
-                href={`https://wa.me/${whatsapp}?text=Olá! Gostaria de fazer um pedido.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-7 py-3 rounded-full border-2 border-primary text-primary font-body text-sm font-semibold hover:bg-primary/5 transition-colors"
-              >
-                Fazer Pedido
-              </a>
+              {hero?.cta_text && hero?.cta_link && (
+                <Link
+                  to={hero.cta_link}
+                  className="inline-flex items-center justify-center px-7 py-3 rounded-full bg-primary text-primary-foreground font-body text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                >
+                  {hero.cta_text} 🧁
+                </Link>
+              )}
             </motion.div>
           </div>
 
