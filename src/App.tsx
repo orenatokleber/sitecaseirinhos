@@ -33,8 +33,6 @@ import AdminSEO from "./pages/admin/AdminSEO";
 import AdminComments from "./pages/admin/AdminComments";
 import AdminLinks from "./pages/admin/AdminLinks";
 import RedirectPage from "./pages/RedirectPage";
-import DeliveryPage from "./pages/Delivery";
-import AdminDelivery from "./pages/admin/AdminDelivery";
 import { HelmetProvider } from "react-helmet-async";
 import { useTrackPageView } from "@/hooks/usePageViews";
 
