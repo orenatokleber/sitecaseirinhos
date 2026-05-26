@@ -6,12 +6,12 @@ import WaveDivider from "@/components/WaveDivider";
 import ConfettiDots from "@/components/ConfettiDots";
 import { useSiteSections, useSiteSectionsList, useProducts, useTestimonials, useSiteSettings } from "@/hooks/useSiteContent";
 
-import heroCakeFallback from "@/assets/caseirinhos-58.jpg";
-import cakeChocolate from "@/assets/caseirinhos-85.jpg";
-import cakeSlice from "@/assets/caseirinhos-118.jpg";
-import docesFinos from "@/assets/caseirinhos-40.jpg";
-import sobremesaCopo from "@/assets/caseirinhos-2.jpg";
-import boloPote from "@/assets/caseirinhos-4.jpg";
+import heroCakeFallback from "@/assets/caseirinhos-58.webp";
+import cakeChocolate from "@/assets/caseirinhos-85.webp";
+import cakeSlice from "@/assets/caseirinhos-118.webp";
+import docesFinos from "@/assets/caseirinhos-40.webp";
+import sobremesaCopo from "@/assets/caseirinhos-2.webp";
+import boloPote from "@/assets/caseirinhos-4.webp";
 
 const fallbackProducts = [
   { img: cakeChocolate, name: "Bolos Caseiros", desc: "Receitas tradicionais feitas com amor e ingredientes selecionados" },

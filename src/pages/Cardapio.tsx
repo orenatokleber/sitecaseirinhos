@@ -8,8 +8,8 @@ import InstagramFeed from "@/components/InstagramFeed";
 import massaBrancaDefault from "@/assets/massa-branca.jpg";
 import massaChocolateDefault from "@/assets/massa-chocolate.jpg";
 import massaRedVelvetDefault from "@/assets/massa-red-velvet.jpg";
-import boloCasamento from "@/assets/caseirinhos-85.jpg";
-import cakeChocolate from "@/assets/caseirinhos-83.jpg";
+import boloCasamento from "@/assets/caseirinhos-85.webp";
+import cakeChocolate from "@/assets/caseirinhos-83.webp";
 
 const formatPrice = (v: number) => `R$ ${v.toFixed(2).replace(".", ",")}`;
 

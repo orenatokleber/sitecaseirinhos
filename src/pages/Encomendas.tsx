@@ -2,8 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings } from "@/hooks/useSiteContent";
-import boloCasamento from "@/assets/caseirinhos-85.jpg";
-import cakeChocolate from "@/assets/caseirinhos-83.jpg";
+import boloCasamento from "@/assets/caseirinhos-85.webp";
+import cakeChocolate from "@/assets/caseirinhos-83.webp";
 
 const Encomendas = () => {
   const { data: settings } = useSiteSettings();
