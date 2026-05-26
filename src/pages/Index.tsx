@@ -468,14 +468,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Bottom wave — chocolate descending into the next section */}
-        <div className="relative leading-[0] -mt-px rotate-180">
-          <svg viewBox="0 0 1440 140" preserveAspectRatio="none" className="block w-full h-16 md:h-24" aria-hidden="true">
-            <path d="M0,80 C240,20 480,140 720,80 C960,20 1200,140 1440,80 L1440,140 L0,140 Z" fill="hsl(var(--chocolate))" opacity="0.35" />
-            <path d="M0,100 C320,40 640,160 960,100 C1200,52 1320,132 1440,100 L1440,140 L0,140 Z" fill="hsl(var(--chocolate))" opacity="0.6" />
-            <path d="M0,118 C360,70 720,170 1080,118 C1260,92 1380,128 1440,118 L1440,140 L0,140 Z" fill="hsl(var(--chocolate))" />
-          </svg>
-        </div>
+        {/* Bottom transition handled by Footer's own wave */}
       </div>
       )}
     </main>
