@@ -417,11 +417,11 @@ const Index = () => {
       })}
 
       {isSectionVisible('cta') && (
-      <section className="relative py-28 md:py-36 text-center overflow-hidden">
+      <>
+      <WaveDivider color="hsl(var(--chocolate))" flip />
+      <section className="relative py-20 md:py-28 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-chocolate via-chocolate/90 to-chocolate" />
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.3) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent pointer-events-none z-[1]" />
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none z-[1]" />
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -471,6 +471,8 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+      <WaveDivider color="hsl(var(--chocolate))" />
+      </>
       )}
     </main>
   );
