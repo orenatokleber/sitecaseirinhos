@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Instagram, Phone, MapPin, Clock, Heart } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { normalizeInstagramUrl } from "@/lib/utils";
 import logo from "@/assets/logo.png";
 
 const Footer = () => {
