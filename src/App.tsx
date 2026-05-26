@@ -80,7 +80,6 @@ const App = () => (
               <Route path="/galeria" element={<Galeria />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/delivery" element={<DeliveryPage />} />
               <Route path="/:slug" element={<RedirectPage />} />
 
               {/* Admin routes */}
@@ -92,7 +91,6 @@ const App = () => (
                 <Route path="secoes" element={<AdminSections />} />
                 <Route path="produtos" element={<AdminProducts />} />
                 <Route path="cardapio" element={<AdminCardapio />} />
-                <Route path="delivery" element={<AdminDelivery />} />
                 <Route path="depoimentos" element={<AdminTestimonials />} />
                 <Route path="galeria" element={<AdminGallery />} />
               <Route path="blog" element={<AdminBlog />} />
