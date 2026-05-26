@@ -34,7 +34,7 @@ const AdminSections = () => {
   const [heroColors, setHeroColors] = useState<SectionColors>({});
   const [aboutPreview, setAboutPreview] = useState({ title: "", content: "", cta_text: "", cta_link: "" });
   const [aboutColors, setAboutColors] = useState<SectionColors>({});
-  const [cta, setCta] = useState({ title: "", content: "", cta_text: "" });
+  const [cta, setCta] = useState({ title: "", content: "", cta_text: "", cta_link: "", image_url: "" });
   const [ctaColors, setCtaColors] = useState<SectionColors>({});
 
   // Custom sections editing state
