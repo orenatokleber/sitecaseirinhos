@@ -5,6 +5,7 @@ import SectionTitle from "@/components/SectionTitle";
 import WaveDivider from "@/components/WaveDivider";
 import ConfettiDots from "@/components/ConfettiDots";
 import { useSiteSections, useSiteSectionsList, useProducts, useTestimonials, useSiteSettings } from "@/hooks/useSiteContent";
+import { normalizeWhatsApp } from "@/lib/utils";
 
 import heroCakeFallback from "@/assets/caseirinhos-58.webp";
 import cakeChocolate from "@/assets/caseirinhos-85.webp";
