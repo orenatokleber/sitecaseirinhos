@@ -11,9 +11,9 @@ const Footer = () => {
 
   return (
     <footer className="relative overflow-hidden">
-      {/* Wave top — sits on the previous (delivery/chocolate) section, wave shape is the deeper footer color */}
-      <div className="w-full overflow-hidden leading-[0] bg-chocolate -mb-px">
-        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto" preserveAspectRatio="none">
+      {/* Wave top — transparent wrapper so the previous section's background fills behind the divider on any page */}
+      <div className="w-full overflow-hidden leading-[0] bg-transparent -mb-px">
+        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto block" preserveAspectRatio="none">
           <path d="M0 40C360 80 720 0 1080 40C1260 60 1380 50 1440 40V80H0V40Z" fill="hsl(var(--chocolate-deep))" />
         </svg>
       </div>
