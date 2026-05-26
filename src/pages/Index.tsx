@@ -426,7 +426,16 @@ const Index = () => {
         </div>
 
         <section className="relative py-20 md:py-28 text-center overflow-hidden bg-chocolate">
-          <div className="absolute inset-0 bg-gradient-to-br from-chocolate via-chocolate/95 to-chocolate" />
+          {cta?.image_url && (
+            <img
+              src={cta.image_url}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-br from-chocolate/95 via-chocolate/90 to-chocolate/95" />
           <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, hsl(var(--cream)) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
           {/* Soft inner vignette for depth */}
           <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, hsl(var(--chocolate) / 0.5) 100%)' }} />
@@ -449,13 +458,22 @@ const Index = () => {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link
-                  to="/delivery"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground font-body text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-                >
-                  <ExternalLink size={18} />
-                  {cta?.cta_text || "Fazer Pedido Online"}
-                </Link>
+                {(() => {
+                  const link = cta?.cta_link || "/cardapio";
+                  const isExternal = /^https?:\/\//i.test(link);
+                  const classes = "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground font-body text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all";
+                  const label = (
+                    <>
+                      <ExternalLink size={18} />
+                      {cta?.cta_text || "Fazer Pedido Online"}
+                    </>
+                  );
+                  return isExternal ? (
+                    <a href={link} target="_blank" rel="noopener noreferrer" className={classes}>{label}</a>
+                  ) : (
+                    <Link to={link} className={classes}>{label}</Link>
+                  );
+                })()}
                 <a
                   href={`https://wa.me/${whatsapp}?text=Olá! Gostaria de fazer um pedido.`}
                   target="_blank"
