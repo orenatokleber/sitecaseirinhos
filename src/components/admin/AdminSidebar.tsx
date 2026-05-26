@@ -11,7 +11,8 @@ import {
   LogOut,
   ExternalLink,
   Link as LinkIcon,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Heart
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import { Button } from "@/components/ui/button";
 const menuItems = [
   { icon: Home, label: "Dashboard", path: "/painel-admin" },
   { icon: FileText, label: "Seções do Site", path: "/painel-admin/secoes" },
+  { icon: Heart, label: "Nossa História", path: "/painel-admin/nossa-historia" },
   { icon: ShoppingBag, label: "Produtos", path: "/painel-admin/produtos" },
   { icon: UtensilsCrossed, label: "Cardápio", path: "/painel-admin/cardapio" },
   { icon: MessageSquare, label: "Depoimentos", path: "/painel-admin/depoimentos" },

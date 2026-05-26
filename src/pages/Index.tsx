@@ -478,14 +478,6 @@ const Index = () => {
                     <Link to={link} className={classes}>{label}</Link>
                   );
                 })()}
-                <a
-                  href={`https://wa.me/${whatsapp}?text=Olá! Gostaria de fazer um pedido.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border-2 border-cream/40 text-cream font-body text-sm font-semibold hover:bg-cream/10 transition-colors"
-                >
-                  Pedir pelo WhatsApp
-                </a>
               </div>
 
               <div className="flex flex-wrap justify-center gap-6 mt-10 text-cream/60 text-sm font-body">
