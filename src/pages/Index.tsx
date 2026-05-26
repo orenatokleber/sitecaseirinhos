@@ -176,10 +176,22 @@ const Index = () => {
 
       {isSectionVisible('about_preview') && (
       <section
-        className="py-16 md:py-24 bg-pink-light"
+        className="relative py-16 md:py-24 bg-pink-light overflow-hidden"
         style={{ backgroundColor: aboutColors.bg_color || undefined }}
       >
-        <div className="container mx-auto px-4 text-center max-w-2xl">
+        {aboutPreview?.image_url && (
+          <>
+            <img
+              src={aboutPreview.image_url}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-background/70" />
+          </>
+        )}
+        <div className="container mx-auto px-4 text-center max-w-2xl relative z-10">
           <SectionTitle script="Sobre nós" title={aboutPreview?.title || "Uma História de Amor pela Confeitaria"} />
           <p
             className="leading-relaxed mb-8 text-muted-foreground"
