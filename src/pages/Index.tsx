@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, Cake, Heart, Award } from "lucide-react";
+import { Star, Cake, Heart, Award, Truck, ExternalLink, Clock, MapPin } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
 import WaveDivider from "@/components/WaveDivider";
 import ConfettiDots from "@/components/ConfettiDots";
@@ -417,29 +417,56 @@ const Index = () => {
       })}
 
       {isSectionVisible('cta') && (
-      <section className="relative py-20 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-accent to-rose" />
-        <ConfettiDots className="opacity-30" />
+      <section className="relative py-20 md:py-28 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-chocolate via-chocolate/90 to-chocolate" />
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.3) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
         <div className="container mx-auto px-4 relative z-10">
-          <motion.h2
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-script text-3xl md:text-5xl mb-4 text-primary-foreground"
+            className="max-w-2xl mx-auto"
           >
-            {cta?.title || "Pronto para adoçar seu dia?"}
-          </motion.h2>
-          <p className="mb-8 max-w-md mx-auto text-primary-foreground/80">
-            {cta?.content || "Entre em contato e faça sua encomenda. Transformamos seus momentos em memórias doces."}
-          </p>
-          <a
-            href={`https://wa.me/${whatsapp}?text=Olá! Gostaria de fazer um pedido.`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-card text-foreground font-body text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-          >
-            {cta?.cta_text || "Fazer Pedido pelo WhatsApp"} 💬
-          </a>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-cream mb-6 border border-white/20">
+              <Truck size={18} />
+              <span className="text-sm font-semibold font-body">Entregamos na sua porta</span>
+            </div>
+            <h2 className="font-heading text-3xl md:text-5xl mb-4 text-cream font-bold">
+              {cta?.title || "Peça pelo Delivery"}
+            </h2>
+            <p className="mb-10 max-w-lg mx-auto text-cream/80 font-body leading-relaxed">
+              {cta?.content || "Bolos fresquinhos e doces artesanais entregues com carinho. Confira nosso cardápio de delivery e peça agora!"}
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                to="/delivery"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground font-body text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+              >
+                <ExternalLink size={18} />
+                {cta?.cta_text || "Fazer Pedido Online"}
+              </Link>
+              <a
+                href={`https://wa.me/${whatsapp}?text=Olá! Gostaria de fazer um pedido.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border-2 border-cream/40 text-cream font-body text-sm font-semibold hover:bg-white/10 transition-colors"
+              >
+                Pedir pelo WhatsApp
+              </a>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-6 mt-10 text-cream/60 text-sm font-body">
+              <span className="flex items-center gap-1.5">
+                <Clock size={14} />
+                Entrega Rápida
+              </span>
+              <span className="flex items-center gap-1.5">
+                <MapPin size={14} />
+                Consulte sua região
+              </span>
+            </div>
+          </motion.div>
         </div>
       </section>
       )}
