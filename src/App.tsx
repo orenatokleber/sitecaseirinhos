@@ -90,6 +90,7 @@ const App = () => (
               <Route path="/painel-admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="secoes" element={<AdminSections />} />
+                <Route path="nossa-historia" element={<AdminNossaHistoria />} />
                 <Route path="produtos" element={<AdminProducts />} />
                 <Route path="cardapio" element={<AdminCardapio />} />
                 <Route path="depoimentos" element={<AdminTestimonials />} />
