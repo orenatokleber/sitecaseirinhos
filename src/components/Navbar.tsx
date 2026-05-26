@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Cake, Truck } from "lucide-react";
+import { Menu, X, Cake } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import logo from "@/assets/logo.png";
@@ -60,19 +60,6 @@ const Navbar = () => {
             Bolos & Encomendas
           </Link>
 
-          {/* Delivery */}
-          <Link
-            to="/delivery"
-            className={`hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-body transition-all duration-300 shadow-sm border ${
-              location.pathname === "/delivery"
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
-            }`}
-          >
-            <Truck size={16} />
-            Peça pelo Delivery
-          </Link>
-
           <button
             className="lg:hidden text-foreground p-2 rounded-full hover:bg-muted transition-colors"
             onClick={() => setOpen(!open)}
@@ -115,14 +102,6 @@ const Navbar = () => {
                 >
                   <Cake size={16} />
                   Bolos & Encomendas
-                </Link>
-                <Link
-                  to="/delivery"
-                  onClick={() => setOpen(false)}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground text-sm font-semibold font-body"
-                >
-                  <Truck size={16} />
-                  Peça pelo Delivery
                 </Link>
               </li>
             </ul>

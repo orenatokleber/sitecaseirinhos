@@ -33,8 +33,6 @@ import AdminSEO from "./pages/admin/AdminSEO";
 import AdminComments from "./pages/admin/AdminComments";
 import AdminLinks from "./pages/admin/AdminLinks";
 import RedirectPage from "./pages/RedirectPage";
-import DeliveryPage from "./pages/Delivery";
-import AdminDelivery from "./pages/admin/AdminDelivery";
 import { HelmetProvider } from "react-helmet-async";
 import { useTrackPageView } from "@/hooks/usePageViews";
 
@@ -82,7 +80,6 @@ const App = () => (
               <Route path="/galeria" element={<Galeria />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/delivery" element={<DeliveryPage />} />
               <Route path="/:slug" element={<RedirectPage />} />
 
               {/* Admin routes */}
@@ -94,7 +91,6 @@ const App = () => (
                 <Route path="secoes" element={<AdminSections />} />
                 <Route path="produtos" element={<AdminProducts />} />
                 <Route path="cardapio" element={<AdminCardapio />} />
-                <Route path="delivery" element={<AdminDelivery />} />
                 <Route path="depoimentos" element={<AdminTestimonials />} />
                 <Route path="galeria" element={<AdminGallery />} />
               <Route path="blog" element={<AdminBlog />} />
