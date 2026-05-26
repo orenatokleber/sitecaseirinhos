@@ -32,7 +32,7 @@ const AdminSections = () => {
 
   const [hero, setHero] = useState({ title: "", subtitle: "", image_url: "", cta_text: "", cta_link: "" });
   const [heroColors, setHeroColors] = useState<SectionColors>({});
-  const [aboutPreview, setAboutPreview] = useState({ title: "", content: "", cta_text: "", cta_link: "" });
+  const [aboutPreview, setAboutPreview] = useState({ title: "", content: "", cta_text: "", cta_link: "", image_url: "" });
   const [aboutColors, setAboutColors] = useState<SectionColors>({});
   const [cta, setCta] = useState({ title: "", content: "", cta_text: "", cta_link: "", image_url: "" });
   const [ctaColors, setCtaColors] = useState<SectionColors>({});
