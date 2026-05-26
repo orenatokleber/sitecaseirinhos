@@ -39,7 +39,7 @@ const NossaHistoria = () => {
               <p>Nosso propósito é claro: <strong className="text-foreground">transformar momentos em memórias doces</strong>. Seja um aniversário, um casamento, um chá de bebê ou simplesmente uma terça-feira que merece um bolo especial — estamos aqui para fazer parte da sua história.</p>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="md:order-2 order-1">
-              <img src={decorandoBolo} alt="Confeiteira decorando bolo artesanal" className="rounded-lg object-cover w-full h-[420px] shadow-md" />
+              <img src={decorandoBolo} alt="Confeiteira decorando bolo artesanal" className="rounded-lg object-cover w-full h-[420px] shadow-md" loading="lazy" decoding="async" />
             </motion.div>
           </div>
         </div>
