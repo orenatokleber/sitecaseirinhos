@@ -59,6 +59,7 @@ export default {
         chocolate: {
           DEFAULT: "hsl(var(--chocolate))",
           light: "hsl(var(--chocolate-light))",
+          deep: "hsl(var(--chocolate-deep))",
         },
         "pink-light": "hsl(var(--pink-light))",
         "pink-medium": "hsl(var(--pink-medium))",
