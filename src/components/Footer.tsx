@@ -23,7 +23,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {/* Brand */}
             <div className="text-center md:text-left flex flex-col items-center md:items-start">
-              <img src={logo} alt="Caseirinhos a Confeitaria" className="h-14 w-auto mb-4 brightness-0 invert" />
+              <img src={logo} alt="Caseirinhos a Confeitaria" className="h-14 w-auto mb-4 brightness-0 invert" loading="lazy" decoding="async" />
               <p className="text-sm opacity-70 leading-relaxed">
                 Mais do que doces, criamos memórias. Cada bolo é feito com amor, dedicação e ingredientes selecionados.
               </p>

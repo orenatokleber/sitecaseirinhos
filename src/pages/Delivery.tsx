@@ -199,7 +199,7 @@ const DeliveryPage = () => {
               onClick={(e) => e.stopPropagation()}
             >
               {showModal.image_url && (
-                <img src={showModal.image_url} alt={showModal.title} className="w-full h-56 object-cover" />
+                <img src={showModal.image_url} alt={showModal.title} className="w-full h-56 object-cover" loading="lazy" decoding="async" />
               )}
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-3">

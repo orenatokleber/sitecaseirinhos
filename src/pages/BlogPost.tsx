@@ -497,7 +497,7 @@ const BlogPost = () => {
               <div className="flex items-center gap-5 text-sm text-muted-foreground">
                 <span className="flex items-center gap-2.5 font-medium text-foreground">
                   {adminProfile?.avatar_url ? (
-                    <img src={adminProfile.avatar_url} alt={adminProfile.display_name || post.author_name} className="w-9 h-9 rounded-full object-cover ring-2 ring-accent/20" />
+                    <img src={adminProfile.avatar_url} alt={adminProfile.display_name || post.author_name} className="w-9 h-9 rounded-full object-cover ring-2 ring-accent/20" loading="lazy" decoding="async" />
                   ) : (
                     <div className="w-9 h-9 rounded-full bg-accent/15 flex items-center justify-center">
                       <User className="h-4 w-4 text-accent" />

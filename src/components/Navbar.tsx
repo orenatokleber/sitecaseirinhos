@@ -26,7 +26,7 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between py-3 px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Caseirinhos a Confeitaria" className="h-10 md:h-12 w-auto" />
+          <img src={logo} alt="Caseirinhos a Confeitaria" className="h-10 md:h-12 w-auto" decoding="async" fetchPriority="high" />
         </Link>
 
         {/* Desktop nav */}
