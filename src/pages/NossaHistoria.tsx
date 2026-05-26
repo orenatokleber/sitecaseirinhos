@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSections } from "@/hooks/useSiteContent";
+import { getPublicImageUrl } from "@/lib/supabase";
 import { useFooterWaveBg } from "@/hooks/useFooterWaveBg";
 import nossaHistoriaImg from "@/assets/caseirinhos-103.webp";
 import confeiteiraSorrindo from "@/assets/caseirinhos-19.webp";
@@ -16,9 +17,9 @@ const NossaHistoria = () => {
   const block2 = meta.block2 || {};
   const values = meta.values || {};
 
-  const heroImg = hero.image_url || nossaHistoriaImg;
-  const block1Img = block1.image_url || confeiteiraSorrindo;
-  const block2Img = block2.image_url || decorandoBolo;
+  const heroImg = hero.image_url ? getPublicImageUrl(hero.image_url) : nossaHistoriaImg;
+  const block1Img = block1.image_url ? getPublicImageUrl(block1.image_url) : confeiteiraSorrindo;
+  const block2Img = block2.image_url ? getPublicImageUrl(block2.image_url) : decorandoBolo;
 
   const valueItems: Array<{ title: string; desc: string }> = Array.isArray(values.items) && values.items.length > 0
     ? values.items
