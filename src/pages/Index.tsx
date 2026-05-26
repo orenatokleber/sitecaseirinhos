@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, Cake, Heart, Award } from "lucide-react";
+import { Star, Cake, Heart, Award, Truck, ExternalLink, Clock, MapPin } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
 import WaveDivider from "@/components/WaveDivider";
 import ConfettiDots from "@/components/ConfettiDots";
