@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSections } from "@/hooks/useSiteContent";
+import { getPublicImageUrl } from "@/lib/supabase";
 import { useFooterWaveBg } from "@/hooks/useFooterWaveBg";
 import nossaHistoriaImg from "@/assets/caseirinhos-103.webp";
 import confeiteiraSorrindo from "@/assets/caseirinhos-19.webp";
