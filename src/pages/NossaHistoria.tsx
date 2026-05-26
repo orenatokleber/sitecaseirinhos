@@ -24,7 +24,7 @@ const NossaHistoria = () => {
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
-              <img src={confeiteiraSorrindo} alt="Confeiteira Caseirinhos com fouet" className="rounded-lg object-cover w-full h-[420px] shadow-md" />
+              <img src={confeiteiraSorrindo} alt="Confeiteira Caseirinhos com fouet" className="rounded-lg object-cover w-full h-[420px] shadow-md" loading="lazy" decoding="async" />
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="space-y-6 text-muted-foreground leading-relaxed">
               <SectionTitle script="O começo" title="De uma cozinha caseira para o seu coração" align="left" />
