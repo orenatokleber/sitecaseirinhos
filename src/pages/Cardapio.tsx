@@ -410,7 +410,9 @@ const Cardapio = () => {
                   </div>
                 );
               })}
+              </motion.div>
             </div>
+
 
             {sec("cardapio_addons").content && (
               <p className="text-xs text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
