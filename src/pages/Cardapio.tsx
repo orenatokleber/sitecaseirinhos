@@ -22,6 +22,45 @@ const formatPrice = (v: number | null | undefined) =>
 const formatAddon = (v: number) =>
   v > 0 ? `+R$${Math.round(v)}` : "";
 
+const isTransparentImage = (url?: string | null) =>
+  !!url && /\.(png|webp|svg)(\?|$)/i.test(url);
+
+const SectionImage = ({
+  src,
+  alt,
+  sticky = false,
+}: {
+  src: string;
+  alt: string;
+  sticky?: boolean;
+}) => {
+  const transparent = isTransparentImage(src);
+  const wrapperCls = sticky ? "sticky top-28" : "";
+  if (transparent) {
+    return (
+      <div className={wrapperCls}>
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className="w-full max-h-[420px] object-contain bg-transparent mx-auto"
+          style={{ background: "transparent" }}
+        />
+      </div>
+    );
+  }
+  return (
+    <div className={wrapperCls}>
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="rounded-lg object-cover w-full h-[420px] shadow-md"
+      />
+    </div>
+  );
+};
+
 const Cardapio = () => {
   const isMobile = useIsMobile();
   const { data: settings } = useSiteSettings();
@@ -104,8 +143,22 @@ const Cardapio = () => {
             )}
 
             {sec("cardapio_hero").image_url && (
-              <div className="mt-8 max-w-3xl mx-auto rounded-2xl overflow-hidden border border-border/60 shadow-sm">
-                <img src={sec("cardapio_hero").image_url} alt={sec("cardapio_hero").title || "Cardápio"} className="w-full h-auto" />
+              <div className="mt-8 max-w-3xl mx-auto">
+                {isTransparentImage(sec("cardapio_hero").image_url) ? (
+                  <img
+                    src={sec("cardapio_hero").image_url}
+                    alt={sec("cardapio_hero").title || "Cardápio"}
+                    className="w-full h-auto max-h-[480px] object-contain mx-auto"
+                  />
+                ) : (
+                  <div className="rounded-2xl overflow-hidden border border-border/60 shadow-sm">
+                    <img
+                      src={sec("cardapio_hero").image_url}
+                      alt={sec("cardapio_hero").title || "Cardápio"}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                )}
               </div>
             )}
             {sec("cardapio_hero").content && (
@@ -136,12 +189,7 @@ const Cardapio = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.7 }}
               >
-                <img
-                  src={sec("cardapio_sizes").image_url}
-                  alt={sec("cardapio_sizes").title || ""}
-                  className="rounded-lg object-cover w-full h-[420px] shadow-md"
-                  loading="lazy"
-                />
+                <SectionImage src={sec("cardapio_sizes").image_url} alt={sec("cardapio_sizes").title || ""} />
               </motion.div>
             )}
 
@@ -247,12 +295,7 @@ const Cardapio = () => {
                     transition={{ duration: 0.7 }}
                     className={imageOnRight ? "md:order-2" : "md:order-1"}
                   >
-                    <img
-                      src={catImg}
-                      alt={cat.name}
-                      className="rounded-lg object-cover w-full h-[420px] shadow-md sticky top-28"
-                      loading="lazy"
-                    />
+                    <SectionImage src={catImg} alt={cat.name} sticky />
                   </motion.div>
                 )}
 
@@ -365,12 +408,7 @@ const Cardapio = () => {
                   transition={{ duration: 0.7 }}
                   className={imageOnRight ? "md:order-2" : "md:order-1"}
                 >
-                  <img
-                    src={catImg}
-                    alt={cat.name}
-                    className="rounded-lg object-cover w-full h-[420px] shadow-md"
-                    loading="lazy"
-                  />
+                  <SectionImage src={catImg} alt={cat.name} />
                 </motion.div>
               )}
 
@@ -444,12 +482,7 @@ const Cardapio = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.7 }}
                 >
-                  <img
-                    src={sec("cardapio_rectangular").image_url}
-                    alt={sec("cardapio_rectangular").title || ""}
-                    className="rounded-lg object-cover w-full h-[420px] shadow-md sticky top-28"
-                    loading="lazy"
-                  />
+                  <SectionImage src={sec("cardapio_rectangular").image_url} alt={sec("cardapio_rectangular").title || ""} sticky />
                 </motion.div>
               )}
 
@@ -527,8 +560,14 @@ const Cardapio = () => {
 
 
             {sec("cardapio_decorations").image_url && (
-              <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-                <img src={sec("cardapio_decorations").image_url} alt={sec("cardapio_decorations").title || ""} className="w-full h-auto" loading="lazy" />
+              <div className="mt-6">
+                {isTransparentImage(sec("cardapio_decorations").image_url) ? (
+                  <img src={sec("cardapio_decorations").image_url} alt={sec("cardapio_decorations").title || ""} className="w-full h-auto max-h-[480px] object-contain mx-auto" loading="lazy" />
+                ) : (
+                  <div className="rounded-2xl overflow-hidden border border-border/60">
+                    <img src={sec("cardapio_decorations").image_url} alt={sec("cardapio_decorations").title || ""} className="w-full h-auto" loading="lazy" />
+                  </div>
+                )}
               </div>
             )}
 
@@ -572,8 +611,14 @@ const Cardapio = () => {
           )}
 
           {sec("cardapio_order").image_url && (
-            <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-              <img src={sec("cardapio_order").image_url} alt={sec("cardapio_order").title || ""} className="w-full h-auto" loading="lazy" />
+            <div className="mt-6">
+              {isTransparentImage(sec("cardapio_order").image_url) ? (
+                <img src={sec("cardapio_order").image_url} alt={sec("cardapio_order").title || ""} className="w-full h-auto max-h-[420px] object-contain mx-auto" loading="lazy" />
+              ) : (
+                <div className="rounded-2xl overflow-hidden border border-border/60">
+                  <img src={sec("cardapio_order").image_url} alt={sec("cardapio_order").title || ""} className="w-full h-auto" loading="lazy" />
+                </div>
+              )}
             </div>
           )}
           {sec("cardapio_order").content && (
