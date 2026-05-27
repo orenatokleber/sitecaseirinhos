@@ -427,7 +427,7 @@ const Cardapio = () => {
       {/* ─── BOLOS RETANGULARES (TABELA DETALHADA) ─── */}
       {rectangular.length > 0 && (
         <section className="pb-12">
-          <div className="container mx-auto px-4 max-w-3xl">
+          <div className="container mx-auto px-4 max-w-6xl">
             {sec("cardapio_rectangular").title && (
               <SectionTitle
                 script={scriptOf("cardapio_rectangular")}
@@ -436,55 +436,73 @@ const Cardapio = () => {
               />
             )}
 
-
-            {sec("cardapio_rectangular").image_url && (
-              <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-                <img src={sec("cardapio_rectangular").image_url} alt={sec("cardapio_rectangular").title || ""} className="w-full h-auto" loading="lazy" />
-              </div>
-            )}
-
-            <div className="mt-8 space-y-6">
-              {rectangular.map((r) => (
-                <div
-                  key={r.id}
-                  className="rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+            <div className={`grid grid-cols-1 ${sec("cardapio_rectangular").image_url ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-start mt-4`}>
+              {sec("cardapio_rectangular").image_url && (
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
                 >
-                  <div className="bg-accent/10 px-5 py-3 text-center">
-                    <h3 className="font-heading font-bold text-foreground uppercase text-sm tracking-wider">
-                      {r.name}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-1 font-body">
-                      {[r.dimensions, r.slices ? `${r.slices} fatias` : null, r.weight_kg ? `${Number(r.weight_kg).toFixed(1)} kg` : null]
-                        .filter(Boolean)
-                        .join(" | ")}
-                    </p>
-                  </div>
-                  <div className="p-5 space-y-2">
-                    {r.note && (
-                      <p className="font-script text-lg text-chocolate text-center mb-3">
-                        {r.note}
+                  <img
+                    src={sec("cardapio_rectangular").image_url}
+                    alt={sec("cardapio_rectangular").title || ""}
+                    className="rounded-lg object-cover w-full h-[420px] shadow-md sticky top-28"
+                    loading="lazy"
+                  />
+                </motion.div>
+              )}
+
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className="space-y-6"
+              >
+                {rectangular.map((r) => (
+                  <div
+                    key={r.id}
+                    className="rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                  >
+                    <div className="bg-accent/10 px-5 py-3 text-center">
+                      <h3 className="font-heading font-bold text-foreground uppercase text-sm tracking-wider">
+                        {r.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1 font-body">
+                        {[r.dimensions, r.slices ? `${r.slices} fatias` : null, r.weight_kg ? `${Number(r.weight_kg).toFixed(1)} kg` : null]
+                          .filter(Boolean)
+                          .join(" | ")}
                       </p>
-                    )}
-                    {r.class1_price != null && (
-                      <div className="flex justify-between text-sm font-body">
-                      <span>Tradicional</span>
-                        <span className="font-bold text-chocolate">
-                          {formatPrice(r.class1_price)}
-                        </span>
-                      </div>
-                    )}
-                    {r.class2_price != null && (
-                      <div className="flex justify-between text-sm font-body">
-                        <span>Premium</span>
-                        <span className="font-bold text-chocolate">
-                          {formatPrice(r.class2_price)}
-                        </span>
-                      </div>
-                    )}
+                    </div>
+                    <div className="p-5 space-y-2">
+                      {r.note && (
+                        <p className="font-script text-lg text-chocolate text-center mb-3">
+                          {r.note}
+                        </p>
+                      )}
+                      {r.class1_price != null && (
+                        <div className="flex justify-between text-sm font-body">
+                          <span>Tradicional</span>
+                          <span className="font-bold text-chocolate">
+                            {formatPrice(r.class1_price)}
+                          </span>
+                        </div>
+                      )}
+                      {r.class2_price != null && (
+                        <div className="flex justify-between text-sm font-body">
+                          <span>Premium</span>
+                          <span className="font-bold text-chocolate">
+                            {formatPrice(r.class2_price)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </motion.div>
             </div>
+
 
             {sec("cardapio_rectangular").content && (
               <p className="text-xs text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
