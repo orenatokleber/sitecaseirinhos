@@ -213,10 +213,10 @@ const Cardapio = () => {
           <section key={cat.id} className="pb-12">
             <div className="container mx-auto px-4 max-w-3xl">
               <SectionTitle
-                script={`Passo ${2 + idx}`}
                 title={cat.name}
                 subtitle={cat.description || undefined}
               />
+
 
               {catImg && (
                 <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
