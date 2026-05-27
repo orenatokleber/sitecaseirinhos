@@ -81,6 +81,15 @@ const SizesPanel = () => {
   const del = useDeleteCakeSize();
   const [newRow, setNewRow] = useState<Partial<CakeSize>>({ code: "", name: "", ring_size: "", slices: 0, weight_kg: 0, sort_order: 0, is_active: true });
 
+  const handleAddSize = () => {
+    const code = (newRow.code || "").trim();
+    if (!code || upsert.isPending) return;
+    upsert.mutate(
+      { ...newRow, code, name: code } as any,
+      { onSuccess: () => setNewRow({ code: "", name: "", ring_size: "", slices: 0, weight_kg: 0, sort_order: 0, is_active: true }) }
+    );
+  };
+
   if (isLoading) return <Loader2 className="animate-spin" />;
 
   return (
@@ -97,7 +106,7 @@ const SizesPanel = () => {
             <div><Label className="text-xs">Fatias</Label><Input type="number" value={newRow.slices ?? ""} onChange={(e) => setNewRow({ ...newRow, slices: parseInt(e.target.value) || 0 })} /></div>
             <div><Label className="text-xs">Peso (kg)</Label><Input type="number" step="0.1" value={newRow.weight_kg ?? ""} onChange={(e) => setNewRow({ ...newRow, weight_kg: parseFloat(e.target.value) || 0 })} /></div>
             <div><Label className="text-xs">Ordem</Label><Input type="number" value={newRow.sort_order ?? 0} onChange={(e) => setNewRow({ ...newRow, sort_order: parseInt(e.target.value) || 0 })} /></div>
-            <Button disabled={!newRow.code} onClick={() => { upsert.mutate(newRow as any); setNewRow({ code: "", name: "", ring_size: "", slices: 0, weight_kg: 0, sort_order: 0, is_active: true }); }}><Plus className="w-4 h-4 mr-1" /> Adicionar</Button>
+            <Button disabled={!newRow.code?.trim() || upsert.isPending} onClick={handleAddSize}><Plus className="w-4 h-4 mr-1" /> Adicionar</Button>
           </div>
         </div>
       </CardContent>
@@ -116,7 +125,7 @@ const SizeRow = ({ size, onSave, onDelete }: { size: CakeSize; onSave: (r: any) 
       <div><Label className="text-xs">Ordem</Label><Input type="number" value={row.sort_order} onChange={(e) => setRow({ ...row, sort_order: parseInt(e.target.value) || 0 })} /></div>
       <div className="flex items-center gap-2 pb-2"><input type="checkbox" checked={row.is_active} onChange={(e) => setRow({ ...row, is_active: e.target.checked })} /> <Label className="text-xs">Ativo</Label></div>
       <div className="flex gap-1 col-span-2 md:col-span-1">
-        <Button size="sm" onClick={() => onSave({ ...row, name: row.name || row.code })}><Save className="w-4 h-4 mr-1" /> Salvar</Button>
+        <Button size="sm" onClick={() => onSave({ ...row, code: row.code.trim(), name: (row.name || row.code).trim() })}><Save className="w-4 h-4 mr-1" /> Salvar</Button>
         <Button size="sm" variant="destructive" onClick={onDelete}><Trash2 className="w-4 h-4" /></Button>
       </div>
     </div>
