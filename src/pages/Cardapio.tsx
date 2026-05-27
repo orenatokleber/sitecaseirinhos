@@ -23,6 +23,7 @@ const formatAddon = (v: number) =>
   v > 0 ? `+R$${Math.round(v)}` : "";
 
 const Cardapio = () => {
+  const isMobile = useIsMobile();
   const { data: settings } = useSiteSettings();
   const { data: sections = {} } = useSiteSections();
   const whatsapp =
