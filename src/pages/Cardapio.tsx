@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Cake, Heart, Sparkles, MessageCircle } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings, useSiteSections } from "@/hooks/useSiteContent";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { normalizeWhatsApp } from "@/lib/utils";
 import { getPublicImageUrl } from "@/lib/supabase";
 import {
