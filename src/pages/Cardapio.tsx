@@ -103,6 +103,11 @@ const Cardapio = () => {
                 <img src={sec("cardapio_hero").image_url} alt={sec("cardapio_hero").title || "Cardápio"} className="w-full h-auto" />
               </div>
             )}
+            {sec("cardapio_hero").content && (
+              <p className="text-sm text-muted-foreground max-w-2xl mx-auto mt-6 leading-relaxed whitespace-pre-line">
+                {sec("cardapio_hero").content}
+              </p>
+            )}
           </motion.div>
         </div>
       </section>
