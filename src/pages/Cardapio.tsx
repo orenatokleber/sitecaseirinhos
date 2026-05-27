@@ -143,8 +143,22 @@ const Cardapio = () => {
             )}
 
             {sec("cardapio_hero").image_url && (
-              <div className="mt-8 max-w-3xl mx-auto rounded-2xl overflow-hidden border border-border/60 shadow-sm">
-                <img src={sec("cardapio_hero").image_url} alt={sec("cardapio_hero").title || "Cardápio"} className="w-full h-auto" />
+              <div className="mt-8 max-w-3xl mx-auto">
+                {isTransparentImage(sec("cardapio_hero").image_url) ? (
+                  <img
+                    src={sec("cardapio_hero").image_url}
+                    alt={sec("cardapio_hero").title || "Cardápio"}
+                    className="w-full h-auto max-h-[480px] object-contain mx-auto"
+                  />
+                ) : (
+                  <div className="rounded-2xl overflow-hidden border border-border/60 shadow-sm">
+                    <img
+                      src={sec("cardapio_hero").image_url}
+                      alt={sec("cardapio_hero").title || "Cardápio"}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                )}
               </div>
             )}
             {sec("cardapio_hero").content && (
