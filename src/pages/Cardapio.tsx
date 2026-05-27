@@ -2,8 +2,9 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Cake, Heart, Sparkles, MessageCircle } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
-import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useSiteSettings, useSiteSections } from "@/hooks/useSiteContent";
 import { normalizeWhatsApp } from "@/lib/utils";
+import { getPublicImageUrl } from "@/lib/supabase";
 import {
   useCakeSizes,
   useCakeCategories,
@@ -13,6 +14,7 @@ import {
   useCakeDecorations,
 } from "@/hooks/useCardapio";
 
+
 const formatPrice = (v: number | null | undefined) =>
   v == null ? "—" : `R$ ${Number(v).toFixed(0)}`;
 
@@ -21,8 +23,12 @@ const formatAddon = (v: number) =>
 
 const Cardapio = () => {
   const { data: settings } = useSiteSettings();
+  const { data: sections = {} } = useSiteSections();
   const whatsapp =
     normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
+
+  const sec = (key: string) => (sections as any)?.[key] || {};
+  const scriptOf = (key: string) => sec(key)?.metadata?.script || undefined;
 
   const { data: sizes = [] } = useCakeSizes(true);
   const { data: categories = [] } = useCakeCategories(true);
@@ -30,6 +36,7 @@ const Cardapio = () => {
   const { data: flavors = [] } = useCakeFlavors(true);
   const { data: rectangular = [] } = useCakeRectangular(true);
   const { data: decorations = [] } = useCakeDecorations(true);
+
 
   const [orderForm, setOrderForm] = useState({
     name: "",
@@ -77,17 +84,25 @@ const Cardapio = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="font-script text-2xl md:text-3xl text-primary">
-              Nossas delícias
-            </span>
+            {scriptOf("cardapio_hero") && (
+              <span className="font-script text-2xl md:text-3xl text-primary">
+                {scriptOf("cardapio_hero")}
+              </span>
+            )}
             <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mt-2 mb-4">
-              Cardápio de Encomendas
+              {sec("cardapio_hero").title || "Cardápio de Encomendas"}
             </h1>
             <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mb-4" />
-            <p className="text-muted-foreground max-w-lg mx-auto font-body leading-relaxed">
-              Escolha o tamanho do seu bolo, depois o sabor perfeito para a sua
-              celebração.
-            </p>
+            {sec("cardapio_hero").subtitle && (
+              <p className="text-muted-foreground max-w-lg mx-auto font-body leading-relaxed">
+                {sec("cardapio_hero").subtitle}
+              </p>
+            )}
+            {sec("cardapio_hero").image_url && (
+              <div className="mt-8 max-w-3xl mx-auto rounded-2xl overflow-hidden border border-border/60 shadow-sm">
+                <img src={sec("cardapio_hero").image_url} alt={sec("cardapio_hero").title || "Cardápio"} className="w-full h-auto" />
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -96,10 +111,16 @@ const Cardapio = () => {
       <section className="pb-12">
         <div className="container mx-auto px-4 max-w-3xl">
           <SectionTitle
-            script="Passo 1"
-            title="Bolos Decorados"
-            subtitle="com 3 camadas de recheio"
+            script={scriptOf("cardapio_sizes") || "Passo 1"}
+            title={sec("cardapio_sizes").title || "Bolos Decorados"}
+            subtitle={sec("cardapio_sizes").subtitle || "com 3 camadas de recheio"}
           />
+
+          {sec("cardapio_sizes").image_url && (
+            <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
+              <img src={sec("cardapio_sizes").image_url} alt={sec("cardapio_sizes").title || ""} className="w-full h-auto" loading="lazy" />
+            </div>
+          )}
 
           <div className="space-y-3 mt-8">
             {sizes.map((s, i) => (
@@ -164,17 +185,19 @@ const Cardapio = () => {
             ))}
           </div>
 
-          <p className="text-xs text-muted-foreground mt-6 leading-relaxed">
-            *Todos os bolos têm cerca de 10cm de altura · os pesos podem ter
-            pequenas variações · todos são decorados com buttercream (creme
-            caseiro de manteiga saborizado com baunilha).
-          </p>
+          {sec("cardapio_sizes").content && (
+            <p className="text-xs text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
+              {sec("cardapio_sizes").content}
+            </p>
+          )}
         </div>
       </section>
+
 
       {/* ─── CATEGORIAS DE SABORES (CLASSE 1, CLASSE 2, ...) ─── */}
       {standardCategories.map((cat, idx) => {
         const catFlavors = flavorsByCategory[cat.id] || [];
+        const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : null;
         return (
           <section key={cat.id} className="pb-12">
             <div className="container mx-auto px-4 max-w-3xl">
@@ -183,6 +206,12 @@ const Cardapio = () => {
                 title={cat.name}
                 subtitle={cat.description || undefined}
               />
+
+              {catImg && (
+                <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
+                  <img src={catImg} alt={cat.name} className="w-full h-auto" loading="lazy" />
+                </div>
+              )}
 
               {/* Tabela de preços por tamanho */}
               <div className="mt-6 rounded-2xl border border-accent/20 bg-card shadow-sm overflow-hidden">
@@ -235,14 +264,22 @@ const Cardapio = () => {
       })}
 
       {/* ─── BOLOS CORAÇÃO (ADDON) ─── */}
-      {addonCategories.map((cat) => (
+      {addonCategories.map((cat) => {
+        const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : (sec("cardapio_addons").image_url || null);
+        return (
         <section key={cat.id} className="pb-12">
           <div className="container mx-auto px-4 max-w-3xl">
             <SectionTitle
-              script="Especial"
-              title={cat.name}
-              subtitle={cat.description || "Adicional ao valor do bolo"}
+              script={scriptOf("cardapio_addons") || "Especial"}
+              title={sec("cardapio_addons").title || cat.name}
+              subtitle={sec("cardapio_addons").subtitle || cat.description || "Adicional ao valor do bolo"}
             />
+
+            {catImg && (
+              <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
+                <img src={catImg} alt={cat.name} className="w-full h-auto" loading="lazy" />
+              </div>
+            )}
 
             <div className="mt-6 space-y-3">
               {sizes.map((s) => {
@@ -274,15 +311,32 @@ const Cardapio = () => {
                 );
               })}
             </div>
+
+            {sec("cardapio_addons").content && (
+              <p className="text-xs text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
+                {sec("cardapio_addons").content}
+              </p>
+            )}
           </div>
         </section>
-      ))}
+        );
+      })}
 
       {/* ─── BOLOS RETANGULARES (TABELA DETALHADA) ─── */}
       {rectangular.length > 0 && (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-3xl">
-            <SectionTitle script="Especial" title="Bolos Retangulares" />
+            <SectionTitle
+              script={scriptOf("cardapio_rectangular") || "Especial"}
+              title={sec("cardapio_rectangular").title || "Bolos Retangulares"}
+              subtitle={sec("cardapio_rectangular").subtitle || undefined}
+            />
+
+            {sec("cardapio_rectangular").image_url && (
+              <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
+                <img src={sec("cardapio_rectangular").image_url} alt={sec("cardapio_rectangular").title || ""} className="w-full h-auto" loading="lazy" />
+              </div>
+            )}
 
             <div className="mt-8 space-y-6">
               {rectangular.map((r) => (
@@ -326,36 +380,56 @@ const Cardapio = () => {
                 </div>
               ))}
             </div>
+
+            {sec("cardapio_rectangular").content && (
+              <p className="text-xs text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
+                {sec("cardapio_rectangular").content}
+              </p>
+            )}
           </div>
         </section>
       )}
 
       {/* ─── DECORAÇÕES ─── */}
-      {decorations.length > 0 && (
+      {(decorations.length > 0 || sec("cardapio_decorations").title) && (
         <section className="pb-16">
           <div className="container mx-auto px-4 max-w-4xl">
             <SectionTitle
-              script="Galeria"
-              title="Decorações"
-              subtitle="Os valores das decorações são variáveis e podem ser consultados pelo site ou no nosso WhatsApp!"
+              script={scriptOf("cardapio_decorations") || "Galeria"}
+              title={sec("cardapio_decorations").title || "Decorações"}
+              subtitle={sec("cardapio_decorations").subtitle || undefined}
             />
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-8">
-              {decorations.map((d) => (
-                <motion.div
-                  key={d.id}
-                  whileHover={{ scale: 1.03 }}
-                  className="aspect-square overflow-hidden rounded-xl border border-border/60 bg-card"
-                >
-                  <img
-                    src={d.image_url}
-                    alt={d.title || "Decoração"}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
-                </motion.div>
-              ))}
-            </div>
+            {sec("cardapio_decorations").image_url && (
+              <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
+                <img src={sec("cardapio_decorations").image_url} alt={sec("cardapio_decorations").title || ""} className="w-full h-auto" loading="lazy" />
+              </div>
+            )}
+
+            {decorations.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-8">
+                {decorations.map((d) => (
+                  <motion.div
+                    key={d.id}
+                    whileHover={{ scale: 1.03 }}
+                    className="aspect-square overflow-hidden rounded-xl border border-border/60 bg-card"
+                  >
+                    <img
+                      src={d.image_url}
+                      alt={d.title || "Decoração"}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {sec("cardapio_decorations").content && (
+              <p className="text-sm text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
+                {sec("cardapio_decorations").content}
+              </p>
+            )}
           </div>
         </section>
       )}
@@ -363,7 +437,22 @@ const Cardapio = () => {
       {/* ─── ORDER FORM ─── */}
       <section id="encomenda" className="pb-16">
         <div className="container mx-auto px-4 max-w-xl">
-          <SectionTitle script="Orçamento" title="Solicite seu orçamento" />
+          <SectionTitle
+            script={scriptOf("cardapio_order") || "Orçamento"}
+            title={sec("cardapio_order").title || "Solicite seu orçamento"}
+            subtitle={sec("cardapio_order").subtitle || undefined}
+          />
+          {sec("cardapio_order").image_url && (
+            <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
+              <img src={sec("cardapio_order").image_url} alt={sec("cardapio_order").title || ""} className="w-full h-auto" loading="lazy" />
+            </div>
+          )}
+          {sec("cardapio_order").content && (
+            <p className="text-sm text-muted-foreground mt-6 leading-relaxed whitespace-pre-line text-center">
+              {sec("cardapio_order").content}
+            </p>
+          )}
+
           <form onSubmit={handleOrderSubmit} className="space-y-4 mt-6">
             {[
               { label: "Nome", key: "name" as const, type: "text" },

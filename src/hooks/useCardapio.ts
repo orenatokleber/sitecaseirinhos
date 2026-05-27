@@ -19,9 +19,11 @@ export type CakeCategory = {
   name: string;
   description: string | null;
   type: "standard" | "addon";
+  image_url: string | null;
   sort_order: number;
   is_active: boolean;
 };
+
 
 export type CakePrice = {
   id: string;
@@ -121,6 +123,8 @@ export function useCakeCategories(activeOnly = false) {
     ...baseOpts,
   });
 }
+
+
 
 export function useUpsertCakeCategory() {
   const qc = useQueryClient();
