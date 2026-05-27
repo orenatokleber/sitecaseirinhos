@@ -318,8 +318,14 @@ export function useUpsertCakeDecoration() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (row: Partial<CakeDecoration> & { image_url: string }) => {
-      const { error } = await supabase.from("cake_decorations" as any).upsert(row, { onConflict: "id" });
-      if (error) throw error;
+      const { id, ...rest } = row;
+      if (id) {
+        const { error } = await supabase.from("cake_decorations" as any).update(rest).eq("id", id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("cake_decorations" as any).insert(rest);
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["cake-decorations"] });
