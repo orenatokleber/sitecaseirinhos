@@ -83,7 +83,12 @@ export function useUpsertCakeSize() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (row: Partial<CakeSize> & { code: string; name: string }) => {
-      const { id, ...rest } = row;
+      const normalizedRow = {
+        ...row,
+        code: row.code.trim(),
+        name: (row.name || row.code).trim(),
+      };
+      const { id, ...rest } = normalizedRow;
       if (id) {
         const { error } = await supabase.from("cake_sizes" as any).update(rest).eq("id", id);
         if (error) throw error;
@@ -96,7 +101,12 @@ export function useUpsertCakeSize() {
       qc.invalidateQueries({ queryKey: ["cake-sizes"] });
       toast.success("Tamanho salvo");
     },
-    onError: (e: any) => toast.error("Erro ao salvar: " + e.message),
+    onError: (e: any) => {
+      const message = e?.code === "23505" || String(e?.message || "").includes("cake_sizes_code_key")
+        ? "Já existe um tamanho com esse código. Use outro código ou edite o tamanho existente."
+        : `Erro ao salvar: ${e?.message || "tente novamente"}`;
+      toast.error(message);
+    },
   });
 }
 
