@@ -250,7 +250,7 @@ const CategoryCard = ({
         <div className="mt-2"><Label className="text-xs">Descrição</Label><Input value={cat.description || ""} onChange={(e) => setCat({ ...cat, description: e.target.value })} /></div>
         <div className="mt-3">
           <Label className="text-xs">Imagem da seção (opcional)</Label>
-          <ImageUpload value={cat.image_url || ""} onChange={(url) => setCat({ ...cat, image_url: url })} folder="cardapio/categorias" aspectRatio={16 / 9} recommendedSize="1280×720px" />
+          <ImageUpload value={cat.image_url || ""} onChange={(url) => setCat({ ...cat, image_url: url })} folder="cardapio/categorias" allowOrientationChoice recommendedSize="16:9 ou 9:16" />
         </div>
       </CardHeader>
 
@@ -519,7 +519,7 @@ const SectionEditor = ({
         </div>
         <div>
           <Label className="text-xs">Imagem (opcional)</Label>
-          <ImageUpload value={row.image_url} onChange={(url) => setRow({ ...row, image_url: url })} folder={`cardapio/${cfg.key}`} aspectRatio={cfg.aspect} recommendedSize={cfg.size} />
+          <ImageUpload value={row.image_url} onChange={(url) => setRow({ ...row, image_url: url })} folder={`cardapio/${cfg.key}`} allowOrientationChoice recommendedSize="16:9 ou 9:16" />
         </div>
         <Button size="sm" onClick={() => onSave({
           title: row.title || null,

@@ -36,26 +36,18 @@ const SectionImage = ({
 }) => {
   const transparent = isTransparentImage(src);
   const wrapperCls = sticky ? "sticky top-28" : "";
-  if (transparent) {
-    return (
-      <div className={wrapperCls}>
-        <img
-          src={src}
-          alt={alt}
-          loading="lazy"
-          className="w-full max-h-[420px] object-contain bg-transparent mx-auto"
-          style={{ background: "transparent" }}
-        />
-      </div>
-    );
-  }
   return (
     <div className={wrapperCls}>
       <img
         src={src}
         alt={alt}
         loading="lazy"
-        className="rounded-lg object-cover w-full h-[420px] shadow-md"
+        className={
+          transparent
+            ? "w-full h-auto max-h-[520px] object-contain bg-transparent mx-auto"
+            : "w-full h-auto max-h-[520px] object-contain mx-auto rounded-lg shadow-md"
+        }
+        style={transparent ? { background: "transparent" } : undefined}
       />
     </div>
   );

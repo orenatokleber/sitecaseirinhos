@@ -14,6 +14,7 @@ interface ImageUploadProps {
   className?: string;
   aspectRatio?: number;
   recommendedSize?: string;
+  allowOrientationChoice?: boolean;
 }
 
 function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: number) {
@@ -59,14 +60,19 @@ async function getCroppedImg(image: HTMLImageElement, crop: PixelCrop): Promise<
   });
 }
 
-const ImageUpload = ({ value, onChange, folder = "general", className, aspectRatio, recommendedSize }: ImageUploadProps) => {
+const ImageUpload = ({ value, onChange, folder = "general", className, aspectRatio, recommendedSize, allowOrientationChoice }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [showCropper, setShowCropper] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [crop, setCrop] = useState<CropType>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+  const [orientation, setOrientation] = useState<"landscape" | "portrait">("landscape");
   const imgRef = useRef<HTMLImageElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const effectiveAspect = allowOrientationChoice
+    ? (orientation === "landscape" ? 16 / 9 : 9 / 16)
+    : aspectRatio;
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -93,10 +99,10 @@ const ImageUpload = ({ value, onChange, folder = "general", className, aspectRat
   const onImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       const { width, height } = e.currentTarget;
-      const aspect = aspectRatio || 16 / 9;
+      const aspect = effectiveAspect || 16 / 9;
       setCrop(centerAspectCrop(width, height, aspect));
     },
-    [aspectRatio]
+    [effectiveAspect]
   );
 
   const handleCropComplete = async () => {
@@ -242,13 +248,35 @@ const ImageUpload = ({ value, onChange, folder = "general", className, aspectRat
               {recommendedSize && <span className="font-medium"> Tamanho recomendado: {recommendedSize}</span>}
             </p>
 
+            {allowOrientationChoice && (
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={orientation === "landscape" ? "default" : "outline"}
+                  onClick={() => setOrientation("landscape")}
+                >
+                  Paisagem (16:9)
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={orientation === "portrait" ? "default" : "outline"}
+                  onClick={() => setOrientation("portrait")}
+                >
+                  Retrato (9:16)
+                </Button>
+              </div>
+            )}
+
             {selectedFile && (
               <div className="flex justify-center bg-muted/30 rounded-lg p-4">
                 <ReactCrop
+                  key={effectiveAspect}
                   crop={crop}
                   onChange={(_, percentCrop) => setCrop(percentCrop)}
                   onComplete={(c) => setCompletedCrop(c)}
-                  aspect={aspectRatio}
+                  aspect={effectiveAspect}
                   className="max-h-[50vh]"
                 >
                   <img
