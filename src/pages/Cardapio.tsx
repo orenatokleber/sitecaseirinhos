@@ -666,20 +666,22 @@ const Cardapio = () => {
       </section>
 
       {/* Floating CTA */}
-      <motion.button
-        onClick={() =>
-          document.getElementById("encomenda")?.scrollIntoView({ behavior: "smooth" })
-        }
-        className="fixed bottom-20 right-6 z-40 bg-accent text-accent-foreground px-5 py-3 rounded-full shadow-lg font-body font-bold text-sm flex items-center gap-2 hover:shadow-xl transition-shadow"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Cake className="w-4 h-4" />
-        Fazer Encomenda
-      </motion.button>
+      {settings?.cardapio_fab_enabled !== false && (
+        <motion.button
+          onClick={() =>
+            document.getElementById("encomenda")?.scrollIntoView({ behavior: "smooth" })
+          }
+          className="fixed bottom-20 right-6 z-40 bg-accent text-accent-foreground px-5 py-3 rounded-full shadow-lg font-body font-bold text-sm flex items-center gap-2 hover:shadow-xl transition-shadow"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Cake className="w-4 h-4" />
+          Fazer Encomenda
+        </motion.button>
+      )}
     </main>
   );
 };
