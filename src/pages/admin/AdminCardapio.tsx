@@ -351,8 +351,8 @@ const RectangularPanel = () => {
             <div><Label className="text-xs">Dimensões</Label><Input value={newRow.dimensions || ""} onChange={(e) => setNewRow({ ...newRow, dimensions: e.target.value })} /></div>
             <div><Label className="text-xs">Fatias</Label><Input type="number" value={newRow.slices ?? 0} onChange={(e) => setNewRow({ ...newRow, slices: parseInt(e.target.value) || 0 })} /></div>
             <div><Label className="text-xs">Peso (kg)</Label><Input type="number" step="0.1" value={newRow.weight_kg ?? 0} onChange={(e) => setNewRow({ ...newRow, weight_kg: parseFloat(e.target.value) || 0 })} /></div>
-            <div><Label className="text-xs">Classe 1 (R$)</Label><Input type="number" step="0.01" value={newRow.class1_price ?? 0} onChange={(e) => setNewRow({ ...newRow, class1_price: parseFloat(e.target.value) || 0 })} /></div>
-            <div><Label className="text-xs">Classe 2 (R$)</Label><Input type="number" step="0.01" value={newRow.class2_price ?? 0} onChange={(e) => setNewRow({ ...newRow, class2_price: parseFloat(e.target.value) || 0 })} /></div>
+            <div><Label className="text-xs">Tradicional (R$)</Label><Input type="number" step="0.01" value={newRow.class1_price ?? 0} onChange={(e) => setNewRow({ ...newRow, class1_price: parseFloat(e.target.value) || 0 })} /></div>
+            <div><Label className="text-xs">Premium (R$)</Label><Input type="number" step="0.01" value={newRow.class2_price ?? 0} onChange={(e) => setNewRow({ ...newRow, class2_price: parseFloat(e.target.value) || 0 })} /></div>
             <div><Label className="text-xs">Ordem</Label><Input type="number" value={newRow.sort_order ?? 0} onChange={(e) => setNewRow({ ...newRow, sort_order: parseInt(e.target.value) || 0 })} /></div>
           </div>
           <Input placeholder="Observação (ex: O bolo retrô pode ser decorado bem retrô :))" value={newRow.note || ""} onChange={(e) => setNewRow({ ...newRow, note: e.target.value })} />
@@ -373,8 +373,8 @@ const RectangularRow = ({ row, onSave, onDelete }: { row: CakeRectangular; onSav
           <div><Label className="text-xs">Dimensões</Label><Input value={r.dimensions || ""} onChange={(e) => setR({ ...r, dimensions: e.target.value })} /></div>
           <div><Label className="text-xs">Fatias</Label><Input type="number" value={r.slices ?? 0} onChange={(e) => setR({ ...r, slices: parseInt(e.target.value) || 0 })} /></div>
           <div><Label className="text-xs">Peso (kg)</Label><Input type="number" step="0.1" value={r.weight_kg ?? 0} onChange={(e) => setR({ ...r, weight_kg: parseFloat(e.target.value) || 0 })} /></div>
-          <div><Label className="text-xs">Classe 1 (R$)</Label><Input type="number" step="0.01" value={r.class1_price ?? 0} onChange={(e) => setR({ ...r, class1_price: parseFloat(e.target.value) || 0 })} /></div>
-          <div><Label className="text-xs">Classe 2 (R$)</Label><Input type="number" step="0.01" value={r.class2_price ?? 0} onChange={(e) => setR({ ...r, class2_price: parseFloat(e.target.value) || 0 })} /></div>
+          <div><Label className="text-xs">Tradicional (R$)</Label><Input type="number" step="0.01" value={r.class1_price ?? 0} onChange={(e) => setR({ ...r, class1_price: parseFloat(e.target.value) || 0 })} /></div>
+          <div><Label className="text-xs">Premium (R$)</Label><Input type="number" step="0.01" value={r.class2_price ?? 0} onChange={(e) => setR({ ...r, class2_price: parseFloat(e.target.value) || 0 })} /></div>
           <div><Label className="text-xs">Ordem</Label><Input type="number" value={r.sort_order} onChange={(e) => setR({ ...r, sort_order: parseInt(e.target.value) || 0 })} /></div>
           <div className="flex items-center gap-1 pb-2"><input type="checkbox" checked={r.is_active} onChange={(e) => setR({ ...r, is_active: e.target.checked })} /> <Label className="text-xs">Ativo</Label></div>
         </div>

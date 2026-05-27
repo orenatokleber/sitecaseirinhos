@@ -377,7 +377,7 @@ const Cardapio = () => {
                     )}
                     {r.class1_price != null && (
                       <div className="flex justify-between text-sm font-body">
-                        <span>Classe 1</span>
+                      <span>Tradicional</span>
                         <span className="font-bold text-chocolate">
                           {formatPrice(r.class1_price)}
                         </span>
@@ -385,7 +385,7 @@ const Cardapio = () => {
                     )}
                     {r.class2_price != null && (
                       <div className="flex justify-between text-sm font-body">
-                        <span>Classe 2</span>
+                        <span>Premium</span>
                         <span className="font-bold text-chocolate">
                           {formatPrice(r.class2_price)}
                         </span>
