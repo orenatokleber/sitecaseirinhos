@@ -118,14 +118,12 @@ export function useCakeCategories(activeOnly = false) {
       if (activeOnly) q = q.eq("is_active", true);
       const { data, error } = await q;
       if (error) throw error;
-      return ((data ?? []) as unknown as CakeCategory[]).map((c) => ({
-        ...c,
-        image_url: c.image_url ? getPublicImageUrl(c.image_url) : null,
-      }));
+      return (data ?? []) as unknown as CakeCategory[];
     },
     ...baseOpts,
   });
 }
+
 
 
 export function useUpsertCakeCategory() {
