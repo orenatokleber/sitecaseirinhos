@@ -229,93 +229,114 @@ const Cardapio = () => {
       {standardCategories.map((cat, idx) => {
         const catFlavors = flavorsByCategory[cat.id] || [];
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : null;
+        const imageOnRight = idx % 2 === 1;
         return (
           <section key={cat.id} className="pb-12">
-            <div className="container mx-auto px-4 max-w-3xl">
+            <div className="container mx-auto px-4 max-w-6xl">
               <SectionTitle
                 title={cat.name}
                 subtitle={cat.description || undefined}
               />
 
+              <div className={`grid grid-cols-1 ${catImg ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-start mt-4`}>
+                {catImg && (
+                  <motion.div
+                    initial={{ opacity: 0, x: imageOnRight ? 30 : -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7 }}
+                    className={imageOnRight ? "md:order-2" : "md:order-1"}
+                  >
+                    <img
+                      src={catImg}
+                      alt={cat.name}
+                      className="rounded-lg object-cover w-full h-[420px] shadow-md sticky top-28"
+                      loading="lazy"
+                    />
+                  </motion.div>
+                )}
 
-              {catImg && (
-                <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-                  <img src={catImg} alt={cat.name} className="w-full h-auto" loading="lazy" />
-                </div>
-              )}
-
-              {/* Preços por tamanho — mobile: cards / desktop: tabela */}
-              {isMobile ? (
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  {sizes.map((s) => (
-                    <div
-                      key={s.id}
-                      className="rounded-2xl border border-accent/20 bg-card shadow-sm p-4 text-center"
-                    >
-                      <div className="font-heading text-lg font-bold text-foreground">
-                        {s.code}
+                <motion.div
+                  initial={{ opacity: 0, x: imageOnRight ? -30 : 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
+                  className={catImg ? (imageOnRight ? "md:order-1" : "md:order-2") : ""}
+                >
+                  {/* Preços por tamanho — mobile: cards / desktop: tabela */}
+                  {isMobile ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      {sizes.map((s) => (
+                        <div
+                          key={s.id}
+                          className="rounded-2xl border border-accent/20 bg-card shadow-sm p-4 text-center"
+                        >
+                          <div className="font-heading text-lg font-bold text-foreground">
+                            {s.code}
+                          </div>
+                          <div className="mt-1 text-xs text-muted-foreground font-body space-y-0.5">
+                            {s.slices != null && <div>{s.slices} fatias</div>}
+                            {s.weight_kg != null && <div>{Number(s.weight_kg).toFixed(1)}kg</div>}
+                          </div>
+                          <div className="mt-2 font-body text-base font-semibold text-chocolate">
+                            {formatPrice(priceOf(cat.id, s.id))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-accent/20 bg-card shadow-sm overflow-x-auto">
+                      <div
+                        className="grid divide-x divide-border/60 min-w-full"
+                        style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                      >
+                        {sizes.map((s) => (
+                          <div key={s.id} className="text-center py-3 bg-accent/[0.04] min-w-0">
+                            <div className="font-heading text-base md:text-lg font-bold text-foreground truncate px-1">
+                              {s.code}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      <div className="mt-1 text-xs text-muted-foreground font-body space-y-0.5">
-                        {s.slices != null && <div>{s.slices} fatias</div>}
-                        {s.weight_kg != null && <div>{Number(s.weight_kg).toFixed(1)}kg</div>}
-                      </div>
-                      <div className="mt-2 font-body text-base font-semibold text-chocolate">
-                        {formatPrice(priceOf(cat.id, s.id))}
+                      <div
+                        className="grid divide-x divide-border/60 border-t border-border/60 min-w-full"
+                        style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                      >
+                        {sizes.map((s) => (
+                          <div key={s.id} className="text-center py-3 min-w-0">
+                            <div className="font-body text-sm md:text-base font-semibold text-chocolate truncate px-1">
+                              {formatPrice(priceOf(cat.id, s.id))}
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="mt-6 rounded-2xl border border-accent/20 bg-card shadow-sm overflow-x-auto">
-                  <div
-                    className="grid divide-x divide-border/60 min-w-full"
-                    style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
-                  >
-                    {sizes.map((s) => (
-                      <div key={s.id} className="text-center py-3 bg-accent/[0.04] min-w-0">
-                        <div className="font-heading text-base md:text-lg font-bold text-foreground truncate px-1">
-                          {s.code}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div
-                    className="grid divide-x divide-border/60 border-t border-border/60 min-w-full"
-                    style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
-                  >
-                    {sizes.map((s) => (
-                      <div key={s.id} className="text-center py-3 min-w-0">
-                        <div className="font-body text-sm md:text-base font-semibold text-chocolate truncate px-1">
-                          {formatPrice(priceOf(cat.id, s.id))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                  )}
 
-              {/* Lista de sabores */}
-              <div className="mt-8 space-y-4">
-                {catFlavors.map((f) => (
-                  <div
-                    key={f.id}
-                    className="border-l-2 border-accent/30 pl-4 py-1"
-                  >
-                    <h4 className="font-heading font-bold text-foreground uppercase text-sm tracking-wide">
-                      {f.name}
-                    </h4>
-                    {f.description && (
-                      <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                        {f.description}
+                  {/* Lista de sabores */}
+                  <div className="mt-8 space-y-4">
+                    {catFlavors.map((f) => (
+                      <div
+                        key={f.id}
+                        className="border-l-2 border-accent/30 pl-4 py-1"
+                      >
+                        <h4 className="font-heading font-bold text-foreground uppercase text-sm tracking-wide">
+                          {f.name}
+                        </h4>
+                        {f.description && (
+                          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                            {f.description}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                    {catFlavors.length === 0 && (
+                      <p className="text-sm text-muted-foreground italic">
+                        Em breve novos sabores.
                       </p>
                     )}
                   </div>
-                ))}
-                {catFlavors.length === 0 && (
-                  <p className="text-sm text-muted-foreground italic">
-                    Em breve novos sabores.
-                  </p>
-                )}
+                </motion.div>
               </div>
             </div>
           </section>
@@ -323,25 +344,44 @@ const Cardapio = () => {
       })}
 
       {/* ─── BOLOS CORAÇÃO (ADDON) ─── */}
-      {addonCategories.map((cat) => {
+      {addonCategories.map((cat, idx) => {
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : (sec("cardapio_addons").image_url || null);
+        const imageOnRight = idx % 2 === 1;
         return (
         <section key={cat.id} className="pb-12">
-          <div className="container mx-auto px-4 max-w-3xl">
+          <div className="container mx-auto px-4 max-w-6xl">
             <SectionTitle
               script={scriptOf("cardapio_addons")}
               title={sec("cardapio_addons").title || cat.name}
               subtitle={sec("cardapio_addons").subtitle || cat.description || undefined}
             />
 
+            <div className={`grid grid-cols-1 ${catImg ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-center mt-4`}>
+              {catImg && (
+                <motion.div
+                  initial={{ opacity: 0, x: imageOnRight ? 30 : -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
+                  className={imageOnRight ? "md:order-2" : "md:order-1"}
+                >
+                  <img
+                    src={catImg}
+                    alt={cat.name}
+                    className="rounded-lg object-cover w-full h-[420px] shadow-md"
+                    loading="lazy"
+                  />
+                </motion.div>
+              )}
 
-            {catImg && (
-              <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-                <img src={catImg} alt={cat.name} className="w-full h-auto" loading="lazy" />
-              </div>
-            )}
+              <motion.div
+                initial={{ opacity: 0, x: imageOnRight ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className={`space-y-3 ${catImg ? (imageOnRight ? "md:order-1" : "md:order-2") : ""}`}
+              >
 
-            <div className="mt-6 space-y-3">
               {sizes.map((s) => {
                 const addon = priceOf(cat.id, s.id);
                 if (addon == null || addon === 0) return null;
