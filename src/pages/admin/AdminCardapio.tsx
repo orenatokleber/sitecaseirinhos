@@ -13,7 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ImageUpload from "@/components/admin/ImageUpload";
-import { Loader2, Plus, Trash2, Cake, Tag, Star, Square, Image as ImageIcon, Save } from "lucide-react";
+import { Loader2, Plus, Trash2, Cake, Tag, Star, Square, Image as ImageIcon, Save, FileText } from "lucide-react";
+import { useSiteSectionsList, useUpdateSiteSection, useCreateSiteSection } from "@/hooks/useSiteContent";
+
 import {
   useCakeSizes,
   useUpsertCakeSize,
@@ -50,8 +52,9 @@ const AdminCardapio = () => {
         </p>
       </div>
 
-      <Tabs defaultValue="sizes">
+      <Tabs defaultValue="content">
         <TabsList className="flex-wrap h-auto">
+          <TabsTrigger value="content"><FileText className="w-4 h-4 mr-1" /> Conteúdo</TabsTrigger>
           <TabsTrigger value="sizes"><Cake className="w-4 h-4 mr-1" /> Tamanhos</TabsTrigger>
           <TabsTrigger value="categories"><Tag className="w-4 h-4 mr-1" /> Categorias & Preços</TabsTrigger>
           <TabsTrigger value="flavors"><Star className="w-4 h-4 mr-1" /> Sabores</TabsTrigger>
@@ -59,12 +62,14 @@ const AdminCardapio = () => {
           <TabsTrigger value="decorations"><ImageIcon className="w-4 h-4 mr-1" /> Decorações</TabsTrigger>
         </TabsList>
 
+        <TabsContent value="content" className="mt-6"><ContentPanel /></TabsContent>
         <TabsContent value="sizes" className="mt-6"><SizesPanel /></TabsContent>
         <TabsContent value="categories" className="mt-6"><CategoriesPanel /></TabsContent>
         <TabsContent value="flavors" className="mt-6"><FlavorsPanel /></TabsContent>
         <TabsContent value="rectangular" className="mt-6"><RectangularPanel /></TabsContent>
         <TabsContent value="decorations" className="mt-6"><DecorationsPanel /></TabsContent>
       </Tabs>
+
     </div>
   );
 };
