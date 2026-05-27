@@ -99,10 +99,10 @@ const ImageUpload = ({ value, onChange, folder = "general", className, aspectRat
   const onImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       const { width, height } = e.currentTarget;
-      const aspect = aspectRatio || 16 / 9;
+      const aspect = effectiveAspect || 16 / 9;
       setCrop(centerAspectCrop(width, height, aspect));
     },
-    [aspectRatio]
+    [effectiveAspect]
   );
 
   const handleCropComplete = async () => {
