@@ -118,11 +118,14 @@ const Cardapio = () => {
       {/* ─── BOLOS DECORADOS — TAMANHOS ─── */}
       <section className="pb-12">
         <div className="container mx-auto px-4 max-w-3xl">
-          <SectionTitle
-            script={scriptOf("cardapio_sizes") || "Passo 1"}
-            title={sec("cardapio_sizes").title || "Bolos Decorados"}
-            subtitle={sec("cardapio_sizes").subtitle || "com 3 camadas de recheio"}
-          />
+          {sec("cardapio_sizes").title && (
+            <SectionTitle
+              script={scriptOf("cardapio_sizes")}
+              title={sec("cardapio_sizes").title}
+              subtitle={sec("cardapio_sizes").subtitle || undefined}
+            />
+          )}
+
 
           {sec("cardapio_sizes").image_url && (
             <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
