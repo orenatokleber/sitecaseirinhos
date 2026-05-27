@@ -487,12 +487,7 @@ const Cardapio = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.7 }}
                 >
-                  <img
-                    src={sec("cardapio_rectangular").image_url}
-                    alt={sec("cardapio_rectangular").title || ""}
-                    className="rounded-lg object-cover w-full h-[420px] shadow-md sticky top-28"
-                    loading="lazy"
-                  />
+                  <SectionImage src={sec("cardapio_rectangular").image_url} alt={sec("cardapio_rectangular").title || ""} sticky />
                 </motion.div>
               )}
 
