@@ -409,11 +409,14 @@ const Cardapio = () => {
       {(decorations.length > 0 || sec("cardapio_decorations").title) && (
         <section className="pb-16">
           <div className="container mx-auto px-4 max-w-4xl">
-            <SectionTitle
-              script={scriptOf("cardapio_decorations") || "Galeria"}
-              title={sec("cardapio_decorations").title || "Decorações"}
-              subtitle={sec("cardapio_decorations").subtitle || undefined}
-            />
+            {sec("cardapio_decorations").title && (
+              <SectionTitle
+                script={scriptOf("cardapio_decorations")}
+                title={sec("cardapio_decorations").title}
+                subtitle={sec("cardapio_decorations").subtitle || undefined}
+              />
+            )}
+
 
             {sec("cardapio_decorations").image_url && (
               <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
