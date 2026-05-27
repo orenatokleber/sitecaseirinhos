@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Cake, Heart, Sparkles, MessageCircle } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings, useSiteSections } from "@/hooks/useSiteContent";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { normalizeWhatsApp } from "@/lib/utils";
 import { getPublicImageUrl } from "@/lib/supabase";
 import {
@@ -22,6 +23,7 @@ const formatAddon = (v: number) =>
   v > 0 ? `+R$${Math.round(v)}` : "";
 
 const Cardapio = () => {
+  const isMobile = useIsMobile();
   const { data: settings } = useSiteSettings();
   const { data: sections = {} } = useSiteSections();
   const whatsapp =
@@ -224,33 +226,55 @@ const Cardapio = () => {
                 </div>
               )}
 
-              {/* Tabela de preços por tamanho */}
-              <div className="mt-6 rounded-2xl border border-accent/20 bg-card shadow-sm overflow-x-auto">
-                <div
-                  className="grid divide-x divide-border/60 min-w-full"
-                  style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
-                >
+              {/* Preços por tamanho — mobile: cards / desktop: tabela */}
+              {isMobile ? (
+                <div className="mt-6 grid grid-cols-2 gap-3">
                   {sizes.map((s) => (
-                    <div key={s.id} className="text-center py-3 bg-accent/[0.04] min-w-0">
-                      <div className="font-heading text-base md:text-lg font-bold text-foreground truncate px-1">
+                    <div
+                      key={s.id}
+                      className="rounded-2xl border border-accent/20 bg-card shadow-sm p-4 text-center"
+                    >
+                      <div className="font-heading text-lg font-bold text-foreground">
                         {s.code}
                       </div>
-                    </div>
-                  ))}
-                </div>
-                <div
-                  className="grid divide-x divide-border/60 border-t border-border/60 min-w-full"
-                  style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
-                >
-                  {sizes.map((s) => (
-                    <div key={s.id} className="text-center py-3 min-w-0">
-                      <div className="font-body text-sm md:text-base font-semibold text-chocolate truncate px-1">
+                      <div className="mt-1 text-xs text-muted-foreground font-body space-y-0.5">
+                        {s.slices != null && <div>{s.slices} fatias</div>}
+                        {s.weight_kg != null && <div>{Number(s.weight_kg).toFixed(1)}kg</div>}
+                      </div>
+                      <div className="mt-2 font-body text-base font-semibold text-chocolate">
                         {formatPrice(priceOf(cat.id, s.id))}
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
+              ) : (
+                <div className="mt-6 rounded-2xl border border-accent/20 bg-card shadow-sm overflow-x-auto">
+                  <div
+                    className="grid divide-x divide-border/60 min-w-full"
+                    style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                  >
+                    {sizes.map((s) => (
+                      <div key={s.id} className="text-center py-3 bg-accent/[0.04] min-w-0">
+                        <div className="font-heading text-base md:text-lg font-bold text-foreground truncate px-1">
+                          {s.code}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div
+                    className="grid divide-x divide-border/60 border-t border-border/60 min-w-full"
+                    style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                  >
+                    {sizes.map((s) => (
+                      <div key={s.id} className="text-center py-3 min-w-0">
+                        <div className="font-body text-sm md:text-base font-semibold text-chocolate truncate px-1">
+                          {formatPrice(priceOf(cat.id, s.id))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Lista de sabores */}
               <div className="mt-8 space-y-4">
