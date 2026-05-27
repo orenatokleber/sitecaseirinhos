@@ -89,15 +89,18 @@ const Cardapio = () => {
                 {scriptOf("cardapio_hero")}
               </span>
             )}
-            <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mt-2 mb-4">
-              {sec("cardapio_hero").title || "Cardápio de Encomendas"}
-            </h1>
+            {sec("cardapio_hero").title && (
+              <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mt-2 mb-4">
+                {sec("cardapio_hero").title}
+              </h1>
+            )}
             <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mb-4" />
             {sec("cardapio_hero").subtitle && (
               <p className="text-muted-foreground max-w-lg mx-auto font-body leading-relaxed">
                 {sec("cardapio_hero").subtitle}
               </p>
             )}
+
             {sec("cardapio_hero").image_url && (
               <div className="mt-8 max-w-3xl mx-auto rounded-2xl overflow-hidden border border-border/60 shadow-sm">
                 <img src={sec("cardapio_hero").image_url} alt={sec("cardapio_hero").title || "Cardápio"} className="w-full h-auto" />
@@ -115,11 +118,14 @@ const Cardapio = () => {
       {/* ─── BOLOS DECORADOS — TAMANHOS ─── */}
       <section className="pb-12">
         <div className="container mx-auto px-4 max-w-3xl">
-          <SectionTitle
-            script={scriptOf("cardapio_sizes") || "Passo 1"}
-            title={sec("cardapio_sizes").title || "Bolos Decorados"}
-            subtitle={sec("cardapio_sizes").subtitle || "com 3 camadas de recheio"}
-          />
+          {sec("cardapio_sizes").title && (
+            <SectionTitle
+              script={scriptOf("cardapio_sizes")}
+              title={sec("cardapio_sizes").title}
+              subtitle={sec("cardapio_sizes").subtitle || undefined}
+            />
+          )}
+
 
           {sec("cardapio_sizes").image_url && (
             <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
@@ -207,10 +213,10 @@ const Cardapio = () => {
           <section key={cat.id} className="pb-12">
             <div className="container mx-auto px-4 max-w-3xl">
               <SectionTitle
-                script={`Passo ${2 + idx}`}
                 title={cat.name}
                 subtitle={cat.description || undefined}
               />
+
 
               {catImg && (
                 <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
@@ -275,10 +281,11 @@ const Cardapio = () => {
         <section key={cat.id} className="pb-12">
           <div className="container mx-auto px-4 max-w-3xl">
             <SectionTitle
-              script={scriptOf("cardapio_addons") || "Especial"}
+              script={scriptOf("cardapio_addons")}
               title={sec("cardapio_addons").title || cat.name}
-              subtitle={sec("cardapio_addons").subtitle || cat.description || "Adicional ao valor do bolo"}
+              subtitle={sec("cardapio_addons").subtitle || cat.description || undefined}
             />
+
 
             {catImg && (
               <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
@@ -331,11 +338,14 @@ const Cardapio = () => {
       {rectangular.length > 0 && (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-3xl">
-            <SectionTitle
-              script={scriptOf("cardapio_rectangular") || "Especial"}
-              title={sec("cardapio_rectangular").title || "Bolos Retangulares"}
-              subtitle={sec("cardapio_rectangular").subtitle || undefined}
-            />
+            {sec("cardapio_rectangular").title && (
+              <SectionTitle
+                script={scriptOf("cardapio_rectangular")}
+                title={sec("cardapio_rectangular").title}
+                subtitle={sec("cardapio_rectangular").subtitle || undefined}
+              />
+            )}
+
 
             {sec("cardapio_rectangular").image_url && (
               <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
@@ -399,11 +409,14 @@ const Cardapio = () => {
       {(decorations.length > 0 || sec("cardapio_decorations").title) && (
         <section className="pb-16">
           <div className="container mx-auto px-4 max-w-4xl">
-            <SectionTitle
-              script={scriptOf("cardapio_decorations") || "Galeria"}
-              title={sec("cardapio_decorations").title || "Decorações"}
-              subtitle={sec("cardapio_decorations").subtitle || undefined}
-            />
+            {sec("cardapio_decorations").title && (
+              <SectionTitle
+                script={scriptOf("cardapio_decorations")}
+                title={sec("cardapio_decorations").title}
+                subtitle={sec("cardapio_decorations").subtitle || undefined}
+              />
+            )}
+
 
             {sec("cardapio_decorations").image_url && (
               <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
@@ -442,11 +455,14 @@ const Cardapio = () => {
       {/* ─── ORDER FORM ─── */}
       <section id="encomenda" className="pb-16">
         <div className="container mx-auto px-4 max-w-xl">
-          <SectionTitle
-            script={scriptOf("cardapio_order") || "Orçamento"}
-            title={sec("cardapio_order").title || "Solicite seu orçamento"}
-            subtitle={sec("cardapio_order").subtitle || undefined}
-          />
+          {sec("cardapio_order").title && (
+            <SectionTitle
+              script={scriptOf("cardapio_order")}
+              title={sec("cardapio_order").title}
+              subtitle={sec("cardapio_order").subtitle || undefined}
+            />
+          )}
+
           {sec("cardapio_order").image_url && (
             <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
               <img src={sec("cardapio_order").image_url} alt={sec("cardapio_order").title || ""} className="w-full h-auto" loading="lazy" />
