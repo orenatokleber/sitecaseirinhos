@@ -2,8 +2,9 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Cake, Heart, Sparkles, MessageCircle } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
-import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useSiteSettings, useSiteSections } from "@/hooks/useSiteContent";
 import { normalizeWhatsApp } from "@/lib/utils";
+import { getPublicImageUrl } from "@/lib/supabase";
 import {
   useCakeSizes,
   useCakeCategories,
@@ -13,6 +14,7 @@ import {
   useCakeDecorations,
 } from "@/hooks/useCardapio";
 
+
 const formatPrice = (v: number | null | undefined) =>
   v == null ? "—" : `R$ ${Number(v).toFixed(0)}`;
 
@@ -21,8 +23,12 @@ const formatAddon = (v: number) =>
 
 const Cardapio = () => {
   const { data: settings } = useSiteSettings();
+  const { data: sections = {} } = useSiteSections();
   const whatsapp =
     normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
+
+  const sec = (key: string) => (sections as any)?.[key] || {};
+  const scriptOf = (key: string) => sec(key)?.metadata?.script || undefined;
 
   const { data: sizes = [] } = useCakeSizes(true);
   const { data: categories = [] } = useCakeCategories(true);
@@ -30,6 +36,7 @@ const Cardapio = () => {
   const { data: flavors = [] } = useCakeFlavors(true);
   const { data: rectangular = [] } = useCakeRectangular(true);
   const { data: decorations = [] } = useCakeDecorations(true);
+
 
   const [orderForm, setOrderForm] = useState({
     name: "",
