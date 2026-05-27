@@ -281,10 +281,11 @@ const Cardapio = () => {
         <section key={cat.id} className="pb-12">
           <div className="container mx-auto px-4 max-w-3xl">
             <SectionTitle
-              script={scriptOf("cardapio_addons") || "Especial"}
+              script={scriptOf("cardapio_addons")}
               title={sec("cardapio_addons").title || cat.name}
-              subtitle={sec("cardapio_addons").subtitle || cat.description || "Adicional ao valor do bolo"}
+              subtitle={sec("cardapio_addons").subtitle || cat.description || undefined}
             />
+
 
             {catImg && (
               <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
