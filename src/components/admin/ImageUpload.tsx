@@ -60,14 +60,19 @@ async function getCroppedImg(image: HTMLImageElement, crop: PixelCrop): Promise<
   });
 }
 
-const ImageUpload = ({ value, onChange, folder = "general", className, aspectRatio, recommendedSize }: ImageUploadProps) => {
+const ImageUpload = ({ value, onChange, folder = "general", className, aspectRatio, recommendedSize, allowOrientationChoice }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [showCropper, setShowCropper] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [crop, setCrop] = useState<CropType>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+  const [orientation, setOrientation] = useState<"landscape" | "portrait">("landscape");
   const imgRef = useRef<HTMLImageElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const effectiveAspect = allowOrientationChoice
+    ? (orientation === "landscape" ? 16 / 9 : 9 / 16)
+    : aspectRatio;
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
