@@ -444,6 +444,12 @@ const ContentPanel = () => {
   );
 };
 
+const stripPublicUrl = (u: string | null | undefined): string => {
+  if (!u) return "";
+  const m = u.match(/\/site-images\/(.+)$/);
+  return m ? m[1] : u;
+};
+
 const SectionEditor = ({
   cfg, section, onSave,
 }: { cfg: { key: string; label: string; hint: string; aspect: number; size: string }; section: any; onSave: (u: any) => void }) => {
@@ -452,14 +458,9 @@ const SectionEditor = ({
     title: initial.title || "",
     subtitle: initial.subtitle || "",
     content: initial.content || "",
-    image_url: section?.image_url && section.image_url.startsWith("http")
-      ? "" // we don't know the raw path from the transformed URL; keep current path via section
-      : (initial.image_url || ""),
+    image_url: stripPublicUrl(initial.image_url),
     script: (initial.metadata as any)?.script || "",
   });
-  // Always keep the raw path; if useSiteSectionsList transformed image_url to a public URL,
-  // we still send the raw path back. So we read the raw value via a separate fetch fallback:
-  // simpler: just allow user to re-upload to change.
   return (
     <Card>
       <CardHeader>
@@ -498,6 +499,7 @@ const SectionEditor = ({
         })}>
           <Save className="w-4 h-4 mr-1" /> Salvar seção
         </Button>
+
       </CardContent>
     </Card>
   );
