@@ -470,23 +470,21 @@ const SectionEditor = ({
       </CardHeader>
       <CardContent className="space-y-3">
         {!simplified && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <Label className="text-xs">Script (texto pequeno)</Label>
-                <Input value={row.script} onChange={(e) => setRow({ ...row, script: e.target.value })} placeholder="Ex: Passo 1" />
-              </div>
-              <div>
-                <Label className="text-xs">Título</Label>
-                <Input value={row.title} onChange={(e) => setRow({ ...row, title: e.target.value })} />
-              </div>
-            </div>
-            <div>
-              <Label className="text-xs">Subtítulo</Label>
-              <Input value={row.subtitle} onChange={(e) => setRow({ ...row, subtitle: e.target.value })} />
-            </div>
-          </>
+          <div>
+            <Label className="text-xs">Script (texto pequeno)</Label>
+            <Input value={row.script} onChange={(e) => setRow({ ...row, script: e.target.value })} placeholder="Ex: Passo 1" />
+          </div>
         )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <Label className="text-xs">Título</Label>
+            <Input value={row.title} onChange={(e) => setRow({ ...row, title: e.target.value })} />
+          </div>
+          <div>
+            <Label className="text-xs">Subtítulo</Label>
+            <Input value={row.subtitle} onChange={(e) => setRow({ ...row, subtitle: e.target.value })} />
+          </div>
+        </div>
         <div>
           <Label className="text-xs">Observação / texto adicional</Label>
           <Textarea rows={3} value={row.content} onChange={(e) => setRow({ ...row, content: e.target.value })} />
@@ -496,8 +494,8 @@ const SectionEditor = ({
           <ImageUpload value={row.image_url} onChange={(url) => setRow({ ...row, image_url: url })} folder={`cardapio/${cfg.key}`} aspectRatio={cfg.aspect} recommendedSize={cfg.size} />
         </div>
         <Button size="sm" onClick={() => onSave({
-          title: simplified ? (section?.title ?? null) : (row.title || null),
-          subtitle: simplified ? (section?.subtitle ?? null) : (row.subtitle || null),
+          title: row.title || null,
+          subtitle: row.subtitle || null,
           content: row.content || null,
           image_url: row.image_url || null,
           metadata: simplified
@@ -508,6 +506,7 @@ const SectionEditor = ({
         </Button>
 
       </CardContent>
+
     </Card>
   );
 };
