@@ -611,8 +611,14 @@ const Cardapio = () => {
           )}
 
           {sec("cardapio_order").image_url && (
-            <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-              <img src={sec("cardapio_order").image_url} alt={sec("cardapio_order").title || ""} className="w-full h-auto" loading="lazy" />
+            <div className="mt-6">
+              {isTransparentImage(sec("cardapio_order").image_url) ? (
+                <img src={sec("cardapio_order").image_url} alt={sec("cardapio_order").title || ""} className="w-full h-auto max-h-[420px] object-contain mx-auto" loading="lazy" />
+              ) : (
+                <div className="rounded-2xl overflow-hidden border border-border/60">
+                  <img src={sec("cardapio_order").image_url} alt={sec("cardapio_order").title || ""} className="w-full h-auto" loading="lazy" />
+                </div>
+              )}
             </div>
           )}
           {sec("cardapio_order").content && (
