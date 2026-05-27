@@ -119,7 +119,7 @@ const Cardapio = () => {
 
       {/* ─── BOLOS DECORADOS — TAMANHOS ─── */}
       <section className="pb-12">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="container mx-auto px-4 max-w-6xl">
           {sec("cardapio_sizes").title && (
             <SectionTitle
               script={scriptOf("cardapio_sizes")}
@@ -128,74 +128,91 @@ const Cardapio = () => {
             />
           )}
 
-
-          {sec("cardapio_sizes").image_url && (
-            <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-              <img src={sec("cardapio_sizes").image_url} alt={sec("cardapio_sizes").title || ""} className="w-full h-auto" loading="lazy" />
-            </div>
-          )}
-
-          <div className="space-y-3 mt-8">
-            {sizes.map((s, i) => (
+          <div className={`grid grid-cols-1 ${sec("cardapio_sizes").image_url ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-center mt-4`}>
+            {sec("cardapio_sizes").image_url && (
               <motion.div
-                key={s.id}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                transition={{ duration: 0.7 }}
               >
-                <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 bg-accent/10 flex items-center justify-center">
-                  <span className="font-heading text-2xl md:text-3xl font-bold text-accent">
-                    {s.code}
-                  </span>
-                </div>
-                <div className="flex-1 flex flex-wrap items-center gap-x-4 gap-y-1 py-3 pr-4 text-sm md:text-base text-foreground font-body">
-                  {s.ring_size && <span>{s.ring_size}</span>}
-                  {s.slices != null && (
-                    <>
-                      <span className="text-muted-foreground">|</span>
-                      <span>{s.slices} fatias</span>
-                    </>
-                  )}
-                  {s.weight_kg != null && (
-                    <>
-                      <span className="text-muted-foreground">|</span>
-                      <span>{Number(s.weight_kg).toFixed(1)}kg</span>
-                    </>
-                  )}
-                </div>
+                <img
+                  src={sec("cardapio_sizes").image_url}
+                  alt={sec("cardapio_sizes").title || ""}
+                  className="rounded-lg object-cover w-full h-[420px] shadow-md"
+                  loading="lazy"
+                />
               </motion.div>
-            ))}
+            )}
 
-            {/* Retangulares resumo */}
-            {rectangular.map((r) => (
-              <div
-                key={r.id}
-                className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
-              >
-                <div className="w-24 h-16 md:w-28 md:h-20 flex-shrink-0 bg-chocolate/10 flex items-center justify-center px-2 text-center">
-                  <span className="font-heading text-xs md:text-sm font-bold text-chocolate leading-tight">
-                    {r.name.toUpperCase()}
-                  </span>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="space-y-3"
+            >
+              {sizes.map((s, i) => (
+                <motion.div
+                  key={s.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                >
+                  <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 bg-accent/10 flex items-center justify-center">
+                    <span className="font-heading text-2xl md:text-3xl font-bold text-accent">
+                      {s.code}
+                    </span>
+                  </div>
+                  <div className="flex-1 flex flex-wrap items-center gap-x-4 gap-y-1 py-3 pr-4 text-sm md:text-base text-foreground font-body">
+                    {s.ring_size && <span>{s.ring_size}</span>}
+                    {s.slices != null && (
+                      <>
+                        <span className="text-muted-foreground">|</span>
+                        <span>{s.slices} fatias</span>
+                      </>
+                    )}
+                    {s.weight_kg != null && (
+                      <>
+                        <span className="text-muted-foreground">|</span>
+                        <span>{Number(s.weight_kg).toFixed(1)}kg</span>
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+
+              {/* Retangulares resumo */}
+              {rectangular.map((r) => (
+                <div
+                  key={r.id}
+                  className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                >
+                  <div className="w-24 h-16 md:w-28 md:h-20 flex-shrink-0 bg-chocolate/10 flex items-center justify-center px-2 text-center">
+                    <span className="font-heading text-xs md:text-sm font-bold text-chocolate leading-tight">
+                      {r.name.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex-1 flex flex-wrap items-center gap-x-3 gap-y-1 py-3 pr-4 text-sm text-foreground font-body">
+                    {r.dimensions && <span>{r.dimensions}</span>}
+                    {r.slices != null && (
+                      <>
+                        <span className="text-muted-foreground">|</span>
+                        <span>{r.slices} fatias</span>
+                      </>
+                    )}
+                    {r.weight_kg != null && (
+                      <>
+                        <span className="text-muted-foreground">|</span>
+                        <span>{Number(r.weight_kg).toFixed(1)} kg</span>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <div className="flex-1 flex flex-wrap items-center gap-x-3 gap-y-1 py-3 pr-4 text-sm text-foreground font-body">
-                  {r.dimensions && <span>{r.dimensions}</span>}
-                  {r.slices != null && (
-                    <>
-                      <span className="text-muted-foreground">|</span>
-                      <span>{r.slices} fatias</span>
-                    </>
-                  )}
-                  {r.weight_kg != null && (
-                    <>
-                      <span className="text-muted-foreground">|</span>
-                      <span>{Number(r.weight_kg).toFixed(1)} kg</span>
-                    </>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </motion.div>
           </div>
 
           {sec("cardapio_sizes").content && (
@@ -205,6 +222,7 @@ const Cardapio = () => {
           )}
         </div>
       </section>
+
 
 
       {/* ─── CATEGORIAS DE SABORES (CLASSE 1, CLASSE 2, ...) ─── */}
