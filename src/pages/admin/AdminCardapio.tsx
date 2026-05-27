@@ -115,8 +115,8 @@ const SizeRow = ({ size, onSave, onDelete }: { size: CakeSize; onSave: (r: any) 
       <div><Label className="text-xs">Peso (kg)</Label><Input type="number" step="0.1" value={row.weight_kg ?? ""} onChange={(e) => setRow({ ...row, weight_kg: parseFloat(e.target.value) || 0 })} /></div>
       <div><Label className="text-xs">Ordem</Label><Input type="number" value={row.sort_order} onChange={(e) => setRow({ ...row, sort_order: parseInt(e.target.value) || 0 })} /></div>
       <div className="flex items-center gap-2 pb-2"><input type="checkbox" checked={row.is_active} onChange={(e) => setRow({ ...row, is_active: e.target.checked })} /> <Label className="text-xs">Ativo</Label></div>
-      <div className="flex gap-1">
-        <Button size="sm" onClick={() => onSave({ ...row, name: row.name || row.code })}><Save className="w-4 h-4" /></Button>
+      <div className="flex gap-1 col-span-2 md:col-span-1">
+        <Button size="sm" onClick={() => onSave({ ...row, name: row.name || row.code })}><Save className="w-4 h-4 mr-1" /> Salvar</Button>
         <Button size="sm" variant="destructive" onClick={onDelete}><Trash2 className="w-4 h-4" /></Button>
       </div>
     </div>
