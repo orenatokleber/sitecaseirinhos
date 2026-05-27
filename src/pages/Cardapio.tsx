@@ -119,7 +119,7 @@ const Cardapio = () => {
 
       {/* ─── BOLOS DECORADOS — TAMANHOS ─── */}
       <section className="pb-12">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="container mx-auto px-4 max-w-6xl">
           {sec("cardapio_sizes").title && (
             <SectionTitle
               script={scriptOf("cardapio_sizes")}
@@ -128,74 +128,91 @@ const Cardapio = () => {
             />
           )}
 
-
-          {sec("cardapio_sizes").image_url && (
-            <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-              <img src={sec("cardapio_sizes").image_url} alt={sec("cardapio_sizes").title || ""} className="w-full h-auto" loading="lazy" />
-            </div>
-          )}
-
-          <div className="space-y-3 mt-8">
-            {sizes.map((s, i) => (
+          <div className={`grid grid-cols-1 ${sec("cardapio_sizes").image_url ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-center mt-4`}>
+            {sec("cardapio_sizes").image_url && (
               <motion.div
-                key={s.id}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                transition={{ duration: 0.7 }}
               >
-                <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 bg-accent/10 flex items-center justify-center">
-                  <span className="font-heading text-2xl md:text-3xl font-bold text-accent">
-                    {s.code}
-                  </span>
-                </div>
-                <div className="flex-1 flex flex-wrap items-center gap-x-4 gap-y-1 py-3 pr-4 text-sm md:text-base text-foreground font-body">
-                  {s.ring_size && <span>{s.ring_size}</span>}
-                  {s.slices != null && (
-                    <>
-                      <span className="text-muted-foreground">|</span>
-                      <span>{s.slices} fatias</span>
-                    </>
-                  )}
-                  {s.weight_kg != null && (
-                    <>
-                      <span className="text-muted-foreground">|</span>
-                      <span>{Number(s.weight_kg).toFixed(1)}kg</span>
-                    </>
-                  )}
-                </div>
+                <img
+                  src={sec("cardapio_sizes").image_url}
+                  alt={sec("cardapio_sizes").title || ""}
+                  className="rounded-lg object-cover w-full h-[420px] shadow-md"
+                  loading="lazy"
+                />
               </motion.div>
-            ))}
+            )}
 
-            {/* Retangulares resumo */}
-            {rectangular.map((r) => (
-              <div
-                key={r.id}
-                className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
-              >
-                <div className="w-24 h-16 md:w-28 md:h-20 flex-shrink-0 bg-chocolate/10 flex items-center justify-center px-2 text-center">
-                  <span className="font-heading text-xs md:text-sm font-bold text-chocolate leading-tight">
-                    {r.name.toUpperCase()}
-                  </span>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="space-y-3"
+            >
+              {sizes.map((s, i) => (
+                <motion.div
+                  key={s.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                >
+                  <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 bg-accent/10 flex items-center justify-center">
+                    <span className="font-heading text-2xl md:text-3xl font-bold text-accent">
+                      {s.code}
+                    </span>
+                  </div>
+                  <div className="flex-1 flex flex-wrap items-center gap-x-4 gap-y-1 py-3 pr-4 text-sm md:text-base text-foreground font-body">
+                    {s.ring_size && <span>{s.ring_size}</span>}
+                    {s.slices != null && (
+                      <>
+                        <span className="text-muted-foreground">|</span>
+                        <span>{s.slices} fatias</span>
+                      </>
+                    )}
+                    {s.weight_kg != null && (
+                      <>
+                        <span className="text-muted-foreground">|</span>
+                        <span>{Number(s.weight_kg).toFixed(1)}kg</span>
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+
+              {/* Retangulares resumo */}
+              {rectangular.map((r) => (
+                <div
+                  key={r.id}
+                  className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                >
+                  <div className="w-24 h-16 md:w-28 md:h-20 flex-shrink-0 bg-chocolate/10 flex items-center justify-center px-2 text-center">
+                    <span className="font-heading text-xs md:text-sm font-bold text-chocolate leading-tight">
+                      {r.name.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex-1 flex flex-wrap items-center gap-x-3 gap-y-1 py-3 pr-4 text-sm text-foreground font-body">
+                    {r.dimensions && <span>{r.dimensions}</span>}
+                    {r.slices != null && (
+                      <>
+                        <span className="text-muted-foreground">|</span>
+                        <span>{r.slices} fatias</span>
+                      </>
+                    )}
+                    {r.weight_kg != null && (
+                      <>
+                        <span className="text-muted-foreground">|</span>
+                        <span>{Number(r.weight_kg).toFixed(1)} kg</span>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <div className="flex-1 flex flex-wrap items-center gap-x-3 gap-y-1 py-3 pr-4 text-sm text-foreground font-body">
-                  {r.dimensions && <span>{r.dimensions}</span>}
-                  {r.slices != null && (
-                    <>
-                      <span className="text-muted-foreground">|</span>
-                      <span>{r.slices} fatias</span>
-                    </>
-                  )}
-                  {r.weight_kg != null && (
-                    <>
-                      <span className="text-muted-foreground">|</span>
-                      <span>{Number(r.weight_kg).toFixed(1)} kg</span>
-                    </>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </motion.div>
           </div>
 
           {sec("cardapio_sizes").content && (
@@ -207,97 +224,119 @@ const Cardapio = () => {
       </section>
 
 
+
       {/* ─── CATEGORIAS DE SABORES (CLASSE 1, CLASSE 2, ...) ─── */}
       {standardCategories.map((cat, idx) => {
         const catFlavors = flavorsByCategory[cat.id] || [];
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : null;
+        const imageOnRight = idx % 2 === 1;
         return (
           <section key={cat.id} className="pb-12">
-            <div className="container mx-auto px-4 max-w-3xl">
+            <div className="container mx-auto px-4 max-w-6xl">
               <SectionTitle
                 title={cat.name}
                 subtitle={cat.description || undefined}
               />
 
+              <div className={`grid grid-cols-1 ${catImg ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-start mt-4`}>
+                {catImg && (
+                  <motion.div
+                    initial={{ opacity: 0, x: imageOnRight ? 30 : -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7 }}
+                    className={imageOnRight ? "md:order-2" : "md:order-1"}
+                  >
+                    <img
+                      src={catImg}
+                      alt={cat.name}
+                      className="rounded-lg object-cover w-full h-[420px] shadow-md sticky top-28"
+                      loading="lazy"
+                    />
+                  </motion.div>
+                )}
 
-              {catImg && (
-                <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-                  <img src={catImg} alt={cat.name} className="w-full h-auto" loading="lazy" />
-                </div>
-              )}
-
-              {/* Preços por tamanho — mobile: cards / desktop: tabela */}
-              {isMobile ? (
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  {sizes.map((s) => (
-                    <div
-                      key={s.id}
-                      className="rounded-2xl border border-accent/20 bg-card shadow-sm p-4 text-center"
-                    >
-                      <div className="font-heading text-lg font-bold text-foreground">
-                        {s.code}
+                <motion.div
+                  initial={{ opacity: 0, x: imageOnRight ? -30 : 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
+                  className={catImg ? (imageOnRight ? "md:order-1" : "md:order-2") : ""}
+                >
+                  {/* Preços por tamanho — mobile: cards / desktop: tabela */}
+                  {isMobile ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      {sizes.map((s) => (
+                        <div
+                          key={s.id}
+                          className="rounded-2xl border border-accent/20 bg-card shadow-sm p-4 text-center"
+                        >
+                          <div className="font-heading text-lg font-bold text-foreground">
+                            {s.code}
+                          </div>
+                          <div className="mt-1 text-xs text-muted-foreground font-body space-y-0.5">
+                            {s.slices != null && <div>{s.slices} fatias</div>}
+                            {s.weight_kg != null && <div>{Number(s.weight_kg).toFixed(1)}kg</div>}
+                          </div>
+                          <div className="mt-2 font-body text-base font-semibold text-chocolate">
+                            {formatPrice(priceOf(cat.id, s.id))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-accent/20 bg-card shadow-sm overflow-x-auto">
+                      <div
+                        className="grid divide-x divide-border/60 min-w-full"
+                        style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                      >
+                        {sizes.map((s) => (
+                          <div key={s.id} className="text-center py-3 bg-accent/[0.04] min-w-0">
+                            <div className="font-heading text-base md:text-lg font-bold text-foreground truncate px-1">
+                              {s.code}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      <div className="mt-1 text-xs text-muted-foreground font-body space-y-0.5">
-                        {s.slices != null && <div>{s.slices} fatias</div>}
-                        {s.weight_kg != null && <div>{Number(s.weight_kg).toFixed(1)}kg</div>}
-                      </div>
-                      <div className="mt-2 font-body text-base font-semibold text-chocolate">
-                        {formatPrice(priceOf(cat.id, s.id))}
+                      <div
+                        className="grid divide-x divide-border/60 border-t border-border/60 min-w-full"
+                        style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                      >
+                        {sizes.map((s) => (
+                          <div key={s.id} className="text-center py-3 min-w-0">
+                            <div className="font-body text-sm md:text-base font-semibold text-chocolate truncate px-1">
+                              {formatPrice(priceOf(cat.id, s.id))}
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="mt-6 rounded-2xl border border-accent/20 bg-card shadow-sm overflow-x-auto">
-                  <div
-                    className="grid divide-x divide-border/60 min-w-full"
-                    style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
-                  >
-                    {sizes.map((s) => (
-                      <div key={s.id} className="text-center py-3 bg-accent/[0.04] min-w-0">
-                        <div className="font-heading text-base md:text-lg font-bold text-foreground truncate px-1">
-                          {s.code}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div
-                    className="grid divide-x divide-border/60 border-t border-border/60 min-w-full"
-                    style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
-                  >
-                    {sizes.map((s) => (
-                      <div key={s.id} className="text-center py-3 min-w-0">
-                        <div className="font-body text-sm md:text-base font-semibold text-chocolate truncate px-1">
-                          {formatPrice(priceOf(cat.id, s.id))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                  )}
 
-              {/* Lista de sabores */}
-              <div className="mt-8 space-y-4">
-                {catFlavors.map((f) => (
-                  <div
-                    key={f.id}
-                    className="border-l-2 border-accent/30 pl-4 py-1"
-                  >
-                    <h4 className="font-heading font-bold text-foreground uppercase text-sm tracking-wide">
-                      {f.name}
-                    </h4>
-                    {f.description && (
-                      <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                        {f.description}
+                  {/* Lista de sabores */}
+                  <div className="mt-8 space-y-4">
+                    {catFlavors.map((f) => (
+                      <div
+                        key={f.id}
+                        className="border-l-2 border-accent/30 pl-4 py-1"
+                      >
+                        <h4 className="font-heading font-bold text-foreground uppercase text-sm tracking-wide">
+                          {f.name}
+                        </h4>
+                        {f.description && (
+                          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                            {f.description}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                    {catFlavors.length === 0 && (
+                      <p className="text-sm text-muted-foreground italic">
+                        Em breve novos sabores.
                       </p>
                     )}
                   </div>
-                ))}
-                {catFlavors.length === 0 && (
-                  <p className="text-sm text-muted-foreground italic">
-                    Em breve novos sabores.
-                  </p>
-                )}
+                </motion.div>
               </div>
             </div>
           </section>
@@ -305,25 +344,44 @@ const Cardapio = () => {
       })}
 
       {/* ─── BOLOS CORAÇÃO (ADDON) ─── */}
-      {addonCategories.map((cat) => {
+      {addonCategories.map((cat, idx) => {
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : (sec("cardapio_addons").image_url || null);
+        const imageOnRight = idx % 2 === 1;
         return (
         <section key={cat.id} className="pb-12">
-          <div className="container mx-auto px-4 max-w-3xl">
+          <div className="container mx-auto px-4 max-w-6xl">
             <SectionTitle
               script={scriptOf("cardapio_addons")}
               title={sec("cardapio_addons").title || cat.name}
               subtitle={sec("cardapio_addons").subtitle || cat.description || undefined}
             />
 
+            <div className={`grid grid-cols-1 ${catImg ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-center mt-4`}>
+              {catImg && (
+                <motion.div
+                  initial={{ opacity: 0, x: imageOnRight ? 30 : -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
+                  className={imageOnRight ? "md:order-2" : "md:order-1"}
+                >
+                  <img
+                    src={catImg}
+                    alt={cat.name}
+                    className="rounded-lg object-cover w-full h-[420px] shadow-md"
+                    loading="lazy"
+                  />
+                </motion.div>
+              )}
 
-            {catImg && (
-              <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-                <img src={catImg} alt={cat.name} className="w-full h-auto" loading="lazy" />
-              </div>
-            )}
+              <motion.div
+                initial={{ opacity: 0, x: imageOnRight ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className={`space-y-3 ${catImg ? (imageOnRight ? "md:order-1" : "md:order-2") : ""}`}
+              >
 
-            <div className="mt-6 space-y-3">
               {sizes.map((s) => {
                 const addon = priceOf(cat.id, s.id);
                 if (addon == null || addon === 0) return null;
@@ -352,7 +410,9 @@ const Cardapio = () => {
                   </div>
                 );
               })}
+              </motion.div>
             </div>
+
 
             {sec("cardapio_addons").content && (
               <p className="text-xs text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
@@ -367,7 +427,7 @@ const Cardapio = () => {
       {/* ─── BOLOS RETANGULARES (TABELA DETALHADA) ─── */}
       {rectangular.length > 0 && (
         <section className="pb-12">
-          <div className="container mx-auto px-4 max-w-3xl">
+          <div className="container mx-auto px-4 max-w-6xl">
             {sec("cardapio_rectangular").title && (
               <SectionTitle
                 script={scriptOf("cardapio_rectangular")}
@@ -376,55 +436,73 @@ const Cardapio = () => {
               />
             )}
 
-
-            {sec("cardapio_rectangular").image_url && (
-              <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
-                <img src={sec("cardapio_rectangular").image_url} alt={sec("cardapio_rectangular").title || ""} className="w-full h-auto" loading="lazy" />
-              </div>
-            )}
-
-            <div className="mt-8 space-y-6">
-              {rectangular.map((r) => (
-                <div
-                  key={r.id}
-                  className="rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+            <div className={`grid grid-cols-1 ${sec("cardapio_rectangular").image_url ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-start mt-4`}>
+              {sec("cardapio_rectangular").image_url && (
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
                 >
-                  <div className="bg-accent/10 px-5 py-3 text-center">
-                    <h3 className="font-heading font-bold text-foreground uppercase text-sm tracking-wider">
-                      {r.name}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-1 font-body">
-                      {[r.dimensions, r.slices ? `${r.slices} fatias` : null, r.weight_kg ? `${Number(r.weight_kg).toFixed(1)} kg` : null]
-                        .filter(Boolean)
-                        .join(" | ")}
-                    </p>
-                  </div>
-                  <div className="p-5 space-y-2">
-                    {r.note && (
-                      <p className="font-script text-lg text-chocolate text-center mb-3">
-                        {r.note}
+                  <img
+                    src={sec("cardapio_rectangular").image_url}
+                    alt={sec("cardapio_rectangular").title || ""}
+                    className="rounded-lg object-cover w-full h-[420px] shadow-md sticky top-28"
+                    loading="lazy"
+                  />
+                </motion.div>
+              )}
+
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className="space-y-6"
+              >
+                {rectangular.map((r) => (
+                  <div
+                    key={r.id}
+                    className="rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                  >
+                    <div className="bg-accent/10 px-5 py-3 text-center">
+                      <h3 className="font-heading font-bold text-foreground uppercase text-sm tracking-wider">
+                        {r.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1 font-body">
+                        {[r.dimensions, r.slices ? `${r.slices} fatias` : null, r.weight_kg ? `${Number(r.weight_kg).toFixed(1)} kg` : null]
+                          .filter(Boolean)
+                          .join(" | ")}
                       </p>
-                    )}
-                    {r.class1_price != null && (
-                      <div className="flex justify-between text-sm font-body">
-                      <span>Tradicional</span>
-                        <span className="font-bold text-chocolate">
-                          {formatPrice(r.class1_price)}
-                        </span>
-                      </div>
-                    )}
-                    {r.class2_price != null && (
-                      <div className="flex justify-between text-sm font-body">
-                        <span>Premium</span>
-                        <span className="font-bold text-chocolate">
-                          {formatPrice(r.class2_price)}
-                        </span>
-                      </div>
-                    )}
+                    </div>
+                    <div className="p-5 space-y-2">
+                      {r.note && (
+                        <p className="font-script text-lg text-chocolate text-center mb-3">
+                          {r.note}
+                        </p>
+                      )}
+                      {r.class1_price != null && (
+                        <div className="flex justify-between text-sm font-body">
+                          <span>Tradicional</span>
+                          <span className="font-bold text-chocolate">
+                            {formatPrice(r.class1_price)}
+                          </span>
+                        </div>
+                      )}
+                      {r.class2_price != null && (
+                        <div className="flex justify-between text-sm font-body">
+                          <span>Premium</span>
+                          <span className="font-bold text-chocolate">
+                            {formatPrice(r.class2_price)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </motion.div>
             </div>
+
 
             {sec("cardapio_rectangular").content && (
               <p className="text-xs text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
