@@ -408,12 +408,7 @@ const Cardapio = () => {
                   transition={{ duration: 0.7 }}
                   className={imageOnRight ? "md:order-2" : "md:order-1"}
                 >
-                  <img
-                    src={catImg}
-                    alt={cat.name}
-                    className="rounded-lg object-cover w-full h-[420px] shadow-md"
-                    loading="lazy"
-                  />
+                  <SectionImage src={catImg} alt={cat.name} />
                 </motion.div>
               )}
 
