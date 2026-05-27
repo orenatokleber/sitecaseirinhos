@@ -13,8 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { Switch } from "@/components/ui/switch";
 import { Loader2, Plus, Trash2, Cake, Tag, Star, Square, Image as ImageIcon, Save, FileText } from "lucide-react";
-import { useSiteSectionsList, useUpdateSiteSection, useCreateSiteSection } from "@/hooks/useSiteContent";
+import { useSiteSectionsList, useUpdateSiteSection, useCreateSiteSection, useSiteSettings, useUpdateSiteSetting } from "@/hooks/useSiteContent";
 import { toast } from "sonner";
 
 import {
@@ -443,6 +444,10 @@ const ContentPanel = () => {
   const { data: sections = [], isLoading } = useSiteSectionsList();
   const update = useUpdateSiteSection();
   const create = useCreateSiteSection();
+  const { data: settings } = useSiteSettings();
+  const updateSetting = useUpdateSiteSetting();
+
+  const fabEnabled = (settings?.cardapio_fab_enabled as boolean | undefined) !== false;
 
   if (isLoading) return <Loader2 className="animate-spin" />;
 
@@ -451,6 +456,18 @@ const ContentPanel = () => {
 
   return (
     <div className="space-y-4">
+      <Card>
+        <CardContent className="flex items-center justify-between py-4">
+          <div className="space-y-0.5">
+            <Label className="text-sm font-medium">Botão flutuante de encomenda</Label>
+            <p className="text-xs text-muted-foreground">Exibe o botão fixo "Fazer Encomenda" no cardápio</p>
+          </div>
+          <Switch
+            checked={fabEnabled}
+            onCheckedChange={(checked) => updateSetting.mutate({ key: "cardapio_fab_enabled", value: checked })}
+          />
+        </CardContent>
+      </Card>
       <p className="text-sm text-muted-foreground">
         Edite observações e imagens de cada seção do cardápio.
       </p>
