@@ -455,11 +455,14 @@ const Cardapio = () => {
       {/* ─── ORDER FORM ─── */}
       <section id="encomenda" className="pb-16">
         <div className="container mx-auto px-4 max-w-xl">
-          <SectionTitle
-            script={scriptOf("cardapio_order") || "Orçamento"}
-            title={sec("cardapio_order").title || "Solicite seu orçamento"}
-            subtitle={sec("cardapio_order").subtitle || undefined}
-          />
+          {sec("cardapio_order").title && (
+            <SectionTitle
+              script={scriptOf("cardapio_order")}
+              title={sec("cardapio_order").title}
+              subtitle={sec("cardapio_order").subtitle || undefined}
+            />
+          )}
+
           {sec("cardapio_order").image_url && (
             <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
               <img src={sec("cardapio_order").image_url} alt={sec("cardapio_order").title || ""} className="w-full h-auto" loading="lazy" />
