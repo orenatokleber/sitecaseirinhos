@@ -15,6 +15,7 @@ import {
 import ImageUpload from "@/components/admin/ImageUpload";
 import { Loader2, Plus, Trash2, Cake, Tag, Star, Square, Image as ImageIcon, Save, FileText } from "lucide-react";
 import { useSiteSectionsList, useUpdateSiteSection, useCreateSiteSection } from "@/hooks/useSiteContent";
+import { toast } from "sonner";
 
 import {
   useCakeSizes,
@@ -84,6 +85,11 @@ const SizesPanel = () => {
   const handleAddSize = () => {
     const code = (newRow.code || "").trim();
     if (!code || upsert.isPending) return;
+    const codeExists = sizes.some((size) => size.code.trim().toLowerCase() === code.toLowerCase());
+    if (codeExists) {
+      toast.error("Já existe um tamanho com esse código. Edite o tamanho existente ou use outro código.");
+      return;
+    }
     upsert.mutate(
       { ...newRow, code, name: code } as any,
       { onSuccess: () => setNewRow({ code: "", name: "", ring_size: "", slices: 0, weight_kg: 0, sort_order: 0, is_active: true }) }
@@ -96,7 +102,7 @@ const SizesPanel = () => {
     <Card>
       <CardHeader><CardTitle>Tamanhos de bolo</CardTitle></CardHeader>
       <CardContent className="space-y-4">
-        {sizes.map((s) => <SizeRow key={s.id} size={s} onSave={(row) => upsert.mutate(row)} onDelete={() => del.mutate(s.id)} />)}
+        {sizes.map((s) => <SizeRow key={s.id} size={s} sizes={sizes} onSave={(row) => upsert.mutate(row)} onDelete={() => del.mutate(s.id)} />)}
 
         <div className="border-t pt-4">
           <Label className="text-xs font-semibold uppercase tracking-wide">Adicionar tamanho</Label>
@@ -114,8 +120,21 @@ const SizesPanel = () => {
   );
 };
 
-const SizeRow = ({ size, onSave, onDelete }: { size: CakeSize; onSave: (r: any) => void; onDelete: () => void }) => {
+const SizeRow = ({ size, sizes, onSave, onDelete }: { size: CakeSize; sizes: CakeSize[]; onSave: (r: any) => void; onDelete: () => void }) => {
   const [row, setRow] = useState(size);
+  const handleSave = () => {
+    const code = row.code.trim();
+    if (!code) {
+      toast.error("Informe um código para o tamanho.");
+      return;
+    }
+    const codeExists = sizes.some((item) => item.id !== row.id && item.code.trim().toLowerCase() === code.toLowerCase());
+    if (codeExists) {
+      toast.error("Já existe outro tamanho com esse código. Use um código único.");
+      return;
+    }
+    onSave({ ...row, code, name: (row.name || code).trim() });
+  };
   return (
     <div className="grid grid-cols-2 md:grid-cols-7 gap-2 items-end pb-3 border-b border-border/50">
       <div><Label className="text-xs">Código</Label><Input value={row.code} onChange={(e) => setRow({ ...row, code: e.target.value })} /></div>
@@ -125,7 +144,7 @@ const SizeRow = ({ size, onSave, onDelete }: { size: CakeSize; onSave: (r: any) 
       <div><Label className="text-xs">Ordem</Label><Input type="number" value={row.sort_order} onChange={(e) => setRow({ ...row, sort_order: parseInt(e.target.value) || 0 })} /></div>
       <div className="flex items-center gap-2 pb-2"><input type="checkbox" checked={row.is_active} onChange={(e) => setRow({ ...row, is_active: e.target.checked })} /> <Label className="text-xs">Ativo</Label></div>
       <div className="flex gap-1 col-span-2 md:col-span-1">
-        <Button size="sm" onClick={() => onSave({ ...row, code: row.code.trim(), name: (row.name || row.code).trim() })}><Save className="w-4 h-4 mr-1" /> Salvar</Button>
+        <Button size="sm" onClick={handleSave}><Save className="w-4 h-4 mr-1" /> Salvar</Button>
         <Button size="sm" variant="destructive" onClick={onDelete}><Trash2 className="w-4 h-4" /></Button>
       </div>
     </div>
