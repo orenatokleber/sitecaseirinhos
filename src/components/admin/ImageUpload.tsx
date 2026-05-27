@@ -29,24 +29,23 @@ async function getCroppedImg(image: HTMLImageElement, crop: PixelCrop): Promise<
   const canvas = document.createElement("canvas");
   const scaleX = image.naturalWidth / image.width;
   const scaleY = image.naturalHeight / image.height;
-  
-  canvas.width = crop.width * scaleX;
-  canvas.height = crop.height * scaleY;
-  
+
+  // Inset by 1px on each side (in source coords) to avoid edge sampling artifacts
+  const inset = 1;
+  const sx = Math.round(crop.x * scaleX) + inset;
+  const sy = Math.round(crop.y * scaleY) + inset;
+  const sw = Math.max(1, Math.round(crop.width * scaleX) - inset * 2);
+  const sh = Math.max(1, Math.round(crop.height * scaleY) - inset * 2);
+
+  canvas.width = sw;
+  canvas.height = sh;
+
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("No 2d context");
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
-  ctx.drawImage(
-    image,
-    crop.x * scaleX,
-    crop.y * scaleY,
-    crop.width * scaleX,
-    crop.height * scaleY,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+  ctx.drawImage(image, sx, sy, sw, sh, 0, 0, sw, sh);
 
   return new Promise((resolve, reject) => {
     canvas.toBlob(
@@ -55,7 +54,7 @@ async function getCroppedImg(image: HTMLImageElement, crop: PixelCrop): Promise<
         else reject(new Error("Canvas is empty"));
       },
       "image/jpeg",
-      0.9
+      0.92
     );
   });
 }
