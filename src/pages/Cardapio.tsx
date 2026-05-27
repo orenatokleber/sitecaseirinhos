@@ -338,11 +338,14 @@ const Cardapio = () => {
       {rectangular.length > 0 && (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-3xl">
-            <SectionTitle
-              script={scriptOf("cardapio_rectangular") || "Especial"}
-              title={sec("cardapio_rectangular").title || "Bolos Retangulares"}
-              subtitle={sec("cardapio_rectangular").subtitle || undefined}
-            />
+            {sec("cardapio_rectangular").title && (
+              <SectionTitle
+                script={scriptOf("cardapio_rectangular")}
+                title={sec("cardapio_rectangular").title}
+                subtitle={sec("cardapio_rectangular").subtitle || undefined}
+              />
+            )}
+
 
             {sec("cardapio_rectangular").image_url && (
               <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
