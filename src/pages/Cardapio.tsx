@@ -89,15 +89,18 @@ const Cardapio = () => {
                 {scriptOf("cardapio_hero")}
               </span>
             )}
-            <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mt-2 mb-4">
-              {sec("cardapio_hero").title || "Cardápio de Encomendas"}
-            </h1>
+            {sec("cardapio_hero").title && (
+              <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mt-2 mb-4">
+                {sec("cardapio_hero").title}
+              </h1>
+            )}
             <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mb-4" />
             {sec("cardapio_hero").subtitle && (
               <p className="text-muted-foreground max-w-lg mx-auto font-body leading-relaxed">
                 {sec("cardapio_hero").subtitle}
               </p>
             )}
+
             {sec("cardapio_hero").image_url && (
               <div className="mt-8 max-w-3xl mx-auto rounded-2xl overflow-hidden border border-border/60 shadow-sm">
                 <img src={sec("cardapio_hero").image_url} alt={sec("cardapio_hero").title || "Cardápio"} className="w-full h-auto" />
