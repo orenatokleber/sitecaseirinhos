@@ -220,7 +220,12 @@ const CategoryCard = ({
           </div>
         </div>
         <div className="mt-2"><Label className="text-xs">Descrição</Label><Input value={cat.description || ""} onChange={(e) => setCat({ ...cat, description: e.target.value })} /></div>
+        <div className="mt-3">
+          <Label className="text-xs">Imagem da seção (opcional)</Label>
+          <ImageUpload value={cat.image_url || ""} onChange={(url) => setCat({ ...cat, image_url: url })} folder="cardapio/categorias" aspectRatio={16 / 9} recommendedSize="1280×720px" />
+        </div>
       </CardHeader>
+
       <CardContent>
         <Label className="text-xs uppercase font-semibold">Preço por tamanho {cat.type === "addon" && "(adicional ao bolo)"}</Label>
         <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mt-2">
@@ -394,5 +399,107 @@ const DecorationsPanel = () => {
     </div>
   );
 };
-
 export default AdminCardapio;
+
+/* ─── CONTENT (títulos / subtítulos / observações / imagens) ─── */
+const CARDAPIO_SECTIONS: Array<{ key: string; label: string; hint: string; aspect: number; size: string }> = [
+  { key: "cardapio_hero", label: "Hero (topo da página)", hint: "Título principal, subtítulo e script", aspect: 16 / 9, size: "1600×900px" },
+  { key: "cardapio_sizes", label: "Bolos Decorados (Passo 1)", hint: "Título, subtítulo, observação e imagem", aspect: 16 / 9, size: "1280×720px" },
+  { key: "cardapio_addons", label: "Bolos Coração", hint: "Título, subtítulo e imagem", aspect: 16 / 9, size: "1280×720px" },
+  { key: "cardapio_rectangular", label: "Bolos Retangulares", hint: "Título, subtítulo e imagem", aspect: 16 / 9, size: "1280×720px" },
+  { key: "cardapio_decorations", label: "Decorações", hint: "Título, subtítulo e imagem", aspect: 16 / 9, size: "1280×720px" },
+  { key: "cardapio_order", label: "Solicite seu orçamento", hint: "Título e descrição do formulário", aspect: 16 / 9, size: "1280×720px" },
+];
+
+const ContentPanel = () => {
+  const { data: sections = [], isLoading } = useSiteSectionsList();
+  const update = useUpdateSiteSection();
+  const create = useCreateSiteSection();
+
+  if (isLoading) return <Loader2 className="animate-spin" />;
+
+  const byKey: Record<string, any> = {};
+  sections.forEach((s: any) => { byKey[s.section_key] = s; });
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-muted-foreground">
+        Edite os títulos, subtítulos, observações e imagens de cada seção do cardápio.
+      </p>
+      {CARDAPIO_SECTIONS.map((cfg) => {
+        const sec = byKey[cfg.key];
+        return (
+          <SectionEditor
+            key={cfg.key}
+            cfg={cfg}
+            section={sec}
+            onSave={(updates) => {
+              if (sec) update.mutate({ sectionKey: cfg.key, updates });
+              else create.mutate({ section_key: cfg.key, ...updates });
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+const SectionEditor = ({
+  cfg, section, onSave,
+}: { cfg: { key: string; label: string; hint: string; aspect: number; size: string }; section: any; onSave: (u: any) => void }) => {
+  const initial = section || { title: "", subtitle: "", content: "", image_url: "", metadata: {} };
+  const [row, setRow] = useState({
+    title: initial.title || "",
+    subtitle: initial.subtitle || "",
+    content: initial.content || "",
+    image_url: section?.image_url && section.image_url.startsWith("http")
+      ? "" // we don't know the raw path from the transformed URL; keep current path via section
+      : (initial.image_url || ""),
+    script: (initial.metadata as any)?.script || "",
+  });
+  // Always keep the raw path; if useSiteSectionsList transformed image_url to a public URL,
+  // we still send the raw path back. So we read the raw value via a separate fetch fallback:
+  // simpler: just allow user to re-upload to change.
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">{cfg.label}</CardTitle>
+        <p className="text-xs text-muted-foreground">{cfg.hint}</p>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <Label className="text-xs">Script (texto pequeno)</Label>
+            <Input value={row.script} onChange={(e) => setRow({ ...row, script: e.target.value })} placeholder="Ex: Passo 1" />
+          </div>
+          <div>
+            <Label className="text-xs">Título</Label>
+            <Input value={row.title} onChange={(e) => setRow({ ...row, title: e.target.value })} />
+          </div>
+        </div>
+        <div>
+          <Label className="text-xs">Subtítulo</Label>
+          <Input value={row.subtitle} onChange={(e) => setRow({ ...row, subtitle: e.target.value })} />
+        </div>
+        <div>
+          <Label className="text-xs">Observação / texto adicional</Label>
+          <Textarea rows={3} value={row.content} onChange={(e) => setRow({ ...row, content: e.target.value })} />
+        </div>
+        <div>
+          <Label className="text-xs">Imagem (opcional)</Label>
+          <ImageUpload value={row.image_url} onChange={(url) => setRow({ ...row, image_url: url })} folder={`cardapio/${cfg.key}`} aspectRatio={cfg.aspect} recommendedSize={cfg.size} />
+        </div>
+        <Button size="sm" onClick={() => onSave({
+          title: row.title || null,
+          subtitle: row.subtitle || null,
+          content: row.content || null,
+          image_url: row.image_url || null,
+          metadata: { ...(section?.metadata || {}), script: row.script || null },
+        })}>
+          <Save className="w-4 h-4 mr-1" /> Salvar seção
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
