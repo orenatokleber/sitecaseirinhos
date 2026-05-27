@@ -248,13 +248,35 @@ const ImageUpload = ({ value, onChange, folder = "general", className, aspectRat
               {recommendedSize && <span className="font-medium"> Tamanho recomendado: {recommendedSize}</span>}
             </p>
 
+            {allowOrientationChoice && (
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={orientation === "landscape" ? "default" : "outline"}
+                  onClick={() => setOrientation("landscape")}
+                >
+                  Paisagem (16:9)
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={orientation === "portrait" ? "default" : "outline"}
+                  onClick={() => setOrientation("portrait")}
+                >
+                  Retrato (9:16)
+                </Button>
+              </div>
+            )}
+
             {selectedFile && (
               <div className="flex justify-center bg-muted/30 rounded-lg p-4">
                 <ReactCrop
+                  key={effectiveAspect}
                   crop={crop}
                   onChange={(_, percentCrop) => setCrop(percentCrop)}
                   onComplete={(c) => setCompletedCrop(c)}
-                  aspect={aspectRatio}
+                  aspect={effectiveAspect}
                   className="max-h-[50vh]"
                 >
                   <img
