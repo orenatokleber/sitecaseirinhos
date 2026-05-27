@@ -225,20 +225,26 @@ const Cardapio = () => {
               )}
 
               {/* Tabela de preços por tamanho */}
-              <div className="mt-6 rounded-2xl border border-accent/20 bg-card shadow-sm overflow-hidden">
-                <div className="grid grid-cols-4 divide-x divide-border/60">
+              <div className="mt-6 rounded-2xl border border-accent/20 bg-card shadow-sm overflow-x-auto">
+                <div
+                  className="grid divide-x divide-border/60 min-w-full"
+                  style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                >
                   {sizes.map((s) => (
-                    <div key={s.id} className="text-center py-3 bg-accent/[0.04]">
-                      <div className="font-heading text-lg font-bold text-foreground">
+                    <div key={s.id} className="text-center py-3 bg-accent/[0.04] min-w-0">
+                      <div className="font-heading text-base md:text-lg font-bold text-foreground truncate px-1">
                         {s.code}
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="grid grid-cols-4 divide-x divide-border/60 border-t border-border/60">
+                <div
+                  className="grid divide-x divide-border/60 border-t border-border/60 min-w-full"
+                  style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                >
                   {sizes.map((s) => (
-                    <div key={s.id} className="text-center py-3">
-                      <div className="font-body text-sm md:text-base font-semibold text-chocolate">
+                    <div key={s.id} className="text-center py-3 min-w-0">
+                      <div className="font-body text-sm md:text-base font-semibold text-chocolate truncate px-1">
                         {formatPrice(priceOf(cat.id, s.id))}
                       </div>
                     </div>
