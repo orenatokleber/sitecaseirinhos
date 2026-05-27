@@ -84,17 +84,25 @@ const Cardapio = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="font-script text-2xl md:text-3xl text-primary">
-              Nossas delícias
-            </span>
+            {scriptOf("cardapio_hero") && (
+              <span className="font-script text-2xl md:text-3xl text-primary">
+                {scriptOf("cardapio_hero")}
+              </span>
+            )}
             <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mt-2 mb-4">
-              Cardápio de Encomendas
+              {sec("cardapio_hero").title || "Cardápio de Encomendas"}
             </h1>
             <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mb-4" />
-            <p className="text-muted-foreground max-w-lg mx-auto font-body leading-relaxed">
-              Escolha o tamanho do seu bolo, depois o sabor perfeito para a sua
-              celebração.
-            </p>
+            {sec("cardapio_hero").subtitle && (
+              <p className="text-muted-foreground max-w-lg mx-auto font-body leading-relaxed">
+                {sec("cardapio_hero").subtitle}
+              </p>
+            )}
+            {sec("cardapio_hero").image_url && (
+              <div className="mt-8 max-w-3xl mx-auto rounded-2xl overflow-hidden border border-border/60 shadow-sm">
+                <img src={sec("cardapio_hero").image_url} alt={sec("cardapio_hero").title || "Cardápio"} className="w-full h-auto" />
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -103,10 +111,16 @@ const Cardapio = () => {
       <section className="pb-12">
         <div className="container mx-auto px-4 max-w-3xl">
           <SectionTitle
-            script="Passo 1"
-            title="Bolos Decorados"
-            subtitle="com 3 camadas de recheio"
+            script={scriptOf("cardapio_sizes") || "Passo 1"}
+            title={sec("cardapio_sizes").title || "Bolos Decorados"}
+            subtitle={sec("cardapio_sizes").subtitle || "com 3 camadas de recheio"}
           />
+
+          {sec("cardapio_sizes").image_url && (
+            <div className="mt-6 rounded-2xl overflow-hidden border border-border/60">
+              <img src={sec("cardapio_sizes").image_url} alt={sec("cardapio_sizes").title || ""} className="w-full h-auto" loading="lazy" />
+            </div>
+          )}
 
           <div className="space-y-3 mt-8">
             {sizes.map((s, i) => (
@@ -171,13 +185,14 @@ const Cardapio = () => {
             ))}
           </div>
 
-          <p className="text-xs text-muted-foreground mt-6 leading-relaxed">
-            *Todos os bolos têm cerca de 10cm de altura · os pesos podem ter
-            pequenas variações · todos são decorados com buttercream (creme
-            caseiro de manteiga saborizado com baunilha).
-          </p>
+          {sec("cardapio_sizes").content && (
+            <p className="text-xs text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
+              {sec("cardapio_sizes").content}
+            </p>
+          )}
         </div>
       </section>
+
 
       {/* ─── CATEGORIAS DE SABORES (CLASSE 1, CLASSE 2, ...) ─── */}
       {standardCategories.map((cat, idx) => {
