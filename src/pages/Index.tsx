@@ -65,7 +65,7 @@ const Index = () => {
   };
 
   const FIXED_SECTIONS = ['hero', 'about_preview', 'products', 'testimonials', 'cta'];
-  const customSections = sectionsList?.filter(s => !FIXED_SECTIONS.includes(s.section_key) && (s.metadata as any)?.is_visible !== false) || [];
+
 
   return (
     <main className="overflow-hidden">
