@@ -540,6 +540,9 @@ const Cardapio = () => {
                 ))}
               </motion.div>
             </div>
+              );
+            })()}
+
 
 
             {sec("cardapio_rectangular").content && (
