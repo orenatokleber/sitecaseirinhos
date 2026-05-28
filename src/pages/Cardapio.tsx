@@ -271,7 +271,8 @@ const Cardapio = () => {
       {standardCategories.map((cat, idx) => {
         const catFlavors = flavorsByCategory[cat.id] || [];
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : null;
-        const imageOnRight = idx % 2 === 1;
+        // continua a alternância iniciada pela seção de tamanhos (idx 0 = imagem à esquerda)
+        const imageOnRight = (idx + 1) % 2 === 1;
         return (
           <section key={cat.id} className="pb-12">
             <div className="container mx-auto px-4 max-w-6xl">
@@ -280,7 +281,8 @@ const Cardapio = () => {
                 subtitle={cat.description || undefined}
               />
 
-              <div className={`grid grid-cols-1 ${catImg ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-start mt-4`}>
+              <div className={`grid grid-cols-1 ${catImg ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-center mt-4`}>
+
                 {catImg && (
                   <motion.div
                     initial={{ opacity: 0, x: imageOnRight ? 30 : -30 }}
