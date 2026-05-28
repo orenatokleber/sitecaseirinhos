@@ -65,7 +65,7 @@ const Index = () => {
   };
 
   const FIXED_SECTIONS = ['hero', 'about_preview', 'products', 'testimonials', 'cta'];
-  const customSections = sectionsList?.filter(s => !FIXED_SECTIONS.includes(s.section_key) && (s.metadata as any)?.is_visible !== false) || [];
+
 
   return (
     <main className="overflow-hidden">
@@ -286,131 +286,7 @@ const Index = () => {
       </section>
       )}
 
-      {/* Custom Sections */}
-      {customSections.map((section, i) => {
-        const colors = (section.metadata as any)?.colors || {};
-        const layout = (section.metadata as any)?.layout || "text-centered";
 
-        if (layout === "hero-banner") {
-          return (
-            <motion.section
-              key={section.section_key}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="relative min-h-[60vh] flex items-center justify-center overflow-hidden"
-            >
-              {section.image_url && (
-                <img src={section.image_url} alt={section.title || ""} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-              )}
-              <div className="absolute inset-0" style={{ backgroundColor: colors.overlay_color ? `${colors.overlay_color}99` : 'rgba(0,0,0,0.5)' }} />
-              <div className="relative z-10 text-center px-4 max-w-3xl">
-                {section.title && <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4" style={{ color: colors.title_color || '#ffffff' }}>{section.title}</h2>}
-                {section.subtitle && <p className="font-script text-2xl md:text-3xl mb-4" style={{ color: colors.title_color || '#ffffff' }}>{section.subtitle}</p>}
-                {section.content && <p className="text-lg mb-8" style={{ color: colors.text_color || '#ffffffcc' }}>{section.content}</p>}
-                {section.cta_text && section.cta_link && (
-                  <Link to={section.cta_link} className="inline-flex items-center justify-center px-8 py-3 rounded-full font-body text-sm font-semibold hover:opacity-90 transition-opacity" style={{ backgroundColor: colors.accent_color || 'hsl(var(--primary))', color: '#ffffff' }}>
-                    {section.cta_text}
-                  </Link>
-                )}
-              </div>
-            </motion.section>
-          );
-        }
-
-        if (layout === "image-left" || layout === "image-right") {
-          return (
-            <motion.section
-              key={section.section_key}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className={`py-20 ${i % 2 === 0 ? '' : 'bg-secondary'}`}
-              style={{ backgroundColor: colors.bg_color || undefined }}
-            >
-              <div className={`container mx-auto px-4 flex flex-col ${layout === "image-left" ? "md:flex-row" : "md:flex-row-reverse"} gap-12 items-center max-w-5xl`}>
-                {section.image_url && (
-                  <div className="w-full md:w-1/2 rounded-3xl overflow-hidden">
-                    <img src={section.image_url} alt={section.title || ""} className="w-full h-auto object-cover" loading="lazy" />
-                  </div>
-                )}
-                <div className={`w-full ${section.image_url ? 'md:w-1/2' : ''}`}>
-                  {section.title && <h2 className="font-heading text-2xl md:text-3xl font-bold mb-4" style={{ color: colors.title_color || undefined }}>{section.title}</h2>}
-                  {section.subtitle && <p className="font-script text-xl mb-2 text-primary">{section.subtitle}</p>}
-                  {section.content && <p className="leading-relaxed mb-6 text-muted-foreground" style={{ color: colors.text_color || undefined }}>{section.content}</p>}
-                  {section.cta_text && section.cta_link && (
-                    <Link to={section.cta_link} className="inline-flex items-center justify-center px-8 py-3 rounded-full font-body text-sm font-semibold hover:opacity-90 transition-opacity bg-primary text-primary-foreground" style={{ backgroundColor: colors.accent_color || undefined }}>
-                      {section.cta_text}
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </motion.section>
-          );
-        }
-
-        if (layout === "product-grid") {
-          const items = section.content?.split('\n').filter(Boolean) || [];
-          return (
-            <motion.section
-              key={section.section_key}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className={`py-20 ${i % 2 === 0 ? '' : 'bg-secondary'}`}
-              style={{ backgroundColor: colors.bg_color || undefined }}
-            >
-              <div className="container mx-auto px-4">
-                {section.title && <SectionTitle script={(section.metadata as any)?.display_name || ""} title={section.title} subtitle={section.subtitle || undefined} />}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                  {items.map((item, idx) => (
-                    <div key={idx} className="bg-card rounded-2xl p-6 text-center shadow-sm border border-border">
-                      <p style={{ color: colors.text_color || undefined }}>{item}</p>
-                    </div>
-                  ))}
-                </div>
-                {section.cta_text && section.cta_link && (
-                  <div className="text-center mt-10">
-                    <Link to={section.cta_link} className="inline-flex items-center justify-center px-8 py-3 rounded-full font-body text-sm font-semibold hover:opacity-90 transition-opacity bg-primary text-primary-foreground" style={{ backgroundColor: colors.accent_color || undefined }}>
-                      {section.cta_text}
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </motion.section>
-          );
-        }
-
-        return (
-          <motion.section
-            key={section.section_key}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className={`py-20 ${i % 2 === 0 ? '' : 'bg-secondary'}`}
-            style={{ backgroundColor: colors.bg_color || undefined }}
-          >
-            <div className="container mx-auto px-4 text-center max-w-3xl">
-              {section.image_url && (
-                <div className="mb-8 max-w-md mx-auto rounded-3xl overflow-hidden">
-                  <img src={section.image_url} alt={section.title || ""} className="w-full h-auto object-cover" loading="lazy" />
-                </div>
-              )}
-              {section.title && <SectionTitle script={(section.metadata as any)?.display_name || ""} title={section.title} subtitle={section.subtitle || undefined} />}
-              {section.content && <p className="leading-relaxed mb-8 text-muted-foreground" style={{ color: colors.text_color || undefined }}>{section.content}</p>}
-              {section.cta_text && section.cta_link && (
-                <Link to={section.cta_link} className="inline-flex items-center justify-center px-8 py-3 rounded-full font-body text-sm font-semibold hover:opacity-90 transition-opacity bg-primary text-primary-foreground" style={{ backgroundColor: colors.accent_color || undefined }}>
-                  {section.cta_text}
-                </Link>
-              )}
-            </div>
-          </motion.section>
-        );
-      })}
 
       {isSectionVisible('cta') && (
       <div className="relative">
