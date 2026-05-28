@@ -180,6 +180,7 @@ const Cardapio = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7 }}
+                className="md:order-1 flex justify-center"
               >
                 <SectionImage src={sec("cardapio_sizes").image_url} alt={sec("cardapio_sizes").title || ""} />
               </motion.div>
@@ -190,7 +191,8 @@ const Cardapio = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="space-y-3"
+              className="space-y-3 md:order-2"
+
             >
               {sizes.map((s, i) => (
                 <motion.div
