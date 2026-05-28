@@ -386,7 +386,8 @@ const Cardapio = () => {
       {/* ─── BOLOS CORAÇÃO (ADDON) ─── */}
       {addonCategories.map((cat, idx) => {
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : (sec("cardapio_addons").image_url || null);
-        const imageOnRight = idx % 2 === 1;
+        const imageOnRight = (idx + 1 + standardCategories.length) % 2 === 1;
+
         return (
         <section key={cat.id} className="pb-12">
           <div className="container mx-auto px-4 max-w-6xl">
