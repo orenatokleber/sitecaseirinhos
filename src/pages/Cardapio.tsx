@@ -289,7 +289,8 @@ const Cardapio = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.7 }}
-                    className={imageOnRight ? "md:order-2" : "md:order-1"}
+                    className={`${imageOnRight ? "md:order-2" : "md:order-1"} flex justify-center`}
+
                   >
                     <SectionImage src={catImg} alt={cat.name} sticky />
                   </motion.div>
