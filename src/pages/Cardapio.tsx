@@ -180,6 +180,7 @@ const Cardapio = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7 }}
+                className="md:order-1 flex justify-center"
               >
                 <SectionImage src={sec("cardapio_sizes").image_url} alt={sec("cardapio_sizes").title || ""} />
               </motion.div>
@@ -190,7 +191,8 @@ const Cardapio = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="space-y-3"
+              className="space-y-3 md:order-2"
+
             >
               {sizes.map((s, i) => (
                 <motion.div
@@ -269,7 +271,8 @@ const Cardapio = () => {
       {standardCategories.map((cat, idx) => {
         const catFlavors = flavorsByCategory[cat.id] || [];
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : null;
-        const imageOnRight = idx % 2 === 1;
+        // continua a alternância iniciada pela seção de tamanhos (idx 0 = imagem à esquerda)
+        const imageOnRight = (idx + 1) % 2 === 1;
         return (
           <section key={cat.id} className="pb-12">
             <div className="container mx-auto px-4 max-w-6xl">
@@ -278,14 +281,16 @@ const Cardapio = () => {
                 subtitle={cat.description || undefined}
               />
 
-              <div className={`grid grid-cols-1 ${catImg ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-start mt-4`}>
+              <div className={`grid grid-cols-1 ${catImg ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-center mt-4`}>
+
                 {catImg && (
                   <motion.div
                     initial={{ opacity: 0, x: imageOnRight ? 30 : -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.7 }}
-                    className={imageOnRight ? "md:order-2" : "md:order-1"}
+                    className={`${imageOnRight ? "md:order-2" : "md:order-1"} flex justify-center`}
+
                   >
                     <SectionImage src={catImg} alt={cat.name} sticky />
                   </motion.div>
@@ -381,7 +386,8 @@ const Cardapio = () => {
       {/* ─── BOLOS CORAÇÃO (ADDON) ─── */}
       {addonCategories.map((cat, idx) => {
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : (sec("cardapio_addons").image_url || null);
-        const imageOnRight = idx % 2 === 1;
+        const imageOnRight = (idx + 1 + standardCategories.length) % 2 === 1;
+
         return (
         <section key={cat.id} className="pb-12">
           <div className="container mx-auto px-4 max-w-6xl">
@@ -398,7 +404,7 @@ const Cardapio = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.7 }}
-                  className={imageOnRight ? "md:order-2" : "md:order-1"}
+                  className={`${imageOnRight ? "md:order-2" : "md:order-1"} flex justify-center`}
                 >
                   <SectionImage src={catImg} alt={cat.name} />
                 </motion.div>
@@ -466,24 +472,31 @@ const Cardapio = () => {
               />
             )}
 
-            <div className={`grid grid-cols-1 ${sec("cardapio_rectangular").image_url ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-start mt-4`}>
-              {sec("cardapio_rectangular").image_url && (
+            {(() => {
+              const rectIdx = 1 + standardCategories.length + addonCategories.length;
+              const rectImageOnRight = rectIdx % 2 === 1;
+              const hasImg = !!sec("cardapio_rectangular").image_url;
+              return (
+            <div className={`grid grid-cols-1 ${hasImg ? "md:grid-cols-2" : ""} gap-10 md:gap-12 items-center mt-4`}>
+              {hasImg && (
                 <motion.div
-                  initial={{ opacity: 0, x: -30 }}
+                  initial={{ opacity: 0, x: rectImageOnRight ? 30 : -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.7 }}
+                  className={`${rectImageOnRight ? "md:order-2" : "md:order-1"} flex justify-center`}
                 >
                   <SectionImage src={sec("cardapio_rectangular").image_url} alt={sec("cardapio_rectangular").title || ""} sticky />
                 </motion.div>
               )}
 
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
+                initial={{ opacity: 0, x: rectImageOnRight ? -30 : 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7 }}
-                className="space-y-6"
+                className={`space-y-6 ${hasImg ? (rectImageOnRight ? "md:order-1" : "md:order-2") : ""}`}
+
               >
                 {rectangular.map((r) => (
                   <div
@@ -527,6 +540,9 @@ const Cardapio = () => {
                 ))}
               </motion.div>
             </div>
+              );
+            })()}
+
 
 
             {sec("cardapio_rectangular").content && (
