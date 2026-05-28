@@ -193,76 +193,11 @@ const AdminSections = () => {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="font-heading text-3xl font-bold text-foreground">Seções do Site</h1>
-          <p className="text-muted-foreground">Edite textos, imagens e cores das seções</p>
-        </div>
-        <Dialog open={newSectionOpen} onOpenChange={setNewSectionOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Seção
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Criar Nova Seção</DialogTitle>
-              <DialogDescription>Adicione uma nova seção personalizada ao site</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label>Nome da Seção</Label>
-                <Input
-                  value={newSection.name}
-                  onChange={(e) => setNewSection({ ...newSection, name: e.target.value })}
-                  placeholder="Ex: Promoções, Parceiros, FAQ..."
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Título</Label>
-                <Input
-                  value={newSection.title}
-                  onChange={(e) => setNewSection({ ...newSection, title: e.target.value })}
-                  placeholder="Título que aparecerá na seção"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Conteúdo</Label>
-                <Textarea
-                  value={newSection.content}
-                  onChange={(e) => setNewSection({ ...newSection, content: e.target.value })}
-                  placeholder="Texto da seção..."
-                  rows={3}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Layout da Seção</Label>
-                <Select value={newSection.layout} onValueChange={(v) => setNewSection({ ...newSection, layout: v })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="text-centered">Texto Centralizado</SelectItem>
-                    <SelectItem value="hero-banner">Banner (estilo Hero)</SelectItem>
-                    <SelectItem value="image-left">Imagem à Esquerda</SelectItem>
-                    <SelectItem value="image-right">Imagem à Direita</SelectItem>
-                    <SelectItem value="product-grid">Grade de Cards</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground">Define como a seção será exibida no site</p>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setNewSectionOpen(false)}>Cancelar</Button>
-              <Button onClick={handleCreateSection} disabled={!newSection.name.trim() || createSection.isPending}>
-                {createSection.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
-                Criar Seção
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+      <div className="mb-8">
+        <h1 className="font-heading text-3xl font-bold text-foreground">Seções do Site</h1>
+        <p className="text-muted-foreground">Edite textos, imagens e cores das seções</p>
       </div>
+
 
       <div className="space-y-6 max-w-2xl">
         {/* Hero Section */}
