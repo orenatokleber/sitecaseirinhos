@@ -1,7 +1,8 @@
 import { Helmet } from "react-helmet-async";
-import { Wrench, Instagram, MessageCircle } from "lucide-react";
+import { Wrench, Instagram, MessageCircle, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { Link } from "react-router-dom";
 
 interface MaintenancePageProps {
   config?: {
