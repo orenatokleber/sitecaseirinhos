@@ -85,6 +85,8 @@ const MaintenancePage = ({ config: configProp }: MaintenancePageProps) => {
               </Link>
             </Button>
           </div>
+
+          {(config.show_whatsapp || config.show_instagram) && (
             <div className="flex items-center justify-center gap-3 pt-4">
               {config.show_whatsapp && whatsappNumber && (
                 <Button
