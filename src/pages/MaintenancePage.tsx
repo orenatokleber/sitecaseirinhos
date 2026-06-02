@@ -1,7 +1,8 @@
 import { Helmet } from "react-helmet-async";
-import { Wrench, Instagram, MessageCircle } from "lucide-react";
+import { Wrench, Instagram, MessageCircle, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from "@/hooks/useSiteContent";
+import { Link } from "react-router-dom";
 
 interface MaintenancePageProps {
   config?: {
@@ -71,6 +72,19 @@ const MaintenancePage = ({ config: configProp }: MaintenancePageProps) => {
               Previsão de retorno: {expectedReturn}
             </p>
           )}
+
+          <div className="pt-2">
+            <Button
+              asChild
+              variant="outline"
+              style={{ borderColor: textColor, color: textColor }}
+            >
+              <Link to="/">
+                <Home size={18} className="mr-2" />
+                Voltar ao início
+              </Link>
+            </Button>
+          </div>
 
           {(config.show_whatsapp || config.show_instagram) && (
             <div className="flex items-center justify-center gap-3 pt-4">
