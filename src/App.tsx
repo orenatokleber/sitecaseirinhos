@@ -35,8 +35,11 @@ import AdminSEO from "./pages/admin/AdminSEO";
 import AdminComments from "./pages/admin/AdminComments";
 import AdminLinks from "./pages/admin/AdminLinks";
 import RedirectPage from "./pages/RedirectPage";
+import MaintenancePage from "./pages/MaintenancePage";
+import AdminMaintenance from "./pages/admin/AdminMaintenance";
 import { HelmetProvider } from "react-helmet-async";
 import { useTrackPageView } from "@/hooks/usePageViews";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 
 const queryClient = new QueryClient();
 
@@ -45,9 +48,16 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const isAdminRoute = location.pathname.startsWith('/painel-admin');
   const hideWhatsApp = location.pathname === '/' || location.pathname.startsWith('/cardapio');
   useTrackPageView();
+  const { data: settings } = useSiteSettings();
 
   if (isAdminRoute) {
     return <>{children}</>;
+  }
+
+  const maintenance = settings?.maintenance;
+  const enabledPaths: string[] = maintenance?.enabled_paths || [];
+  if (enabledPaths.includes(location.pathname)) {
+    return <MaintenancePage />;
   }
 
   return (
@@ -103,6 +113,7 @@ const App = () => (
                 <Route path="seo" element={<AdminSEO />} />
                 <Route path="links" element={<AdminLinks />} />
                 <Route path="config" element={<AdminConfig />} />
+                <Route path="manutencao" element={<AdminMaintenance />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />

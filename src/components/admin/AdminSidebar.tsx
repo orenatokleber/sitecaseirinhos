@@ -13,7 +13,8 @@ import {
   Link as LinkIcon,
   UtensilsCrossed,
   Heart,
-  FileStack
+  FileStack,
+  Wrench
 
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -31,6 +32,7 @@ const menuItems = [
   { icon: MessageSquare, label: "Comentários", path: "/painel-admin/comentarios" },
   { icon: Search, label: "SEO", path: "/painel-admin/seo" },
   { icon: LinkIcon, label: "Links", path: "/painel-admin/links" },
+  { icon: Wrench, label: "Manutenção", path: "/painel-admin/manutencao" },
   { icon: Settings, label: "Configurações", path: "/painel-admin/config" },
 ];
 
