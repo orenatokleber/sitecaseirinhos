@@ -73,7 +73,18 @@ const MaintenancePage = ({ config: configProp }: MaintenancePageProps) => {
             </p>
           )}
 
-          {(config.show_whatsapp || config.show_instagram) && (
+          <div className="pt-2">
+            <Button
+              asChild
+              variant="outline"
+              style={{ borderColor: textColor, color: textColor }}
+            >
+              <Link to="/">
+                <Home size={18} className="mr-2" />
+                Voltar ao início
+              </Link>
+            </Button>
+          </div>
             <div className="flex items-center justify-center gap-3 pt-4">
               {config.show_whatsapp && whatsappNumber && (
                 <Button
