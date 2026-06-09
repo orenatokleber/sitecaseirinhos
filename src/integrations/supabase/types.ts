@@ -106,6 +106,81 @@ export type Database = {
         }
         Relationships: []
       }
+      cake_addon_prices: {
+        Row: {
+          addon_id: string
+          created_at: string
+          id: string
+          price: number
+          size_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          addon_id: string
+          created_at?: string
+          id?: string
+          price: number
+          size_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          addon_id?: string
+          created_at?: string
+          id?: string
+          price?: number
+          size_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cake_addon_prices_addon_id_fkey"
+            columns: ["addon_id"]
+            isOneToOne: false
+            referencedRelation: "cake_addons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cake_addon_prices_size_id_fkey"
+            columns: ["size_id"]
+            isOneToOne: false
+            referencedRelation: "cake_sizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cake_addons: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          pricing_type: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          pricing_type?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          pricing_type?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cake_categories: {
         Row: {
           created_at: string
@@ -644,6 +719,121 @@ export type Database = {
           key?: string
           updated_at?: string
           value?: Json
+        }
+        Relationships: []
+      }
+      sweet_flavors: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+          type_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          type_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+          type_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sweet_flavors_type_id_fkey"
+            columns: ["type_id"]
+            isOneToOne: false
+            referencedRelation: "sweet_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sweet_packages: {
+        Row: {
+          created_at: string
+          id: string
+          price: number
+          quantity: number
+          sort_order: number
+          type_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          price: number
+          quantity: number
+          sort_order?: number
+          type_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          price?: number
+          quantity?: number
+          sort_order?: number
+          type_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sweet_packages_type_id_fkey"
+            columns: ["type_id"]
+            isOneToOne: false
+            referencedRelation: "sweet_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sweet_types: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+          weight_g: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+          weight_g?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+          weight_g?: number | null
         }
         Relationships: []
       }
