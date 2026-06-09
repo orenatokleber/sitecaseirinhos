@@ -13,6 +13,11 @@ import {
   useCakeFlavors,
   useCakeRectangular,
   useCakeDecorations,
+  useSweetTypes,
+  useSweetFlavors,
+  useSweetPackages,
+  useCakeAddons,
+  useCakeAddonPrices,
 } from "@/hooks/useCardapio";
 
 
