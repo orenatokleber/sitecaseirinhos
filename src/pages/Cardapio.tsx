@@ -709,6 +709,7 @@ const Cardapio = () => {
       )}
 
       {/* ─── ORDER FORM ─── */}
+      {isVisible("cardapio_order") && (
       <section id="encomenda" className="pb-16">
 
         <div className="container mx-auto px-4 max-w-xl">
