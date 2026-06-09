@@ -520,7 +520,7 @@ export type CakeAddon = {
   id: string;
   name: string;
   description: string | null;
-  pricing_type: "fixed" | "per_size";
+  pricing_type: "fixed" | "from" | "per_size";
   sort_order: number;
   is_active: boolean;
 };
