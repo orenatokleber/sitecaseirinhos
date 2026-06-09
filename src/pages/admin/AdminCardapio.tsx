@@ -78,6 +78,8 @@ const AdminCardapio = () => {
           <TabsTrigger value="categories"><Tag className="w-4 h-4 mr-1" /> Categorias & Preços</TabsTrigger>
           <TabsTrigger value="flavors"><Star className="w-4 h-4 mr-1" /> Sabores</TabsTrigger>
           <TabsTrigger value="rectangular"><Square className="w-4 h-4 mr-1" /> Retangulares</TabsTrigger>
+          <TabsTrigger value="sweets"><Candy className="w-4 h-4 mr-1" /> Doces</TabsTrigger>
+          <TabsTrigger value="addons"><Sparkles className="w-4 h-4 mr-1" /> Adicionais</TabsTrigger>
           <TabsTrigger value="decorations"><ImageIcon className="w-4 h-4 mr-1" /> Decorações</TabsTrigger>
         </TabsList>
 
@@ -86,6 +88,8 @@ const AdminCardapio = () => {
         <TabsContent value="categories" className="mt-6"><CategoriesPanel /></TabsContent>
         <TabsContent value="flavors" className="mt-6"><FlavorsPanel /></TabsContent>
         <TabsContent value="rectangular" className="mt-6"><RectangularPanel /></TabsContent>
+        <TabsContent value="sweets" className="mt-6"><SweetsPanel /></TabsContent>
+        <TabsContent value="addons" className="mt-6"><AddonsPanel /></TabsContent>
         <TabsContent value="decorations" className="mt-6"><DecorationsPanel /></TabsContent>
       </Tabs>
 
