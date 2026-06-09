@@ -366,6 +366,7 @@ export type SweetType = {
   name: string;
   description: string | null;
   weight_g: number | null;
+  image_url: string | null;
   sort_order: number;
   is_active: boolean;
 };
