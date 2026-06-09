@@ -172,8 +172,10 @@ const Cardapio = () => {
           </motion.div>
         </div>
       </section>
+      )}
 
       {/* ─── BOLOS DECORADOS — TAMANHOS ─── */}
+      {isVisible("cardapio_sizes") && (
       <section className="pb-12">
         <div className="container mx-auto px-4 max-w-6xl">
           {sec("cardapio_sizes").title && (
