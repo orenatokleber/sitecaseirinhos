@@ -282,7 +282,7 @@ const Cardapio = () => {
 
 
       {/* ─── CATEGORIAS DE SABORES (CLASSE 1, CLASSE 2, ...) ─── */}
-      {standardCategories.map((cat, idx) => {
+      {isVisible("cardapio_categories") && standardCategories.map((cat, idx) => {
         const catFlavors = flavorsByCategory[cat.id] || [];
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : null;
         // continua a alternância iniciada pela seção de tamanhos (idx 0 = imagem à esquerda)
