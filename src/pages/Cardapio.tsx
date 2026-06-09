@@ -275,12 +275,11 @@ const Cardapio = () => {
           )}
         </div>
       </section>
-      )}
+  ) : null;
 
-
-
-      {/* ─── CATEGORIAS DE SABORES (CLASSE 1, CLASSE 2, ...) ─── */}
-      {isVisible("cardapio_categories") && standardCategories.map((cat, idx) => {
+  const categoriesEl = isVisible("cardapio_categories") ? (
+    <>
+      {standardCategories.map((cat, idx) => {
         const catFlavors = flavorsByCategory[cat.id] || [];
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : null;
         // continua a alternância iniciada pela seção de tamanhos (idx 0 = imagem à esquerda)
