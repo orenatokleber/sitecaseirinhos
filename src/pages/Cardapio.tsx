@@ -112,10 +112,9 @@ const Cardapio = () => {
     );
   };
 
-  return (
-    <main className="pt-24 pb-8">
-      {/* ─── HERO ─── */}
-      {isVisible("cardapio_hero") && (
+  const orderedKeys = getOrderedSectionKeys(sections as any);
+
+  const heroEl = isVisible("cardapio_hero") ? (
       <section className="py-14 md:py-20 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-3xl" />
