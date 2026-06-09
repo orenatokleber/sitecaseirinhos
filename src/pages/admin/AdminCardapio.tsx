@@ -14,9 +14,10 @@ import {
 } from "@/components/ui/select";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Plus, Trash2, Cake, Tag, Star, Square, Image as ImageIcon, Save, FileText, Candy, Sparkles } from "lucide-react";
+import { Loader2, Plus, Trash2, Cake, Tag, Star, Square, Image as ImageIcon, Save, FileText, Candy, Sparkles, ArrowUp, ArrowDown, GripVertical } from "lucide-react";
 import { useSiteSectionsList, useUpdateSiteSection, useCreateSiteSection, useSiteSettings, useUpdateSiteSetting } from "@/hooks/useSiteContent";
 import { toast } from "sonner";
+import { CARDAPIO_SECTIONS, getOrderedSectionKeys } from "@/lib/cardapioSections";
 
 import {
   useCakeSizes,
