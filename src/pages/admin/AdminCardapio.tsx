@@ -578,3 +578,251 @@ const SectionEditor = ({
 };
 
 
+
+/* ─── SWEETS PANEL ─── */
+const SweetsPanel = () => {
+  const { data: types = [], isLoading } = useSweetTypes();
+  const { data: flavors = [] } = useSweetFlavors();
+  const { data: packages = [] } = useSweetPackages();
+  const upsertType = useUpsertSweetType();
+  const delType = useDeleteSweetType();
+  const upsertFlavor = useUpsertSweetFlavor();
+  const delFlavor = useDeleteSweetFlavor();
+  const upsertPkg = useUpsertSweetPackage();
+  const delPkg = useDeleteSweetPackage();
+
+  const [newType, setNewType] = useState({ slug: "", name: "", description: "", weight_g: 10, sort_order: 0, is_active: true });
+  const [newFlavorByType, setNewFlavorByType] = useState<Record<string, string>>({});
+  const [newPkgByType, setNewPkgByType] = useState<Record<string, { quantity: number; price: number }>>({});
+
+  if (isLoading) return <Loader2 className="animate-spin" />;
+
+  return (
+    <div className="space-y-6">
+      {types.map((t) => (
+        <Card key={t.id}>
+          <CardHeader>
+            <SweetTypeRow t={t} onSave={(r) => upsertType.mutate(r)} onDelete={() => delType.mutate(t.id)} />
+          </CardHeader>
+          <CardContent className="space-y-5">
+            {/* Pacotes */}
+            <div>
+              <Label className="text-xs uppercase font-semibold">Pacotes (preços por quantidade)</Label>
+              <div className="space-y-2 mt-2">
+                {packages.filter((p) => p.type_id === t.id).map((p) => (
+                  <SweetPackageRow key={p.id} pkg={p} onSave={(r) => upsertPkg.mutate(r)} onDelete={() => delPkg.mutate(p.id)} />
+                ))}
+                <div className="grid grid-cols-3 gap-2 items-end">
+                  <div><Label className="text-xs">Qtd.</Label><Input type="number" value={newPkgByType[t.id]?.quantity ?? ""} onChange={(e) => setNewPkgByType({ ...newPkgByType, [t.id]: { quantity: parseInt(e.target.value) || 0, price: newPkgByType[t.id]?.price || 0 } })} /></div>
+                  <div><Label className="text-xs">Preço (R$)</Label><Input type="number" step="0.01" value={newPkgByType[t.id]?.price ?? ""} onChange={(e) => setNewPkgByType({ ...newPkgByType, [t.id]: { quantity: newPkgByType[t.id]?.quantity || 0, price: parseFloat(e.target.value) || 0 } })} /></div>
+                  <Button size="sm" disabled={!newPkgByType[t.id]?.quantity} onClick={() => { upsertPkg.mutate({ type_id: t.id, quantity: newPkgByType[t.id].quantity, price: newPkgByType[t.id].price, sort_order: 0 }); setNewPkgByType({ ...newPkgByType, [t.id]: { quantity: 0, price: 0 } }); }}><Plus className="w-4 h-4 mr-1" /> Adicionar pacote</Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Sabores */}
+            <div>
+              <Label className="text-xs uppercase font-semibold">Sabores</Label>
+              <div className="space-y-2 mt-2">
+                {flavors.filter((f) => f.type_id === t.id).map((f) => (
+                  <SweetFlavorRow key={f.id} flavor={f} onSave={(r) => upsertFlavor.mutate(r)} onDelete={() => delFlavor.mutate(f.id)} />
+                ))}
+                <div className="flex gap-2">
+                  <Input placeholder="Novo sabor" value={newFlavorByType[t.id] || ""} onChange={(e) => setNewFlavorByType({ ...newFlavorByType, [t.id]: e.target.value })} />
+                  <Button size="sm" disabled={!newFlavorByType[t.id]} onClick={() => { upsertFlavor.mutate({ type_id: t.id, name: newFlavorByType[t.id], sort_order: flavors.filter((f) => f.type_id === t.id).length + 1, is_active: true }); setNewFlavorByType({ ...newFlavorByType, [t.id]: "" }); }}><Plus className="w-4 h-4" /></Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+
+      <Card>
+        <CardHeader><CardTitle className="text-base">Novo tipo de doce</CardTitle></CardHeader>
+        <CardContent className="space-y-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div><Label className="text-xs">Slug</Label><Input value={newType.slug} onChange={(e) => setNewType({ ...newType, slug: e.target.value })} /></div>
+            <div><Label className="text-xs">Nome</Label><Input value={newType.name} onChange={(e) => setNewType({ ...newType, name: e.target.value })} /></div>
+            <div><Label className="text-xs">Peso (g)</Label><Input type="number" value={newType.weight_g} onChange={(e) => setNewType({ ...newType, weight_g: parseFloat(e.target.value) || 0 })} /></div>
+            <div><Label className="text-xs">Ordem</Label><Input type="number" value={newType.sort_order} onChange={(e) => setNewType({ ...newType, sort_order: parseInt(e.target.value) || 0 })} /></div>
+          </div>
+          <Input placeholder="Descrição" value={newType.description} onChange={(e) => setNewType({ ...newType, description: e.target.value })} />
+          <Button size="sm" disabled={!newType.slug || !newType.name} onClick={() => { upsertType.mutate(newType as any); setNewType({ slug: "", name: "", description: "", weight_g: 10, sort_order: 0, is_active: true }); }}><Plus className="w-4 h-4 mr-1" /> Criar</Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const SweetTypeRow = ({ t, onSave, onDelete }: { t: SweetType; onSave: (r: any) => void; onDelete: () => void }) => {
+  const [row, setRow] = useState(t);
+  return (
+    <div className="space-y-2">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 items-end">
+        <div><Label className="text-xs">Nome</Label><Input value={row.name} onChange={(e) => setRow({ ...row, name: e.target.value })} /></div>
+        <div><Label className="text-xs">Slug</Label><Input value={row.slug} onChange={(e) => setRow({ ...row, slug: e.target.value })} /></div>
+        <div><Label className="text-xs">Peso (g)</Label><Input type="number" value={row.weight_g ?? 0} onChange={(e) => setRow({ ...row, weight_g: parseFloat(e.target.value) || 0 })} /></div>
+        <div className="flex items-center gap-2 pb-2"><input type="checkbox" checked={row.is_active} onChange={(e) => setRow({ ...row, is_active: e.target.checked })} /> <Label className="text-xs">Ativo</Label></div>
+        <div className="flex gap-1">
+          <Button size="sm" onClick={() => onSave(row)}><Save className="w-4 h-4" /></Button>
+          <Button size="sm" variant="destructive" onClick={onDelete}><Trash2 className="w-4 h-4" /></Button>
+        </div>
+      </div>
+      <Input placeholder="Descrição" value={row.description || ""} onChange={(e) => setRow({ ...row, description: e.target.value })} />
+    </div>
+  );
+};
+
+const SweetFlavorRow = ({ flavor, onSave, onDelete }: { flavor: SweetFlavor; onSave: (r: any) => void; onDelete: () => void }) => {
+  const [row, setRow] = useState(flavor);
+  return (
+    <div className="flex gap-2 items-center">
+      <Input value={row.name} onChange={(e) => setRow({ ...row, name: e.target.value })} />
+      <Input type="number" className="w-20" value={row.sort_order} onChange={(e) => setRow({ ...row, sort_order: parseInt(e.target.value) || 0 })} />
+      <input type="checkbox" checked={row.is_active} onChange={(e) => setRow({ ...row, is_active: e.target.checked })} />
+      <Button size="sm" onClick={() => onSave(row)}><Save className="w-4 h-4" /></Button>
+      <Button size="sm" variant="destructive" onClick={onDelete}><Trash2 className="w-4 h-4" /></Button>
+    </div>
+  );
+};
+
+const SweetPackageRow = ({ pkg, onSave, onDelete }: { pkg: any; onSave: (r: any) => void; onDelete: () => void }) => {
+  const [row, setRow] = useState(pkg);
+  return (
+    <div className="grid grid-cols-3 gap-2 items-end">
+      <div><Label className="text-xs">Qtd.</Label><Input type="number" value={row.quantity} onChange={(e) => setRow({ ...row, quantity: parseInt(e.target.value) || 0 })} /></div>
+      <div><Label className="text-xs">Preço (R$)</Label><Input type="number" step="0.01" value={row.price} onChange={(e) => setRow({ ...row, price: parseFloat(e.target.value) || 0 })} /></div>
+      <div className="flex gap-1">
+        <Button size="sm" onClick={() => onSave(row)}><Save className="w-4 h-4" /></Button>
+        <Button size="sm" variant="destructive" onClick={onDelete}><Trash2 className="w-4 h-4" /></Button>
+      </div>
+    </div>
+  );
+};
+
+/* ─── ADDONS PANEL ─── */
+const AddonsPanel = () => {
+  const { data: addons = [], isLoading } = useCakeAddons();
+  const { data: sizes = [] } = useCakeSizes();
+  const { data: prices = [] } = useCakeAddonPrices();
+  const upsert = useUpsertCakeAddon();
+  const del = useDeleteCakeAddon();
+  const upsertPrice = useUpsertCakeAddonPrice();
+
+  const [newAddon, setNewAddon] = useState({ name: "", description: "", pricing_type: "fixed" as "fixed" | "per_size", sort_order: 0, is_active: true });
+
+  if (isLoading) return <Loader2 className="animate-spin" />;
+
+  const getPrice = (addonId: string, sizeId: string | null) =>
+    prices.find((p) => p.addon_id === addonId && (sizeId === null ? p.size_id === null : p.size_id === sizeId))?.price ?? 0;
+
+  return (
+    <div className="space-y-4">
+      {addons.map((a) => (
+        <AddonCard
+          key={a.id}
+          addon={a}
+          sizes={sizes}
+          getPrice={getPrice}
+          onSave={(r) => upsert.mutate(r)}
+          onDelete={() => del.mutate(a.id)}
+          onSavePrice={(sizeId, price) => upsertPrice.mutate({ addon_id: a.id, size_id: sizeId, price })}
+        />
+      ))}
+
+      <Card>
+        <CardHeader><CardTitle className="text-base">Novo adicional</CardTitle></CardHeader>
+        <CardContent className="space-y-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div className="md:col-span-2"><Label className="text-xs">Nome</Label><Input value={newAddon.name} onChange={(e) => setNewAddon({ ...newAddon, name: e.target.value })} /></div>
+            <div>
+              <Label className="text-xs">Tipo de preço</Label>
+              <Select value={newAddon.pricing_type} onValueChange={(v) => setNewAddon({ ...newAddon, pricing_type: v as any })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fixed">Fixo</SelectItem>
+                  <SelectItem value="per_size">Por tamanho de bolo</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div><Label className="text-xs">Ordem</Label><Input type="number" value={newAddon.sort_order} onChange={(e) => setNewAddon({ ...newAddon, sort_order: parseInt(e.target.value) || 0 })} /></div>
+          </div>
+          <Input placeholder="Descrição" value={newAddon.description} onChange={(e) => setNewAddon({ ...newAddon, description: e.target.value })} />
+          <Button size="sm" disabled={!newAddon.name} onClick={() => { upsert.mutate(newAddon as any); setNewAddon({ name: "", description: "", pricing_type: "fixed", sort_order: 0, is_active: true }); }}><Plus className="w-4 h-4 mr-1" /> Criar</Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const AddonCard = ({
+  addon, sizes, getPrice, onSave, onDelete, onSavePrice,
+}: {
+  addon: CakeAddon;
+  sizes: any[];
+  getPrice: (addonId: string, sizeId: string | null) => number;
+  onSave: (r: any) => void;
+  onDelete: () => void;
+  onSavePrice: (sizeId: string | null, price: number) => void;
+}) => {
+  const [row, setRow] = useState(addon);
+  const [fixedPrice, setFixedPrice] = useState<number>(getPrice(addon.id, null));
+  const [sizePrices, setSizePrices] = useState<Record<string, number>>(() => {
+    const m: Record<string, number> = {};
+    sizes.forEach((s) => { m[s.id] = getPrice(addon.id, s.id); });
+    return m;
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 items-end">
+          <div className="md:col-span-2"><Label className="text-xs">Nome</Label><Input value={row.name} onChange={(e) => setRow({ ...row, name: e.target.value })} /></div>
+          <div>
+            <Label className="text-xs">Tipo</Label>
+            <Select value={row.pricing_type} onValueChange={(v) => setRow({ ...row, pricing_type: v as any })}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="fixed">Fixo</SelectItem>
+                <SelectItem value="per_size">Por tamanho</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div><Label className="text-xs">Ordem</Label><Input type="number" value={row.sort_order} onChange={(e) => setRow({ ...row, sort_order: parseInt(e.target.value) || 0 })} /></div>
+          <div className="flex gap-1">
+            <Button size="sm" onClick={() => onSave(row)}><Save className="w-4 h-4" /></Button>
+            <Button size="sm" variant="destructive" onClick={onDelete}><Trash2 className="w-4 h-4" /></Button>
+          </div>
+        </div>
+        <Input className="mt-2" placeholder="Descrição" value={row.description || ""} onChange={(e) => setRow({ ...row, description: e.target.value })} />
+        <div className="mt-2 flex items-center gap-2"><input type="checkbox" checked={row.is_active} onChange={(e) => setRow({ ...row, is_active: e.target.checked })} /><Label className="text-xs">Ativo</Label></div>
+      </CardHeader>
+      <CardContent>
+        {row.pricing_type === "fixed" ? (
+          <div className="max-w-xs">
+            <Label className="text-xs">Preço fixo (R$)</Label>
+            <Input type="number" step="0.01" value={fixedPrice} onChange={(e) => setFixedPrice(parseFloat(e.target.value) || 0)} onBlur={() => onSavePrice(null, fixedPrice)} />
+          </div>
+        ) : (
+          <div>
+            <Label className="text-xs uppercase font-semibold">Preço por tamanho</Label>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mt-2">
+              {sizes.map((s) => (
+                <div key={s.id}>
+                  <Label className="text-xs">{s.code}</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={sizePrices[s.id] ?? 0}
+                    onChange={(e) => setSizePrices({ ...sizePrices, [s.id]: parseFloat(e.target.value) || 0 })}
+                    onBlur={() => onSavePrice(s.id, sizePrices[s.id] || 0)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
