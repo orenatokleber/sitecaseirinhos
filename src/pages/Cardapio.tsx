@@ -393,8 +393,11 @@ const Cardapio = () => {
           </section>
         );
       })}
+    </>
+  ) : null;
 
-      {/* ─── BOLOS CORAÇÃO (ADDON) ─── */}
+  const addonsEl = (
+    <>
       {addonCategories.map((cat, idx) => {
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : (sec("cardapio_addons").image_url || null);
         const imageOnRight = (idx + 1 + standardCategories.length) % 2 === 1;
