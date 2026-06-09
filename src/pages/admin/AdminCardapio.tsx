@@ -666,7 +666,7 @@ const SweetsPanel = () => {
 };
 
 const SweetTypeRow = ({ t, onSave, onDelete }: { t: SweetType; onSave: (r: any) => void; onDelete: () => void }) => {
-  const [row, setRow] = useState(t);
+  const [row, setRow] = useState({ ...t, image_url: stripPublicUrl(t.image_url) });
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2 items-end">
@@ -680,6 +680,10 @@ const SweetTypeRow = ({ t, onSave, onDelete }: { t: SweetType; onSave: (r: any) 
         </div>
       </div>
       <Input placeholder="Descrição" value={row.description || ""} onChange={(e) => setRow({ ...row, description: e.target.value })} />
+      <div>
+        <Label className="text-xs">Imagem do docinho (opcional)</Label>
+        <ImageUpload value={row.image_url || ""} onChange={(url) => setRow({ ...row, image_url: url })} folder="cardapio/doces" aspectRatio={1} recommendedSize="800×800px" />
+      </div>
     </div>
   );
 };
