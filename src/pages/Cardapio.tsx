@@ -12,7 +12,7 @@ import {
   useCakePrices,
   useCakeFlavors,
   useCakeRectangular,
-  useCakeDecorations,
+  // useCakeDecorations removed — decorations gallery section eliminated
   useSweetTypes,
   useSweetFlavors,
   useSweetPackages,
