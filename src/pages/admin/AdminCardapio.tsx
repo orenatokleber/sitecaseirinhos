@@ -457,7 +457,6 @@ const CARDAPIO_SECTIONS: Array<{ key: string; label: string; hint: string; aspec
   { key: "cardapio_sizes", label: "Bolos Decorados (Passo 1)", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
   { key: "cardapio_addons", label: "Bolos Coração", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
   { key: "cardapio_rectangular", label: "Bolos Retangulares", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
-  { key: "cardapio_decorations", label: "Decorações", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
   { key: "cardapio_order", label: "Solicite seu orçamento", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
 ];
 
@@ -520,19 +519,29 @@ const SectionEditor = ({
   cfg, section, onSave,
 }: { cfg: { key: string; label: string; hint: string; aspect: number; size: string; simplified?: boolean }; section: any; onSave: (u: any) => void }) => {
   const initial = section || { title: "", subtitle: "", content: "", image_url: "", metadata: {} };
+  const initialVisible = (initial.metadata as any)?.is_visible !== false;
   const [row, setRow] = useState({
     title: initial.title || "",
     subtitle: initial.subtitle || "",
     content: initial.content || "",
     image_url: stripPublicUrl(initial.image_url),
     script: (initial.metadata as any)?.script || "",
+    is_visible: initialVisible,
   });
   const simplified = cfg.simplified;
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">{cfg.label}</CardTitle>
-        <p className="text-xs text-muted-foreground">{cfg.hint}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <CardTitle className="text-base">{cfg.label}</CardTitle>
+            <p className="text-xs text-muted-foreground">{cfg.hint}</p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Label className="text-xs">Visível no site</Label>
+            <Switch checked={row.is_visible} onCheckedChange={(v) => setRow({ ...row, is_visible: v })} />
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         {!simplified && (
@@ -564,9 +573,11 @@ const SectionEditor = ({
           subtitle: row.subtitle || null,
           content: row.content || null,
           image_url: row.image_url || null,
-          metadata: simplified
-            ? (section?.metadata || {})
-            : { ...(section?.metadata || {}), script: row.script || null },
+          metadata: {
+            ...(section?.metadata || {}),
+            is_visible: row.is_visible,
+            ...(simplified ? {} : { script: row.script || null }),
+          },
         })}>
           <Save className="w-4 h-4 mr-1" /> Salvar seção
         </Button>
@@ -655,7 +666,7 @@ const SweetsPanel = () => {
 };
 
 const SweetTypeRow = ({ t, onSave, onDelete }: { t: SweetType; onSave: (r: any) => void; onDelete: () => void }) => {
-  const [row, setRow] = useState(t);
+  const [row, setRow] = useState({ ...t, image_url: stripPublicUrl(t.image_url) });
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2 items-end">
@@ -669,6 +680,10 @@ const SweetTypeRow = ({ t, onSave, onDelete }: { t: SweetType; onSave: (r: any) 
         </div>
       </div>
       <Input placeholder="Descrição" value={row.description || ""} onChange={(e) => setRow({ ...row, description: e.target.value })} />
+      <div>
+        <Label className="text-xs">Imagem do docinho (opcional)</Label>
+        <ImageUpload value={row.image_url || ""} onChange={(url) => setRow({ ...row, image_url: url })} folder="cardapio/doces" aspectRatio={1} recommendedSize="800×800px" />
+      </div>
     </div>
   );
 };
@@ -709,7 +724,7 @@ const AddonsPanel = () => {
   const del = useDeleteCakeAddon();
   const upsertPrice = useUpsertCakeAddonPrice();
 
-  const [newAddon, setNewAddon] = useState({ name: "", description: "", pricing_type: "fixed" as "fixed" | "per_size", sort_order: 0, is_active: true });
+  const [newAddon, setNewAddon] = useState({ name: "", description: "", pricing_type: "fixed" as "fixed" | "from" | "per_size", sort_order: 0, is_active: true });
 
   if (isLoading) return <Loader2 className="animate-spin" />;
 
@@ -740,7 +755,8 @@ const AddonsPanel = () => {
               <Select value={newAddon.pricing_type} onValueChange={(v) => setNewAddon({ ...newAddon, pricing_type: v as any })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="fixed">Fixo</SelectItem>
+                  <SelectItem value="fixed">Preço fixo</SelectItem>
+                  <SelectItem value="from">A partir de</SelectItem>
                   <SelectItem value="per_size">Por tamanho de bolo</SelectItem>
                 </SelectContent>
               </Select>
@@ -783,7 +799,8 @@ const AddonCard = ({
             <Select value={row.pricing_type} onValueChange={(v) => setRow({ ...row, pricing_type: v as any })}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="fixed">Fixo</SelectItem>
+                <SelectItem value="fixed">Preço fixo</SelectItem>
+                <SelectItem value="from">A partir de</SelectItem>
                 <SelectItem value="per_size">Por tamanho</SelectItem>
               </SelectContent>
             </Select>
@@ -798,9 +815,9 @@ const AddonCard = ({
         <div className="mt-2 flex items-center gap-2"><input type="checkbox" checked={row.is_active} onChange={(e) => setRow({ ...row, is_active: e.target.checked })} /><Label className="text-xs">Ativo</Label></div>
       </CardHeader>
       <CardContent>
-        {row.pricing_type === "fixed" ? (
+        {row.pricing_type === "fixed" || row.pricing_type === "from" ? (
           <div className="max-w-xs">
-            <Label className="text-xs">Preço fixo (R$)</Label>
+            <Label className="text-xs">{row.pricing_type === "from" ? "A partir de (R$)" : "Preço fixo (R$)"}</Label>
             <Input type="number" step="0.01" value={fixedPrice} onChange={(e) => setFixedPrice(parseFloat(e.target.value) || 0)} onBlur={() => onSavePrice(null, fixedPrice)} />
           </div>
         ) : (

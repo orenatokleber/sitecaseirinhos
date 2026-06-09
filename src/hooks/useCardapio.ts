@@ -366,6 +366,7 @@ export type SweetType = {
   name: string;
   description: string | null;
   weight_g: number | null;
+  image_url: string | null;
   sort_order: number;
   is_active: boolean;
 };
@@ -393,7 +394,10 @@ export function useSweetTypes(activeOnly = false) {
       if (activeOnly) q = q.eq("is_active", true);
       const { data, error } = await q;
       if (error) throw error;
-      return (data ?? []) as unknown as SweetType[];
+      return ((data ?? []) as unknown as SweetType[]).map((t) => ({
+        ...t,
+        image_url: t.image_url ? getPublicImageUrl(t.image_url) : t.image_url,
+      }));
     },
     ...baseOpts,
   });
@@ -516,7 +520,7 @@ export type CakeAddon = {
   id: string;
   name: string;
   description: string | null;
-  pricing_type: "fixed" | "per_size";
+  pricing_type: "fixed" | "from" | "per_size";
   sort_order: number;
   is_active: boolean;
 };

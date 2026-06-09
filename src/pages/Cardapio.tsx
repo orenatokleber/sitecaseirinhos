@@ -66,6 +66,7 @@ const Cardapio = () => {
     normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
 
   const sec = (key: string) => (sections as any)?.[key] || {};
+  const isVisible = (key: string) => sec(key)?.metadata?.is_visible !== false;
   const scriptOf = (key: string) => sec(key)?.metadata?.script || undefined;
 
   const { data: sizes = [] } = useCakeSizes(true);
@@ -114,6 +115,7 @@ const Cardapio = () => {
   return (
     <main className="pt-24 pb-8">
       {/* ─── HERO ─── */}
+      {isVisible("cardapio_hero") && (
       <section className="py-14 md:py-20 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-3xl" />
@@ -170,8 +172,10 @@ const Cardapio = () => {
           </motion.div>
         </div>
       </section>
+      )}
 
       {/* ─── BOLOS DECORADOS — TAMANHOS ─── */}
+      {isVisible("cardapio_sizes") && (
       <section className="pb-12">
         <div className="container mx-auto px-4 max-w-6xl">
           {sec("cardapio_sizes").title && (
@@ -273,6 +277,7 @@ const Cardapio = () => {
           )}
         </div>
       </section>
+      )}
 
 
 
@@ -470,7 +475,7 @@ const Cardapio = () => {
       })}
 
       {/* ─── BOLOS RETANGULARES (TABELA DETALHADA) ─── */}
-      {rectangular.length > 0 && (
+      {rectangular.length > 0 && isVisible("cardapio_rectangular") && (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-6xl">
             {sec("cardapio_rectangular").title && (
@@ -627,6 +632,11 @@ const Cardapio = () => {
                 const typePackages = sweetPackages.filter((p) => p.type_id === t.id).sort((a, b) => a.quantity - b.quantity);
                 return (
                   <div key={t.id} className="rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden">
+                    {t.image_url && (
+                      <div className="aspect-[4/3] overflow-hidden bg-muted">
+                        <img src={t.image_url} alt={t.name} loading="lazy" className="w-full h-full object-cover" />
+                      </div>
+                    )}
                     <div className="bg-accent/10 px-5 py-4 text-center">
                       <h3 className="font-heading font-bold text-foreground uppercase tracking-wider">{t.name}</h3>
                       {t.weight_g != null && (
@@ -681,6 +691,12 @@ const Cardapio = () => {
                             <span className="font-bold text-chocolate">+ {formatPrice(p.price)}</span>
                           </div>
                         ))
+                      ) : a.pricing_type === "from" ? (
+                        aPrices.filter((p) => p.size_id === null).map((p) => (
+                          <div key={p.id} className="text-sm font-body">
+                            <span className="font-bold text-chocolate">A partir de {formatPrice(p.price)}</span>
+                          </div>
+                        ))
                       ) : (
                         <div className="grid grid-cols-5 gap-1 text-center text-xs">
                           {sizes.map((s) => {
@@ -704,6 +720,7 @@ const Cardapio = () => {
       )}
 
       {/* ─── ORDER FORM ─── */}
+      {isVisible("cardapio_order") && (
       <section id="encomenda" className="pb-16">
 
         <div className="container mx-auto px-4 max-w-xl">
@@ -777,6 +794,7 @@ const Cardapio = () => {
           </form>
         </div>
       </section>
+      )}
 
       {/* Floating CTA */}
       {settings?.cardapio_fab_enabled !== false && (
