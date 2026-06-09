@@ -621,10 +621,9 @@ const Cardapio = () => {
             </div>
           </div>
         </section>
-      )}
+  ) : null;
 
-      {/* ─── ADICIONAIS DE DECORAÇÃO ─── */}
-      {cakeAddons.length > 0 && isVisible("cardapio_decorations") && (
+  const decorationsEl = cakeAddons.length > 0 && isVisible("cardapio_decorations") ? (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-4xl">
             <SectionTitle
