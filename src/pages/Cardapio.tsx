@@ -567,10 +567,9 @@ const Cardapio = () => {
             )}
           </div>
         </section>
-      )}
+  ) : null;
 
-      {/* ─── DOCES ─── */}
-      {sweetTypes.length > 0 && isVisible("cardapio_sweets") && (
+  const sweetsEl = sweetTypes.length > 0 && isVisible("cardapio_sweets") ? (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-5xl">
             <SectionTitle
