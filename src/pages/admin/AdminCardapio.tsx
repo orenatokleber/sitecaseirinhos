@@ -815,9 +815,9 @@ const AddonCard = ({
         <div className="mt-2 flex items-center gap-2"><input type="checkbox" checked={row.is_active} onChange={(e) => setRow({ ...row, is_active: e.target.checked })} /><Label className="text-xs">Ativo</Label></div>
       </CardHeader>
       <CardContent>
-        {row.pricing_type === "fixed" ? (
+        {row.pricing_type === "fixed" || row.pricing_type === "from" ? (
           <div className="max-w-xs">
-            <Label className="text-xs">Preço fixo (R$)</Label>
+            <Label className="text-xs">{row.pricing_type === "from" ? "A partir de (R$)" : "Preço fixo (R$)"}</Label>
             <Input type="number" step="0.01" value={fixedPrice} onChange={(e) => setFixedPrice(parseFloat(e.target.value) || 0)} onBlur={() => onSavePrice(null, fixedPrice)} />
           </div>
         ) : (
