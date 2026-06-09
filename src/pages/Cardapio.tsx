@@ -568,64 +568,15 @@ const Cardapio = () => {
         </section>
       )}
 
-      {/* ─── DECORAÇÕES ─── */}
-      {(decorations.length > 0 || sec("cardapio_decorations").title) && (
-        <section className="pb-16">
-          <div className="container mx-auto px-4 max-w-4xl">
-            {sec("cardapio_decorations").title && (
-              <SectionTitle
-                script={scriptOf("cardapio_decorations")}
-                title={sec("cardapio_decorations").title}
-                subtitle={sec("cardapio_decorations").subtitle || undefined}
-              />
-            )}
-
-
-            {sec("cardapio_decorations").image_url && (
-              <div className="mt-6">
-                {isTransparentImage(sec("cardapio_decorations").image_url) ? (
-                  <img src={sec("cardapio_decorations").image_url} alt={sec("cardapio_decorations").title || ""} className="w-full h-auto max-h-[480px] object-contain mx-auto" loading="lazy" />
-                ) : (
-                  <div className="rounded-2xl overflow-hidden border border-border/60">
-                    <img src={sec("cardapio_decorations").image_url} alt={sec("cardapio_decorations").title || ""} className="w-full h-auto" loading="lazy" />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {decorations.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-8">
-                {decorations.map((d) => (
-                  <motion.div
-                    key={d.id}
-                    whileHover={{ scale: 1.03 }}
-                    className="aspect-square overflow-hidden rounded-xl border border-border/60 bg-card"
-                  >
-                    <img
-                      src={d.image_url}
-                      alt={d.title || "Decoração"}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-                ))}
-              </div>
-            )}
-
-            {sec("cardapio_decorations").content && (
-              <p className="text-sm text-muted-foreground mt-6 leading-relaxed whitespace-pre-line">
-                {sec("cardapio_decorations").content}
-              </p>
-            )}
-          </div>
-        </section>
-      )}
-
       {/* ─── DOCES ─── */}
-      {sweetTypes.length > 0 && (
+      {sweetTypes.length > 0 && isVisible("cardapio_sweets") && (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-5xl">
-            <SectionTitle script="Doçuras" title="Doces para Festas" subtitle="Vendidos em pacotes de 25, 50 ou 100 unidades" />
+            <SectionTitle
+              script={scriptOf("cardapio_sweets") || "Doçuras"}
+              title={sec("cardapio_sweets").title || "Doces para Festas"}
+              subtitle={sec("cardapio_sweets").subtitle || "Vendidos em pacotes de 25, 50 ou 100 unidades"}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
               {sweetTypes.map((t) => {
                 const typeFlavors = sweetFlavors.filter((f) => f.type_id === t.id);
@@ -673,10 +624,14 @@ const Cardapio = () => {
       )}
 
       {/* ─── ADICIONAIS DE DECORAÇÃO ─── */}
-      {cakeAddons.length > 0 && (
+      {cakeAddons.length > 0 && isVisible("cardapio_decorations") && (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-4xl">
-            <SectionTitle script="Toques especiais" title="Adicionais de Decoração" subtitle="Personalize ainda mais o seu bolo" />
+            <SectionTitle
+              script={scriptOf("cardapio_decorations") || "Toques especiais"}
+              title={sec("cardapio_decorations").title || "Decorações"}
+              subtitle={sec("cardapio_decorations").subtitle || "Personalize ainda mais o seu bolo"}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
               {cakeAddons.map((a) => {
                 const aPrices = addonPrices.filter((p) => p.addon_id === a.id);
@@ -718,6 +673,7 @@ const Cardapio = () => {
           </div>
         </section>
       )}
+
 
       {/* ─── ORDER FORM ─── */}
       {isVisible("cardapio_order") && (
