@@ -783,6 +783,7 @@ const Cardapio = () => {
           </form>
         </div>
       </section>
+      )}
 
       {/* Floating CTA */}
       {settings?.cardapio_fab_enabled !== false && (
