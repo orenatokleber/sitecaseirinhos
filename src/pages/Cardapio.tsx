@@ -475,7 +475,7 @@ const Cardapio = () => {
       })}
 
       {/* ─── BOLOS RETANGULARES (TABELA DETALHADA) ─── */}
-      {rectangular.length > 0 && (
+      {rectangular.length > 0 && isVisible("cardapio_rectangular") && (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-6xl">
             {sec("cardapio_rectangular").title && (
