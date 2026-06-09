@@ -457,7 +457,6 @@ const CARDAPIO_SECTIONS: Array<{ key: string; label: string; hint: string; aspec
   { key: "cardapio_sizes", label: "Bolos Decorados (Passo 1)", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
   { key: "cardapio_addons", label: "Bolos Coração", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
   { key: "cardapio_rectangular", label: "Bolos Retangulares", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
-  { key: "cardapio_decorations", label: "Decorações", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
   { key: "cardapio_order", label: "Solicite seu orçamento", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
 ];
 
