@@ -13,6 +13,11 @@ import {
   useCakeFlavors,
   useCakeRectangular,
   useCakeDecorations,
+  useSweetTypes,
+  useSweetFlavors,
+  useSweetPackages,
+  useCakeAddons,
+  useCakeAddonPrices,
 } from "@/hooks/useCardapio";
 
 
@@ -69,7 +74,11 @@ const Cardapio = () => {
   const { data: flavors = [] } = useCakeFlavors(true);
   const { data: rectangular = [] } = useCakeRectangular(true);
   const { data: decorations = [] } = useCakeDecorations(true);
-
+  const { data: sweetTypes = [] } = useSweetTypes(true);
+  const { data: sweetFlavors = [] } = useSweetFlavors(true);
+  const { data: sweetPackages = [] } = useSweetPackages();
+  const { data: cakeAddons = [] } = useCakeAddons(true);
+  const { data: addonPrices = [] } = useCakeAddonPrices();
 
   const [orderForm, setOrderForm] = useState({
     name: "",
@@ -607,8 +616,96 @@ const Cardapio = () => {
         </section>
       )}
 
+      {/* ─── DOCES ─── */}
+      {sweetTypes.length > 0 && (
+        <section className="pb-12">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <SectionTitle script="Doçuras" title="Doces para Festas" subtitle="Vendidos em pacotes de 25, 50 ou 100 unidades" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              {sweetTypes.map((t) => {
+                const typeFlavors = sweetFlavors.filter((f) => f.type_id === t.id);
+                const typePackages = sweetPackages.filter((p) => p.type_id === t.id).sort((a, b) => a.quantity - b.quantity);
+                return (
+                  <div key={t.id} className="rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden">
+                    <div className="bg-accent/10 px-5 py-4 text-center">
+                      <h3 className="font-heading font-bold text-foreground uppercase tracking-wider">{t.name}</h3>
+                      {t.weight_g != null && (
+                        <p className="text-xs text-muted-foreground mt-1 font-body">Aproximadamente {t.weight_g}g por unidade</p>
+                      )}
+                      {t.description && <p className="text-xs text-muted-foreground mt-1 font-body">{t.description}</p>}
+                    </div>
+                    <div className="p-5 space-y-4">
+                      {typePackages.length > 0 && (
+                        <div className="space-y-2">
+                          {typePackages.map((p) => (
+                            <div key={p.id} className="flex justify-between text-sm font-body border-b border-border/40 pb-2 last:border-0">
+                              <span>Pacote com {p.quantity} unidades</span>
+                              <span className="font-bold text-chocolate">{formatPrice(p.price)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {typeFlavors.length > 0 && (
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Sabores</p>
+                          <ul className="grid grid-cols-1 gap-1 text-sm font-body text-foreground/80">
+                            {typeFlavors.map((f) => <li key={f.id} className="flex"><span className="text-accent mr-2">•</span>{f.name}</li>)}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ─── ADICIONAIS DE DECORAÇÃO ─── */}
+      {cakeAddons.length > 0 && (
+        <section className="pb-12">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <SectionTitle script="Toques especiais" title="Adicionais de Decoração" subtitle="Personalize ainda mais o seu bolo" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+              {cakeAddons.map((a) => {
+                const aPrices = addonPrices.filter((p) => p.addon_id === a.id);
+                return (
+                  <div key={a.id} className="rounded-2xl bg-card border border-border/60 shadow-sm p-5">
+                    <h3 className="font-heading font-bold text-foreground uppercase tracking-wider text-sm">{a.name}</h3>
+                    {a.description && <p className="text-xs text-muted-foreground mt-1 font-body">{a.description}</p>}
+                    <div className="mt-3 space-y-1">
+                      {a.pricing_type === "fixed" ? (
+                        aPrices.filter((p) => p.size_id === null).map((p) => (
+                          <div key={p.id} className="text-sm font-body">
+                            <span className="font-bold text-chocolate">+ {formatPrice(p.price)}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="grid grid-cols-5 gap-1 text-center text-xs">
+                          {sizes.map((s) => {
+                            const p = aPrices.find((x) => x.size_id === s.id);
+                            return (
+                              <div key={s.id} className="rounded bg-accent/5 py-2 px-1">
+                                <div className="font-semibold">{s.code}</div>
+                                <div className="text-chocolate font-bold">{p ? `+${formatPrice(p.price)}` : "—"}</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ─── ORDER FORM ─── */}
       <section id="encomenda" className="pb-16">
+
         <div className="container mx-auto px-4 max-w-xl">
           {sec("cardapio_order").title && (
             <SectionTitle
