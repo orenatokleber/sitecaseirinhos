@@ -66,6 +66,7 @@ const Cardapio = () => {
     normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
 
   const sec = (key: string) => (sections as any)?.[key] || {};
+  const isVisible = (key: string) => sec(key)?.metadata?.is_visible !== false;
   const scriptOf = (key: string) => sec(key)?.metadata?.script || undefined;
 
   const { data: sizes = [] } = useCakeSizes(true);
