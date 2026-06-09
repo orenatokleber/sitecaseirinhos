@@ -74,9 +74,12 @@ const Cardapio = () => {
   const { data: flavors = [] } = useCakeFlavors(true);
   const { data: rectangular = [] } = useCakeRectangular(true);
   const { data: decorations = [] } = useCakeDecorations(true);
+  const { data: sweetTypes = [] } = useSweetTypes(true);
+  const { data: sweetFlavors = [] } = useSweetFlavors(true);
+  const { data: sweetPackages = [] } = useSweetPackages();
+  const { data: cakeAddons = [] } = useCakeAddons(true);
+  const { data: addonPrices = [] } = useCakeAddonPrices();
 
-
-  const [orderForm, setOrderForm] = useState({
     name: "",
     phone: "",
     event: "",
