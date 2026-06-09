@@ -632,6 +632,11 @@ const Cardapio = () => {
                 const typePackages = sweetPackages.filter((p) => p.type_id === t.id).sort((a, b) => a.quantity - b.quantity);
                 return (
                   <div key={t.id} className="rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden">
+                    {t.image_url && (
+                      <div className="aspect-[4/3] overflow-hidden bg-muted">
+                        <img src={t.image_url} alt={t.name} loading="lazy" className="w-full h-full object-cover" />
+                      </div>
+                    )}
                     <div className="bg-accent/10 px-5 py-4 text-center">
                       <h3 className="font-heading font-bold text-foreground uppercase tracking-wider">{t.name}</h3>
                       {t.weight_g != null && (
