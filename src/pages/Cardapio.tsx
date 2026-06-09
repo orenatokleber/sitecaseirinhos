@@ -80,6 +80,7 @@ const Cardapio = () => {
   const { data: cakeAddons = [] } = useCakeAddons(true);
   const { data: addonPrices = [] } = useCakeAddonPrices();
 
+  const [orderForm, setOrderForm] = useState({
     name: "",
     phone: "",
     event: "",
