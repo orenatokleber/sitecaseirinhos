@@ -394,7 +394,10 @@ export function useSweetTypes(activeOnly = false) {
       if (activeOnly) q = q.eq("is_active", true);
       const { data, error } = await q;
       if (error) throw error;
-      return (data ?? []) as unknown as SweetType[];
+      return ((data ?? []) as unknown as SweetType[]).map((t) => ({
+        ...t,
+        image_url: t.image_url ? getPublicImageUrl(t.image_url) : t.image_url,
+      }));
     },
     ...baseOpts,
   });
