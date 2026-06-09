@@ -14,9 +14,10 @@ import {
 } from "@/components/ui/select";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Plus, Trash2, Cake, Tag, Star, Square, Image as ImageIcon, Save, FileText, Candy, Sparkles } from "lucide-react";
+import { Loader2, Plus, Trash2, Cake, Tag, Star, Square, Image as ImageIcon, Save, FileText, Candy, Sparkles, ArrowUp, ArrowDown, GripVertical } from "lucide-react";
 import { useSiteSectionsList, useUpdateSiteSection, useCreateSiteSection, useSiteSettings, useUpdateSiteSetting } from "@/hooks/useSiteContent";
 import { toast } from "sonner";
+import { CARDAPIO_SECTIONS, getOrderedSectionKeys } from "@/lib/cardapioSections";
 
 import {
   useCakeSizes,
@@ -452,16 +453,7 @@ const DecorationsPanel = () => {
 export default AdminCardapio;
 
 /* ─── CONTENT (títulos / subtítulos / observações / imagens) ─── */
-const CARDAPIO_SECTIONS: Array<{ key: string; label: string; hint: string; aspect: number; size: string; simplified?: boolean }> = [
-  { key: "cardapio_hero", label: "Hero (topo da página)", hint: "Título principal, subtítulo, script, observação e imagem", aspect: 16 / 9, size: "1600×900px" },
-  { key: "cardapio_sizes", label: "Bolos Decorados (Passo 1)", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
-  { key: "cardapio_categories", label: "Categorias de Sabores (Classe 1, 2...)", hint: "Visibilidade da seção de sabores por categoria", aspect: 16 / 9, size: "1280×720px", simplified: true },
-  { key: "cardapio_addons", label: "Bolos Coração", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
-  { key: "cardapio_rectangular", label: "Bolos Retangulares", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
-  { key: "cardapio_sweets", label: "Doces para Festas", hint: "Título, subtítulo e visibilidade da seção de doces", aspect: 16 / 9, size: "1280×720px", simplified: true },
-  { key: "cardapio_decorations", label: "Decorações (Adicionais)", hint: "Título e subtítulo da seção de adicionais de decoração", aspect: 16 / 9, size: "1280×720px", simplified: true },
-  { key: "cardapio_order", label: "Solicite seu orçamento", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
-];
+/* CARDAPIO_SECTIONS moved to src/lib/cardapioSections.ts */
 
 const ContentPanel = () => {
   const { data: sections = [], isLoading } = useSiteSectionsList();
@@ -477,6 +469,28 @@ const ContentPanel = () => {
   const byKey: Record<string, any> = {};
   sections.forEach((s: any) => { byKey[s.section_key] = s; });
 
+  const orderedKeys = getOrderedSectionKeys(byKey);
+  const cfgByKey: Record<string, typeof CARDAPIO_SECTIONS[number]> = {};
+  CARDAPIO_SECTIONS.forEach((c) => { cfgByKey[c.key] = c; });
+
+  const persistOrder = (keys: string[]) => {
+    keys.forEach((k, idx) => {
+      const sec = byKey[k];
+      const meta = { ...(sec?.metadata || {}), position: idx };
+      if (sec) update.mutate({ sectionKey: k, updates: { metadata: meta } });
+      else create.mutate({ section_key: k, metadata: meta } as any);
+    });
+  };
+
+  const move = (key: string, dir: -1 | 1) => {
+    const idx = orderedKeys.indexOf(key);
+    const target = idx + dir;
+    if (idx < 0 || target < 0 || target >= orderedKeys.length) return;
+    const next = [...orderedKeys];
+    [next[idx], next[target]] = [next[target], next[idx]];
+    persistOrder(next);
+  };
+
   return (
     <div className="space-y-4">
       <Card>
@@ -491,11 +505,46 @@ const ContentPanel = () => {
           />
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Ordem das seções no cardápio</CardTitle>
+          <p className="text-xs text-muted-foreground">Use as setas para reposicionar. Seções ocultas mantêm a posição mas não aparecem no site.</p>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {orderedKeys.map((k, idx) => {
+            const cfg = cfgByKey[k];
+            const sec = byKey[k];
+            const visible = sec?.metadata?.is_visible !== false;
+            return (
+              <div key={k} className="flex items-center gap-2 rounded-md border border-border/60 bg-card px-3 py-2">
+                <GripVertical className="w-4 h-4 text-muted-foreground shrink-0" />
+                <div className="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center text-xs font-bold shrink-0">
+                  {idx + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{cfg?.label || k}</p>
+                  <p className="text-[11px] text-muted-foreground">{visible ? "Visível" : "Oculta"}</p>
+                </div>
+                <Button size="icon" variant="ghost" disabled={idx === 0} onClick={() => move(k, -1)} aria-label="Mover para cima">
+                  <ArrowUp className="w-4 h-4" />
+                </Button>
+                <Button size="icon" variant="ghost" disabled={idx === orderedKeys.length - 1} onClick={() => move(k, 1)} aria-label="Mover para baixo">
+                  <ArrowDown className="w-4 h-4" />
+                </Button>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+
       <p className="text-sm text-muted-foreground">
         Edite observações e imagens de cada seção do cardápio.
       </p>
-      {CARDAPIO_SECTIONS.map((cfg) => {
-        const sec = byKey[cfg.key];
+      {orderedKeys.map((k) => {
+        const cfg = cfgByKey[k];
+        if (!cfg) return null;
+        const sec = byKey[k];
         return (
           <SectionEditor
             key={cfg.key}

@@ -1,18 +1,18 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Cake, Heart, Sparkles, MessageCircle } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
-import { useSiteSettings, useSiteSections } from "@/hooks/useSiteContent";
+import { useSiteSettings, useSiteSections, useSiteSectionsList } from "@/hooks/useSiteContent";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { normalizeWhatsApp } from "@/lib/utils";
 import { getPublicImageUrl } from "@/lib/supabase";
+import { getOrderedSectionKeys } from "@/lib/cardapioSections";
 import {
   useCakeSizes,
   useCakeCategories,
   useCakePrices,
   useCakeFlavors,
   useCakeRectangular,
-  // useCakeDecorations removed — decorations gallery section eliminated
   useSweetTypes,
   useSweetFlavors,
   useSweetPackages,
@@ -112,10 +112,9 @@ const Cardapio = () => {
     );
   };
 
-  return (
-    <main className="pt-24 pb-8">
-      {/* ─── HERO ─── */}
-      {isVisible("cardapio_hero") && (
+  const orderedKeys = getOrderedSectionKeys(sections as any);
+
+  const heroEl = isVisible("cardapio_hero") ? (
       <section className="py-14 md:py-20 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-3xl" />
@@ -172,10 +171,9 @@ const Cardapio = () => {
           </motion.div>
         </div>
       </section>
-      )}
+  ) : null;
 
-      {/* ─── BOLOS DECORADOS — TAMANHOS ─── */}
-      {isVisible("cardapio_sizes") && (
+  const sizesEl = isVisible("cardapio_sizes") ? (
       <section className="pb-12">
         <div className="container mx-auto px-4 max-w-6xl">
           {sec("cardapio_sizes").title && (
@@ -277,12 +275,11 @@ const Cardapio = () => {
           )}
         </div>
       </section>
-      )}
+  ) : null;
 
-
-
-      {/* ─── CATEGORIAS DE SABORES (CLASSE 1, CLASSE 2, ...) ─── */}
-      {isVisible("cardapio_categories") && standardCategories.map((cat, idx) => {
+  const categoriesEl = isVisible("cardapio_categories") ? (
+    <>
+      {standardCategories.map((cat, idx) => {
         const catFlavors = flavorsByCategory[cat.id] || [];
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : null;
         // continua a alternância iniciada pela seção de tamanhos (idx 0 = imagem à esquerda)
@@ -396,8 +393,11 @@ const Cardapio = () => {
           </section>
         );
       })}
+    </>
+  ) : null;
 
-      {/* ─── BOLOS CORAÇÃO (ADDON) ─── */}
+  const addonsEl = (
+    <>
       {addonCategories.map((cat, idx) => {
         const catImg = cat.image_url ? getPublicImageUrl(cat.image_url) : (sec("cardapio_addons").image_url || null);
         const imageOnRight = (idx + 1 + standardCategories.length) % 2 === 1;
@@ -473,9 +473,10 @@ const Cardapio = () => {
         </section>
         );
       })}
+    </>
+  );
 
-      {/* ─── BOLOS RETANGULARES (TABELA DETALHADA) ─── */}
-      {rectangular.length > 0 && isVisible("cardapio_rectangular") && (
+  const rectangularEl = rectangular.length > 0 && isVisible("cardapio_rectangular") ? (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-6xl">
             {sec("cardapio_rectangular").title && (
@@ -566,10 +567,9 @@ const Cardapio = () => {
             )}
           </div>
         </section>
-      )}
+  ) : null;
 
-      {/* ─── DOCES ─── */}
-      {sweetTypes.length > 0 && isVisible("cardapio_sweets") && (
+  const sweetsEl = sweetTypes.length > 0 && isVisible("cardapio_sweets") ? (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-5xl">
             <SectionTitle
@@ -621,10 +621,9 @@ const Cardapio = () => {
             </div>
           </div>
         </section>
-      )}
+  ) : null;
 
-      {/* ─── ADICIONAIS DE DECORAÇÃO ─── */}
-      {cakeAddons.length > 0 && isVisible("cardapio_decorations") && (
+  const decorationsEl = cakeAddons.length > 0 && isVisible("cardapio_decorations") ? (
         <section className="pb-12">
           <div className="container mx-auto px-4 max-w-4xl">
             <SectionTitle
@@ -672,11 +671,9 @@ const Cardapio = () => {
             </div>
           </div>
         </section>
-      )}
+  ) : null;
 
-
-      {/* ─── ORDER FORM ─── */}
-      {isVisible("cardapio_order") && (
+  const orderEl = isVisible("cardapio_order") ? (
       <section id="encomenda" className="pb-16">
 
         <div className="container mx-auto px-4 max-w-xl">
@@ -750,7 +747,24 @@ const Cardapio = () => {
           </form>
         </div>
       </section>
-      )}
+  ) : null;
+
+  const sectionElements: Record<string, React.ReactNode> = {
+    cardapio_hero: heroEl,
+    cardapio_sizes: sizesEl,
+    cardapio_categories: categoriesEl,
+    cardapio_addons: addonsEl,
+    cardapio_rectangular: rectangularEl,
+    cardapio_sweets: sweetsEl,
+    cardapio_decorations: decorationsEl,
+    cardapio_order: orderEl,
+  };
+
+  return (
+    <main className="pt-24 pb-8">
+      {orderedKeys.map((k) => (
+        <React.Fragment key={k}>{sectionElements[k]}</React.Fragment>
+      ))}
 
       {/* Floating CTA */}
       {settings?.cardapio_fab_enabled !== false && (
