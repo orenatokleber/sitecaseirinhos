@@ -74,7 +74,7 @@ const Cardapio = () => {
   const { data: prices = [] } = useCakePrices();
   const { data: flavors = [] } = useCakeFlavors(true);
   const { data: rectangular = [] } = useCakeRectangular(true);
-  const { data: decorations = [] } = useCakeDecorations(true);
+  // decorations section removed; addons section (Adicionais) now uses the "Decorações" title
   const { data: sweetTypes = [] } = useSweetTypes(true);
   const { data: sweetFlavors = [] } = useSweetFlavors(true);
   const { data: sweetPackages = [] } = useSweetPackages();
