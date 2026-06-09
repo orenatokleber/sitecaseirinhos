@@ -755,7 +755,8 @@ const AddonsPanel = () => {
               <Select value={newAddon.pricing_type} onValueChange={(v) => setNewAddon({ ...newAddon, pricing_type: v as any })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="fixed">Fixo</SelectItem>
+                  <SelectItem value="fixed">Preço fixo</SelectItem>
+                  <SelectItem value="from">A partir de</SelectItem>
                   <SelectItem value="per_size">Por tamanho de bolo</SelectItem>
                 </SelectContent>
               </Select>
