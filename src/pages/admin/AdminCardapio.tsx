@@ -519,19 +519,29 @@ const SectionEditor = ({
   cfg, section, onSave,
 }: { cfg: { key: string; label: string; hint: string; aspect: number; size: string; simplified?: boolean }; section: any; onSave: (u: any) => void }) => {
   const initial = section || { title: "", subtitle: "", content: "", image_url: "", metadata: {} };
+  const initialVisible = (initial.metadata as any)?.is_visible !== false;
   const [row, setRow] = useState({
     title: initial.title || "",
     subtitle: initial.subtitle || "",
     content: initial.content || "",
     image_url: stripPublicUrl(initial.image_url),
     script: (initial.metadata as any)?.script || "",
+    is_visible: initialVisible,
   });
   const simplified = cfg.simplified;
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">{cfg.label}</CardTitle>
-        <p className="text-xs text-muted-foreground">{cfg.hint}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <CardTitle className="text-base">{cfg.label}</CardTitle>
+            <p className="text-xs text-muted-foreground">{cfg.hint}</p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Label className="text-xs">Visível no site</Label>
+            <Switch checked={row.is_visible} onCheckedChange={(v) => setRow({ ...row, is_visible: v })} />
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         {!simplified && (
@@ -563,9 +573,11 @@ const SectionEditor = ({
           subtitle: row.subtitle || null,
           content: row.content || null,
           image_url: row.image_url || null,
-          metadata: simplified
-            ? (section?.metadata || {})
-            : { ...(section?.metadata || {}), script: row.script || null },
+          metadata: {
+            ...(section?.metadata || {}),
+            is_visible: row.is_visible,
+            ...(simplified ? {} : { script: row.script || null }),
+          },
         })}>
           <Save className="w-4 h-4 mr-1" /> Salvar seção
         </Button>
