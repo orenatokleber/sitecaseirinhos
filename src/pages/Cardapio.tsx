@@ -671,11 +671,9 @@ const Cardapio = () => {
             </div>
           </div>
         </section>
-      )}
+  ) : null;
 
-
-      {/* ─── ORDER FORM ─── */}
-      {isVisible("cardapio_order") && (
+  const orderEl = isVisible("cardapio_order") ? (
       <section id="encomenda" className="pb-16">
 
         <div className="container mx-auto px-4 max-w-xl">
@@ -749,7 +747,24 @@ const Cardapio = () => {
           </form>
         </div>
       </section>
-      )}
+  ) : null;
+
+  const sectionElements: Record<string, React.ReactNode> = {
+    cardapio_hero: heroEl,
+    cardapio_sizes: sizesEl,
+    cardapio_categories: categoriesEl,
+    cardapio_addons: addonsEl,
+    cardapio_rectangular: rectangularEl,
+    cardapio_sweets: sweetsEl,
+    cardapio_decorations: decorationsEl,
+    cardapio_order: orderEl,
+  };
+
+  return (
+    <main className="pt-24 pb-8">
+      {orderedKeys.map((k) => (
+        <React.Fragment key={k}>{sectionElements[k]}</React.Fragment>
+      ))}
 
       {/* Floating CTA */}
       {settings?.cardapio_fab_enabled !== false && (
