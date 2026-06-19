@@ -12,8 +12,7 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-  const { user, isAdmin, loading, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
+  const { user, isAdmin, loading, signInWithEmail, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,18 +28,7 @@ const AdminLogin = () => {
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    let result;
-    if (isSignUp) {
-      result = await signUpWithEmail(email, password);
-      if (!result.error) {
-        toast.success("Conta criada! Fazendo login...");
-        result = await signInWithEmail(email, password);
-      }
-    } else {
-      result = await signInWithEmail(email, password);
-    }
-    
+    const result = await signInWithEmail(email, password);
     if (result.error) {
       toast.error(result.error.message || "Erro ao fazer login");
     }
@@ -128,19 +116,10 @@ const AdminLogin = () => {
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSignUp ? "Criar Conta" : "Entrar"}
+              Entrar
             </Button>
           </form>
 
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm text-muted-foreground hover:text-accent transition-colors"
-            >
-              {isSignUp ? "Já tem conta? Entrar" : "Primeira vez? Criar conta"}
-            </button>
-          </div>
         </CardContent>
       </Card>
     </div>
