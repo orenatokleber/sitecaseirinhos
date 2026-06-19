@@ -280,23 +280,30 @@ const CategoryCard = ({
       </CardHeader>
 
       <CardContent>
-        <Label className="text-xs uppercase font-semibold">Preço por tamanho {cat.type === "addon" && "(adicional ao bolo)"}</Label>
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mt-2">
-          {sizes.map((s) => (
-            <div key={s.id}>
-              <Label className="text-xs">{s.code}</Label>
-              <div className="flex gap-1">
-                <Input
-                  type="number"
-                  step="0.01"
-                  value={localPrices[s.id] ?? 0}
-                  onChange={(e) => setLocalPrices({ ...localPrices, [s.id]: parseFloat(e.target.value) || 0 })}
-                  onBlur={() => onSavePrice(s.id, localPrices[s.id] || 0)}
-                />
-              </div>
+        {cat.type !== "consult" && (
+          <>
+            <Label className="text-xs uppercase font-semibold">Preço por tamanho {cat.type === "addon" && "(adicional ao bolo)"}</Label>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mt-2">
+              {sizes.map((s) => (
+                <div key={s.id}>
+                  <Label className="text-xs">{s.code}</Label>
+                  <div className="flex gap-1">
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={localPrices[s.id] ?? 0}
+                      onChange={(e) => setLocalPrices({ ...localPrices, [s.id]: parseFloat(e.target.value) || 0 })}
+                      onBlur={() => onSavePrice(s.id, localPrices[s.id] || 0)}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
+        {cat.type === "consult" && (
+          <p className="text-sm text-muted-foreground">Categoria marcada como "Valor a consultar". Os preços não serão exibidos no cardápio.</p>
+        )}
       </CardContent>
     </Card>
   );
