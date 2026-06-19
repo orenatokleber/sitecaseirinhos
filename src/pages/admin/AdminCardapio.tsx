@@ -792,19 +792,47 @@ const AddonsPanel = () => {
   const getPrice = (addonId: string, sizeId: string | null) =>
     prices.find((p) => p.addon_id === addonId && (sizeId === null ? p.size_id === null : p.size_id === sizeId))?.price ?? 0;
 
+  const groups: { key: "round" | "rectangular"; label: string }[] = [
+    { key: "round", label: "Bolos Redondos" },
+    { key: "rectangular", label: "Bolos Retangulares" },
+  ];
+
+  const sortByOrder = (list: CakeAddon[]) =>
+    [...list].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || a.name.localeCompare(b.name));
+
   return (
-    <div className="space-y-4">
-      {addons.map((a) => (
-        <AddonCard
-          key={a.id}
-          addon={a}
-          sizes={sizes}
-          getPrice={getPrice}
-          onSave={(r) => upsert.mutate(r)}
-          onDelete={() => del.mutate(a.id)}
-          onSavePrice={(sizeId, price) => upsertPrice.mutate({ addon_id: a.id, size_id: sizeId, price })}
-        />
-      ))}
+    <div className="space-y-8">
+      {groups.map((g) => {
+        const groupAddons = sortByOrder(addons.filter((a) => (a.applies_to || "round") === g.key));
+        return (
+          <div key={g.key} className="space-y-3">
+            <div className="flex items-center justify-between border-b border-border/60 pb-2">
+              <h3 className="font-heading text-xl font-semibold text-foreground">
+                Adicionais — {g.label}
+              </h3>
+              <span className="text-xs text-muted-foreground">{groupAddons.length} item(s)</span>
+            </div>
+            {groupAddons.length === 0 && (
+              <p className="text-sm text-muted-foreground italic">Nenhum adicional cadastrado para {g.label.toLowerCase()}.</p>
+            )}
+            {groupAddons.map((a, idx) => (
+              <div key={a.id} className="relative">
+                <div className="absolute -left-2 top-3 z-10 bg-primary text-primary-foreground text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center shadow-sm">
+                  {idx + 1}
+                </div>
+                <AddonCard
+                  addon={a}
+                  sizes={sizes}
+                  getPrice={getPrice}
+                  onSave={(r) => upsert.mutate(r)}
+                  onDelete={() => del.mutate(a.id)}
+                  onSavePrice={(sizeId, price) => upsertPrice.mutate({ addon_id: a.id, size_id: sizeId, price })}
+                />
+              </div>
+            ))}
+          </div>
+        );
+      })}
 
       <Card>
         <CardHeader><CardTitle className="text-base">Novo adicional</CardTitle></CardHeader>
