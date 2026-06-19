@@ -641,8 +641,7 @@ const Cardapio = () => {
                           );
                         })}
                       </div>
-                    );
-                  })}
+                    )}
                   </div>
                 </div>
               );
