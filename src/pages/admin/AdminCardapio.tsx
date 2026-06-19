@@ -827,7 +827,7 @@ const AddonsPanel = () => {
           </div>
           <Input placeholder="Descrição" value={newAddon.description} onChange={(e) => setNewAddon({ ...newAddon, description: e.target.value })} />
           <Button size="sm" disabled={!newAddon.name} onClick={() => { upsert.mutate(newAddon as any); setNewAddon({ name: "", description: "", pricing_type: "fixed", applies_to: "round", sort_order: 0, is_active: true }); }}><Plus className="w-4 h-4 mr-1" /> Criar</Button>
-          <Button size="sm" disabled={!newAddon.name} onClick={() => { upsert.mutate(newAddon as any); setNewAddon({ name: "", description: "", pricing_type: "fixed", sort_order: 0, is_active: true }); }}><Plus className="w-4 h-4 mr-1" /> Criar</Button>
+          
         </CardContent>
       </Card>
     </div>
