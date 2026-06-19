@@ -776,7 +776,7 @@ const AddonsPanel = () => {
   const del = useDeleteCakeAddon();
   const upsertPrice = useUpsertCakeAddonPrice();
 
-  const [newAddon, setNewAddon] = useState({ name: "", description: "", pricing_type: "fixed" as "fixed" | "from" | "per_size", sort_order: 0, is_active: true });
+  const [newAddon, setNewAddon] = useState({ name: "", description: "", pricing_type: "fixed" as "fixed" | "from" | "per_size", applies_to: "round" as "round" | "rectangular", sort_order: 0, is_active: true });
 
   if (isLoading) return <Loader2 className="animate-spin" />;
 
