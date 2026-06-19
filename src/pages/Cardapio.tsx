@@ -21,11 +21,20 @@ import {
 } from "@/hooks/useCardapio";
 
 
+const formatNumberBR = (v: number) => {
+  const n = Number(v);
+  const hasDecimals = Math.abs(n - Math.trunc(n)) > 0.0001;
+  return n.toLocaleString("pt-BR", {
+    minimumFractionDigits: hasDecimals ? 2 : 0,
+    maximumFractionDigits: 2,
+  });
+};
+
 const formatPrice = (v: number | null | undefined) =>
-  v == null ? "—" : `R$ ${Number(v).toFixed(0)}`;
+  v == null ? "—" : `R$ ${formatNumberBR(Number(v))}`;
 
 const formatAddon = (v: number) =>
-  v > 0 ? `+R$${Math.round(v)}` : "";
+  v > 0 ? `+R$${formatNumberBR(v)}` : "";
 
 const isTransparentImage = (url?: string | null) =>
   !!url && /\.(png|webp|svg)(\?|$)/i.test(url);
