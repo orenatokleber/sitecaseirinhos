@@ -12,8 +12,7 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-  const { user, isAdmin, loading, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
+  const { user, isAdmin, loading, signInWithEmail, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
