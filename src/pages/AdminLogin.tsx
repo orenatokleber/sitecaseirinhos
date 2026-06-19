@@ -28,18 +28,7 @@ const AdminLogin = () => {
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    let result;
-    if (isSignUp) {
-      result = await signUpWithEmail(email, password);
-      if (!result.error) {
-        toast.success("Conta criada! Fazendo login...");
-        result = await signInWithEmail(email, password);
-      }
-    } else {
-      result = await signInWithEmail(email, password);
-    }
-    
+    const result = await signInWithEmail(email, password);
     if (result.error) {
       toast.error(result.error.message || "Erro ao fazer login");
     }
