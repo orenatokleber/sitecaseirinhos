@@ -855,8 +855,18 @@ const AddonCard = ({
   return (
     <Card>
       <CardHeader>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 items-end">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-2 items-end">
           <div className="md:col-span-2"><Label className="text-xs">Nome</Label><Input value={row.name} onChange={(e) => setRow({ ...row, name: e.target.value })} /></div>
+          <div>
+            <Label className="text-xs">Aplica-se a</Label>
+            <Select value={row.applies_to} onValueChange={(v) => setRow({ ...row, applies_to: v as any })}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="round">Bolo Redondo</SelectItem>
+                <SelectItem value="rectangular">Bolo Retangular</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div>
             <Label className="text-xs">Tipo</Label>
             <Select value={row.pricing_type} onValueChange={(v) => setRow({ ...row, pricing_type: v as any })}>
