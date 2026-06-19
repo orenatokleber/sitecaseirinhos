@@ -1,0 +1,1 @@
+ALTER TABLE public.cake_addons ADD COLUMN IF NOT EXISTS applies_to TEXT NOT NULL DEFAULT 'round' CHECK (applies_to IN ('round','rectangular'));
