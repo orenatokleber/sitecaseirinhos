@@ -521,6 +521,7 @@ export type CakeAddon = {
   name: string;
   description: string | null;
   pricing_type: "fixed" | "from" | "per_size";
+  applies_to: "round" | "rectangular";
   sort_order: number;
   is_active: boolean;
 };
