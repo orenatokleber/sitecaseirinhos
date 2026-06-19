@@ -658,6 +658,12 @@ const Cardapio = () => {
                           <span className="font-bold text-chocolate">+ {formatPrice(p.price)}</span>
                         </div>
                       ))
+                    ) : a.pricing_type === "from" ? (
+                      aPrices.filter((p) => p.size_id === null).map((p) => (
+                        <div key={p.id} className="text-sm font-body">
+                          <span className="font-bold text-chocolate">A partir de {formatPrice(p.price)}</span>
+                        </div>
+                      ))
                     ) : (
                       <div className="grid grid-cols-5 gap-1 text-center text-xs">
                         {sizes.map((s) => {
