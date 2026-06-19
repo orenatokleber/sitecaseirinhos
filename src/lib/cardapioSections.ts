@@ -14,7 +14,8 @@ export const CARDAPIO_SECTIONS: CardapioSectionCfg[] = [
   { key: "cardapio_addons", label: "Bolos Coração", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
   { key: "cardapio_rectangular", label: "Bolos Retangulares", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
   { key: "cardapio_sweets", label: "Doces para Festas", hint: "Título, subtítulo e visibilidade da seção de doces", aspect: 16 / 9, size: "1280×720px", simplified: true },
-  { key: "cardapio_decorations", label: "Decorações (Adicionais)", hint: "Título e subtítulo da seção de adicionais de decoração", aspect: 16 / 9, size: "1280×720px", simplified: true },
+  { key: "cardapio_decorations", label: "Decorações - Bolos Redondos (Adicionais)", hint: "Título e subtítulo da seção de adicionais para bolos redondos", aspect: 16 / 9, size: "1280×720px", simplified: true },
+  { key: "cardapio_decorations_rect", label: "Decorações - Bolos Retangulares (Adicionais)", hint: "Título e subtítulo da seção de adicionais para bolos retangulares", aspect: 16 / 9, size: "1280×720px", simplified: true },
   { key: "cardapio_order", label: "Solicite seu orçamento", hint: "Observação e imagem", aspect: 16 / 9, size: "1280×720px", simplified: true },
 ];
 
