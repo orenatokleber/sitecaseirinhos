@@ -424,34 +424,45 @@ const Cardapio = () => {
                 className={`space-y-3 ${catImg ? (imageOnRight ? "md:order-1" : "md:order-2") : ""}`}
               >
 
-              {sizes.map((s) => {
-                const addon = priceOf(cat.id, s.id);
-                if (addon == null || addon === 0) return null;
-                return (
-                  <div
-                    key={s.id}
-                    className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
-                  >
-                    <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 bg-primary/10 flex items-center justify-center">
-                      <span className="font-heading text-2xl md:text-3xl font-bold text-primary">
-                        {s.code}
-                      </span>
+              {cat.type === "consult" ? (
+                <div className="rounded-2xl bg-card border border-border/60 shadow-sm p-5 text-center">
+                  <span className="font-heading text-lg font-bold text-chocolate">
+                    Valor a consultar
+                  </span>
+                  <p className="text-sm text-muted-foreground mt-1 font-body">
+                    Entre em contato para mais informações.
+                  </p>
+                </div>
+              ) : (
+                sizes.map((s) => {
+                  const addon = priceOf(cat.id, s.id);
+                  if (addon == null || addon === 0) return null;
+                  return (
+                    <div
+                      key={s.id}
+                      className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                    >
+                      <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 bg-primary/10 flex items-center justify-center">
+                        <span className="font-heading text-2xl md:text-3xl font-bold text-primary">
+                          {s.code}
+                        </span>
+                      </div>
+                      <div className="flex-1 flex flex-wrap items-center gap-x-3 gap-y-1 py-3 pr-4 text-sm md:text-base text-foreground font-body">
+                        {s.slices != null && <span>{s.slices} fatias</span>}
+                        {s.weight_kg != null && (
+                          <>
+                            <span className="text-muted-foreground">|</span>
+                            <span>{Number(s.weight_kg).toFixed(1)}kg</span>
+                          </>
+                        )}
+                        <span className="ml-auto font-heading font-bold text-accent">
+                          {formatAddon(addon)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex-1 flex flex-wrap items-center gap-x-3 gap-y-1 py-3 pr-4 text-sm md:text-base text-foreground font-body">
-                      {s.slices != null && <span>{s.slices} fatias</span>}
-                      {s.weight_kg != null && (
-                        <>
-                          <span className="text-muted-foreground">|</span>
-                          <span>{Number(s.weight_kg).toFixed(1)}kg</span>
-                        </>
-                      )}
-                      <span className="ml-auto font-heading font-bold text-accent">
-                        {formatAddon(addon)}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
               </motion.div>
             </div>
 
