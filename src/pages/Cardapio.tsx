@@ -741,6 +741,7 @@ const Cardapio = () => {
     cardapio_rectangular: rectangularEl,
     cardapio_sweets: sweetsEl,
     cardapio_decorations: decorationsEl,
+    cardapio_decorations_rect: decorationsRectEl,
     cardapio_order: orderEl,
   };
 
