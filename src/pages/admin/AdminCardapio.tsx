@@ -785,7 +785,7 @@ const AddonsPanel = () => {
   const del = useDeleteCakeAddon();
   const upsertPrice = useUpsertCakeAddonPrice();
 
-  const [newAddon, setNewAddon] = useState({ name: "", description: "", pricing_type: "fixed" as "fixed" | "per_size" | "consult", applies_to: "round" as "round" | "rectangular", sort_order: 0, is_active: true });
+  const [newAddon, setNewAddon] = useState({ name: "", description: "", pricing_type: "fixed" as "fixed" | "from" | "per_size" | "consult", applies_to: "round" as "round" | "rectangular", sort_order: 0, is_active: true });
 
   if (isLoading) return <Loader2 className="animate-spin" />;
 
@@ -855,6 +855,7 @@ const AddonsPanel = () => {
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="fixed">Preço fixo</SelectItem>
+                  <SelectItem value="from">A partir de</SelectItem>
                   <SelectItem value="per_size">Por tamanho de bolo</SelectItem>
                   <SelectItem value="consult">Valor a consultar</SelectItem>
                 </SelectContent>
@@ -910,6 +911,7 @@ const AddonCard = ({
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="fixed">Preço fixo</SelectItem>
+                <SelectItem value="from">A partir de</SelectItem>
                 <SelectItem value="per_size">Por tamanho</SelectItem>
                 <SelectItem value="consult">Valor a consultar</SelectItem>
               </SelectContent>
@@ -927,9 +929,9 @@ const AddonCard = ({
       <CardContent>
         {row.pricing_type === "consult" ? (
           <p className="text-sm text-muted-foreground">Adicional marcado como "Valor a consultar". O preço não será exibido no cardápio.</p>
-        ) : row.pricing_type === "fixed" ? (
+        ) : row.pricing_type === "fixed" || row.pricing_type === "from" ? (
           <div className="max-w-xs">
-            <Label className="text-xs">Preço fixo (R$)</Label>
+            <Label className="text-xs">{row.pricing_type === "from" ? "A partir de (R$)" : "Preço fixo (R$)"}</Label>
             <Input type="number" step="0.01" value={fixedPrice} onChange={(e) => setFixedPrice(parseFloat(e.target.value) || 0)} onBlur={() => onSavePrice(null, fixedPrice)} />
           </div>
         ) : (
