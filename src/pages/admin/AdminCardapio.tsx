@@ -776,7 +776,7 @@ const AddonsPanel = () => {
   const del = useDeleteCakeAddon();
   const upsertPrice = useUpsertCakeAddonPrice();
 
-  const [newAddon, setNewAddon] = useState({ name: "", description: "", pricing_type: "fixed" as "fixed" | "from" | "per_size", sort_order: 0, is_active: true });
+  const [newAddon, setNewAddon] = useState({ name: "", description: "", pricing_type: "fixed" as "fixed" | "from" | "per_size", applies_to: "round" as "round" | "rectangular", sort_order: 0, is_active: true });
 
   if (isLoading) return <Loader2 className="animate-spin" />;
 
@@ -800,8 +800,18 @@ const AddonsPanel = () => {
       <Card>
         <CardHeader><CardTitle className="text-base">Novo adicional</CardTitle></CardHeader>
         <CardContent className="space-y-2">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
             <div className="md:col-span-2"><Label className="text-xs">Nome</Label><Input value={newAddon.name} onChange={(e) => setNewAddon({ ...newAddon, name: e.target.value })} /></div>
+            <div>
+              <Label className="text-xs">Aplica-se a</Label>
+              <Select value={newAddon.applies_to} onValueChange={(v) => setNewAddon({ ...newAddon, applies_to: v as any })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="round">Bolo Redondo</SelectItem>
+                  <SelectItem value="rectangular">Bolo Retangular</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div>
               <Label className="text-xs">Tipo de preço</Label>
               <Select value={newAddon.pricing_type} onValueChange={(v) => setNewAddon({ ...newAddon, pricing_type: v as any })}>
@@ -816,7 +826,8 @@ const AddonsPanel = () => {
             <div><Label className="text-xs">Ordem</Label><Input type="number" value={newAddon.sort_order} onChange={(e) => setNewAddon({ ...newAddon, sort_order: parseInt(e.target.value) || 0 })} /></div>
           </div>
           <Input placeholder="Descrição" value={newAddon.description} onChange={(e) => setNewAddon({ ...newAddon, description: e.target.value })} />
-          <Button size="sm" disabled={!newAddon.name} onClick={() => { upsert.mutate(newAddon as any); setNewAddon({ name: "", description: "", pricing_type: "fixed", sort_order: 0, is_active: true }); }}><Plus className="w-4 h-4 mr-1" /> Criar</Button>
+          <Button size="sm" disabled={!newAddon.name} onClick={() => { upsert.mutate(newAddon as any); setNewAddon({ name: "", description: "", pricing_type: "fixed", applies_to: "round", sort_order: 0, is_active: true }); }}><Plus className="w-4 h-4 mr-1" /> Criar</Button>
+          
         </CardContent>
       </Card>
     </div>
@@ -844,8 +855,18 @@ const AddonCard = ({
   return (
     <Card>
       <CardHeader>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 items-end">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-2 items-end">
           <div className="md:col-span-2"><Label className="text-xs">Nome</Label><Input value={row.name} onChange={(e) => setRow({ ...row, name: e.target.value })} /></div>
+          <div>
+            <Label className="text-xs">Aplica-se a</Label>
+            <Select value={row.applies_to} onValueChange={(v) => setRow({ ...row, applies_to: v as any })}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="round">Bolo Redondo</SelectItem>
+                <SelectItem value="rectangular">Bolo Retangular</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div>
             <Label className="text-xs">Tipo</Label>
             <Select value={row.pricing_type} onValueChange={(v) => setRow({ ...row, pricing_type: v as any })}>

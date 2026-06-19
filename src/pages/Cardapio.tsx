@@ -595,55 +595,67 @@ const Cardapio = () => {
         </section>
   ) : null;
 
-  const decorationsEl = cakeAddons.length > 0 && isVisible("cardapio_decorations") ? (
-        <section className="pb-12">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <SectionTitle
-              script={scriptOf("cardapio_decorations") || "Toques especiais"}
-              title={sec("cardapio_decorations").title || "Decorações"}
-              subtitle={sec("cardapio_decorations").subtitle || "Personalize ainda mais o seu bolo"}
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-              {cakeAddons.map((a) => {
-                const aPrices = addonPrices.filter((p) => p.addon_id === a.id);
-                return (
-                  <div key={a.id} className="rounded-2xl bg-card border border-border/60 shadow-sm p-5">
-                    <h3 className="font-heading font-bold text-foreground uppercase tracking-wider text-sm">{a.name}</h3>
-                    {a.description && <p className="text-xs text-muted-foreground mt-1 font-body">{a.description}</p>}
-                    <div className="mt-3 space-y-1">
-                      {a.pricing_type === "fixed" ? (
-                        aPrices.filter((p) => p.size_id === null).map((p) => (
-                          <div key={p.id} className="text-sm font-body">
-                            <span className="font-bold text-chocolate">+ {formatPrice(p.price)}</span>
-                          </div>
-                        ))
-                      ) : a.pricing_type === "from" ? (
-                        aPrices.filter((p) => p.size_id === null).map((p) => (
-                          <div key={p.id} className="text-sm font-body">
-                            <span className="font-bold text-chocolate">A partir de {formatPrice(p.price)}</span>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="grid grid-cols-5 gap-1 text-center text-xs">
-                          {sizes.map((s) => {
-                            const p = aPrices.find((x) => x.size_id === s.id);
-                            return (
-                              <div key={s.id} className="rounded bg-accent/5 py-2 px-1">
-                                <div className="font-semibold">{s.code}</div>
-                                <div className="text-chocolate font-bold">{p ? `+${formatPrice(p.price)}` : "—"}</div>
-                              </div>
-                            );
-                          })}
+  const renderDecorations = (
+    items: typeof cakeAddons,
+    sectionKey: "cardapio_decorations" | "cardapio_decorations_rect",
+    defaultTitle: string,
+  ) => {
+    if (items.length === 0 || !isVisible(sectionKey)) return null;
+    return (
+      <section className="pb-12">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <SectionTitle
+            script={scriptOf(sectionKey) || "Toques especiais"}
+            title={sec(sectionKey).title || defaultTitle}
+            subtitle={sec(sectionKey).subtitle || "Personalize ainda mais o seu bolo"}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+            {items.map((a) => {
+              const aPrices = addonPrices.filter((p) => p.addon_id === a.id);
+              return (
+                <div key={a.id} className="rounded-2xl bg-card border border-border/60 shadow-sm p-5">
+                  <h3 className="font-heading font-bold text-foreground uppercase tracking-wider text-sm">{a.name}</h3>
+                  {a.description && <p className="text-xs text-muted-foreground mt-1 font-body">{a.description}</p>}
+                  <div className="mt-3 space-y-1">
+                    {a.pricing_type === "fixed" ? (
+                      aPrices.filter((p) => p.size_id === null).map((p) => (
+                        <div key={p.id} className="text-sm font-body">
+                          <span className="font-bold text-chocolate">+ {formatPrice(p.price)}</span>
                         </div>
-                      )}
-                    </div>
+                      ))
+                    ) : a.pricing_type === "from" ? (
+                      aPrices.filter((p) => p.size_id === null).map((p) => (
+                        <div key={p.id} className="text-sm font-body">
+                          <span className="font-bold text-chocolate">A partir de {formatPrice(p.price)}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="grid grid-cols-5 gap-1 text-center text-xs">
+                        {sizes.map((s) => {
+                          const p = aPrices.find((x) => x.size_id === s.id);
+                          return (
+                            <div key={s.id} className="rounded bg-accent/5 py-2 px-1">
+                              <div className="font-semibold">{s.code}</div>
+                              <div className="text-chocolate font-bold">{p ? `+${formatPrice(p.price)}` : "—"}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
-        </section>
-  ) : null;
+        </div>
+      </section>
+    );
+  };
+
+  const roundAddons = cakeAddons.filter((a) => (a as any).applies_to !== "rectangular");
+  const rectAddons = cakeAddons.filter((a) => (a as any).applies_to === "rectangular");
+  const decorationsEl = renderDecorations(roundAddons, "cardapio_decorations", "Decorações");
+  const decorationsRectEl = renderDecorations(rectAddons, "cardapio_decorations_rect", "Decorações - Bolos Retangulares");
 
   const orderEl = isVisible("cardapio_order") ? (
       <section id="encomenda" className="pb-16">
@@ -729,6 +741,7 @@ const Cardapio = () => {
     cardapio_rectangular: rectangularEl,
     cardapio_sweets: sweetsEl,
     cardapio_decorations: decorationsEl,
+    cardapio_decorations_rect: decorationsRectEl,
     cardapio_order: orderEl,
   };
 

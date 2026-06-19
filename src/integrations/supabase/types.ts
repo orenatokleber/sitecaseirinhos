@@ -150,6 +150,7 @@ export type Database = {
       }
       cake_addons: {
         Row: {
+          applies_to: string
           created_at: string
           description: string | null
           id: string
@@ -160,6 +161,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          applies_to?: string
           created_at?: string
           description?: string | null
           id?: string
@@ -170,6 +172,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          applies_to?: string
           created_at?: string
           description?: string | null
           id?: string
