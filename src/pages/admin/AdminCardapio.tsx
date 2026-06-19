@@ -182,7 +182,7 @@ const CategoriesPanel = () => {
   const upsertCat = useUpsertCakeCategory();
   const delCat = useDeleteCakeCategory();
   const upsertPrice = useUpsertCakePrice();
-  const [newCat, setNewCat] = useState({ slug: "", name: "", description: "", type: "standard" as "standard" | "addon", sort_order: 0, is_active: true });
+  const [newCat, setNewCat] = useState({ slug: "", name: "", description: "", type: "standard" as "standard" | "addon" | "consult", sort_order: 0, is_active: true });
 
   const getPrice = (catId: string, sizeId: string) =>
     prices.find((p) => p.category_id === catId && p.size_id === sizeId)?.price ?? 0;

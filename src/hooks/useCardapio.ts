@@ -18,7 +18,7 @@ export type CakeCategory = {
   slug: string;
   name: string;
   description: string | null;
-  type: "standard" | "addon";
+  type: "standard" | "addon" | "consult";
   image_url: string | null;
   sort_order: number;
   is_active: boolean;
