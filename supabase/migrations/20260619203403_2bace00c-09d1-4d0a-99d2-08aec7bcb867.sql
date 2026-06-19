@@ -1,0 +1,2 @@
+ALTER TABLE public.cake_categories DROP CONSTRAINT IF EXISTS cake_categories_type_check;
+ALTER TABLE public.cake_categories ADD CONSTRAINT cake_categories_type_check CHECK (type IN ('standard', 'addon', 'consult'));
