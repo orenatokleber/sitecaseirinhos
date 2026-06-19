@@ -648,16 +648,14 @@ const Cardapio = () => {
                   <h3 className="font-heading font-bold text-foreground uppercase tracking-wider text-sm">{a.name}</h3>
                   {a.description && <p className="text-xs text-muted-foreground mt-1 font-body">{a.description}</p>}
                   <div className="mt-3 space-y-1">
-                    {a.pricing_type === "fixed" ? (
+                    {a.pricing_type === "consult" ? (
+                      <div className="text-sm font-body text-muted-foreground italic">
+                        Valor a consultar
+                      </div>
+                    ) : a.pricing_type === "fixed" ? (
                       aPrices.filter((p) => p.size_id === null).map((p) => (
                         <div key={p.id} className="text-sm font-body">
                           <span className="font-bold text-chocolate">+ {formatPrice(p.price)}</span>
-                        </div>
-                      ))
-                    ) : a.pricing_type === "from" ? (
-                      aPrices.filter((p) => p.size_id === null).map((p) => (
-                        <div key={p.id} className="text-sm font-body">
-                          <span className="font-bold text-chocolate">A partir de {formatPrice(p.price)}</span>
                         </div>
                       ))
                     ) : (
