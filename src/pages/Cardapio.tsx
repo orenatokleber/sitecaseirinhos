@@ -237,34 +237,6 @@ const Cardapio = () => {
                 </motion.div>
               ))}
 
-              {/* Retangulares resumo */}
-              {rectangular.map((r) => (
-                <div
-                  key={r.id}
-                  className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
-                >
-                  <div className="w-24 h-16 md:w-28 md:h-20 flex-shrink-0 bg-chocolate/10 flex items-center justify-center px-2 text-center">
-                    <span className="font-heading text-xs md:text-sm font-bold text-chocolate leading-tight">
-                      {r.name.toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="flex-1 flex flex-wrap items-center gap-x-3 gap-y-1 py-3 pr-4 text-sm text-foreground font-body">
-                    {r.dimensions && <span>{r.dimensions}</span>}
-                    {r.slices != null && (
-                      <>
-                        <span className="text-muted-foreground">|</span>
-                        <span>{r.slices} fatias</span>
-                      </>
-                    )}
-                    {r.weight_kg != null && (
-                      <>
-                        <span className="text-muted-foreground">|</span>
-                        <span>{Number(r.weight_kg).toFixed(1)} kg</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
             </motion.div>
           </div>
 
