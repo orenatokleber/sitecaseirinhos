@@ -296,53 +296,64 @@ const Cardapio = () => {
                   className={catImg ? (imageOnRight ? "md:order-1" : "md:order-2") : ""}
                 >
                   {/* Preços por tamanho — mobile: cards / desktop: tabela */}
-                  {isMobile ? (
-                    <div className="grid grid-cols-2 gap-3">
-                      {sizes.map((s) => (
-                        <div
-                          key={s.id}
-                          className="rounded-2xl border border-accent/20 bg-card shadow-sm p-4 text-center"
-                        >
-                          <div className="font-heading text-lg font-bold text-foreground">
-                            {s.code}
-                          </div>
-                          <div className="mt-1 text-xs text-muted-foreground font-body space-y-0.5">
-                            {s.slices != null && <div>{s.slices} fatias</div>}
-                            {s.weight_kg != null && <div>{Number(s.weight_kg).toFixed(1)}kg</div>}
-                          </div>
-                          <div className="mt-2 font-body text-base font-semibold text-chocolate">
-                            {formatPrice(priceOf(cat.id, s.id))}
-                          </div>
-                        </div>
-                      ))}
+                  {cat.type === "consult" ? (
+                    <div className="rounded-2xl border border-accent/20 bg-card shadow-sm p-6 text-center">
+                      <span className="font-heading text-lg md:text-xl font-bold text-chocolate">
+                        Valor a consultar
+                      </span>
+                      <p className="text-sm text-muted-foreground mt-2 font-body">
+                        Entre em contato para mais informações.
+                      </p>
                     </div>
                   ) : (
-                    <div className="rounded-2xl border border-accent/20 bg-card shadow-sm overflow-x-auto">
-                      <div
-                        className="grid divide-x divide-border/60 min-w-full"
-                        style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
-                      >
+                    isMobile ? (
+                      <div className="grid grid-cols-2 gap-3">
                         {sizes.map((s) => (
-                          <div key={s.id} className="text-center py-3 bg-accent/[0.04] min-w-0">
-                            <div className="font-heading text-base md:text-lg font-bold text-foreground truncate px-1">
+                          <div
+                            key={s.id}
+                            className="rounded-2xl border border-accent/20 bg-card shadow-sm p-4 text-center"
+                          >
+                            <div className="font-heading text-lg font-bold text-foreground">
                               {s.code}
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div
-                        className="grid divide-x divide-border/60 border-t border-border/60 min-w-full"
-                        style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
-                      >
-                        {sizes.map((s) => (
-                          <div key={s.id} className="text-center py-3 min-w-0">
-                            <div className="font-body text-sm md:text-base font-semibold text-chocolate truncate px-1">
+                            <div className="mt-1 text-xs text-muted-foreground font-body space-y-0.5">
+                              {s.slices != null && <div>{s.slices} fatias</div>}
+                              {s.weight_kg != null && <div>{Number(s.weight_kg).toFixed(1)}kg</div>}
+                            </div>
+                            <div className="mt-2 font-body text-base font-semibold text-chocolate">
                               {formatPrice(priceOf(cat.id, s.id))}
                             </div>
                           </div>
                         ))}
                       </div>
-                    </div>
+                    ) : (
+                      <div className="rounded-2xl border border-accent/20 bg-card shadow-sm overflow-x-auto">
+                        <div
+                          className="grid divide-x divide-border/60 min-w-full"
+                          style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                        >
+                          {sizes.map((s) => (
+                            <div key={s.id} className="text-center py-3 bg-accent/[0.04] min-w-0">
+                              <div className="font-heading text-base md:text-lg font-bold text-foreground truncate px-1">
+                                {s.code}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div
+                          className="grid divide-x divide-border/60 border-t border-border/60 min-w-full"
+                          style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+                        >
+                          {sizes.map((s) => (
+                            <div key={s.id} className="text-center py-3 min-w-0">
+                              <div className="font-body text-sm md:text-base font-semibold text-chocolate truncate px-1">
+                                {formatPrice(priceOf(cat.id, s.id))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
                   )}
 
                   {/* Lista de sabores */}
@@ -413,34 +424,45 @@ const Cardapio = () => {
                 className={`space-y-3 ${catImg ? (imageOnRight ? "md:order-1" : "md:order-2") : ""}`}
               >
 
-              {sizes.map((s) => {
-                const addon = priceOf(cat.id, s.id);
-                if (addon == null || addon === 0) return null;
-                return (
-                  <div
-                    key={s.id}
-                    className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
-                  >
-                    <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 bg-primary/10 flex items-center justify-center">
-                      <span className="font-heading text-2xl md:text-3xl font-bold text-primary">
-                        {s.code}
-                      </span>
+              {cat.type === "consult" ? (
+                <div className="rounded-2xl bg-card border border-border/60 shadow-sm p-5 text-center">
+                  <span className="font-heading text-lg font-bold text-chocolate">
+                    Valor a consultar
+                  </span>
+                  <p className="text-sm text-muted-foreground mt-1 font-body">
+                    Entre em contato para mais informações.
+                  </p>
+                </div>
+              ) : (
+                sizes.map((s) => {
+                  const addon = priceOf(cat.id, s.id);
+                  if (addon == null || addon === 0) return null;
+                  return (
+                    <div
+                      key={s.id}
+                      className="flex items-center gap-4 rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden"
+                    >
+                      <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 bg-primary/10 flex items-center justify-center">
+                        <span className="font-heading text-2xl md:text-3xl font-bold text-primary">
+                          {s.code}
+                        </span>
+                      </div>
+                      <div className="flex-1 flex flex-wrap items-center gap-x-3 gap-y-1 py-3 pr-4 text-sm md:text-base text-foreground font-body">
+                        {s.slices != null && <span>{s.slices} fatias</span>}
+                        {s.weight_kg != null && (
+                          <>
+                            <span className="text-muted-foreground">|</span>
+                            <span>{Number(s.weight_kg).toFixed(1)}kg</span>
+                          </>
+                        )}
+                        <span className="ml-auto font-heading font-bold text-accent">
+                          {formatAddon(addon)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex-1 flex flex-wrap items-center gap-x-3 gap-y-1 py-3 pr-4 text-sm md:text-base text-foreground font-body">
-                      {s.slices != null && <span>{s.slices} fatias</span>}
-                      {s.weight_kg != null && (
-                        <>
-                          <span className="text-muted-foreground">|</span>
-                          <span>{Number(s.weight_kg).toFixed(1)}kg</span>
-                        </>
-                      )}
-                      <span className="ml-auto font-heading font-bold text-accent">
-                        {formatAddon(addon)}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
               </motion.div>
             </div>
 
