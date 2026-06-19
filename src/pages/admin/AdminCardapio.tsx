@@ -216,6 +216,7 @@ const CategoriesPanel = () => {
                 <SelectContent>
                   <SelectItem value="standard">Padrão (preço total)</SelectItem>
                   <SelectItem value="addon">Adicional (+R$)</SelectItem>
+                  <SelectItem value="consult">Valor a consultar</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -261,6 +262,7 @@ const CategoryCard = ({
               <SelectContent>
                 <SelectItem value="standard">Padrão</SelectItem>
                 <SelectItem value="addon">Adicional</SelectItem>
+                <SelectItem value="consult">Valor a consultar</SelectItem>
               </SelectContent>
             </Select>
           </div>
