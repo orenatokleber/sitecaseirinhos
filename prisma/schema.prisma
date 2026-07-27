@@ -1,0 +1,361 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../backend/node_modules/.prisma/client"
+}
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  profile      Profile?
+  roles        UserRole[]
+
+  @@map("users")
+}
+
+model Profile {
+  id          String   @id @default(uuid())
+  userId      String   @unique @map("user_id")
+  displayName String?  @map("display_name")
+  avatarUrl   String?  @map("avatar_url")
+  bio         String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  role      String   @default("user") // admin, editor, user
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_roles")
+}
+
+model BlogPost {
+  id             String        @id @default(uuid())
+  slug           String        @unique
+  title          String
+  content        String        @db.Text
+  excerpt        String?       @db.Text
+  coverImage     String?       @map("cover_image")
+  authorName     String        @default("Caseirinhos") @map("author_name")
+  category       String?
+  tags           Json?         // JSON array of strings
+  readingTimeMin Int?          @map("reading_time_min")
+  allowComments  Boolean       @default(true) @map("allow_comments")
+  isPublished    Boolean       @default(false) @map("is_published")
+  publishedAt    DateTime?     @map("published_at")
+  sortOrder      Int?          @map("sort_order")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  comments       BlogComment[]
+
+  @@map("blog_posts")
+}
+
+model BlogComment {
+  id         String   @id @default(uuid())
+  postId     String   @map("post_id")
+  authorName String   @map("author_name")
+  content    String   @db.Text
+  isApproved Boolean  @default(false) @map("is_approved")
+  createdAt  DateTime @default(now()) @map("created_at")
+  post       BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("blog_comments")
+}
+
+model CakeSize {
+  id             String               @id @default(uuid())
+  code           String               @unique
+  name           String
+  slices         Int?
+  weightKg       Float?               @map("weight_kg")
+  ringSize       String?              @map("ring_size")
+  isActive       Boolean              @default(true) @map("is_active")
+  sortOrder      Int                  @default(0) @map("sort_order")
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+  categoryPrices CakeCategoryPrice[]
+  addonPrices    CakeAddonPrice[]
+
+  @@map("cake_sizes")
+}
+
+model CakeCategory {
+  id             String               @id @default(uuid())
+  name           String
+  slug           String               @unique
+  description    String?              @db.Text
+  imageUrl       String?              @map("image_url")
+  type           String               @default("standard")
+  isActive       Boolean              @default(true) @map("is_active")
+  sortOrder      Int                  @default(0) @map("sort_order")
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+  categoryPrices CakeCategoryPrice[]
+  flavors        CakeFlavor[]
+
+  @@map("cake_categories")
+}
+
+model CakeCategoryPrice {
+  id         String       @id @default(uuid())
+  categoryId String       @map("category_id")
+  sizeId     String       @map("size_id")
+  price      Float
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  category   CakeCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  size       CakeSize     @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, sizeId])
+  @@map("cake_category_prices")
+}
+
+model CakeFlavor {
+  id          String       @id @default(uuid())
+  categoryId  String       @map("category_id")
+  name        String
+  description String?      @db.Text
+  isActive    Boolean      @default(true) @map("is_active")
+  sortOrder   Int          @default(0) @map("sort_order")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  category    CakeCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("cake_flavors")
+}
+
+model CakeDecoration {
+  id        String   @id @default(uuid())
+  title     String?
+  imageUrl  String   @map("image_url")
+  isActive  Boolean  @default(true) @map("is_active")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("cake_decorations")
+}
+
+model CakeRectangular {
+  id          String   @id @default(uuid())
+  name        String
+  slices      Int?
+  weightKg    Float?   @map("weight_kg")
+  dimensions  String?
+  class1Price Float?   @map("class1_price")
+  class2Price Float?   @map("class2_price")
+  note        String?  @db.Text
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("cake_rectangular")
+}
+
+model CakeAddon {
+  id          String           @id @default(uuid())
+  name        String
+  description String?          @db.Text
+  pricingType String           @default("fixed") @map("pricing_type")
+  appliesTo   String           @default("all") @map("applies_to")
+  isActive    Boolean          @default(true) @map("is_active")
+  sortOrder   Int              @default(0) @map("sort_order")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  prices      CakeAddonPrice[]
+
+  @@map("cake_addons")
+}
+
+model CakeAddonPrice {
+  id        String    @id @default(uuid())
+  addonId   String    @map("addon_id")
+  sizeId    String?   @map("size_id")
+  price     Float
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  addon     CakeAddon @relation(fields: [addonId], references: [id], onDelete: Cascade)
+  size      CakeSize? @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+
+  @@map("cake_addon_prices")
+}
+
+model SweetType {
+  id          String         @id @default(uuid())
+  name        String
+  slug        String         @unique
+  description String?        @db.Text
+  imageUrl    String?        @map("image_url")
+  weightG     Int?           @map("weight_g")
+  isActive    Boolean        @default(true) @map("is_active")
+  sortOrder   Int            @default(0) @map("sort_order")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  flavors     SweetFlavor[]
+  packages    SweetPackage[]
+
+  @@map("sweet_types")
+}
+
+model SweetFlavor {
+  id          String    @id @default(uuid())
+  typeId      String    @map("type_id")
+  name        String
+  description String?   @db.Text
+  isActive    Boolean   @default(true) @map("is_active")
+  sortOrder   Int       @default(0) @map("sort_order")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  sweetType   SweetType @relation(fields: [typeId], references: [id], onDelete: Cascade)
+
+  @@map("sweet_flavors")
+}
+
+model SweetPackage {
+  id        String    @id @default(uuid())
+  typeId    String    @map("type_id")
+  quantity  Int
+  price     Float
+  sortOrder Int       @default(0) @map("sort_order")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  sweetType   SweetType @relation(fields: [typeId], references: [id], onDelete: Cascade)
+
+  @@unique([typeId, quantity])
+  @@map("sweet_packages")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String?  @db.Text
+  price       Float?
+  imageUrl    String?  @map("image_url")
+  category    String
+  isFeatured  Boolean  @default(false) @map("is_featured")
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model GalleryImage {
+  id        String   @id @default(uuid())
+  title     String?
+  altText   String?  @map("alt_text")
+  imageUrl  String   @map("image_url")
+  category  String?
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("gallery_images")
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  name      String
+  content   String   @db.Text
+  stars     Int      @default(5)
+  isActive  Boolean  @default(true) @map("is_active")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("testimonials")
+}
+
+model DeliveryPopup {
+  id           String   @id @default(uuid())
+  popupType    String   @default("general") @map("popup_type")
+  title        String
+  description  String?  @db.Text
+  discountText String?  @map("discount_text")
+  couponCode   String?  @map("coupon_code")
+  imageUrl     String?  @map("image_url")
+  bgColor      String?  @map("bg_color")
+  textColor    String?  @map("text_color")
+  isActive     Boolean  @default(true) @map("is_active")
+  sortOrder    Int      @default(0) @map("sort_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("delivery_popups")
+}
+
+model Redirect {
+  id             String          @id @default(uuid())
+  slug           String          @unique
+  destinationUrl String          @map("destination_url")
+  title          String?
+  totalClicks    Int             @default(0) @map("total_clicks")
+  isActive       Boolean         @default(true) @map("is_active")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  clicks         RedirectClick[]
+
+  @@map("redirects")
+}
+
+model RedirectClick {
+  id         String   @id @default(uuid())
+  redirectId String   @map("redirect_id")
+  referrer   String?
+  userAgent  String?  @map("user_agent")
+  clickedAt  DateTime @default(now()) @map("clicked_at")
+  redirect   Redirect @relation(fields: [redirectId], references: [id], onDelete: Cascade)
+
+  @@map("redirect_clicks")
+}
+
+model PageView {
+  id        String   @id @default(uuid())
+  pagePath  String   @map("page_path")
+  pageTitle String?  @map("page_title")
+  referrer  String?
+  userAgent String?  @map("user_agent")
+  viewedAt  DateTime @default(now()) @map("viewed_at")
+
+  @@map("page_views")
+}
+
+model SiteSection {
+  id         String   @id @default(uuid())
+  sectionKey String   @unique @map("section_key")
+  title      String?
+  subtitle   String?
+  content    String?  @db.Text
+  imageUrl   String?  @map("image_url")
+  ctaText    String?  @map("cta_text")
+  ctaLink    String?  @map("cta_link")
+  metadata   Json?
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("site_sections")
+}
+
+model SiteSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}

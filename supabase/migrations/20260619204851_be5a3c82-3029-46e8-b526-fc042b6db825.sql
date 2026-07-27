@@ -1,2 +1,0 @@
-ALTER TABLE public.cake_addons DROP CONSTRAINT IF EXISTS cake_addons_pricing_type_check;
-ALTER TABLE public.cake_addons ADD CONSTRAINT cake_addons_pricing_type_check CHECK (pricing_type IN ('fixed', 'from', 'per_size', 'consult'));
