@@ -1,0 +1,7 @@
+project_id = "kmgiylrpkqtteyujiwpn"
+
+[functions.og-share]
+verify_jwt = false
+
+[functions.generate-blog-post]
+verify_jwt = false

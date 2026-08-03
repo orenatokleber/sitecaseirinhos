@@ -1,0 +1,1 @@
+ALTER TABLE public.sweet_types ADD COLUMN IF NOT EXISTS image_url text;
