@@ -37,6 +37,8 @@ import AdminLinks from "./pages/admin/AdminLinks";
 import RedirectPage from "./pages/RedirectPage";
 import MaintenancePage from "./pages/MaintenancePage";
 import AdminMaintenance from "./pages/admin/AdminMaintenance";
+import Biolink from "./pages/Biolink";
+import AdminBiolink from "./pages/admin/AdminBiolink";
 import { HelmetProvider } from "react-helmet-async";
 import { useTrackPageView } from "@/hooks/usePageViews";
 import { useSiteSettings } from "@/hooks/useSiteContent";
@@ -46,11 +48,12 @@ const queryClient = new QueryClient();
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/painel-admin');
+  const isBareRoute = location.pathname === '/links';
   const hideWhatsApp = location.pathname === '/' || location.pathname.startsWith('/cardapio');
   useTrackPageView();
   const { data: settings } = useSiteSettings();
 
-  if (isAdminRoute) {
+  if (isAdminRoute || isBareRoute) {
     return <>{children}</>;
   }
 
@@ -92,7 +95,9 @@ const App = () => (
               <Route path="/galeria" element={<Galeria />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/links" element={<Biolink />} />
               <Route path="/:slug" element={<RedirectPage />} />
+
 
               {/* Admin routes */}
               <Route path="/painel-admin/login" element={<AdminLogin />} />
@@ -112,6 +117,7 @@ const App = () => (
                 <Route path="comentarios" element={<AdminComments />} />
                 <Route path="seo" element={<AdminSEO />} />
                 <Route path="links" element={<AdminLinks />} />
+                <Route path="biolink" element={<AdminBiolink />} />
                 <Route path="config" element={<AdminConfig />} />
                 <Route path="manutencao" element={<AdminMaintenance />} />
               </Route>
