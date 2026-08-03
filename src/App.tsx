@@ -117,6 +117,7 @@ const App = () => (
                 <Route path="comentarios" element={<AdminComments />} />
                 <Route path="seo" element={<AdminSEO />} />
                 <Route path="links" element={<AdminLinks />} />
+                <Route path="biolink" element={<AdminBiolink />} />
                 <Route path="config" element={<AdminConfig />} />
                 <Route path="manutencao" element={<AdminMaintenance />} />
               </Route>
