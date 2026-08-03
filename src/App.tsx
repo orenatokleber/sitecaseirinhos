@@ -37,6 +37,8 @@ import AdminLinks from "./pages/admin/AdminLinks";
 import RedirectPage from "./pages/RedirectPage";
 import MaintenancePage from "./pages/MaintenancePage";
 import AdminMaintenance from "./pages/admin/AdminMaintenance";
+import Biolink from "./pages/Biolink";
+import AdminBiolink from "./pages/admin/AdminBiolink";
 import { HelmetProvider } from "react-helmet-async";
 import { useTrackPageView } from "@/hooks/usePageViews";
 import { useSiteSettings } from "@/hooks/useSiteContent";
