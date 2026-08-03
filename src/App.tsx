@@ -94,6 +94,7 @@ const App = () => (
               <Route path="/contato" element={<Contato />} />
               <Route path="/galeria" element={<Galeria />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/links" element={<Biolink />} />
               <Route path="/:slug" element={<RedirectPage />} />
 
