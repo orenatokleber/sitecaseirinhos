@@ -12,54 +12,86 @@ import {
   useCreateSiteSection,
 } from "@/hooks/useSiteContent";
 
-const PEDIDO_SECTIONS = [
+type SectionCfg = {
+  key: string;
+  label: string;
+  hint: string;
+  showScript?: boolean;
+  /** Seção do cardápio usada como conteúdo padrão hoje na página */
+  fallbackKey?: string;
+  defaults?: { script?: string; title?: string; subtitle?: string; content?: string };
+};
+
+const PEDIDO_SECTIONS: SectionCfg[] = [
   {
     key: "pedido_hero",
     label: "Topo da página",
     hint: "Script, título, subtítulo, texto informativo e imagem no topo de /montar-pedido.",
     showScript: true,
+    fallbackKey: "cardapio_hero",
+    defaults: {
+      script: "Passo a passo",
+      title: "Monte seu Pedido",
+      subtitle: "Escolha as opções abaixo, adicione ao resumo e envie tudo pelo WhatsApp",
+    },
   },
   {
     key: "pedido_kind",
     label: "Passo 1 — O que você deseja?",
     hint: "Título e observação do passo de escolha entre bolo redondo, retangular ou doces.",
+    defaults: { title: "O que você deseja?" },
   },
   {
     key: "pedido_size",
     label: "Passo 2 — Tamanho (bolo redondo)",
     hint: "Título, observação e imagem do passo de tamanhos.",
+    fallbackKey: "cardapio_sizes",
+    defaults: { title: "Tamanho" },
   },
   {
     key: "pedido_round_line",
     label: "Passo 3 — Linha e sabor (bolo redondo)",
     hint: "Título, observação e imagem do passo de linha (Tradicional/Premium) e sabores.",
+    defaults: { title: "Linha e sabor" },
   },
   {
     key: "pedido_round_addons",
     label: "Passo 4 — Adicionais (bolo redondo)",
     hint: "Título, observação e imagem dos adicionais de bolos redondos.",
+    fallbackKey: "cardapio_decorations",
+    defaults: { title: "Adicionais (opcional)" },
   },
   {
     key: "pedido_rect",
     label: "Passo 2 — Modelo (bolo retangular)",
     hint: "Título, observação e imagem do passo de modelos retangulares.",
+    fallbackKey: "cardapio_rectangular",
+    defaults: { title: "Modelo" },
   },
   {
     key: "pedido_rect_line",
     label: "Passo 3 — Linha (bolo retangular)",
     hint: "Título, observação e imagem do passo de linha dos retangulares.",
+    defaults: { title: "Linha" },
   },
   {
     key: "pedido_rect_addons",
     label: "Passo 4 — Adicionais (bolo retangular)",
     hint: "Título, observação e imagem dos adicionais de bolos retangulares.",
+    fallbackKey: "cardapio_decorations_rect",
+    defaults: { title: "Adicionais (opcional)" },
   },
   {
     key: "pedido_sweets",
     label: "Doces para festa",
     hint: "Aparece em todos os fluxos (bolo redondo, retangular e doces). Título, observação e imagem.",
+    fallbackKey: "cardapio_sweets",
+    defaults: {
+      title: "Doces para festa (opcional)",
+      content: "Vendidos em pacotes de 25, 50 ou 100 unidades",
+    },
   },
-] as const;
+];
 
 const stripPublicUrl = (u: string | null | undefined): string => {
   if (!u) return "";
@@ -70,26 +102,43 @@ const stripPublicUrl = (u: string | null | undefined): string => {
 const SectionEditor = ({
   cfg,
   section,
+  fallback,
   onSave,
 }: {
-  cfg: { key: string; label: string; hint: string; showScript?: boolean };
+  cfg: SectionCfg;
   section: any;
+  fallback: any;
   onSave: (u: any) => void;
 }) => {
-  const initial = section || {};
+  const own = section || {};
+  const fb = fallback || {};
+  const d = cfg.defaults || {};
+
+  // Mostra exatamente o que já aparece hoje na página: valor próprio → herdado do cardápio → padrão
+  const pick = (field: string, fallbackValue?: string) =>
+    own[field] || fb[field] || fallbackValue || "";
+
   const [row, setRow] = useState({
-    title: initial.title || "",
-    subtitle: initial.subtitle || "",
-    content: initial.content || "",
-    image_url: stripPublicUrl(initial.image_url),
-    script: (initial.metadata as any)?.script || "",
+    title: pick("title", d.title),
+    subtitle: pick("subtitle", d.subtitle),
+    content: pick("content", d.content),
+    image_url: stripPublicUrl(own.image_url || fb.image_url),
+    script: (own.metadata as any)?.script || d.script || "",
   });
+
+  const inherited = !own.title && !own.subtitle && !own.content && !own.image_url;
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-base">{cfg.label}</CardTitle>
         <p className="text-xs text-muted-foreground">{cfg.hint}</p>
+        {inherited && (
+          <p className="text-xs text-accent">
+            Conteúdo atual vindo do cardápio/padrão. Ao salvar, ele passa a ser exclusivo desta
+            página.
+          </p>
+        )}
       </CardHeader>
       <CardContent className="space-y-3">
         {cfg.showScript && (
@@ -172,8 +221,7 @@ const AdminMontarPedido = () => {
       <div>
         <h1 className="font-display text-3xl text-foreground">Montar Pedido</h1>
         <p className="mt-1 text-muted-foreground">
-          Edite os textos e imagens da página onde o cliente monta o pedido. Se um campo ficar vazio,
-          o conteúdo do cardápio é usado como padrão.
+          Os campos já vêm preenchidos com o que aparece hoje na página. Edite o que quiser e salve.
         </p>
       </div>
 
@@ -182,6 +230,7 @@ const AdminMontarPedido = () => {
           key={cfg.key}
           cfg={cfg}
           section={byKey[cfg.key]}
+          fallback={cfg.fallbackKey ? byKey[cfg.fallbackKey] : null}
           onSave={(updates) => {
             if (byKey[cfg.key]) update.mutate({ sectionKey: cfg.key, updates });
             else create.mutate({ section_key: cfg.key, ...updates });
