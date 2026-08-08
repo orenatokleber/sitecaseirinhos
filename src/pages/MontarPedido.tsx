@@ -453,7 +453,12 @@ const MontarPedido = () => {
 
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
             <div className="space-y-5">
-              <StepCard step={1} title="O que você deseja?">
+              <StepCard
+                step={1}
+                title={sec("pedido_kind").title || "O que você deseja?"}
+                hint={sec("pedido_kind").content || sec("pedido_kind").subtitle}
+                image={sec("pedido_kind").image_url}
+              >
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <Chip active={kind === "round"} onClick={() => setKind("round")}>
                     Bolo redondo
