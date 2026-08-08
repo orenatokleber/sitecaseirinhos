@@ -428,11 +428,12 @@ const MontarPedido = () => {
                 />
               )}
               <div className="flex-1">
-                {psec("pedido_hero", "cardapio_hero").subtitle && (
+                {psec("pedido_hero", "cardapio_hero").subtitle && !sec("pedido_hero").subtitle && (
                   <p className="font-body text-sm leading-relaxed text-muted-foreground">
                     {psec("pedido_hero", "cardapio_hero").subtitle}
                   </p>
                 )}
+
                 {psec("pedido_hero", "cardapio_hero").content && (
                   <p className="mt-2 font-body text-xs leading-relaxed text-muted-foreground">
                     {psec("pedido_hero", "cardapio_hero").content}
