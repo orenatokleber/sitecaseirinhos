@@ -499,7 +499,12 @@ const MontarPedido = () => {
                     </div>
                   </StepCard>
 
-                  <StepCard step={3} title="Linha e sabor">
+                  <StepCard
+                    step={3}
+                    title={sec("pedido_round_line").title || "Linha e sabor"}
+                    hint={sec("pedido_round_line").content || sec("pedido_round_line").subtitle}
+                    image={sec("pedido_round_line").image_url}
+                  >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {standardCats.map((c) => (
                         <OptionCard
