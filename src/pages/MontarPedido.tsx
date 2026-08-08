@@ -231,6 +231,24 @@ const MontarPedido = () => {
     };
   };
 
+  const sweetDraft = useMemo<OrderItem | null>(() => {
+    if (!sweetTypeId || !sweetPackageId) return null;
+    const t = sweetTypes.find((x) => x.id === sweetTypeId);
+    const pkg = sweetPackages.find((x) => x.id === sweetPackageId);
+    const fl = sweetFlavors.find((x) => x.id === sweetFlavorId);
+    const details = [`Quantidade: ${pkg?.quantity} unidades`];
+    if (fl) details.push(`Sabor: ${fl.name}`);
+    return {
+      id: "draft-sweet",
+      kind: "sweet" as const,
+      title: `Doces — ${t?.name ?? ""}`,
+      details,
+      price: pkg?.price ?? null,
+      consult: pkg?.price === undefined,
+      qty: 1,
+    };
+  }, [sweetTypeId, sweetFlavorId, sweetPackageId, sweetTypes, sweetFlavors, sweetPackages]);
+
   const currentDraft = useMemo<OrderItem | null>(() => {
     if (kind === "round") {
       if (!sizeId || !catId) return null;
