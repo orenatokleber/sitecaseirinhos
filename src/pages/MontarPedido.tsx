@@ -172,6 +172,18 @@ const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
   const { data: sections = {} } = useSiteSections();
   const sec = (key: string) => (sections as any)?.[key] || {};
+  /** Prefere a seção própria da página "Montar Pedido" e cai para a do cardápio */
+  const psec = (key: string, fallbackKey?: string) => {
+    const own = (sections as any)?.[key];
+    const fb = fallbackKey ? (sections as any)?.[fallbackKey] : undefined;
+    if (!own && !fb) return {};
+    return {
+      title: own?.title || fb?.title || null,
+      subtitle: own?.subtitle || fb?.subtitle || null,
+      content: own?.content || fb?.content || null,
+      image_url: own?.image_url || fb?.image_url || null,
+    };
+  };
   const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
 
 
