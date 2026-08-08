@@ -392,6 +392,39 @@ const MontarPedido = () => {
             subtitle="Escolha as opções abaixo, adicione ao resumo e envie tudo pelo WhatsApp"
           />
 
+          {(sec("cardapio_hero").image_url || sec("cardapio_hero").content) && (
+            <div className="mx-auto mb-8 flex max-w-6xl flex-col items-center gap-5 rounded-2xl border border-border bg-card/60 p-5 md:flex-row md:p-6">
+              {sec("cardapio_hero").image_url && (
+                <img
+                  src={sec("cardapio_hero").image_url}
+                  alt={sec("cardapio_hero").title || "Cardápio Caseirinhos"}
+                  loading="lazy"
+                  className="h-40 w-full max-w-xs rounded-xl object-contain md:h-48"
+                />
+              )}
+              <div className="flex-1">
+                {sec("cardapio_hero").subtitle && (
+                  <p className="font-body text-sm leading-relaxed text-muted-foreground">
+                    {sec("cardapio_hero").subtitle}
+                  </p>
+                )}
+                {sec("cardapio_hero").content && (
+                  <p className="mt-2 font-body text-xs leading-relaxed text-muted-foreground">
+                    {sec("cardapio_hero").content}
+                  </p>
+                )}
+                <Link
+                  to="/cardapio"
+                  className="mt-3 inline-flex items-center gap-1 font-body text-xs font-semibold text-primary underline-offset-4 hover:underline"
+                >
+                  Ver cardápio completo <ArrowRight size={13} />
+                </Link>
+              </div>
+            </div>
+          )}
+
+
+
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
             <div className="space-y-5">
               <StepCard step={1} title="O que você deseja?">
