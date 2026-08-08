@@ -172,6 +172,18 @@ const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
   const { data: sections = {} } = useSiteSections();
   const sec = (key: string) => (sections as any)?.[key] || {};
+  /** Prefere a seção própria da página "Montar Pedido" e cai para a do cardápio */
+  const psec = (key: string, fallbackKey?: string) => {
+    const own = (sections as any)?.[key];
+    const fb = fallbackKey ? (sections as any)?.[fallbackKey] : undefined;
+    if (!own && !fb) return {};
+    return {
+      title: own?.title || fb?.title || null,
+      subtitle: own?.subtitle || fb?.subtitle || null,
+      content: own?.content || fb?.content || null,
+      image_url: own?.image_url || fb?.image_url || null,
+    };
+  };
   const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
 
 
@@ -230,6 +242,24 @@ const MontarPedido = () => {
       label: p !== null ? `${addon.pricing_type === "from" ? "a partir de " : ""}${formatPrice(p)}` : "a consultar",
     };
   };
+
+  const sweetDraft = useMemo<OrderItem | null>(() => {
+    if (!sweetTypeId || !sweetPackageId) return null;
+    const t = sweetTypes.find((x) => x.id === sweetTypeId);
+    const pkg = sweetPackages.find((x) => x.id === sweetPackageId);
+    const fl = sweetFlavors.find((x) => x.id === sweetFlavorId);
+    const details = [`Quantidade: ${pkg?.quantity} unidades`];
+    if (fl) details.push(`Sabor: ${fl.name}`);
+    return {
+      id: "draft-sweet",
+      kind: "sweet" as const,
+      title: `Doces — ${t?.name ?? ""}`,
+      details,
+      price: pkg?.price ?? null,
+      consult: pkg?.price === undefined,
+      qty: 1,
+    };
+  }, [sweetTypeId, sweetFlavorId, sweetPackageId, sweetTypes, sweetFlavors, sweetPackages]);
 
   const currentDraft = useMemo<OrderItem | null>(() => {
     if (kind === "round") {
@@ -290,21 +320,7 @@ const MontarPedido = () => {
         qty: 1,
       };
     }
-    if (!sweetTypeId || !sweetPackageId) return null;
-    const t = sweetTypes.find((x) => x.id === sweetTypeId);
-    const pkg = sweetPackages.find((x) => x.id === sweetPackageId);
-    const fl = sweetFlavors.find((x) => x.id === sweetFlavorId);
-    const details = [`Quantidade: ${pkg?.quantity} unidades`];
-    if (fl) details.push(`Sabor: ${fl.name}`);
-    return {
-      id: "draft",
-      kind: "sweet",
-      title: `Doces — ${t?.name ?? ""}`,
-      details,
-      price: pkg?.price ?? null,
-      consult: pkg?.price === undefined,
-      qty: 1,
-    };
+    return sweetDraft;
   }, [
     kind,
     sizeId,
@@ -314,9 +330,7 @@ const MontarPedido = () => {
     rectId,
     rectClass,
     rectAddons,
-    sweetTypeId,
-    sweetFlavorId,
-    sweetPackageId,
+    sweetDraft,
     sizes,
     categories,
     flavors,
@@ -324,14 +338,20 @@ const MontarPedido = () => {
     addons,
     addonPrices,
     rectangular,
-    sweetTypes,
-    sweetFlavors,
-    sweetPackages,
   ]);
 
+  const canAdd = kind === "sweet" ? !!sweetDraft : !!currentDraft || !!sweetDraft;
+
   const addItem = () => {
-    if (!currentDraft) return;
-    setItems((prev) => [...prev, { ...currentDraft, id: `${Date.now()}` }]);
+    const toAdd: OrderItem[] = [];
+    if (kind !== "sweet" && currentDraft) toAdd.push(currentDraft);
+    if (sweetDraft) toAdd.push(sweetDraft);
+    if (toAdd.length === 0) return;
+    const stamp = Date.now();
+    setItems((prev) => [
+      ...prev,
+      ...toAdd.map((it, i) => ({ ...it, id: `${stamp}-${i}` })),
+    ]);
     setSizeId("");
     setCatId("");
     setFlavorId("");
@@ -342,6 +362,7 @@ const MontarPedido = () => {
     setSweetFlavorId("");
     setSweetPackageId("");
   };
+
 
   const toggle = (list: string[], setList: (v: string[]) => void, id: string) =>
     setList(list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
@@ -387,30 +408,35 @@ const MontarPedido = () => {
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <SectionTitle
-            script="Passo a passo"
-            title="Monte seu Pedido"
-            subtitle="Escolha as opções abaixo, adicione ao resumo e envie tudo pelo WhatsApp"
+            script={sec("pedido_hero").metadata?.script || "Passo a passo"}
+            title={sec("pedido_hero").title || "Monte seu Pedido"}
+            subtitle={
+              sec("pedido_hero").subtitle ||
+              "Escolha as opções abaixo, adicione ao resumo e envie tudo pelo WhatsApp"
+            }
           />
 
-          {(sec("cardapio_hero").image_url || sec("cardapio_hero").content) && (
+
+          {(psec("pedido_hero", "cardapio_hero").image_url || psec("pedido_hero", "cardapio_hero").content) && (
             <div className="mx-auto mb-8 flex max-w-6xl flex-col items-center gap-5 rounded-2xl border border-border bg-card/60 p-5 md:flex-row md:p-6">
-              {sec("cardapio_hero").image_url && (
+              {psec("pedido_hero", "cardapio_hero").image_url && (
                 <img
-                  src={sec("cardapio_hero").image_url}
-                  alt={sec("cardapio_hero").title || "Cardápio Caseirinhos"}
+                  src={psec("pedido_hero", "cardapio_hero").image_url}
+                  alt={psec("pedido_hero", "cardapio_hero").title || "Cardápio Caseirinhos"}
                   loading="lazy"
                   className="h-40 w-full max-w-xs rounded-xl object-contain md:h-48"
                 />
               )}
               <div className="flex-1">
-                {sec("cardapio_hero").subtitle && (
+                {psec("pedido_hero", "cardapio_hero").subtitle && !sec("pedido_hero").subtitle && (
                   <p className="font-body text-sm leading-relaxed text-muted-foreground">
-                    {sec("cardapio_hero").subtitle}
+                    {psec("pedido_hero", "cardapio_hero").subtitle}
                   </p>
                 )}
-                {sec("cardapio_hero").content && (
+
+                {psec("pedido_hero", "cardapio_hero").content && (
                   <p className="mt-2 font-body text-xs leading-relaxed text-muted-foreground">
-                    {sec("cardapio_hero").content}
+                    {psec("pedido_hero", "cardapio_hero").content}
                   </p>
                 )}
                 <Link
@@ -427,7 +453,12 @@ const MontarPedido = () => {
 
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
             <div className="space-y-5">
-              <StepCard step={1} title="O que você deseja?">
+              <StepCard
+                step={1}
+                title={sec("pedido_kind").title || "O que você deseja?"}
+                hint={sec("pedido_kind").content || sec("pedido_kind").subtitle}
+                image={sec("pedido_kind").image_url}
+              >
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <Chip active={kind === "round"} onClick={() => setKind("round")}>
                     Bolo redondo
@@ -445,9 +476,9 @@ const MontarPedido = () => {
                 <>
                   <StepCard
                     step={2}
-                    title={sec("cardapio_sizes").title || "Tamanho"}
-                    hint={sec("cardapio_sizes").content || sec("cardapio_sizes").subtitle}
-                    image={sec("cardapio_sizes").image_url}
+                    title={psec("pedido_size", "cardapio_sizes").title || "Tamanho"}
+                    hint={psec("pedido_size", "cardapio_sizes").content || psec("pedido_size", "cardapio_sizes").subtitle}
+                    image={psec("pedido_size", "cardapio_sizes").image_url}
                   >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {sizes.map((s) => (
@@ -468,7 +499,12 @@ const MontarPedido = () => {
                     </div>
                   </StepCard>
 
-                  <StepCard step={3} title="Linha e sabor">
+                  <StepCard
+                    step={3}
+                    title={sec("pedido_round_line").title || "Linha e sabor"}
+                    hint={sec("pedido_round_line").content || sec("pedido_round_line").subtitle}
+                    image={sec("pedido_round_line").image_url}
+                  >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {standardCats.map((c) => (
                         <OptionCard
@@ -514,9 +550,9 @@ const MontarPedido = () => {
                   {roundAddonList.length > 0 && (
                     <StepCard
                       step={4}
-                      title={sec("cardapio_decorations").title || "Adicionais (opcional)"}
-                      hint={sec("cardapio_decorations").subtitle}
-                      image={sec("cardapio_addons").image_url}
+                      title={psec("pedido_round_addons", "cardapio_decorations").title || "Adicionais (opcional)"}
+                      hint={psec("pedido_round_addons", "cardapio_decorations").subtitle}
+                      image={psec("pedido_round_addons", "cardapio_addons").image_url}
                     >
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {roundAddonList.map((a) => {
@@ -542,11 +578,11 @@ const MontarPedido = () => {
                 <>
                   <StepCard
                     step={2}
-                    title={sec("cardapio_rectangular").title || "Modelo"}
+                    title={psec("pedido_rect", "cardapio_rectangular").title || "Modelo"}
                     hint={
-                      sec("cardapio_rectangular").content || sec("cardapio_rectangular").subtitle
+                      psec("pedido_rect", "cardapio_rectangular").content || psec("pedido_rect", "cardapio_rectangular").subtitle
                     }
-                    image={sec("cardapio_rectangular").image_url}
+                    image={psec("pedido_rect", "cardapio_rectangular").image_url}
                   >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {rectangular.map((r) => (
@@ -568,7 +604,12 @@ const MontarPedido = () => {
                     </div>
                   </StepCard>
 
-                  <StepCard step={3} title="Linha">
+                  <StepCard
+                    step={3}
+                    title={sec("pedido_rect_line").title || "Linha"}
+                    hint={sec("pedido_rect_line").content || sec("pedido_rect_line").subtitle}
+                    image={sec("pedido_rect_line").image_url}
+                  >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <OptionCard
                         active={rectClass === "class1"}
@@ -596,8 +637,8 @@ const MontarPedido = () => {
                   {rectAddonList.length > 0 && (
                     <StepCard
                       step={4}
-                      title={sec("cardapio_decorations_rect").title || "Adicionais (opcional)"}
-                      hint={sec("cardapio_decorations_rect").subtitle}
+                      title={psec("pedido_rect_addons", "cardapio_decorations_rect").title || "Adicionais (opcional)"}
+                      hint={psec("pedido_rect_addons", "cardapio_decorations_rect").subtitle}
                     >
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {rectAddonList.map((a) => {
@@ -619,39 +660,45 @@ const MontarPedido = () => {
                 </>
               )}
 
-              {kind === "sweet" && (
-                <>
-                  <StepCard
-                    step={2}
-                    title={sec("cardapio_sweets").title || "Tipo de doce"}
-                    hint={
-                      sec("cardapio_sweets").content ||
-                      sec("cardapio_sweets").subtitle ||
-                      "Vendidos em pacotes de 25, 50 ou 100 unidades"
-                    }
-                  >
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      {sweetTypes.map((t) => (
-                        <OptionCard
-                          key={t.id}
-                          active={sweetTypeId === t.id}
-                          onClick={() => {
-                            setSweetTypeId(t.id);
-                            setSweetFlavorId("");
-                            setSweetPackageId("");
-                          }}
-                          image={t.image_url}
-                          title={t.name}
-                          meta={t.weight_g ? `${t.weight_g}g por unidade` : undefined}
-                          description={t.description}
-                        />
-                      ))}
-                    </div>
-                  </StepCard>
+              <StepCard
+                step={kind === "sweet" ? 2 : 5}
+                title={
+                  psec("pedido_sweets", "cardapio_sweets").title ||
+                  (kind === "sweet" ? "Tipo de doce" : "Doces para festa (opcional)")
+                }
+                hint={
+                  psec("pedido_sweets", "cardapio_sweets").content ||
+                  psec("pedido_sweets", "cardapio_sweets").subtitle ||
+                  "Vendidos em pacotes de 25, 50 ou 100 unidades"
+                }
+                image={psec("pedido_sweets", "cardapio_sweets").image_url}
+              >
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {sweetTypes.map((t) => (
+                    <OptionCard
+                      key={t.id}
+                      active={sweetTypeId === t.id}
+                      onClick={() => {
+                        const same = sweetTypeId === t.id;
+                        setSweetTypeId(same ? "" : t.id);
+                        setSweetFlavorId("");
+                        setSweetPackageId("");
+                      }}
+                      image={t.image_url}
+                      title={t.name}
+                      meta={t.weight_g ? `${t.weight_g}g por unidade` : undefined}
+                      description={t.description}
+                    />
+                  ))}
+                </div>
 
-                  {sweetTypeId && (
-                    <StepCard step={3} title="Sabor e quantidade">
-                      {typeFlavors.length > 0 && (
+                {sweetTypeId && (
+                  <div className="mt-5 border-t border-border/60 pt-5">
+                    {typeFlavors.length > 0 && (
+                      <>
+                        <p className="mb-2 font-body text-xs uppercase tracking-wider text-muted-foreground">
+                          Escolha o sabor
+                        </p>
                         <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                           {typeFlavors.map((f) => (
                             <OptionCard
@@ -663,34 +710,34 @@ const MontarPedido = () => {
                             />
                           ))}
                         </div>
-                      )}
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        {typePackages.map((p) => (
-                          <OptionCard
-                            key={p.id}
-                            active={sweetPackageId === p.id}
-                            onClick={() => setSweetPackageId(p.id)}
-                            title={`${p.quantity} unidades`}
-                            price={formatPrice(p.price)}
-                          />
-                        ))}
-                      </div>
-                    </StepCard>
-                  )}
-                </>
-              )}
-
+                      </>
+                    )}
+                    <p className="mb-2 font-body text-xs uppercase tracking-wider text-muted-foreground">
+                      Quantidade
+                    </p>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {typePackages.map((p) => (
+                        <OptionCard
+                          key={p.id}
+                          active={sweetPackageId === p.id}
+                          onClick={() => setSweetPackageId(p.id)}
+                          title={`${p.quantity} unidades`}
+                          price={formatPrice(p.price)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </StepCard>
 
               <button
                 type="button"
                 onClick={addItem}
-                disabled={!currentDraft}
+                disabled={!canAdd}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 font-body text-sm uppercase tracking-wider text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Plus size={16} />
-                {currentDraft
-                  ? `Adicionar ao pedido${currentDraft.consult ? "" : ` · ${formatPrice(currentDraft.price)}`}`
-                  : "Selecione as opções acima"}
+                {canAdd ? "Adicionar ao pedido" : "Selecione as opções acima"}
               </button>
             </div>
 

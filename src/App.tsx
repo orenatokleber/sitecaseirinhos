@@ -30,6 +30,7 @@ import AdminBlog from "./pages/admin/AdminBlog";
 import AdminConfig from "./pages/admin/AdminConfig";
 import BlogEditor from "./pages/admin/BlogEditor";
 import AdminCardapio from "./pages/admin/AdminCardapio";
+import AdminMontarPedido from "./pages/admin/AdminMontarPedido";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import AdminSEO from "./pages/admin/AdminSEO";
@@ -113,6 +114,7 @@ const App = () => (
                 <Route path="nossa-historia" element={<AdminNossaHistoria />} />
                 <Route path="produtos" element={<AdminProducts />} />
                 <Route path="cardapio" element={<AdminCardapio />} />
+                <Route path="montar-pedido" element={<AdminMontarPedido />} />
                 <Route path="depoimentos" element={<AdminTestimonials />} />
                 <Route path="galeria" element={<AdminGallery />} />
               <Route path="blog" element={<AdminBlog />} />

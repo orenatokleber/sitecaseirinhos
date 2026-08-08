@@ -27,6 +27,7 @@ const menuItems = [
 
   { icon: ShoppingBag, label: "Produtos", path: "/painel-admin/produtos" },
   { icon: UtensilsCrossed, label: "Cardápio", path: "/painel-admin/cardapio" },
+  { icon: ShoppingBag, label: "Montar Pedido", path: "/painel-admin/montar-pedido" },
   { icon: MessageSquare, label: "Depoimentos", path: "/painel-admin/depoimentos" },
   { icon: Image, label: "Galeria", path: "/painel-admin/galeria" },
   { icon: BookOpen, label: "Blog", path: "/painel-admin/blog" },
