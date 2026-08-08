@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Check, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { Check, Plus, Trash2, ShoppingBag, ArrowRight, Info } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import SectionTitle from "@/components/SectionTitle";
-import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useSiteSettings, useSiteSections } from "@/hooks/useSiteContent";
+import { getPublicImageUrl } from "@/lib/supabase";
 import { normalizeWhatsApp } from "@/lib/utils";
 import {
   useCakeSizes,
@@ -18,6 +19,7 @@ import {
   useSweetFlavors,
   useSweetPackages,
 } from "@/hooks/useCardapio";
+
 
 const formatPrice = (v: number | null | undefined) =>
   v === null || v === undefined
