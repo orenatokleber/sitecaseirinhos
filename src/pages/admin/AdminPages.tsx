@@ -30,6 +30,13 @@ const pages = [
     icon: UtensilsCrossed,
   },
   {
+    title: "Montar Pedido",
+    description: "Edite textos e imagens da página de montar pedido.",
+    to: "/painel-admin/montar-pedido",
+    icon: UtensilsCrossed,
+  },
+
+  {
     title: "Galeria",
     description: "Adicione e organize as fotos da galeria.",
     to: "/painel-admin/galeria",
