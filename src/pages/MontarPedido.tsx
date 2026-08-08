@@ -604,7 +604,12 @@ const MontarPedido = () => {
                     </div>
                   </StepCard>
 
-                  <StepCard step={3} title="Linha">
+                  <StepCard
+                    step={3}
+                    title={sec("pedido_rect_line").title || "Linha"}
+                    hint={sec("pedido_rect_line").content || sec("pedido_rect_line").subtitle}
+                    image={sec("pedido_rect_line").image_url}
+                  >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <OptionCard
                         active={rectClass === "class1"}
