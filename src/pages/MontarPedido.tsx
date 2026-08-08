@@ -706,8 +706,6 @@ const MontarPedido = () => {
               >
                 <Plus size={16} />
                 {canAdd ? "Adicionar ao pedido" : "Selecione as opções acima"}
-
-                  : "Selecione as opções acima"}
               </button>
             </div>
 
