@@ -170,7 +170,10 @@ const StepCard = ({
 
 const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
+  const { data: sections = {} } = useSiteSections();
+  const sec = (key: string) => (sections as any)?.[key] || {};
   const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
+
 
   const { data: sizes = [] } = useCakeSizes(true);
   const { data: categories = [] } = useCakeCategories(true);
