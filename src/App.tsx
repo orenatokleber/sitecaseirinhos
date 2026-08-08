@@ -12,6 +12,7 @@ import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
 import NossaHistoria from "./pages/NossaHistoria";
 import Cardapio from "./pages/Cardapio";
+import MontarPedido from "./pages/MontarPedido";
 
 import Contato from "./pages/Contato";
 import Galeria from "./pages/Galeria";
