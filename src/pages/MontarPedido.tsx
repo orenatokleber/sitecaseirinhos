@@ -67,13 +67,75 @@ const Chip = ({
   </button>
 );
 
+const OptionCard = ({
+  active,
+  onClick,
+  image,
+  title,
+  meta,
+  description,
+  price,
+}: {
+  active: boolean;
+  onClick: () => void;
+  image?: string | null;
+  title: string;
+  meta?: string;
+  description?: string | null;
+  price?: string;
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`flex gap-3 rounded-xl border p-3 text-left transition-all ${
+      active
+        ? "border-primary bg-primary/10 shadow-sm"
+        : "border-border bg-card hover:border-primary/50"
+    }`}
+  >
+    {image ? (
+      <img
+        src={image}
+        alt={title}
+        loading="lazy"
+        className="h-16 w-16 shrink-0 rounded-lg object-cover"
+      />
+    ) : null}
+    <span className="min-w-0 flex-1">
+      <span className="flex items-start gap-2">
+        <span
+          className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
+            active ? "border-primary bg-primary text-primary-foreground" : "border-border"
+          }`}
+        >
+          {active && <Check size={11} />}
+        </span>
+        <span className="font-body text-sm font-semibold text-foreground">{title}</span>
+      </span>
+      {meta && <span className="mt-1 block font-body text-xs text-muted-foreground">{meta}</span>}
+      {description && (
+        <span className="mt-1 block font-body text-xs leading-snug text-muted-foreground">
+          {description}
+        </span>
+      )}
+      {price && (
+        <span className="mt-1 block font-body text-sm font-bold text-chocolate">{price}</span>
+      )}
+    </span>
+  </button>
+);
+
 const StepCard = ({
   step,
   title,
+  hint,
+  image,
   children,
 }: {
   step: number;
   title: string;
+  hint?: string | null;
+  image?: string | null;
   children: React.ReactNode;
 }) => (
   <div className="rounded-2xl border border-border bg-card/60 p-5 md:p-6">
@@ -83,9 +145,28 @@ const StepCard = ({
       </span>
       <h3 className="font-heading text-lg font-semibold text-foreground">{title}</h3>
     </div>
+    {(hint || image) && (
+      <div className="mb-4 flex flex-col gap-3 rounded-xl bg-muted/40 p-3 sm:flex-row sm:items-center">
+        {image && (
+          <img
+            src={image}
+            alt={title}
+            loading="lazy"
+            className="h-28 w-full shrink-0 rounded-lg object-contain sm:w-40"
+          />
+        )}
+        {hint && (
+          <p className="flex items-start gap-2 font-body text-xs leading-relaxed text-muted-foreground">
+            <Info size={14} className="mt-0.5 shrink-0 text-primary" />
+            <span>{hint}</span>
+          </p>
+        )}
+      </div>
+    )}
     {children}
   </div>
 );
+
 
 const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
