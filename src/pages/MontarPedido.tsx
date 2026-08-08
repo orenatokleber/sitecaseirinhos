@@ -413,25 +413,25 @@ const MontarPedido = () => {
             subtitle="Escolha as opções abaixo, adicione ao resumo e envie tudo pelo WhatsApp"
           />
 
-          {(sec("cardapio_hero").image_url || sec("cardapio_hero").content) && (
+          {(psec("pedido_hero", "cardapio_hero").image_url || psec("pedido_hero", "cardapio_hero").content) && (
             <div className="mx-auto mb-8 flex max-w-6xl flex-col items-center gap-5 rounded-2xl border border-border bg-card/60 p-5 md:flex-row md:p-6">
-              {sec("cardapio_hero").image_url && (
+              {psec("pedido_hero", "cardapio_hero").image_url && (
                 <img
-                  src={sec("cardapio_hero").image_url}
-                  alt={sec("cardapio_hero").title || "Cardápio Caseirinhos"}
+                  src={psec("pedido_hero", "cardapio_hero").image_url}
+                  alt={psec("pedido_hero", "cardapio_hero").title || "Cardápio Caseirinhos"}
                   loading="lazy"
                   className="h-40 w-full max-w-xs rounded-xl object-contain md:h-48"
                 />
               )}
               <div className="flex-1">
-                {sec("cardapio_hero").subtitle && (
+                {psec("pedido_hero", "cardapio_hero").subtitle && (
                   <p className="font-body text-sm leading-relaxed text-muted-foreground">
-                    {sec("cardapio_hero").subtitle}
+                    {psec("pedido_hero", "cardapio_hero").subtitle}
                   </p>
                 )}
-                {sec("cardapio_hero").content && (
+                {psec("pedido_hero", "cardapio_hero").content && (
                   <p className="mt-2 font-body text-xs leading-relaxed text-muted-foreground">
-                    {sec("cardapio_hero").content}
+                    {psec("pedido_hero", "cardapio_hero").content}
                   </p>
                 )}
                 <Link
@@ -466,9 +466,9 @@ const MontarPedido = () => {
                 <>
                   <StepCard
                     step={2}
-                    title={sec("cardapio_sizes").title || "Tamanho"}
-                    hint={sec("cardapio_sizes").content || sec("cardapio_sizes").subtitle}
-                    image={sec("cardapio_sizes").image_url}
+                    title={psec("pedido_size", "cardapio_sizes").title || "Tamanho"}
+                    hint={psec("pedido_size", "cardapio_sizes").content || psec("pedido_size", "cardapio_sizes").subtitle}
+                    image={psec("pedido_size", "cardapio_sizes").image_url}
                   >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {sizes.map((s) => (
@@ -535,9 +535,9 @@ const MontarPedido = () => {
                   {roundAddonList.length > 0 && (
                     <StepCard
                       step={4}
-                      title={sec("cardapio_decorations").title || "Adicionais (opcional)"}
-                      hint={sec("cardapio_decorations").subtitle}
-                      image={sec("cardapio_addons").image_url}
+                      title={psec("pedido_round_addons", "cardapio_decorations").title || "Adicionais (opcional)"}
+                      hint={psec("pedido_round_addons", "cardapio_decorations").subtitle}
+                      image={psec("pedido_round_addons", "cardapio_addons").image_url}
                     >
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {roundAddonList.map((a) => {
@@ -563,11 +563,11 @@ const MontarPedido = () => {
                 <>
                   <StepCard
                     step={2}
-                    title={sec("cardapio_rectangular").title || "Modelo"}
+                    title={psec("pedido_rect", "cardapio_rectangular").title || "Modelo"}
                     hint={
-                      sec("cardapio_rectangular").content || sec("cardapio_rectangular").subtitle
+                      psec("pedido_rect", "cardapio_rectangular").content || psec("pedido_rect", "cardapio_rectangular").subtitle
                     }
-                    image={sec("cardapio_rectangular").image_url}
+                    image={psec("pedido_rect", "cardapio_rectangular").image_url}
                   >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {rectangular.map((r) => (
@@ -617,8 +617,8 @@ const MontarPedido = () => {
                   {rectAddonList.length > 0 && (
                     <StepCard
                       step={4}
-                      title={sec("cardapio_decorations_rect").title || "Adicionais (opcional)"}
-                      hint={sec("cardapio_decorations_rect").subtitle}
+                      title={psec("pedido_rect_addons", "cardapio_decorations_rect").title || "Adicionais (opcional)"}
+                      hint={psec("pedido_rect_addons", "cardapio_decorations_rect").subtitle}
                     >
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {rectAddonList.map((a) => {
