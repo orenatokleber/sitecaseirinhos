@@ -408,10 +408,14 @@ const MontarPedido = () => {
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <SectionTitle
-            script="Passo a passo"
-            title="Monte seu Pedido"
-            subtitle="Escolha as opções abaixo, adicione ao resumo e envie tudo pelo WhatsApp"
+            script={sec("pedido_hero").metadata?.script || "Passo a passo"}
+            title={sec("pedido_hero").title || "Monte seu Pedido"}
+            subtitle={
+              sec("pedido_hero").subtitle ||
+              "Escolha as opções abaixo, adicione ao resumo e envie tudo pelo WhatsApp"
+            }
           />
+
 
           {(psec("pedido_hero", "cardapio_hero").image_url || psec("pedido_hero", "cardapio_hero").content) && (
             <div className="mx-auto mb-8 flex max-w-6xl flex-col items-center gap-5 rounded-2xl border border-border bg-card/60 p-5 md:flex-row md:p-6">
