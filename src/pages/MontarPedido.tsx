@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Check, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { Check, Plus, Trash2, ShoppingBag, ArrowRight, Info } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import SectionTitle from "@/components/SectionTitle";
-import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useSiteSettings, useSiteSections } from "@/hooks/useSiteContent";
+import { getPublicImageUrl } from "@/lib/supabase";
 import { normalizeWhatsApp } from "@/lib/utils";
 import {
   useCakeSizes,
@@ -18,6 +19,7 @@ import {
   useSweetFlavors,
   useSweetPackages,
 } from "@/hooks/useCardapio";
+
 
 const formatPrice = (v: number | null | undefined) =>
   v === null || v === undefined
@@ -65,13 +67,75 @@ const Chip = ({
   </button>
 );
 
+const OptionCard = ({
+  active,
+  onClick,
+  image,
+  title,
+  meta,
+  description,
+  price,
+}: {
+  active: boolean;
+  onClick: () => void;
+  image?: string | null;
+  title: string;
+  meta?: string;
+  description?: string | null;
+  price?: string;
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`flex gap-3 rounded-xl border p-3 text-left transition-all ${
+      active
+        ? "border-primary bg-primary/10 shadow-sm"
+        : "border-border bg-card hover:border-primary/50"
+    }`}
+  >
+    {image ? (
+      <img
+        src={image}
+        alt={title}
+        loading="lazy"
+        className="h-16 w-16 shrink-0 rounded-lg object-cover"
+      />
+    ) : null}
+    <span className="min-w-0 flex-1">
+      <span className="flex items-start gap-2">
+        <span
+          className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
+            active ? "border-primary bg-primary text-primary-foreground" : "border-border"
+          }`}
+        >
+          {active && <Check size={11} />}
+        </span>
+        <span className="font-body text-sm font-semibold text-foreground">{title}</span>
+      </span>
+      {meta && <span className="mt-1 block font-body text-xs text-muted-foreground">{meta}</span>}
+      {description && (
+        <span className="mt-1 block font-body text-xs leading-snug text-muted-foreground">
+          {description}
+        </span>
+      )}
+      {price && (
+        <span className="mt-1 block font-body text-sm font-bold text-chocolate">{price}</span>
+      )}
+    </span>
+  </button>
+);
+
 const StepCard = ({
   step,
   title,
+  hint,
+  image,
   children,
 }: {
   step: number;
   title: string;
+  hint?: string | null;
+  image?: string | null;
   children: React.ReactNode;
 }) => (
   <div className="rounded-2xl border border-border bg-card/60 p-5 md:p-6">
@@ -81,13 +145,35 @@ const StepCard = ({
       </span>
       <h3 className="font-heading text-lg font-semibold text-foreground">{title}</h3>
     </div>
+    {(hint || image) && (
+      <div className="mb-4 flex flex-col gap-3 rounded-xl bg-muted/40 p-3 sm:flex-row sm:items-center">
+        {image && (
+          <img
+            src={image}
+            alt={title}
+            loading="lazy"
+            className="h-28 w-full shrink-0 rounded-lg object-contain sm:w-40"
+          />
+        )}
+        {hint && (
+          <p className="flex items-start gap-2 font-body text-xs leading-relaxed text-muted-foreground">
+            <Info size={14} className="mt-0.5 shrink-0 text-primary" />
+            <span>{hint}</span>
+          </p>
+        )}
+      </div>
+    )}
     {children}
   </div>
 );
 
+
 const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
+  const { data: sections = {} } = useSiteSections();
+  const sec = (key: string) => (sections as any)?.[key] || {};
   const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
+
 
   const { data: sizes = [] } = useCakeSizes(true);
   const { data: categories = [] } = useCakeCategories(true);
@@ -306,6 +392,39 @@ const MontarPedido = () => {
             subtitle="Escolha as opções abaixo, adicione ao resumo e envie tudo pelo WhatsApp"
           />
 
+          {(sec("cardapio_hero").image_url || sec("cardapio_hero").content) && (
+            <div className="mx-auto mb-8 flex max-w-6xl flex-col items-center gap-5 rounded-2xl border border-border bg-card/60 p-5 md:flex-row md:p-6">
+              {sec("cardapio_hero").image_url && (
+                <img
+                  src={sec("cardapio_hero").image_url}
+                  alt={sec("cardapio_hero").title || "Cardápio Caseirinhos"}
+                  loading="lazy"
+                  className="h-40 w-full max-w-xs rounded-xl object-contain md:h-48"
+                />
+              )}
+              <div className="flex-1">
+                {sec("cardapio_hero").subtitle && (
+                  <p className="font-body text-sm leading-relaxed text-muted-foreground">
+                    {sec("cardapio_hero").subtitle}
+                  </p>
+                )}
+                {sec("cardapio_hero").content && (
+                  <p className="mt-2 font-body text-xs leading-relaxed text-muted-foreground">
+                    {sec("cardapio_hero").content}
+                  </p>
+                )}
+                <Link
+                  to="/cardapio"
+                  className="mt-3 inline-flex items-center gap-1 font-body text-xs font-semibold text-primary underline-offset-4 hover:underline"
+                >
+                  Ver cardápio completo <ArrowRight size={13} />
+                </Link>
+              </div>
+            </div>
+          )}
+
+
+
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
             <div className="space-y-5">
               <StepCard step={1} title="O que você deseja?">
@@ -324,14 +443,27 @@ const MontarPedido = () => {
 
               {kind === "round" && (
                 <>
-                  <StepCard step={2} title="Tamanho">
+                  <StepCard
+                    step={2}
+                    title={sec("cardapio_sizes").title || "Tamanho"}
+                    hint={sec("cardapio_sizes").content || sec("cardapio_sizes").subtitle}
+                    image={sec("cardapio_sizes").image_url}
+                  >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {sizes.map((s) => (
-                        <Chip key={s.id} active={sizeId === s.id} onClick={() => setSizeId(s.id)}>
-                          {s.name}
-                          {s.ring_size ? ` · ${s.ring_size}` : ""}
-                          {s.slices ? ` · ${s.slices} fatias` : ""}
-                        </Chip>
+                        <OptionCard
+                          key={s.id}
+                          active={sizeId === s.id}
+                          onClick={() => setSizeId(s.id)}
+                          title={s.name}
+                          meta={[
+                            s.ring_size ? `Aro ${s.ring_size}` : null,
+                            s.slices ? `${s.slices} fatias` : null,
+                            s.weight_kg ? `${s.weight_kg} kg` : null,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        />
                       ))}
                     </div>
                   </StepCard>
@@ -339,47 +471,65 @@ const MontarPedido = () => {
                   <StepCard step={3} title="Linha e sabor">
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {standardCats.map((c) => (
-                        <Chip
+                        <OptionCard
                           key={c.id}
                           active={catId === c.id}
                           onClick={() => {
                             setCatId(c.id);
                             setFlavorId("");
                           }}
-                        >
-                          {c.name}
-                          {sizeId && c.type !== "consult" && priceOf(c.id, sizeId) !== null
-                            ? ` · ${formatPrice(priceOf(c.id, sizeId))}`
-                            : c.type === "consult"
-                              ? " · a consultar"
-                              : ""}
-                        </Chip>
+                          image={c.image_url ? getPublicImageUrl(c.image_url) : null}
+                          title={c.name}
+                          description={c.description}
+                          price={
+                            c.type === "consult"
+                              ? "Valor a consultar"
+                              : sizeId && priceOf(c.id, sizeId) !== null
+                                ? formatPrice(priceOf(c.id, sizeId))
+                                : undefined
+                          }
+                        />
                       ))}
                     </div>
                     {catId && catFlavors.length > 0 && (
-                      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        {catFlavors.map((f) => (
-                          <Chip key={f.id} active={flavorId === f.id} onClick={() => setFlavorId(f.id)}>
-                            {f.name}
-                          </Chip>
-                        ))}
-                      </div>
+                      <>
+                        <p className="mt-5 mb-2 font-body text-xs uppercase tracking-wider text-muted-foreground">
+                          Escolha o sabor
+                        </p>
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                          {catFlavors.map((f) => (
+                            <OptionCard
+                              key={f.id}
+                              active={flavorId === f.id}
+                              onClick={() => setFlavorId(f.id)}
+                              title={f.name}
+                              description={f.description}
+                            />
+                          ))}
+                        </div>
+                      </>
                     )}
                   </StepCard>
 
                   {roundAddonList.length > 0 && (
-                    <StepCard step={4} title="Adicionais (opcional)">
+                    <StepCard
+                      step={4}
+                      title={sec("cardapio_decorations").title || "Adicionais (opcional)"}
+                      hint={sec("cardapio_decorations").subtitle}
+                      image={sec("cardapio_addons").image_url}
+                    >
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {roundAddonList.map((a) => {
                           const info = addonPriceInfo(a.id, sizeId);
                           return (
-                            <Chip
+                            <OptionCard
                               key={a.id}
                               active={roundAddons.includes(a.id)}
                               onClick={() => toggle(roundAddons, setRoundAddons, a.id)}
-                            >
-                              {a.name} · {info.label}
-                            </Chip>
+                              title={a.name}
+                              description={a.description}
+                              price={info.label}
+                            />
                           );
                         })}
                       </div>
@@ -390,48 +540,77 @@ const MontarPedido = () => {
 
               {kind === "rectangular" && (
                 <>
-                  <StepCard step={2} title="Modelo">
+                  <StepCard
+                    step={2}
+                    title={sec("cardapio_rectangular").title || "Modelo"}
+                    hint={
+                      sec("cardapio_rectangular").content || sec("cardapio_rectangular").subtitle
+                    }
+                    image={sec("cardapio_rectangular").image_url}
+                  >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {rectangular.map((r) => (
-                        <Chip key={r.id} active={rectId === r.id} onClick={() => setRectId(r.id)}>
-                          {r.name}
-                          {r.dimensions ? ` · ${r.dimensions}` : ""}
-                          {r.slices ? ` · ${r.slices} fatias` : ""}
-                        </Chip>
+                        <OptionCard
+                          key={r.id}
+                          active={rectId === r.id}
+                          onClick={() => setRectId(r.id)}
+                          title={r.name}
+                          meta={[
+                            r.dimensions,
+                            r.slices ? `${r.slices} fatias` : null,
+                            r.weight_kg ? `${r.weight_kg} kg` : null,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                          description={r.note}
+                        />
                       ))}
                     </div>
                   </StepCard>
 
                   <StepCard step={3} title="Linha">
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      <Chip active={rectClass === "class1"} onClick={() => setRectClass("class1")}>
-                        Tradicional
-                        {rectId
-                          ? ` · ${formatPrice(rectangular.find((r) => r.id === rectId)?.class1_price)}`
-                          : ""}
-                      </Chip>
-                      <Chip active={rectClass === "class2"} onClick={() => setRectClass("class2")}>
-                        Premium
-                        {rectId
-                          ? ` · ${formatPrice(rectangular.find((r) => r.id === rectId)?.class2_price)}`
-                          : ""}
-                      </Chip>
+                      <OptionCard
+                        active={rectClass === "class1"}
+                        onClick={() => setRectClass("class1")}
+                        title="Tradicional"
+                        price={
+                          rectId
+                            ? formatPrice(rectangular.find((r) => r.id === rectId)?.class1_price)
+                            : undefined
+                        }
+                      />
+                      <OptionCard
+                        active={rectClass === "class2"}
+                        onClick={() => setRectClass("class2")}
+                        title="Premium"
+                        price={
+                          rectId
+                            ? formatPrice(rectangular.find((r) => r.id === rectId)?.class2_price)
+                            : undefined
+                        }
+                      />
                     </div>
                   </StepCard>
 
                   {rectAddonList.length > 0 && (
-                    <StepCard step={4} title="Adicionais (opcional)">
+                    <StepCard
+                      step={4}
+                      title={sec("cardapio_decorations_rect").title || "Adicionais (opcional)"}
+                      hint={sec("cardapio_decorations_rect").subtitle}
+                    >
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {rectAddonList.map((a) => {
                           const info = addonPriceInfo(a.id);
                           return (
-                            <Chip
+                            <OptionCard
                               key={a.id}
                               active={rectAddons.includes(a.id)}
                               onClick={() => toggle(rectAddons, setRectAddons, a.id)}
-                            >
-                              {a.name} · {info.label}
-                            </Chip>
+                              title={a.name}
+                              description={a.description}
+                              price={info.label}
+                            />
                           );
                         })}
                       </div>
@@ -442,10 +621,18 @@ const MontarPedido = () => {
 
               {kind === "sweet" && (
                 <>
-                  <StepCard step={2} title="Tipo de doce">
+                  <StepCard
+                    step={2}
+                    title={sec("cardapio_sweets").title || "Tipo de doce"}
+                    hint={
+                      sec("cardapio_sweets").content ||
+                      sec("cardapio_sweets").subtitle ||
+                      "Vendidos em pacotes de 25, 50 ou 100 unidades"
+                    }
+                  >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {sweetTypes.map((t) => (
-                        <Chip
+                        <OptionCard
                           key={t.id}
                           active={sweetTypeId === t.id}
                           onClick={() => {
@@ -453,10 +640,11 @@ const MontarPedido = () => {
                             setSweetFlavorId("");
                             setSweetPackageId("");
                           }}
-                        >
-                          {t.name}
-                          {t.weight_g ? ` · ${t.weight_g}g` : ""}
-                        </Chip>
+                          image={t.image_url}
+                          title={t.name}
+                          meta={t.weight_g ? `${t.weight_g}g por unidade` : undefined}
+                          description={t.description}
+                        />
                       ))}
                     </div>
                   </StepCard>
@@ -464,33 +652,34 @@ const MontarPedido = () => {
                   {sweetTypeId && (
                     <StepCard step={3} title="Sabor e quantidade">
                       {typeFlavors.length > 0 && (
-                        <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                           {typeFlavors.map((f) => (
-                            <Chip
+                            <OptionCard
                               key={f.id}
                               active={sweetFlavorId === f.id}
                               onClick={() => setSweetFlavorId(f.id)}
-                            >
-                              {f.name}
-                            </Chip>
+                              title={f.name}
+                              description={f.description}
+                            />
                           ))}
                         </div>
                       )}
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {typePackages.map((p) => (
-                          <Chip
+                          <OptionCard
                             key={p.id}
                             active={sweetPackageId === p.id}
                             onClick={() => setSweetPackageId(p.id)}
-                          >
-                            {p.quantity} unidades · {formatPrice(p.price)}
-                          </Chip>
+                            title={`${p.quantity} unidades`}
+                            price={formatPrice(p.price)}
+                          />
                         ))}
                       </div>
                     </StepCard>
                   )}
                 </>
               )}
+
 
               <button
                 type="button"
