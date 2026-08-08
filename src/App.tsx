@@ -12,6 +12,7 @@ import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
 import NossaHistoria from "./pages/NossaHistoria";
 import Cardapio from "./pages/Cardapio";
+import MontarPedido from "./pages/MontarPedido";
 
 import Contato from "./pages/Contato";
 import Galeria from "./pages/Galeria";
@@ -90,7 +91,8 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/nossa-historia" element={<NossaHistoria />} />
               <Route path="/cardapio" element={<Cardapio />} />
-              
+              <Route path="/montar-pedido" element={<MontarPedido />} />
+
               <Route path="/contato" element={<Contato />} />
               <Route path="/galeria" element={<Galeria />} />
               <Route path="/blog" element={<Blog />} />
