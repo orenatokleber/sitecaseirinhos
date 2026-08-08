@@ -308,21 +308,7 @@ const MontarPedido = () => {
         qty: 1,
       };
     }
-    if (!sweetTypeId || !sweetPackageId) return null;
-    const t = sweetTypes.find((x) => x.id === sweetTypeId);
-    const pkg = sweetPackages.find((x) => x.id === sweetPackageId);
-    const fl = sweetFlavors.find((x) => x.id === sweetFlavorId);
-    const details = [`Quantidade: ${pkg?.quantity} unidades`];
-    if (fl) details.push(`Sabor: ${fl.name}`);
-    return {
-      id: "draft",
-      kind: "sweet",
-      title: `Doces — ${t?.name ?? ""}`,
-      details,
-      price: pkg?.price ?? null,
-      consult: pkg?.price === undefined,
-      qty: 1,
-    };
+    return sweetDraft;
   }, [
     kind,
     sizeId,
@@ -332,9 +318,7 @@ const MontarPedido = () => {
     rectId,
     rectClass,
     rectAddons,
-    sweetTypeId,
-    sweetFlavorId,
-    sweetPackageId,
+    sweetDraft,
     sizes,
     categories,
     flavors,
@@ -342,14 +326,20 @@ const MontarPedido = () => {
     addons,
     addonPrices,
     rectangular,
-    sweetTypes,
-    sweetFlavors,
-    sweetPackages,
   ]);
 
+  const canAdd = kind === "sweet" ? !!sweetDraft : !!currentDraft || !!sweetDraft;
+
   const addItem = () => {
-    if (!currentDraft) return;
-    setItems((prev) => [...prev, { ...currentDraft, id: `${Date.now()}` }]);
+    const toAdd: OrderItem[] = [];
+    if (kind !== "sweet" && currentDraft) toAdd.push(currentDraft);
+    if (sweetDraft) toAdd.push(sweetDraft);
+    if (toAdd.length === 0) return;
+    const stamp = Date.now();
+    setItems((prev) => [
+      ...prev,
+      ...toAdd.map((it, i) => ({ ...it, id: `${stamp}-${i}` })),
+    ]);
     setSizeId("");
     setCatId("");
     setFlavorId("");
@@ -360,6 +350,7 @@ const MontarPedido = () => {
     setSweetFlavorId("");
     setSweetPackageId("");
   };
+
 
   const toggle = (list: string[], setList: (v: string[]) => void, id: string) =>
     setList(list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
