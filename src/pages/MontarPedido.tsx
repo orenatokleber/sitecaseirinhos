@@ -628,39 +628,45 @@ const MontarPedido = () => {
                 </>
               )}
 
-              {kind === "sweet" && (
-                <>
-                  <StepCard
-                    step={2}
-                    title={sec("cardapio_sweets").title || "Tipo de doce"}
-                    hint={
-                      sec("cardapio_sweets").content ||
-                      sec("cardapio_sweets").subtitle ||
-                      "Vendidos em pacotes de 25, 50 ou 100 unidades"
-                    }
-                  >
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      {sweetTypes.map((t) => (
-                        <OptionCard
-                          key={t.id}
-                          active={sweetTypeId === t.id}
-                          onClick={() => {
-                            setSweetTypeId(t.id);
-                            setSweetFlavorId("");
-                            setSweetPackageId("");
-                          }}
-                          image={t.image_url}
-                          title={t.name}
-                          meta={t.weight_g ? `${t.weight_g}g por unidade` : undefined}
-                          description={t.description}
-                        />
-                      ))}
-                    </div>
-                  </StepCard>
+              <StepCard
+                step={kind === "sweet" ? 2 : 5}
+                title={
+                  psec("pedido_sweets", "cardapio_sweets").title ||
+                  (kind === "sweet" ? "Tipo de doce" : "Doces para festa (opcional)")
+                }
+                hint={
+                  psec("pedido_sweets", "cardapio_sweets").content ||
+                  psec("pedido_sweets", "cardapio_sweets").subtitle ||
+                  "Vendidos em pacotes de 25, 50 ou 100 unidades"
+                }
+                image={psec("pedido_sweets", "cardapio_sweets").image_url}
+              >
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {sweetTypes.map((t) => (
+                    <OptionCard
+                      key={t.id}
+                      active={sweetTypeId === t.id}
+                      onClick={() => {
+                        const same = sweetTypeId === t.id;
+                        setSweetTypeId(same ? "" : t.id);
+                        setSweetFlavorId("");
+                        setSweetPackageId("");
+                      }}
+                      image={t.image_url}
+                      title={t.name}
+                      meta={t.weight_g ? `${t.weight_g}g por unidade` : undefined}
+                      description={t.description}
+                    />
+                  ))}
+                </div>
 
-                  {sweetTypeId && (
-                    <StepCard step={3} title="Sabor e quantidade">
-                      {typeFlavors.length > 0 && (
+                {sweetTypeId && (
+                  <div className="mt-5 border-t border-border/60 pt-5">
+                    {typeFlavors.length > 0 && (
+                      <>
+                        <p className="mb-2 font-body text-xs uppercase tracking-wider text-muted-foreground">
+                          Escolha o sabor
+                        </p>
                         <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                           {typeFlavors.map((f) => (
                             <OptionCard
@@ -672,33 +678,35 @@ const MontarPedido = () => {
                             />
                           ))}
                         </div>
-                      )}
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        {typePackages.map((p) => (
-                          <OptionCard
-                            key={p.id}
-                            active={sweetPackageId === p.id}
-                            onClick={() => setSweetPackageId(p.id)}
-                            title={`${p.quantity} unidades`}
-                            price={formatPrice(p.price)}
-                          />
-                        ))}
-                      </div>
-                    </StepCard>
-                  )}
-                </>
-              )}
-
+                      </>
+                    )}
+                    <p className="mb-2 font-body text-xs uppercase tracking-wider text-muted-foreground">
+                      Quantidade
+                    </p>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {typePackages.map((p) => (
+                        <OptionCard
+                          key={p.id}
+                          active={sweetPackageId === p.id}
+                          onClick={() => setSweetPackageId(p.id)}
+                          title={`${p.quantity} unidades`}
+                          price={formatPrice(p.price)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </StepCard>
 
               <button
                 type="button"
                 onClick={addItem}
-                disabled={!currentDraft}
+                disabled={!canAdd}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 font-body text-sm uppercase tracking-wider text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Plus size={16} />
-                {currentDraft
-                  ? `Adicionar ao pedido${currentDraft.consult ? "" : ` · ${formatPrice(currentDraft.price)}`}`
+                {canAdd ? "Adicionar ao pedido" : "Selecione as opções acima"}
+
                   : "Selecione as opções acima"}
               </button>
             </div>
