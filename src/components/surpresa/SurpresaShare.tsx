@@ -36,92 +36,100 @@ const SurpresaShare = ({
     }
   };
 
+  // Render the story artwork to a canvas
+  const buildStoryCanvas = useCallback((): HTMLCanvasElement | null => {
+    const canvas = document.createElement("canvas");
+    // 9:16 aspect ratio for Stories
+    canvas.width = 1080;
+    canvas.height = 1920;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+
+    // Background gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
+    gradient.addColorStop(0, "#FFF8F0");
+    gradient.addColorStop(0.5, "#FFEBD6");
+    gradient.addColorStop(1, "#FFF0E6");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    // Decorative circles
+    ctx.globalAlpha = 0.08;
+    ctx.beginPath();
+    ctx.arc(100, 300, 150, 0, Math.PI * 2);
+    ctx.fillStyle = prize.color;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(980, 1600, 200, 0, Math.PI * 2);
+    ctx.fillStyle = "#E8A87C";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(900, 400, 120, 0, Math.PI * 2);
+    ctx.fillStyle = "#DDA0DD";
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Top text
+    ctx.fillStyle = "#5C3D2E";
+    ctx.font = "bold 48px 'Nunito', sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("🎉 EU GANHEI UMA", 540, 500);
+    ctx.fillText("SURPRESA DA CASEIRINHOS!", 540, 560);
+
+    // Prize display
+    ctx.font = "120px sans-serif";
+    ctx.fillText(prize.emoji, 540, 780);
+
+    ctx.font = "bold 72px 'Nunito', sans-serif";
+    ctx.fillStyle = "#5C3D2E";
+    ctx.fillText("GANHEI", 540, 900);
+
+    ctx.fillStyle = prize.color;
+    ctx.font = "bold 80px 'Nunito', sans-serif";
+    ctx.fillText(formatPrizeText(prize), 540, 1000);
+
+    // Divider
+    ctx.beginPath();
+    ctx.moveTo(340, 1100);
+    ctx.lineTo(740, 1100);
+    ctx.strokeStyle = "#E8A87C";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // CTA
+    ctx.fillStyle = "#8B6F47";
+    ctx.font = "44px 'Nunito', sans-serif";
+    ctx.fillText("Será que você também ganha? 🤔", 540, 1200);
+
+    // Instagram handle
+    ctx.fillStyle = "#D4A574";
+    ctx.font = "bold 40px 'Nunito', sans-serif";
+    ctx.fillText(instagramHandle, 540, 1400);
+
+    // Brand
+    ctx.fillStyle = "#5C3D2E";
+    ctx.font = "italic 60px 'Dancing Script', cursive, sans-serif";
+    ctx.fillText("Caseirinhos", 540, 1550);
+    ctx.font = "28px 'Nunito', sans-serif";
+    ctx.fillStyle = "#8B6F47";
+    ctx.fillText("a Confeitaria", 540, 1600);
+
+    // Hashtag
+    ctx.fillStyle = "#D4A574";
+    ctx.font = "32px 'Nunito', sans-serif";
+    ctx.fillText("#SurpresaCaseirinhos", 540, 1750);
+
+    return canvas;
+  }, [prize, instagramHandle]);
+
+  const canvasToBlob = (canvas: HTMLCanvasElement): Promise<Blob | null> =>
+    new Promise((resolve) => canvas.toBlob((b) => resolve(b), "image/png"));
+
   // Generate and download share image
   const downloadShareImage = useCallback(async () => {
     try {
-      const canvas = document.createElement("canvas");
-      // 9:16 aspect ratio for Stories
-      canvas.width = 1080;
-      canvas.height = 1920;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      // Background gradient
-      const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
-      gradient.addColorStop(0, "#FFF8F0");
-      gradient.addColorStop(0.5, "#FFEBD6");
-      gradient.addColorStop(1, "#FFF0E6");
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 1080, 1920);
-
-      // Decorative circles
-      ctx.globalAlpha = 0.08;
-      ctx.beginPath();
-      ctx.arc(100, 300, 150, 0, Math.PI * 2);
-      ctx.fillStyle = prize.color;
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(980, 1600, 200, 0, Math.PI * 2);
-      ctx.fillStyle = "#E8A87C";
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(900, 400, 120, 0, Math.PI * 2);
-      ctx.fillStyle = "#DDA0DD";
-      ctx.fill();
-      ctx.globalAlpha = 1;
-
-      // Top text
-      ctx.fillStyle = "#5C3D2E";
-      ctx.font = "bold 48px 'Nunito', sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("🎉 EU GANHEI UMA", 540, 500);
-      ctx.fillText("SURPRESA DA CASEIRINHOS!", 540, 560);
-
-      // Prize display
-      ctx.font = "120px sans-serif";
-      ctx.fillText(prize.emoji, 540, 780);
-
-      ctx.font = "bold 72px 'Nunito', sans-serif";
-      ctx.fillStyle = "#5C3D2E";
-      ctx.fillText("GANHEI", 540, 900);
-
-      ctx.fillStyle = prize.color;
-      ctx.font = "bold 80px 'Nunito', sans-serif";
-      const prizeText = formatPrizeText(prize);
-      ctx.fillText(prizeText, 540, 1000);
-
-      // Divider
-      ctx.beginPath();
-      ctx.moveTo(340, 1100);
-      ctx.lineTo(740, 1100);
-      ctx.strokeStyle = "#E8A87C";
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      // CTA
-      ctx.fillStyle = "#8B6F47";
-      ctx.font = "44px 'Nunito', sans-serif";
-      ctx.fillText("Será que você também ganha? 🤔", 540, 1200);
-
-      // Instagram handle
-      ctx.fillStyle = "#D4A574";
-      ctx.font = "bold 40px 'Nunito', sans-serif";
-      ctx.fillText(instagramHandle, 540, 1400);
-
-      // Brand
-      ctx.fillStyle = "#5C3D2E";
-      ctx.font = "italic 60px 'Dancing Script', cursive, sans-serif";
-      ctx.fillText("Caseirinhos", 540, 1550);
-      ctx.font = "28px 'Nunito', sans-serif";
-      ctx.fillStyle = "#8B6F47";
-      ctx.fillText("a Confeitaria", 540, 1600);
-
-      // Hashtag
-      ctx.fillStyle = "#D4A574";
-      ctx.font = "32px 'Nunito', sans-serif";
-      ctx.fillText("#SurpresaCaseirinhos", 540, 1750);
-
-      // Download
+      const canvas = buildStoryCanvas();
+      if (!canvas) return;
       const link = document.createElement("a");
       link.download = `surpresa-caseirinhos-${rewardCode}.png`;
       link.href = canvas.toDataURL("image/png");
@@ -129,18 +137,50 @@ const SurpresaShare = ({
     } catch (err) {
       console.error("Error generating share image:", err);
     }
-  }, [prize, rewardCode, instagramHandle]);
+  }, [buildStoryCanvas, rewardCode]);
 
-  // Try to open Instagram Stories
-  const openInstagram = useCallback(() => {
-    // On mobile, try the Instagram deep link
+  // Share the image directly (native share sheet → Instagram Stories)
+  const shareToInstagram = useCallback(async () => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      window.open("instagram://story-camera", "_blank");
-    } else {
+    try {
+      const canvas = buildStoryCanvas();
+      const blob = canvas ? await canvasToBlob(canvas) : null;
+
+      if (blob) {
+        const file = new File([blob], `surpresa-caseirinhos-${rewardCode}.png`, {
+          type: "image/png",
+        });
+        const nav = navigator as Navigator & {
+          canShare?: (data: ShareData) => boolean;
+        };
+        if (nav.share && nav.canShare?.({ files: [file] })) {
+          // Native sheet: user picks Instagram → Stories with the image ready
+          await nav.share({
+            files: [file],
+            text: `Ganhei uma surpresa da Caseirinhos! ${instagramHandle} #SurpresaCaseirinhos`,
+          });
+          return;
+        }
+      }
+
+      // Fallback: save the image, then open Instagram's story camera
+      await downloadShareImage();
+      if (isMobile) {
+        window.location.href = "instagram://story-camera";
+        setTimeout(() => {
+          window.open("https://instagram.com", "_blank");
+        }, 1200);
+      } else {
+        window.open("https://instagram.com", "_blank");
+      }
+    } catch (err) {
+      // User cancelled the native sheet, or sharing failed
+      if ((err as DOMException)?.name === "AbortError") return;
+      console.error("Error sharing to Instagram:", err);
       window.open("https://instagram.com", "_blank");
     }
-  }, []);
+  }, [buildStoryCanvas, downloadShareImage, instagramHandle, rewardCode]);
+
 
   return (
     <motion.div
