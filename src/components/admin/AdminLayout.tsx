@@ -47,7 +47,7 @@ const AdminLayout = () => {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-64">
+            <SheetContent side="left" className="p-0 w-64 h-full max-h-screen flex flex-col overflow-hidden">
               <AdminSidebar onNavigate={() => setSidebarOpen(false)} />
             </SheetContent>
           </Sheet>

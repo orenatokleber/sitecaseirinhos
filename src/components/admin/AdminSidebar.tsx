@@ -50,7 +50,7 @@ const AdminSidebar = ({ onNavigate }: AdminSidebarProps) => {
   const { signOut, user } = useAuth();
 
   return (
-    <aside className="w-64 bg-card border-r border-border min-h-screen flex flex-col">
+    <aside className="w-64 bg-card border-r border-border h-full min-h-0 md:min-h-screen flex flex-col overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b border-border">
         <Link to="/" className="flex flex-col items-center" onClick={onNavigate}>
@@ -60,7 +60,7 @@ const AdminSidebar = ({ onNavigate }: AdminSidebarProps) => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 overflow-auto">
+      <nav className="flex-1 min-h-0 p-4 overflow-y-auto overscroll-contain">
         <ul className="space-y-1">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
