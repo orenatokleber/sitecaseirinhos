@@ -63,7 +63,7 @@ export function useSurpresa() {
       // First get campaign
       const { data: campaignData, error: cErr } = await supabase
         .from("campaigns" as any)
-        .select("id, slug, status, starts_at, ends_at, require_story_share, instagram, require_access_token, external_menu_url")
+        .select("*")
         .eq("slug", campaignSlug)
         .eq("status", "active")
         .single();
@@ -160,26 +160,12 @@ export function useSurpresa() {
   // Mark share as completed
   const markShareCompleted = useCallback(async (participationId: string) => {
     try {
-      // Update participation status to 'shared'
-      await supabase
-        .from("campaign_participations" as any)
-        .update({ status: "shared" })
-        .eq("id", participationId);
+      // Use RPC to securely update states bypassing anon write restrictions
+      const { error: rpcErr } = await supabase.rpc("mark_share_completed", {
+        p_participation_id: participationId,
+      });
 
-      // Update reward status to 'pending_validation'
-      await supabase
-        .from("campaign_rewards" as any)
-        .update({ status: "pending_validation" })
-        .eq("participation_id", participationId);
-
-      // Log event
-      if (campaignId) {
-        await supabase.from("campaign_events" as any).insert({
-          campaign_id: campaignId,
-          participation_id: participationId,
-          event_type: "story_shared",
-        });
-      }
+      if (rpcErr) throw rpcErr;
 
       setShareCompleted(true);
       setStep("code");
