@@ -239,7 +239,7 @@ const SurpresaShare = ({
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={openInstagram}
+          onClick={shareToInstagram}
           className="w-full py-4 rounded-xl font-body font-bold text-lg text-white shadow-lg"
           style={{
             background: "linear-gradient(135deg, #E1306C, #C13584, #833AB4)",
