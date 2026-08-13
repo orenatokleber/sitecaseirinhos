@@ -61,14 +61,27 @@ export function useSurpresa() {
   const fetchPrizes = useCallback(async (campaignSlug: string) => {
     try {
       // First get campaign
-      const { data: campaignData, error: cErr } = await supabase
+      let { data: campaignData, error: cErr } = await supabase
         .from("campaigns" as any)
         .select("*")
         .eq("slug", campaignSlug)
         .eq("status", "active")
-        .single();
+        .maybeSingle();
 
-      if (cErr || !campaignData) {
+      // Fallback: if requested campaign is not active or found, get the first active campaign
+      if (!campaignData) {
+        const { data: fallbackData } = await supabase
+          .from("campaigns" as any)
+          .select("*")
+          .eq("status", "active")
+          .limit(1);
+
+        if (fallbackData && fallbackData.length > 0) {
+          campaignData = fallbackData[0];
+        }
+      }
+
+      if (!campaignData) {
         setError("Campanha não encontrada ou inativa.");
         return null;
       }
