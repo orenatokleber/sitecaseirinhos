@@ -1,13 +1,15 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useSurpresa } from "@/hooks/useSurpresa";
+import { supabase } from "@/lib/supabase";
 import SurpresaLanding from "@/components/surpresa/SurpresaLanding";
 import SurpresaForm from "@/components/surpresa/SurpresaForm";
 import SurpresaWheel from "@/components/surpresa/SurpresaWheel";
 import SurpresaResult from "@/components/surpresa/SurpresaResult";
 import SurpresaShare from "@/components/surpresa/SurpresaShare";
 import SurpresaCode from "@/components/surpresa/SurpresaCode";
+import { Lock, AlertCircle, RefreshCw } from "lucide-react";
 
 // Default campaign slug — can be overridden via query param
 const DEFAULT_CAMPAIGN = "surpresa-de-agosto";
@@ -16,6 +18,7 @@ const Surpresa = () => {
   const [searchParams] = useSearchParams();
   const campaignSlug = searchParams.get("campanha") || searchParams.get("c") || DEFAULT_CAMPAIGN;
   const source = searchParams.get("source") || searchParams.get("s") || "package";
+  const token = searchParams.get("token") || searchParams.get("t") || "";
 
   const {
     step,
@@ -26,6 +29,7 @@ const Surpresa = () => {
     result,
     alreadyParticipated,
     prizes,
+    campaign,
     shareCompleted,
     fetchPrizes,
     participate,
@@ -33,11 +37,48 @@ const Surpresa = () => {
     logEvent,
   } = useSurpresa();
 
-  // Load prizes when page opens
+  const [tokenValidating, setTokenValidating] = useState(false);
+  const [tokenError, setTokenError] = useState<"no_token" | "invalid_token" | "used_token" | null>(null);
+
+  // Load prizes and validate access token when page opens
   useEffect(() => {
-    fetchPrizes(campaignSlug);
+    const initPage = async () => {
+      const camp = await fetchPrizes(campaignSlug);
+      if (camp) {
+        if (camp.require_access_token) {
+          if (!token) {
+            setTokenError("no_token");
+            return;
+          }
+          setTokenValidating(true);
+          try {
+            const { data, error: tokenErr } = await supabase
+              .from("campaign_access_tokens" as any)
+              .select("used_at")
+              .eq("campaign_id", camp.id)
+              .eq("token", token)
+              .maybeSingle();
+
+            if (tokenErr || !data) {
+              setTokenError("invalid_token");
+            } else if (data.used_at) {
+              setTokenError("used_token");
+            } else {
+              setTokenError(null);
+            }
+          } catch {
+            setTokenError("invalid_token");
+          } finally {
+            setTokenValidating(false);
+          }
+        } else {
+          setTokenError(null);
+        }
+      }
+    };
+    initPage();
     logEvent("page_opened");
-  }, [campaignSlug, fetchPrizes, logEvent]);
+  }, [campaignSlug, fetchPrizes, logEvent, token]);
 
   // Handle start
   const handleStart = useCallback(() => {
@@ -49,9 +90,9 @@ const Surpresa = () => {
   const handleFormSubmit = useCallback(
     async (name: string, whatsapp: string) => {
       setError(null);
-      await participate(campaignSlug, name, whatsapp, source);
+      await participate(campaignSlug, name, whatsapp, source, token);
     },
-    [campaignSlug, source, participate, setError]
+    [campaignSlug, source, token, participate, setError]
   );
 
   // Handle spin complete
@@ -107,77 +148,121 @@ const Surpresa = () => {
 
         {/* State machine */}
         <div className="relative z-10">
-          {step === "landing" && (
-            <SurpresaLanding onStart={handleStart} />
-          )}
+          {tokenValidating ? (
+            <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center">
+              <RefreshCw className="h-10 w-10 animate-spin text-gold mb-4" />
+              <p className="font-body text-chocolate-light">Verificando seu link de acesso...</p>
+            </div>
+          ) : tokenError ? (
+            <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6">
+              <div
+                className="w-full max-w-md rounded-2xl p-8 text-center shadow-xl bg-white border border-gold/20"
+                style={{
+                  background: "linear-gradient(135deg, #FFFDFB 0%, #FFF8F0 100%)",
+                }}
+              >
+                <div className="mx-auto w-16 h-16 rounded-full bg-peach/20 flex items-center justify-center mb-6">
+                  {tokenError === "used_token" ? (
+                    <AlertCircle className="h-8 w-8 text-chocolate-deep" />
+                  ) : (
+                    <Lock className="h-8 w-8 text-chocolate-deep" />
+                  )}
+                </div>
 
-          {step === "form" && (
-            <SurpresaForm
-              onSubmit={handleFormSubmit}
-              loading={loading}
-              error={error}
-            />
-          )}
+                <h2 className="font-heading text-2xl font-bold text-chocolate-deep mb-3">
+                  {tokenError === "no_token" && "Acesso Restrito 🔒"}
+                  {tokenError === "invalid_token" && "Link Inválido ⚠️"}
+                  {tokenError === "used_token" && "Link Já Utilizado ⏰"}
+                </h2>
 
-          {step === "spinning" && result && (
-            <SurpresaWheel
-              prizes={prizes}
-              wonPrize={result.prize}
-              onSpinComplete={handleSpinComplete}
-            />
-          )}
+                <p className="font-body text-sm text-chocolate-light mb-6">
+                  {tokenError === "no_token" && "Esta campanha de sorteios é exclusiva para clientes que efetuaram compras. Por favor, utilize o link de acesso enviado junto ao seu pedido."}
+                  {tokenError === "invalid_token" && "O link de acesso utilizado é inválido ou expirou. Por favor, verifique o link enviado no seu comprovante."}
+                  {tokenError === "used_token" && "Este link de acesso já foi utilizado para girar a roleta. Cada link de compra dá direito a apenas um sorteio."}
+                </p>
 
-          {step === "result" && result && (
-            <SurpresaResult
-              prize={result.prize}
-              rewardCode={result.reward_code}
-              expiresAt={result.expires_at}
-              onContinue={handleResultContinue}
-            />
-          )}
+                <div className="text-xs text-chocolate-light/50 font-body">
+                  Se você acredita que isso é um erro, entre em contato com nosso suporte.
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              {step === "landing" && (
+                <SurpresaLanding onStart={handleStart} />
+              )}
 
-          {step === "share" && result && (
-            <SurpresaShare
-              prize={result.prize}
-              rewardCode={result.reward_code}
-              onShareCompleted={handleShareCompleted}
-              onSkip={handleSkipShare}
-            />
-          )}
+              {step === "form" && (
+                <SurpresaForm
+                  onSubmit={handleFormSubmit}
+                  loading={loading}
+                  error={error}
+                />
+              )}
 
-          {step === "code" && result && (
-            <SurpresaCode
-              prize={result.prize}
-              rewardCode={result.reward_code}
-              expiresAt={result.expires_at}
-              participantName=""
-              requireShare={result.require_story_share}
-              shareCompleted={shareCompleted}
-              rewardStatus={shareCompleted ? "pending_validation" : "pending_share"}
-            />
-          )}
+              {step === "spinning" && result && (
+                <SurpresaWheel
+                  prizes={prizes}
+                  wonPrize={result.prize}
+                  onSpinComplete={handleSpinComplete}
+                />
+              )}
 
-          {/* Already participated fallback */}
-          {step === "code" && !result && alreadyParticipated && (
-            <SurpresaCode
-              prize={{
-                id: "",
-                name: alreadyParticipated.prize_name,
-                description: "",
-                emoji: alreadyParticipated.prize_emoji,
-                prize_type: "",
-                value: 0,
-                product_name: null,
-                min_purchase: 0,
-                color: "#E8A87C",
-              }}
-              rewardCode={alreadyParticipated.reward_code}
-              expiresAt={alreadyParticipated.expires_at}
-              participantName=""
-              requireShare={false}
-              shareCompleted={true}
-              rewardStatus={alreadyParticipated.reward_status}
-            />
+              {step === "result" && result && (
+                <SurpresaResult
+                  prize={result.prize}
+                  rewardCode={result.reward_code}
+                  expiresAt={result.expires_at}
+                  onContinue={handleResultContinue}
+                />
+              )}
+
+              {step === "share" && result && (
+                <SurpresaShare
+                  prize={result.prize}
+                  rewardCode={result.reward_code}
+                  onShareCompleted={handleShareCompleted}
+                  onSkip={handleSkipShare}
+                />
+              )}
+
+              {step === "code" && result && (
+                <SurpresaCode
+                  prize={result.prize}
+                  rewardCode={result.reward_code}
+                  expiresAt={result.expires_at}
+                  participantName=""
+                  requireShare={result.require_story_share}
+                  shareCompleted={shareCompleted}
+                  rewardStatus={shareCompleted ? "pending_validation" : "pending_share"}
+                  externalMenuUrl={campaign?.external_menu_url}
+                />
+              )}
+
+              {/* Already participated fallback */}
+              {step === "code" && !result && alreadyParticipated && (
+                <SurpresaCode
+                  prize={{
+                    id: "",
+                    name: alreadyParticipated.prize_name,
+                    description: "",
+                    emoji: alreadyParticipated.prize_emoji,
+                    prize_type: "",
+                    value: 0,
+                    product_name: null,
+                    min_purchase: 0,
+                    color: "#E8A87C",
+                  }}
+                  rewardCode={alreadyParticipated.reward_code}
+                  expiresAt={alreadyParticipated.expires_at}
+                  participantName=""
+                  requireShare={false}
+                  shareCompleted={true}
+                  rewardStatus={alreadyParticipated.reward_status}
+                  externalMenuUrl={campaign?.external_menu_url}
+                />
+              )}
+            </>
           )}
         </div>
 

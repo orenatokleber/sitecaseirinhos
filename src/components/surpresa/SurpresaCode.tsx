@@ -11,6 +11,7 @@ interface SurpresaCodeProps {
   requireShare: boolean;
   shareCompleted: boolean;
   rewardStatus?: string;
+  externalMenuUrl?: string;
 }
 
 const formatDate = (dateStr: string): string => {
@@ -47,6 +48,7 @@ const SurpresaCode = ({
   requireShare,
   shareCompleted,
   rewardStatus,
+  externalMenuUrl,
 }: SurpresaCodeProps) => {
   const [copied, setCopied] = useState(false);
 
@@ -208,27 +210,44 @@ const SurpresaCode = ({
         className="w-full max-w-sm space-y-3"
       >
         <h3 className="font-heading text-xl font-bold text-chocolate-deep mb-3">
-          🍰 AGORA VAMOS ESCOLHER SEU PEDIDO?
+          {externalMenuUrl ? "🍰 UTILIZE SEU CUPOM NO NOSSO CARDÁPIO" : "🍰 AGORA VAMOS ESCOLHER SEU PEDIDO?"}
         </h3>
 
-        <Link
-          to="/cardapio"
-          className="block w-full py-4 rounded-xl font-body font-bold text-lg text-white shadow-lg text-center"
-          style={{
-            background: "linear-gradient(135deg, hsl(34 47% 60%), hsl(34 40% 50%))",
-          }}
-          id="surpresa-menu-btn"
-        >
-          VER CARDÁPIO 🍰
-        </Link>
+        {externalMenuUrl ? (
+          <a
+            href={externalMenuUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full py-4 rounded-xl font-body font-bold text-lg text-white shadow-lg text-center transition-all hover:brightness-105"
+            style={{
+              background: "linear-gradient(135deg, hsl(34 47% 60%), hsl(34 40% 50%))",
+            }}
+            id="surpresa-menu-btn"
+          >
+            IR PARA O CARDÁPIO 🍰
+          </a>
+        ) : (
+          <>
+            <Link
+              to="/cardapio"
+              className="block w-full py-4 rounded-xl font-body font-bold text-lg text-white shadow-lg text-center"
+              style={{
+                background: "linear-gradient(135deg, hsl(34 47% 60%), hsl(34 40% 50%))",
+              }}
+              id="surpresa-menu-btn"
+            >
+              VER CARDÁPIO 🍰
+            </Link>
 
-        <Link
-          to="/montar-pedido"
-          className="block w-full py-3.5 rounded-xl font-body font-bold text-base text-chocolate-deep border-2 border-gold/40 bg-cream/50 hover:bg-peach/30 transition-colors text-center"
-          id="surpresa-order-btn"
-        >
-          MONTAR MEU PEDIDO 🎂
-        </Link>
+            <Link
+              to="/montar-pedido"
+              className="block w-full py-3.5 rounded-xl font-body font-bold text-base text-chocolate-deep border-2 border-gold/40 bg-cream/50 hover:bg-peach/30 transition-colors text-center"
+              id="surpresa-order-btn"
+            >
+              MONTAR MEU PEDIDO 🎂
+            </Link>
+          </>
+        )}
       </motion.div>
 
       {/* Footer info */}
@@ -238,8 +257,9 @@ const SurpresaCode = ({
         transition={{ delay: 1.1 }}
         className="mt-8 text-xs text-chocolate-light/40 font-body max-w-xs"
       >
-        Apresente este código ao fazer seu pedido.
-        O prêmio é pessoal e intransferível.
+        {externalMenuUrl 
+          ? "Copie o código acima e insira no campo de cupom ao finalizar o seu pedido no nosso cardápio digital."
+          : "Apresente este código ao fazer seu pedido. O prêmio é pessoal e intransferível."}
       </motion.p>
     </motion.div>
   );

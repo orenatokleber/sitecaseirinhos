@@ -54,31 +54,33 @@ export function useSurpresa() {
   const [alreadyParticipated, setAlreadyParticipated] = useState<AlreadyParticipatedResult | null>(null);
   const [prizes, setPrizes] = useState<CampaignPrize[]>([]);
   const [campaignId, setCampaignId] = useState<string | null>(null);
+  const [campaign, setCampaign] = useState<any | null>(null);
   const [shareCompleted, setShareCompleted] = useState(false);
 
   // Fetch campaign prizes for the wheel display
   const fetchPrizes = useCallback(async (campaignSlug: string) => {
     try {
       // First get campaign
-      const { data: campaign, error: cErr } = await supabase
+      const { data: campaignData, error: cErr } = await supabase
         .from("campaigns" as any)
-        .select("id, slug, status, starts_at, ends_at, require_story_share, instagram")
+        .select("id, slug, status, starts_at, ends_at, require_story_share, instagram, require_access_token, external_menu_url")
         .eq("slug", campaignSlug)
         .eq("status", "active")
         .single();
 
-      if (cErr || !campaign) {
+      if (cErr || !campaignData) {
         setError("Campanha não encontrada ou inativa.");
         return null;
       }
 
-      setCampaignId((campaign as any).id);
+      setCampaignId((campaignData as any).id);
+      setCampaign(campaignData);
 
       // Fetch prizes
       const { data: prizesData, error: pErr } = await supabase
         .from("campaign_prizes" as any)
         .select("id, name, emoji, color, probability_pct, sort_order")
-        .eq("campaign_id", (campaign as any).id)
+        .eq("campaign_id", (campaignData as any).id)
         .eq("is_active", true)
         .order("sort_order");
 
@@ -96,7 +98,7 @@ export function useSurpresa() {
         sort_order: p.sort_order,
       }));
       setPrizes(mapped);
-      return campaign;
+      return campaignData;
     } catch {
       setError("Erro de conexão.");
       return null;
@@ -108,7 +110,8 @@ export function useSurpresa() {
     campaignSlug: string,
     name: string,
     whatsapp: string,
-    source = "package"
+    source = "package",
+    token?: string
   ) => {
     setLoading(true);
     setError(null);
@@ -126,6 +129,7 @@ export function useSurpresa() {
           name: name.trim(),
           whatsapp: whatsapp.replace(/\D/g, ""),
           source,
+          token: token || undefined,
         }),
       });
 
@@ -229,5 +233,6 @@ export function useSurpresa() {
     markShareCompleted,
     logEvent,
     reset,
+    campaign,
   };
 }

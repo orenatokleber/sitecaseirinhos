@@ -17,6 +17,8 @@ const defaultCampaign: Partial<Campaign> = {
   mechanic_type: "wheel",
   status: "draft",
   require_story_share: true,
+  require_access_token: false,
+  external_menu_url: "",
   starts_at: new Date().toISOString().slice(0, 16),
   ends_at: "",
   instagram: { handle: "@caseirinhosaconfeitaria", hashtag: "#SurpresaCaseirinhos" },
@@ -220,19 +222,47 @@ const AdminSurpresaCampaigns = () => {
                   />
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={editing.require_story_share ?? true}
-                  onChange={(e) =>
-                    setEditing({ ...editing, require_story_share: e.target.checked })
-                  }
-                  className="w-4 h-4"
-                  id="require-share"
+              <div className="flex flex-col gap-2 border-t pt-4 mt-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={editing.require_story_share ?? true}
+                    onChange={(e) =>
+                      setEditing({ ...editing, require_story_share: e.target.checked })
+                    }
+                    className="w-4 h-4"
+                    id="require-share"
+                  />
+                  <Label htmlFor="require-share" className="cursor-pointer">
+                    Exigir compartilhamento no Instagram Stories
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={editing.require_access_token ?? false}
+                    onChange={(e) =>
+                      setEditing({ ...editing, require_access_token: e.target.checked })
+                    }
+                    className="w-4 h-4"
+                    id="require-access-token"
+                  />
+                  <Label htmlFor="require-access-token" className="cursor-pointer">
+                    Exigir Token de Acesso (apenas clientes que compraram)
+                  </Label>
+                </div>
+              </div>
+              <div className="mt-2">
+                <Label>URL do Cardápio Externo (Opcional)</Label>
+                <Input
+                  type="url"
+                  placeholder="https://exemplo.com/cardapio"
+                  value={editing.external_menu_url || ""}
+                  onChange={(e) => setEditing({ ...editing, external_menu_url: e.target.value })}
                 />
-                <Label htmlFor="require-share" className="cursor-pointer">
-                  Exigir compartilhamento no Instagram Stories
-                </Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Se preenchido, os botões de ação final da roleta redirecionarão para este link.
+                </p>
               </div>
             </div>
           )}

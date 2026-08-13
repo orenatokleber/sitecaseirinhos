@@ -64,7 +64,7 @@ serve(async (req: Request) => {
       );
     }
 
-    const { campaign_slug, name, whatsapp, source = "package", fingerprint } = await req.json();
+    const { campaign_slug, name, whatsapp, source = "package", fingerprint, token } = await req.json();
 
     // Input validation
     if (!campaign_slug || typeof campaign_slug !== "string") {
@@ -131,6 +131,7 @@ serve(async (req: Request) => {
       p_ip_address: clientIP,
       p_user_agent: userAgent,
       p_fingerprint: fingerprint || null,
+      p_access_token: token || null,
     });
 
     if (rpcError) {
