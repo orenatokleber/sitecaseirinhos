@@ -456,6 +456,280 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_events: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          participation_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          participation_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          participation_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_events_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_events_participation_id_fkey"
+            columns: ["participation_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_participations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_participations: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          fingerprint: string | null
+          id: string
+          ip_address: string | null
+          participant_name: string
+          participant_whatsapp: string
+          prize_id: string | null
+          source: string
+          status: string
+          user_agent: string | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          fingerprint?: string | null
+          id?: string
+          ip_address?: string | null
+          participant_name: string
+          participant_whatsapp: string
+          prize_id?: string | null
+          source?: string
+          status?: string
+          user_agent?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          fingerprint?: string | null
+          id?: string
+          ip_address?: string | null
+          participant_name?: string
+          participant_whatsapp?: string
+          prize_id?: string | null
+          source?: string
+          status?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_participations_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_participations_prize_id_fkey"
+            columns: ["prize_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_prizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_prizes: {
+        Row: {
+          campaign_id: string
+          color: string
+          created_at: string
+          description: string | null
+          emoji: string
+          id: string
+          is_active: boolean
+          min_purchase: number | null
+          name: string
+          prize_type: string
+          probability_pct: number
+          product_name: string | null
+          sort_order: number
+          stock_total: number | null
+          stock_used: number
+          updated_at: string
+          validity_days: number
+          value: number | null
+        }
+        Insert: {
+          campaign_id: string
+          color?: string
+          created_at?: string
+          description?: string | null
+          emoji?: string
+          id?: string
+          is_active?: boolean
+          min_purchase?: number | null
+          name: string
+          prize_type?: string
+          probability_pct?: number
+          product_name?: string | null
+          sort_order?: number
+          stock_total?: number | null
+          stock_used?: number
+          updated_at?: string
+          validity_days?: number
+          value?: number | null
+        }
+        Update: {
+          campaign_id?: string
+          color?: string
+          created_at?: string
+          description?: string | null
+          emoji?: string
+          id?: string
+          is_active?: boolean
+          min_purchase?: number | null
+          name?: string
+          prize_type?: string
+          probability_pct?: number
+          product_name?: string | null
+          sort_order?: number
+          stock_total?: number | null
+          stock_used?: number
+          updated_at?: string
+          validity_days?: number
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_prizes_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_rewards: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          loyalty_points_awarded: number | null
+          participation_id: string
+          redeemed_at: string | null
+          redeemed_by: string | null
+          reward_code: string
+          status: string
+          validated_at: string | null
+          validated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          loyalty_points_awarded?: number | null
+          participation_id: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          reward_code: string
+          status?: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          loyalty_points_awarded?: number | null
+          participation_id?: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          reward_code?: string
+          status?: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_rewards_participation_id_fkey"
+            columns: ["participation_id"]
+            isOneToOne: true
+            referencedRelation: "campaign_participations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          created_at: string
+          description: string | null
+          ends_at: string | null
+          id: string
+          instagram: Json
+          mechanic_type: string
+          name: string
+          require_story_share: boolean
+          rules: Json
+          slug: string
+          starts_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          instagram?: Json
+          mechanic_type?: string
+          name: string
+          require_story_share?: boolean
+          rules?: Json
+          slug: string
+          starts_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          instagram?: Json
+          mechanic_type?: string
+          name?: string
+          require_story_share?: boolean
+          rules?: Json
+          slug?: string
+          starts_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       delivery_popups: {
         Row: {
           bg_color: string | null
@@ -945,6 +1219,18 @@ export type Database = {
       increment_redirect_clicks: {
         Args: { redirect_id: string }
         Returns: undefined
+      }
+      select_prize_atomically: {
+        Args: {
+          p_campaign_id: string
+          p_fingerprint?: string
+          p_ip_address?: string
+          p_participant_name: string
+          p_participant_whatsapp: string
+          p_source?: string
+          p_user_agent?: string
+        }
+        Returns: Json
       }
     }
     Enums: {
