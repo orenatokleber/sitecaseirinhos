@@ -41,6 +41,11 @@ import MaintenancePage from "./pages/MaintenancePage";
 import AdminMaintenance from "./pages/admin/AdminMaintenance";
 import Biolink from "./pages/Biolink";
 import AdminBiolink from "./pages/admin/AdminBiolink";
+import Surpresa from "./pages/Surpresa";
+import AdminSurpresa from "./pages/admin/AdminSurpresa";
+import AdminSurpresaCampaigns from "./pages/admin/AdminSurpresaCampaigns";
+import AdminSurpresaCampaignEdit from "./pages/admin/AdminSurpresaCampaignEdit";
+import AdminSurpresaValidate from "./pages/admin/AdminSurpresaValidate";
 import { HelmetProvider } from "react-helmet-async";
 import { useTrackPageView } from "@/hooks/usePageViews";
 import { useSiteSettings } from "@/hooks/useSiteContent";
@@ -50,7 +55,7 @@ const queryClient = new QueryClient();
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/painel-admin');
-  const isBareRoute = location.pathname === '/links';
+  const isBareRoute = location.pathname === '/links' || location.pathname.startsWith('/surpresa');
   const hideWhatsApp = location.pathname === '/' || location.pathname.startsWith('/cardapio');
   useTrackPageView();
   const { data: settings } = useSiteSettings();
@@ -99,6 +104,7 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/links" element={<Biolink />} />
+              <Route path="/surpresa" element={<Surpresa />} />
               <Route path="/:slug" element={<RedirectPage />} />
 
 
@@ -124,6 +130,10 @@ const App = () => (
                 <Route path="biolink" element={<AdminBiolink />} />
                 <Route path="config" element={<AdminConfig />} />
                 <Route path="manutencao" element={<AdminMaintenance />} />
+                <Route path="surpresa" element={<AdminSurpresa />} />
+                <Route path="surpresa/campanhas" element={<AdminSurpresaCampaigns />} />
+                <Route path="surpresa/campanhas/:id" element={<AdminSurpresaCampaignEdit />} />
+                <Route path="surpresa/validar" element={<AdminSurpresaValidate />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />
