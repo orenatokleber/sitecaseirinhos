@@ -1,6 +1,5 @@
-import { useMemo, useState, useCallback, useEffect, useRef } from "react";
+import { useMemo, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
 import {
   Check,
   Plus,
@@ -17,10 +16,11 @@ import {
   Camera,
   PartyPopper,
   Croissant,
-  Gift
+  Gift,
+  Star
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import { useSiteSettings, useSiteSections } from "@/hooks/useSiteContent";
+import { useSiteSettings } from "@/hooks/useSiteContent";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { normalizeWhatsApp } from "@/lib/utils";
 import {
@@ -61,7 +61,7 @@ type OrderItem = {
 };
 
 type CategoryKind = "round" | "rectangular" | "sweet";
-type MainCategory = "bolo" | "doces" | "salgados" | "kit_festa" | "presentear" | "pasta_americana";
+type MainCategory = string;
 
 /* ─── UI Components ────────────────────────── */
 
@@ -165,9 +165,18 @@ const InlineSectionLabel = ({ children }: { children: React.ReactNode }) => (
 /* ─── Main Component ───────────────────────── */
 const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
-  const { data: sections = {} } = useSiteSections();
 
-  const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
+  const lojaConfig = settings?.loja_config as any || {
+    activeCategories: { bolo: true, doces: true, salgados: true, kit_festa: true, pasta_americana: true, presentear: true },
+    customTitles: { bolo: "~100g/pessoa", doces: "3-4/pessoa", salgados: "10-15/pessoa", kit_festa: "", pasta_americana: "", presentear: "" },
+    delivery: { acceptsDelivery: true, deliveryFee: "0", acceptsPickup: true },
+    whatsappMsg: { greeting: "Olá {nome}! Aqui é {loja}", signoff: "Qualquer ajuste é só me avisar. Obrigada!" },
+    customCategories: []
+  };
+
+  const contactSettings = settings?.contact as any;
+  const whatsapp = normalizeWhatsApp(contactSettings?.whatsapp) || "5500000000000";
+  const lojaName = contactSettings?.name || "Nossa Loja";
 
   // Data hooks
   const { data: sizes = [] } = useCakeSizes(true);
@@ -195,14 +204,28 @@ const MontarPedido = () => {
   }, [sweetTypes]);
 
   // Main Category Hierarchy
-  const mainCats = [
-    { id: "bolo" as MainCategory, title: "Bolo", subtitle: "personalizado", icon: Cake },
-    { id: "doces" as MainCategory, title: "Doces", subtitle: "docinhos", icon: Candy },
-    { id: "salgados" as MainCategory, title: "Salgados", subtitle: "por encomenda", icon: Croissant },
-    { id: "kit_festa" as MainCategory, title: "Kit Festa", subtitle: "personalizado", icon: PartyPopper },
-    { id: "pasta_americana" as MainCategory, title: "Pasta Americana", subtitle: "personalizado", icon: Cake },
-    { id: "presentear" as MainCategory, title: "Para Presentear", subtitle: "personalizado", icon: Gift },
-  ];
+  const mainCats = useMemo(() => {
+    const defaultCats = [
+      { id: "bolo", title: "Bolo", subtitle: lojaConfig.customTitles.bolo, icon: Cake, isManual: false },
+      { id: "doces", title: "Doces", subtitle: lojaConfig.customTitles.doces, icon: Candy, isManual: false },
+      { id: "salgados", title: "Salgados", subtitle: lojaConfig.customTitles.salgados, icon: Croissant, isManual: true },
+      { id: "kit_festa", title: "Kit Festa", subtitle: lojaConfig.customTitles.kit_festa, icon: PartyPopper, isManual: true },
+      { id: "pasta_americana", title: "Pasta Americana", subtitle: lojaConfig.customTitles.pasta_americana, icon: Cake, isManual: true },
+      { id: "presentear", title: "Para Presentear", subtitle: lojaConfig.customTitles.presentear, icon: Gift, isManual: true },
+    ].filter(cat => lojaConfig.activeCategories[cat.id]);
+
+    const customCats = (lojaConfig.customCategories || [])
+      .filter((c: any) => c.isActive)
+      .map((c: any) => ({
+        id: c.id,
+        title: c.title,
+        subtitle: c.subtitle,
+        icon: Star,
+        isManual: true
+      }));
+
+    return [...defaultCats, ...customCats];
+  }, [lojaConfig]);
 
   // UI state
   const [selectedMainCat, setSelectedMainCat] = useState<MainCategory | null>(null);
@@ -233,7 +256,7 @@ const MontarPedido = () => {
     email: "",
     date: "", 
     details: "",
-    deliveryMethod: "pickup" as "pickup" | "delivery"
+    deliveryMethod: lojaConfig.delivery.acceptsPickup ? "pickup" : "delivery" as "pickup" | "delivery"
   });
 
   const step2Ref = useRef<HTMLElement>(null);
@@ -284,23 +307,19 @@ const MontarPedido = () => {
     [addons, addonPrices],
   );
 
+  const activeMainCatObj = mainCats.find(c => c.id === selectedMainCat);
+  const isManualCategory = activeMainCatObj?.isManual;
+
   /* ─── Compute draft item ─────── */
   const draftItem = useMemo<OrderItem | null>(() => {
     if (!selectedMainCat) return null;
 
-    // For manual categories
-    if (["salgados", "kit_festa", "presentear", "pasta_americana"].includes(selectedMainCat)) {
+    if (isManualCategory) {
       if (!manualDescription.trim()) return null;
-      const titleMap = {
-        salgados: "Salgados por encomenda",
-        kit_festa: "Kit Festa",
-        presentear: "Para Presentear",
-        pasta_americana: "Pasta Americana"
-      };
       return {
         id: "draft-manual",
         kind: "manual",
-        title: titleMap[selectedMainCat as keyof typeof titleMap] || "Outros",
+        title: activeMainCatObj?.title || "Outros",
         details: [`Descrição: ${manualDescription}`],
         price: null,
         consult: true,
@@ -393,7 +412,7 @@ const MontarPedido = () => {
 
     return null;
   }, [
-    selectedMainCat, manualDescription, selectedProduct, sizeId, flavorId, roundAddons, rectClass, rectAddons,
+    selectedMainCat, isManualCategory, activeMainCatObj, manualDescription, selectedProduct, sizeId, flavorId, roundAddons, rectClass, rectAddons,
     sweetFlavorId, sweetPackageId, categories, sizes, flavors, prices, addons, addonPrices,
     rectangular, sweetTypes, sweetFlavors, sweetPackages, addonPriceInfo,
   ]);
@@ -441,10 +460,17 @@ const MontarPedido = () => {
       return `${i + 1}) ${it.title} — ${it.qty}x — ${p}\n   ${it.details.join("\n   ")}`;
     });
 
-    const deliveryStr = form.deliveryMethod === "pickup" ? "Retirar no local (Ateliê)" : "Entrega (A combinar)";
+    let deliveryStr = "";
+    if (form.deliveryMethod === "pickup") {
+      deliveryStr = "Retirar no local";
+    } else {
+      const fee = Number(lojaConfig.delivery.deliveryFee || 0);
+      deliveryStr = `Entrega (${fee > 0 ? `Taxa: R$ ${fee.toFixed(2)}` : "A combinar"})`;
+    }
 
-    const msg =
-      `Olá! Montei meu pedido no site:\n\n${lines.join("\n\n")}\n\n` +
+    const orderText = 
+      `\n\n*Resumo do Pedido*\n` +
+      `${lines.join("\n\n")}\n\n` +
       `Subtotal estimado: ${formatPrice(finalTotal)}${finalHasConsult ? " (+ itens a consultar)" : ""}\n\n` +
       `*Seus Dados:*\n` +
       `Nome: ${form.name}\n` +
@@ -452,7 +478,12 @@ const MontarPedido = () => {
       (form.email ? `E-mail: ${form.email}\n` : "") +
       `Data desejada: ${form.date}\n` +
       `Forma de Recebimento: ${deliveryStr}\n` +
-      `Observações: ${form.details || "—"}`;
+      `Observações: ${form.details || "—"}\n\n`;
+
+    let greeting = lojaConfig.whatsappMsg.greeting.replace("{nome}", form.name).replace("{loja}", lojaName);
+    let signoff = lojaConfig.whatsappMsg.signoff;
+    
+    const msg = greeting + orderText + signoff;
 
     window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
   };
@@ -464,8 +495,7 @@ const MontarPedido = () => {
     .sort((a, b) => a.quantity - b.quantity) : [];
 
   const subProducts = selectedMainCat === "bolo" ? boloProducts : selectedMainCat === "doces" ? doceProducts : [];
-  const isManualCategory = selectedMainCat && ["salgados", "kit_festa", "presentear", "pasta_americana"].includes(selectedMainCat);
-
+  
   /* ─── Render ────────────────────────────── */
   return (
     <main className="min-h-screen bg-[#fcf8f8] pb-32 pt-20">
@@ -551,7 +581,7 @@ const MontarPedido = () => {
                       rows={4}
                       value={manualDescription}
                       onChange={(e) => setManualDescription(e.target.value)}
-                      placeholder={`Descreva aqui como você gostaria do seu ${mainCats.find(c => c.id === selectedMainCat)?.title}...`}
+                      placeholder={`Descreva aqui como você gostaria do seu ${activeMainCatObj?.title}...`}
                       className="w-full resize-none rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
                     />
                     <p className="text-xs text-muted-foreground mt-2">
@@ -812,39 +842,48 @@ const MontarPedido = () => {
               />
             </div>
 
-            <div>
-              <label className="mb-2 mt-4 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                Forma de recebimento *
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setForm({...form, deliveryMethod: "pickup"})}
-                  className={`flex flex-col items-center justify-center gap-1.5 rounded-xl border p-3 transition-colors ${
-                    form.deliveryMethod === "pickup" ? "border-[#8c3a40] bg-[#f9f2f2] text-[#8c3a40]" : "border-border bg-transparent text-muted-foreground hover:bg-muted/50"
-                  }`}
-                >
-                  <Store size={20} />
-                  <div className="text-center">
-                    <span className="block font-bold text-sm">Retirar no local</span>
-                    <span className="block text-[10px]">No ateliê</span>
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setForm({...form, deliveryMethod: "delivery"})}
-                  className={`flex flex-col items-center justify-center gap-1.5 rounded-xl border p-3 transition-colors ${
-                    form.deliveryMethod === "delivery" ? "border-[#8c3a40] bg-[#f9f2f2] text-[#8c3a40]" : "border-border bg-transparent text-muted-foreground hover:bg-muted/50"
-                  }`}
-                >
-                  <MapPin size={20} />
-                  <div className="text-center">
-                    <span className="block font-bold text-sm">Entrega</span>
-                    <span className="block text-[10px]">A combinar</span>
-                  </div>
-                </button>
+            {/* Delivery Methods dynamic rendering */}
+            {(lojaConfig.delivery.acceptsPickup || lojaConfig.delivery.acceptsDelivery) && (
+              <div>
+                <label className="mb-2 mt-4 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  Forma de recebimento *
+                </label>
+                <div className={`grid gap-3 ${lojaConfig.delivery.acceptsPickup && lojaConfig.delivery.acceptsDelivery ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {lojaConfig.delivery.acceptsPickup && (
+                    <button
+                      type="button"
+                      onClick={() => setForm({...form, deliveryMethod: "pickup"})}
+                      className={`flex flex-col items-center justify-center gap-1.5 rounded-xl border p-3 transition-colors ${
+                        form.deliveryMethod === "pickup" ? "border-[#8c3a40] bg-[#f9f2f2] text-[#8c3a40]" : "border-border bg-transparent text-muted-foreground hover:bg-muted/50"
+                      }`}
+                    >
+                      <Store size={20} />
+                      <div className="text-center">
+                        <span className="block font-bold text-sm">Retirar no local</span>
+                        <span className="block text-[10px]">No ateliê</span>
+                      </div>
+                    </button>
+                  )}
+                  {lojaConfig.delivery.acceptsDelivery && (
+                    <button
+                      type="button"
+                      onClick={() => setForm({...form, deliveryMethod: "delivery"})}
+                      className={`flex flex-col items-center justify-center gap-1.5 rounded-xl border p-3 transition-colors ${
+                        form.deliveryMethod === "delivery" ? "border-[#8c3a40] bg-[#f9f2f2] text-[#8c3a40]" : "border-border bg-transparent text-muted-foreground hover:bg-muted/50"
+                      }`}
+                    >
+                      <MapPin size={20} />
+                      <div className="text-center">
+                        <span className="block font-bold text-sm">Entrega</span>
+                        <span className="block text-[10px]">
+                          {Number(lojaConfig.delivery.deliveryFee || 0) > 0 ? `Taxa: R$ ${Number(lojaConfig.delivery.deliveryFee).toFixed(2)}` : 'A combinar'}
+                        </span>
+                      </div>
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Reference Photo Upload Mockup */}
             <div className="pt-2">
