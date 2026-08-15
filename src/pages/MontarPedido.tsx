@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
@@ -15,7 +15,9 @@ import {
   Store,
   MapPin,
   Camera,
-  ChevronDown
+  PartyPopper,
+  Croissant,
+  Gift
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { useSiteSettings, useSiteSections } from "@/hooks/useSiteContent";
@@ -49,7 +51,7 @@ const formatPrice = (v: number | null | undefined) =>
 
 type OrderItem = {
   id: string;
-  kind: "round" | "rectangular" | "sweet";
+  kind: "round" | "rectangular" | "sweet" | "manual";
   title: string;
   details: string[];
   price: number | null;
@@ -59,12 +61,13 @@ type OrderItem = {
 };
 
 type CategoryKind = "round" | "rectangular" | "sweet";
+type MainCategory = "bolo" | "doces" | "salgados" | "kit_festa" | "presentear" | "pasta_americana";
 
 /* ─── UI Components ────────────────────────── */
 
-const StepHeader = ({ number, title }: { number: number; title: string }) => (
-  <div className="flex items-center gap-3 mb-4">
-    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#8c3a40] text-white font-bold text-xs">
+const StepHeader = ({ number, title, className = "" }: { number: number; title: string, className?: string }) => (
+  <div className={`flex items-center gap-3 mb-4 ${className}`}>
+    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#8c3a40] text-white font-bold text-xs shrink-0">
       {number}
     </div>
     <h2 className="font-heading text-xl font-semibold text-foreground">{title}</h2>
@@ -163,19 +166,6 @@ const InlineSectionLabel = ({ children }: { children: React.ReactNode }) => (
 const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
   const { data: sections = {} } = useSiteSections();
-  const sec = (key: string) => (sections as any)?.[key] || {};
-
-  const psec = (key: string, fallbackKey?: string) => {
-    const own = (sections as any)?.[key];
-    const fb = fallbackKey ? (sections as any)?.[fallbackKey] : undefined;
-    if (!own && !fb) return {};
-    return {
-      title: own?.title || fb?.title || null,
-      subtitle: own?.subtitle || fb?.subtitle || null,
-      content: own?.content || fb?.content || null,
-      image_url: own?.image_url || fb?.image_url || null,
-    };
-  };
 
   const whatsapp = normalizeWhatsApp((settings?.contact as any)?.whatsapp) || "5500000000000";
 
@@ -191,21 +181,37 @@ const MontarPedido = () => {
   const { data: sweetFlavors = [] } = useSweetFlavors(true);
   const { data: sweetPackages = [] } = useSweetPackages();
 
-  // Unified Products for Step 1
   const standardCats = categories.filter((c) => c.type !== "addon");
   
-  const allProducts = useMemo(() => {
+  const boloProducts = useMemo(() => {
     const arr = [];
     standardCats.forEach(c => arr.push({ id: c.id, kind: "round" as const, title: c.name, subtitle: c.description || "Bolos redondos", icon: Cake }));
     rectangular.forEach(r => arr.push({ id: r.id, kind: "rectangular" as const, title: r.name, subtitle: "Bolos retangulares", icon: RectangleHorizontal }));
-    sweetTypes.forEach(t => arr.push({ id: t.id, kind: "sweet" as const, title: t.name, subtitle: t.description || "Doces diversos", icon: Candy }));
     return arr;
-  }, [standardCats, rectangular, sweetTypes]);
+  }, [standardCats, rectangular]);
+
+  const doceProducts = useMemo(() => {
+    return sweetTypes.map(t => ({ id: t.id, kind: "sweet" as const, title: t.name, subtitle: t.description || "Docinhos", icon: Candy }));
+  }, [sweetTypes]);
+
+  // Main Category Hierarchy
+  const mainCats = [
+    { id: "bolo" as MainCategory, title: "Bolo", subtitle: "personalizado", icon: Cake },
+    { id: "doces" as MainCategory, title: "Doces", subtitle: "docinhos", icon: Candy },
+    { id: "salgados" as MainCategory, title: "Salgados", subtitle: "por encomenda", icon: Croissant },
+    { id: "kit_festa" as MainCategory, title: "Kit Festa", subtitle: "personalizado", icon: PartyPopper },
+    { id: "pasta_americana" as MainCategory, title: "Pasta Americana", subtitle: "personalizado", icon: Cake },
+    { id: "presentear" as MainCategory, title: "Para Presentear", subtitle: "personalizado", icon: Gift },
+  ];
 
   // UI state
+  const [selectedMainCat, setSelectedMainCat] = useState<MainCategory | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<{ id: string, kind: CategoryKind } | null>(null);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+
+  // Manual text state for categories without DB mapping (Salgados, Kit festa, etc)
+  const [manualDescription, setManualDescription] = useState("");
 
   // Round cake selections
   const [sizeId, setSizeId] = useState<string>("");
@@ -230,7 +236,18 @@ const MontarPedido = () => {
     deliveryMethod: "pickup" as "pickup" | "delivery"
   });
 
-  // Handle product selection reset
+  const step2Ref = useRef<HTMLElement>(null);
+  const step3Ref = useRef<HTMLElement>(null);
+
+  const handleSelectMainCat = (id: MainCategory) => {
+    setSelectedMainCat(id);
+    setSelectedProduct(null); // reset sub-product
+    setManualDescription("");
+    setTimeout(() => {
+      step2Ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  };
+
   const handleSelectProduct = (id: string, kind: CategoryKind) => {
     setSelectedProduct({ id, kind });
     setSizeId("");
@@ -240,11 +257,6 @@ const MontarPedido = () => {
     setRectAddons([]);
     setSweetFlavorId("");
     setSweetPackageId("");
-    
-    // Scroll to personalize section smoothly
-    setTimeout(() => {
-      document.getElementById("step-2")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
   };
 
   const roundAddonList = addons.filter((a) => a.applies_to !== "rectangular");
@@ -274,6 +286,28 @@ const MontarPedido = () => {
 
   /* ─── Compute draft item ─────── */
   const draftItem = useMemo<OrderItem | null>(() => {
+    if (!selectedMainCat) return null;
+
+    // For manual categories
+    if (["salgados", "kit_festa", "presentear", "pasta_americana"].includes(selectedMainCat)) {
+      if (!manualDescription.trim()) return null;
+      const titleMap = {
+        salgados: "Salgados por encomenda",
+        kit_festa: "Kit Festa",
+        presentear: "Para Presentear",
+        pasta_americana: "Pasta Americana"
+      };
+      return {
+        id: "draft-manual",
+        kind: "manual",
+        title: titleMap[selectedMainCat as keyof typeof titleMap] || "Outros",
+        details: [`Descrição: ${manualDescription}`],
+        price: null,
+        consult: true,
+        qty: 1
+      };
+    }
+
     if (!selectedProduct) return null;
     const { id, kind } = selectedProduct;
 
@@ -338,45 +372,44 @@ const MontarPedido = () => {
       };
     }
 
-    // sweet
-    if (!sweetPackageId) return null;
-    const t = sweetTypes.find((x) => x.id === id);
-    const pkg = sweetPackages.find((x) => x.id === sweetPackageId);
-    const fl = sweetFlavors.find((x) => x.id === sweetFlavorId);
-    const details = [`Quantidade: ${pkg?.quantity} unidades`];
-    if (fl) details.push(`Sabor: ${fl.name}`);
-    return {
-      id: "draft-sweet",
-      kind: "sweet" as const,
-      title: `Doces — ${t?.name ?? ""}`,
-      details,
-      price: pkg?.price ?? null,
-      consult: pkg?.price === undefined,
-      qty: 1,
-      image: t?.image_url,
-    };
+    if (kind === "sweet") {
+      if (!sweetPackageId) return null;
+      const t = sweetTypes.find((x) => x.id === id);
+      const pkg = sweetPackages.find((x) => x.id === sweetPackageId);
+      const fl = sweetFlavors.find((x) => x.id === sweetFlavorId);
+      const details = [`Quantidade: ${pkg?.quantity} unidades`];
+      if (fl) details.push(`Sabor: ${fl.name}`);
+      return {
+        id: "draft-sweet",
+        kind: "sweet" as const,
+        title: `Doces — ${t?.name ?? ""}`,
+        details,
+        price: pkg?.price ?? null,
+        consult: pkg?.price === undefined,
+        qty: 1,
+        image: t?.image_url,
+      };
+    }
+
+    return null;
   }, [
-    selectedProduct, sizeId, flavorId, roundAddons, rectClass, rectAddons,
+    selectedMainCat, manualDescription, selectedProduct, sizeId, flavorId, roundAddons, rectClass, rectAddons,
     sweetFlavorId, sweetPackageId, categories, sizes, flavors, prices, addons, addonPrices,
     rectangular, sweetTypes, sweetFlavors, sweetPackages, addonPriceInfo,
   ]);
 
-  const canAddDraft = (() => {
-    if (!selectedProduct) return false;
-    if (selectedProduct.kind === "round") return !!sizeId;
-    if (selectedProduct.kind === "rectangular") return true;
-    return !!sweetPackageId;
-  })();
+  const canAddDraft = draftItem !== null;
 
   const addItem = () => {
     if (!draftItem) return;
     const stamp = Date.now();
     setItems((prev) => [...prev, { ...draftItem, id: `${stamp}` }]);
-    setSelectedProduct(null); // Reset to allow adding another item
+    setSelectedProduct(null);
+    setSelectedMainCat(null);
+    setManualDescription("");
     
-    // Scroll to cart or next step
     setTimeout(() => {
-      document.getElementById("step-3")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      step3Ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
   };
 
@@ -395,12 +428,10 @@ const MontarPedido = () => {
   const draftTotal = (draftItem?.price ?? 0);
   const displayTotal = total + draftTotal;
   
-  const hasConsult = items.some((it) => it.consult) || draftItem?.consult;
   const itemCount = items.reduce((sum, it) => sum + it.qty, 0) + (draftItem ? 1 : 0);
 
   /* ─── WhatsApp ──────────────────────────── */
   const sendWhatsApp = () => {
-    // If there's a draft that hasn't been added yet, add it automatically or include it in the message
     const finalItems = draftItem ? [...items, draftItem] : items;
     const finalTotal = finalItems.reduce((sum, it) => sum + (it.price ?? 0) * it.qty, 0);
     const finalHasConsult = finalItems.some((it) => it.consult);
@@ -432,6 +463,9 @@ const MontarPedido = () => {
     .filter((p) => p.type_id === selectedProduct.id)
     .sort((a, b) => a.quantity - b.quantity) : [];
 
+  const subProducts = selectedMainCat === "bolo" ? boloProducts : selectedMainCat === "doces" ? doceProducts : [];
+  const isManualCategory = selectedMainCat && ["salgados", "kit_festa", "presentear", "pasta_americana"].includes(selectedMainCat);
+
   /* ─── Render ────────────────────────────── */
   return (
     <main className="min-h-screen bg-[#fcf8f8] pb-32 pt-20">
@@ -456,18 +490,18 @@ const MontarPedido = () => {
 
       <div className="container mx-auto px-4 max-w-xl space-y-10">
         
-        {/* STEP 1: Categories */}
+        {/* STEP 1: Main Category */}
         <section id="step-1">
           <StepHeader number={1} title="O que você vai pedir?" />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {allProducts.map((prod) => (
+            {mainCats.map((cat) => (
               <RadioCard
-                key={`${prod.kind}-${prod.id}`}
-                title={prod.title}
-                subtitle={prod.subtitle}
-                icon={prod.icon}
-                active={selectedProduct?.id === prod.id && selectedProduct?.kind === prod.kind}
-                onClick={() => handleSelectProduct(prod.id, prod.kind)}
+                key={cat.id}
+                title={cat.title}
+                subtitle={cat.subtitle}
+                icon={cat.icon}
+                active={selectedMainCat === cat.id}
+                onClick={() => handleSelectMainCat(cat.id)}
               />
             ))}
           </div>
@@ -475,9 +509,10 @@ const MontarPedido = () => {
 
         {/* STEP 2: Personalize */}
         <AnimatePresence mode="wait">
-          {selectedProduct && (
+          {selectedMainCat && (
             <motion.section
               id="step-2"
+              ref={step2Ref}
               key="step-2"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -485,12 +520,48 @@ const MontarPedido = () => {
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <StepHeader number={2} title="Personalize seu item" />
+              <StepHeader number={2} title="Personalize seu pedido" />
               
               <div className="bg-white rounded-3xl p-5 border border-border/60 shadow-sm space-y-4">
                 
-                {/* ─── Round cake options ─── */}
-                {selectedProduct.kind === "round" && (
+                {/* 2.1 - Sub-categories selection (if bolo or doces) */}
+                {subProducts.length > 0 && (
+                  <>
+                    <InlineSectionLabel>Selecione a linha *</InlineSectionLabel>
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 mb-6">
+                      {subProducts.map((p) => (
+                        <OptionChip
+                          key={`${p.kind}-${p.id}`}
+                          active={selectedProduct?.id === p.id}
+                          onClick={() => handleSelectProduct(p.id, p.kind)}
+                          meta={p.subtitle || undefined}
+                        >
+                          {p.title}
+                        </OptionChip>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {/* 2.2 - Manual input for Salgados, Kit Festa etc */}
+                {isManualCategory && (
+                  <>
+                    <InlineSectionLabel>Descreva seu pedido *</InlineSectionLabel>
+                    <textarea
+                      rows={4}
+                      value={manualDescription}
+                      onChange={(e) => setManualDescription(e.target.value)}
+                      placeholder={`Descreva aqui como você gostaria do seu ${mainCats.find(c => c.id === selectedMainCat)?.title}...`}
+                      className="w-full resize-none rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                    />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Para essa opção, o valor é 100% a consultar. Nossa equipe passará o orçamento pelo WhatsApp.
+                    </p>
+                  </>
+                )}
+
+                {/* 2.3 - Detail options (Round, Rectangular, Sweet) */}
+                {selectedProduct?.kind === "round" && (
                   <>
                     <InlineSectionLabel>Tamanho *</InlineSectionLabel>
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -556,8 +627,7 @@ const MontarPedido = () => {
                   </>
                 )}
 
-                {/* ─── Rectangular cake options ─── */}
-                {selectedProduct.kind === "rectangular" && (
+                {selectedProduct?.kind === "rectangular" && (
                   <>
                     {(() => {
                       const r = rectangular.find((x) => x.id === selectedProduct.id);
@@ -611,8 +681,7 @@ const MontarPedido = () => {
                   </>
                 )}
 
-                {/* ─── Sweet options ─── */}
-                {selectedProduct.kind === "sweet" && (
+                {selectedProduct?.kind === "sweet" && (
                   <>
                     {modalSweetFlavors.length > 0 && (
                       <>
@@ -648,28 +717,30 @@ const MontarPedido = () => {
                   </>
                 )}
 
-                {/* Botão Adicionar (opcional se quiserem comprar mais de um item) */}
-                <div className="pt-4 border-t border-border mt-4">
-                  <button
-                    type="button"
-                    onClick={addItem}
-                    disabled={!canAddDraft}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#8c3a40] text-[#8c3a40] px-4 py-3 font-body text-sm font-semibold transition-all hover:bg-[#8c3a40] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <Plus size={16} />
-                    Adicionar mais itens (opcional)
-                  </button>
-                  <p className="text-center text-xs text-muted-foreground mt-2">
-                    {items.length > 0 ? `Você tem ${items.length} item(s) adicionados.` : "Se quiser apenas este item, pode seguir preenchendo os dados abaixo."}
-                  </p>
-                </div>
+                {/* Botão Adicionar */}
+                {((subProducts.length > 0 && selectedProduct) || isManualCategory) && (
+                  <div className="pt-4 border-t border-border mt-4">
+                    <button
+                      type="button"
+                      onClick={addItem}
+                      disabled={!canAddDraft}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#8c3a40] text-[#8c3a40] px-4 py-3 font-body text-sm font-semibold transition-all hover:bg-[#8c3a40] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <Plus size={16} />
+                      Adicionar mais itens (opcional)
+                    </button>
+                    <p className="text-center text-xs text-muted-foreground mt-2">
+                      {items.length > 0 ? `Você tem ${items.length} item(s) adicionados.` : "Se quiser apenas este item, não precisa clicar acima, siga direto para os dados abaixo."}
+                    </p>
+                  </div>
+                )}
               </div>
             </motion.section>
           )}
         </AnimatePresence>
 
         {/* STEP 3: Formulario */}
-        <section id="step-3" className={(itemCount === 0 && !selectedProduct) ? "opacity-50 pointer-events-none" : ""}>
+        <section id="step-3" ref={step3Ref} className={(itemCount === 0 && !selectedMainCat) ? "opacity-50 pointer-events-none" : ""}>
           <StepHeader number={3} title="Seus dados e entrega" />
           
           <div className="bg-white rounded-3xl p-5 md:p-6 border border-border/60 shadow-sm space-y-4">
@@ -718,7 +789,7 @@ const MontarPedido = () => {
                 Data desejada *
               </label>
               <p className="text-[11px] text-muted-foreground mb-2 -mt-1 leading-tight">
-                Encomendas com no mínimo 2 dias de antecedência.
+                Encomendas com antecedência.
               </p>
               <input
                 type="date"
@@ -839,9 +910,7 @@ const MontarPedido = () => {
               </div>
             ) : (
               [...(items), ...(draftItem ? [draftItem] : [])].map((it, idx) => {
-                // If it's the draft item, we might not want them to delete it from here without going back to step 2,
-                // but for simplicity we treat it as an item in the review screen. 
-                const isDraft = it.id === 'draft' || it.id === 'draft-sweet';
+                const isDraft = it.id === 'draft' || it.id === 'draft-sweet' || it.id === 'draft-manual';
                 
                 return (
                   <div
@@ -914,7 +983,7 @@ const MontarPedido = () => {
             <button
               type="button"
               onClick={sendWhatsApp}
-              disabled={itemCount === 0 || !form.name.trim() || !form.phone.trim() || !form.date}
+              disabled={itemCount === 0 || !form.name.trim() || !form.phone.trim() || !form.date || (!canAddDraft && items.length === 0)}
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-4 font-body text-sm font-bold uppercase tracking-wider text-white shadow-lg shadow-[#25D366]/20 transition-all hover:shadow-xl hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none mt-4"
             >
               Enviar pelo WhatsApp <ArrowRight size={16} />
