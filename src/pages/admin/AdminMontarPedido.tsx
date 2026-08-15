@@ -25,69 +25,81 @@ type SectionCfg = {
 const PEDIDO_SECTIONS: SectionCfg[] = [
   {
     key: "pedido_hero",
-    label: "Topo da página",
-    hint: "Script, título, subtítulo, texto informativo e imagem no topo de /montar-pedido.",
+    label: "🏪 Hero da Loja",
+    hint: "Banner principal no topo da página — título, subtítulo, texto e imagem de fundo.",
     showScript: true,
     fallbackKey: "cardapio_hero",
     defaults: {
       script: "Passo a passo",
       title: "Monte seu Pedido",
-      subtitle: "Escolha as opções abaixo, adicione ao resumo e envie tudo pelo WhatsApp",
+      subtitle: "Escolha seus favoritos, personalize e envie tudo pelo WhatsApp",
     },
   },
   {
-    key: "pedido_kind",
-    label: "Passo 1 — O que você deseja?",
-    hint: "Título e observação do passo de escolha entre bolo redondo, retangular ou doces.",
-    defaults: { title: "O que você deseja?" },
+    key: "pedido_tab_round",
+    label: "🎂 Aba — Bolos Redondos",
+    hint: "Título da aba de bolos redondos (ex: 'Bolos Artesanais'). Deixe vazio para o padrão 'Bolos Redondos'.",
+    defaults: { title: "Bolos Redondos" },
+  },
+  {
+    key: "pedido_tab_rect",
+    label: "📐 Aba — Bolos Retangulares",
+    hint: "Título da aba de bolos retangulares. Deixe vazio para o padrão.",
+    defaults: { title: "Bolos Retangulares" },
+  },
+  {
+    key: "pedido_tab_sweets",
+    label: "🍬 Aba — Doces",
+    hint: "Título da aba de doces. Deixe vazio para o padrão.",
+    defaults: { title: "Doces" },
   },
   {
     key: "pedido_size",
-    label: "Passo 2 — Tamanho (bolo redondo)",
-    hint: "Título, observação e imagem do passo de tamanhos.",
+    label: "📏 Modal — Tamanho (bolo redondo)",
+    hint: "Título da seção de tamanho no modal de personalização.",
     fallbackKey: "cardapio_sizes",
     defaults: { title: "Tamanho" },
   },
   {
     key: "pedido_round_line",
-    label: "Passo 3 — Linha e sabor (bolo redondo)",
-    hint: "Título, observação e imagem do passo de linha (Tradicional/Premium) e sabores.",
+    label: "🎨 Grid — Info bolos redondos",
+    hint: "Texto informativo exibido acima do grid de bolos redondos (ex: regras de encomenda, prazos).",
     defaults: { title: "Linha e sabor" },
   },
   {
     key: "pedido_round_addons",
-    label: "Passo 4 — Adicionais (bolo redondo)",
-    hint: "Título, observação e imagem dos adicionais de bolos redondos.",
+    label: "✨ Modal — Adicionais (bolo redondo)",
+    hint: "Título da seção de adicionais no modal de bolos redondos.",
     fallbackKey: "cardapio_decorations",
-    defaults: { title: "Adicionais (opcional)" },
+    defaults: { title: "Adicionais" },
   },
   {
     key: "pedido_rect",
-    label: "Passo 2 — Modelo (bolo retangular)",
-    hint: "Título, observação e imagem do passo de modelos retangulares.",
+    label: "📐 Grid — Info bolos retangulares",
+    hint: "Texto informativo e imagem fallback para bolos retangulares. A imagem será usada nos cards de retangulares que não possuem imagem própria.",
     fallbackKey: "cardapio_rectangular",
     defaults: { title: "Modelo" },
   },
   {
     key: "pedido_rect_line",
-    label: "Passo 3 — Linha (bolo retangular)",
-    hint: "Título, observação e imagem do passo de linha dos retangulares.",
+    label: "🏷️ Modal — Linha (bolo retangular)",
+    hint: "Título da seção de escolha de linha (Tradicional/Premium) no modal de retangulares.",
     defaults: { title: "Linha" },
   },
   {
     key: "pedido_rect_addons",
-    label: "Passo 4 — Adicionais (bolo retangular)",
-    hint: "Título, observação e imagem dos adicionais de bolos retangulares.",
+    label: "✨ Modal — Adicionais (bolo retangular)",
+    hint: "Título da seção de adicionais no modal de retangulares.",
     fallbackKey: "cardapio_decorations_rect",
-    defaults: { title: "Adicionais (opcional)" },
+    defaults: { title: "Adicionais" },
   },
   {
     key: "pedido_sweets",
-    label: "Doces para festa",
-    hint: "Aparece em todos os fluxos (bolo redondo, retangular e doces). Título, observação e imagem.",
+    label: "🍬 Grid — Info doces",
+    hint: "Texto informativo exibido acima do grid de doces (ex: pacotes disponíveis, prazos).",
     fallbackKey: "cardapio_sweets",
     defaults: {
-      title: "Doces para festa (opcional)",
+      title: "Doces para festa",
       content: "Vendidos em pacotes de 25, 50 ou 100 unidades",
     },
   },
@@ -219,9 +231,10 @@ const AdminMontarPedido = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-foreground">Montar Pedido</h1>
+        <h1 className="font-display text-3xl text-foreground">Montar Pedido — Catálogo</h1>
         <p className="mt-1 text-muted-foreground">
-          Os campos já vêm preenchidos com o que aparece hoje na página. Edite o que quiser e salve.
+          Configure o visual da loja: hero, abas de categoria, textos informativos e títulos dos modais.
+          Os produtos e preços são gerenciados na seção <strong>Cardápio</strong>.
         </p>
       </div>
 
