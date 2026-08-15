@@ -101,7 +101,7 @@ const RadioCard = ({
         {Icon ? <Icon size={20} /> : <Cake size={20} />}
       </div>
       <div
-        className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
+        className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition-colors ${
           active ? "border-[#8c3a40] bg-[#8c3a40] text-white" : "border-muted-foreground/30 bg-transparent"
         }`}
       >
@@ -163,6 +163,33 @@ const InlineSectionLabel = ({ children }: { children: React.ReactNode }) => (
 );
 
 /* ─── Main Component ───────────────────────── */
+
+type CatState = {
+  selectedProduct: { id: string, kind: CategoryKind } | null;
+  manualDescription: string;
+  sizeId: string;
+  flavorId: string;
+  roundAddons: string[];
+  rectClass: "class1" | "class2";
+  rectAddons: string[];
+  sweetFlavorId: string;
+  sweetPackageId: string;
+};
+
+const defaultCatState: CatState = {
+  selectedProduct: null,
+  manualDescription: "",
+  sizeId: "",
+  flavorId: "",
+  roundAddons: [],
+  rectClass: "class1",
+  rectAddons: [],
+  sweetFlavorId: "",
+  sweetPackageId: ""
+};
+
+const toggleArr = (list: string[], val: string) => list.includes(val) ? list.filter(x => x !== val) : [...list, val];
+
 const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
 
@@ -228,26 +255,11 @@ const MontarPedido = () => {
   }, [lojaConfig]);
 
   // UI state
-  const [selectedMainCat, setSelectedMainCat] = useState<MainCategory | null>(null);
-  const [selectedProduct, setSelectedProduct] = useState<{ id: string, kind: CategoryKind } | null>(null);
+  const [selectedMainCats, setSelectedMainCats] = useState<string[]>([]);
+  const [catStates, setCatStates] = useState<Record<string, CatState>>({});
+  
   const [items, setItems] = useState<OrderItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
-
-  // Manual text state for categories without DB mapping (Salgados, Kit festa, etc)
-  const [manualDescription, setManualDescription] = useState("");
-
-  // Round cake selections
-  const [sizeId, setSizeId] = useState<string>("");
-  const [flavorId, setFlavorId] = useState<string>("");
-  const [roundAddons, setRoundAddons] = useState<string[]>([]);
-
-  // Rectangular selections
-  const [rectClass, setRectClass] = useState<"class1" | "class2">("class1");
-  const [rectAddons, setRectAddons] = useState<string[]>([]);
-
-  // Sweet selections
-  const [sweetFlavorId, setSweetFlavorId] = useState<string>("");
-  const [sweetPackageId, setSweetPackageId] = useState<string>("");
 
   // Contact form
   const [form, setForm] = useState({ 
@@ -262,24 +274,38 @@ const MontarPedido = () => {
   const step2Ref = useRef<HTMLElement>(null);
   const step3Ref = useRef<HTMLElement>(null);
 
-  const handleSelectMainCat = (id: MainCategory) => {
-    setSelectedMainCat(id);
-    setSelectedProduct(null); // reset sub-product
-    setManualDescription("");
-    setTimeout(() => {
-      step2Ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
+  const updateCatState = (catId: string, updates: Partial<CatState>) => {
+    setCatStates(prev => ({
+      ...prev,
+      [catId]: { ...(prev[catId] || defaultCatState), ...updates }
+    }));
   };
 
-  const handleSelectProduct = (id: string, kind: CategoryKind) => {
-    setSelectedProduct({ id, kind });
-    setSizeId("");
-    setFlavorId("");
-    setRoundAddons([]);
-    setRectClass("class1");
-    setRectAddons([]);
-    setSweetFlavorId("");
-    setSweetPackageId("");
+  const handleToggleMainCat = (id: string) => {
+    setSelectedMainCats(prev => {
+      const isSelected = prev.includes(id);
+      if (isSelected) {
+        return prev.filter(c => c !== id);
+      } else {
+        setTimeout(() => {
+          step2Ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
+        return [...prev, id];
+      }
+    });
+  };
+
+  const handleSelectProduct = (catId: string, id: string, kind: CategoryKind) => {
+    updateCatState(catId, {
+      selectedProduct: { id, kind },
+      sizeId: "",
+      flavorId: "",
+      roundAddons: [],
+      rectClass: "class1",
+      rectAddons: [],
+      sweetFlavorId: "",
+      sweetPackageId: ""
+    });
   };
 
   const roundAddonList = addons.filter((a) => a.applies_to !== "rectangular");
@@ -307,35 +333,34 @@ const MontarPedido = () => {
     [addons, addonPrices],
   );
 
-  const activeMainCatObj = mainCats.find(c => c.id === selectedMainCat);
-  const isManualCategory = activeMainCatObj?.isManual;
+  /* ─── Compute draft item for a specific category ─────── */
+  const computeDraftForCat = useCallback((catId: string): OrderItem | null => {
+    const state = catStates[catId] || defaultCatState;
+    const activeMainCatObj = mainCats.find(c => c.id === catId);
+    if (!activeMainCatObj) return null;
 
-  /* ─── Compute draft item ─────── */
-  const draftItem = useMemo<OrderItem | null>(() => {
-    if (!selectedMainCat) return null;
-
-    if (isManualCategory) {
-      if (!manualDescription.trim()) return null;
+    if (activeMainCatObj.isManual) {
+      if (!state.manualDescription.trim()) return null;
       return {
-        id: "draft-manual",
+        id: `draft-manual-${catId}`,
         kind: "manual",
-        title: activeMainCatObj?.title || "Outros",
-        details: [`Descrição: ${manualDescription}`],
+        title: activeMainCatObj.title,
+        details: [`Descrição: ${state.manualDescription}`],
         price: null,
         consult: true,
         qty: 1
       };
     }
 
-    if (!selectedProduct) return null;
-    const { id, kind } = selectedProduct;
+    if (!state.selectedProduct) return null;
+    const { id, kind } = state.selectedProduct;
 
     if (kind === "round") {
       const cat = categories.find((c) => c.id === id);
-      if (!cat || !sizeId) return null;
-      const size = sizes.find((s) => s.id === sizeId);
-      const flavor = flavors.find((f) => f.id === flavorId);
-      const base = cat.type === "consult" ? null : priceOf(id, sizeId);
+      if (!cat || !state.sizeId) return null;
+      const size = sizes.find((s) => s.id === state.sizeId);
+      const flavor = flavors.find((f) => f.id === state.flavorId);
+      const base = cat.type === "consult" ? null : priceOf(id, state.sizeId);
       let total = base;
       let consult = cat.type === "consult" || base === null;
       const details = [
@@ -343,15 +368,15 @@ const MontarPedido = () => {
         `Linha: ${cat.name}`,
       ];
       if (flavor) details.push(`Sabor: ${flavor.name}`);
-      roundAddons.forEach((aid) => {
+      state.roundAddons.forEach((aid) => {
         const a = addons.find((x) => x.id === aid);
-        const info = addonPriceInfo(aid, sizeId);
+        const info = addonPriceInfo(aid, state.sizeId);
         details.push(`Adicional: ${a?.name} (${info.label})`);
         if (info.price !== null && total !== null) total += info.price;
         else consult = true;
       });
       return {
-        id: "draft",
+        id: `draft-round-${catId}`,
         kind: "round",
         title: `Bolo ${cat.name} — ${size?.name ?? ""}`,
         details,
@@ -365,15 +390,15 @@ const MontarPedido = () => {
     if (kind === "rectangular") {
       const r = rectangular.find((x) => x.id === id);
       if (!r) return null;
-      const base = rectClass === "class1" ? r.class1_price ?? null : r.class2_price ?? null;
+      const base = state.rectClass === "class1" ? r.class1_price ?? null : r.class2_price ?? null;
       let total = base;
       let consult = base === null;
       const details = [
         `Modelo: ${r.name}${r.dimensions ? ` (${r.dimensions})` : ""}`,
-        `Linha: ${rectClass === "class1" ? "Tradicional" : "Premium"}`,
+        `Linha: ${state.rectClass === "class1" ? "Tradicional" : "Premium"}`,
       ];
       if (r.slices) details.push(`Fatias: ${r.slices}`);
-      rectAddons.forEach((aid) => {
+      state.rectAddons.forEach((aid) => {
         const a = addons.find((x) => x.id === aid);
         const info = addonPriceInfo(aid);
         details.push(`Adicional: ${a?.name} (${info.label})`);
@@ -381,7 +406,7 @@ const MontarPedido = () => {
         else consult = true;
       });
       return {
-        id: "draft",
+        id: `draft-rect-${catId}`,
         kind: "rectangular",
         title: `Bolo retangular ${r.name}`,
         details,
@@ -392,14 +417,14 @@ const MontarPedido = () => {
     }
 
     if (kind === "sweet") {
-      if (!sweetPackageId) return null;
+      if (!state.sweetPackageId) return null;
       const t = sweetTypes.find((x) => x.id === id);
-      const pkg = sweetPackages.find((x) => x.id === sweetPackageId);
-      const fl = sweetFlavors.find((x) => x.id === sweetFlavorId);
+      const pkg = sweetPackages.find((x) => x.id === state.sweetPackageId);
+      const fl = sweetFlavors.find((x) => x.id === state.sweetFlavorId);
       const details = [`Quantidade: ${pkg?.quantity} unidades`];
       if (fl) details.push(`Sabor: ${fl.name}`);
       return {
-        id: "draft-sweet",
+        id: `draft-sweet-${catId}`,
         kind: "sweet" as const,
         title: `Doces — ${t?.name ?? ""}`,
         details,
@@ -412,20 +437,25 @@ const MontarPedido = () => {
 
     return null;
   }, [
-    selectedMainCat, isManualCategory, activeMainCatObj, manualDescription, selectedProduct, sizeId, flavorId, roundAddons, rectClass, rectAddons,
-    sweetFlavorId, sweetPackageId, categories, sizes, flavors, prices, addons, addonPrices,
-    rectangular, sweetTypes, sweetFlavors, sweetPackages, addonPriceInfo,
+    catStates, mainCats, categories, sizes, flavors, prices, addons, addonPrices,
+    rectangular, sweetTypes, sweetFlavors, sweetPackages, addonPriceInfo
   ]);
 
-  const canAddDraft = draftItem !== null;
+  const draftItems = useMemo(() => {
+    return selectedMainCats
+      .map(catId => computeDraftForCat(catId))
+      .filter((d): d is OrderItem => d !== null);
+  }, [selectedMainCats, computeDraftForCat]);
 
-  const addItem = () => {
-    if (!draftItem) return;
+
+  const addItem = (catId: string) => {
+    const draft = computeDraftForCat(catId);
+    if (!draft) return;
     const stamp = Date.now();
-    setItems((prev) => [...prev, { ...draftItem, id: `${stamp}` }]);
-    setSelectedProduct(null);
-    setSelectedMainCat(null);
-    setManualDescription("");
+    setItems((prev) => [...prev, { ...draft, id: `${stamp}-${catId}` }]);
+    
+    // Clear only this category's configuration state so they can add another one of the same type if they want
+    updateCatState(catId, defaultCatState);
     
     setTimeout(() => {
       step3Ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -433,8 +463,6 @@ const MontarPedido = () => {
   };
 
   /* ─── Cart operations ───────────────────── */
-  const toggle = (list: string[], setList: (v: string[]) => void, id: string) =>
-    setList(list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
 
   const changeQty = (id: string, delta: number) =>
     setItems((prev) =>
@@ -444,14 +472,14 @@ const MontarPedido = () => {
   const removeItem = (id: string) => setItems((prev) => prev.filter((x) => x.id !== id));
 
   const total = items.reduce((sum, it) => sum + (it.price ?? 0) * it.qty, 0);
-  const draftTotal = (draftItem?.price ?? 0);
+  const draftTotal = draftItems.reduce((sum, it) => sum + (it.price ?? 0), 0);
   const displayTotal = total + draftTotal;
   
-  const itemCount = items.reduce((sum, it) => sum + it.qty, 0) + (draftItem ? 1 : 0);
+  const itemCount = items.reduce((sum, it) => sum + it.qty, 0) + draftItems.length;
 
   /* ─── WhatsApp ──────────────────────────── */
   const sendWhatsApp = () => {
-    const finalItems = draftItem ? [...items, draftItem] : items;
+    const finalItems = [...items, ...draftItems];
     const finalTotal = finalItems.reduce((sum, it) => sum + (it.price ?? 0) * it.qty, 0);
     const finalHasConsult = finalItems.some((it) => it.consult);
 
@@ -488,13 +516,6 @@ const MontarPedido = () => {
     window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
-  const modalCatFlavors = selectedProduct?.kind === "round" ? flavors.filter((f) => f.category_id === selectedProduct.id) : [];
-  const modalSweetFlavors = selectedProduct?.kind === "sweet" ? sweetFlavors.filter((f) => f.type_id === selectedProduct.id) : [];
-  const modalSweetPackages = selectedProduct?.kind === "sweet" ? sweetPackages
-    .filter((p) => p.type_id === selectedProduct.id)
-    .sort((a, b) => a.quantity - b.quantity) : [];
-
-  const subProducts = selectedMainCat === "bolo" ? boloProducts : selectedMainCat === "doces" ? doceProducts : [];
   
   /* ─── Render ────────────────────────────── */
   return (
@@ -523,6 +544,7 @@ const MontarPedido = () => {
         {/* STEP 1: Main Category */}
         <section id="step-1">
           <StepHeader number={1} title="O que você vai pedir?" />
+          <p className="text-sm text-muted-foreground mb-4">Você pode selecionar mais de uma opção para fazer todo o pedido de uma só vez.</p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3">
             {mainCats.map((cat) => (
               <RadioCard
@@ -530,8 +552,8 @@ const MontarPedido = () => {
                 title={cat.title}
                 subtitle={cat.subtitle}
                 icon={cat.icon}
-                active={selectedMainCat === cat.id}
-                onClick={() => handleSelectMainCat(cat.id)}
+                active={selectedMainCats.includes(cat.id)}
+                onClick={() => handleToggleMainCat(cat.id)}
               />
             ))}
           </div>
@@ -539,7 +561,7 @@ const MontarPedido = () => {
 
         {/* STEP 2: Personalize */}
         <AnimatePresence mode="wait">
-          {selectedMainCat && (
+          {selectedMainCats.length > 0 && (
             <motion.section
               id="step-2"
               ref={step2Ref}
@@ -548,229 +570,253 @@ const MontarPedido = () => {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden"
+              className="overflow-hidden space-y-6"
             >
               <StepHeader number={2} title="Personalize seu pedido" />
               
-              <div className="bg-white rounded-3xl p-5 border border-border/60 shadow-sm space-y-4">
-                
-                {/* 2.1 - Sub-categories selection (if bolo or doces) */}
-                {subProducts.length > 0 && (
-                  <>
-                    <InlineSectionLabel>Selecione a linha *</InlineSectionLabel>
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 mb-6">
-                      {subProducts.map((p) => (
-                        <OptionChip
-                          key={`${p.kind}-${p.id}`}
-                          active={selectedProduct?.id === p.id}
-                          onClick={() => handleSelectProduct(p.id, p.kind)}
-                          meta={p.subtitle || undefined}
-                        >
-                          {p.title}
-                        </OptionChip>
-                      ))}
-                    </div>
-                  </>
-                )}
+              <div className="space-y-6">
+                {selectedMainCats.map(catId => {
+                  const catObj = mainCats.find(c => c.id === catId);
+                  const state = catStates[catId] || defaultCatState;
+                  const isManualCategory = catObj?.isManual;
+                  const subProducts = catId === "bolo" ? boloProducts : catId === "doces" ? doceProducts : [];
+                  
+                  const modalCatFlavors = state.selectedProduct?.kind === "round" ? flavors.filter((f) => f.category_id === state.selectedProduct?.id) : [];
+                  const modalSweetFlavors = state.selectedProduct?.kind === "sweet" ? sweetFlavors.filter((f) => f.type_id === state.selectedProduct?.id) : [];
+                  const modalSweetPackages = state.selectedProduct?.kind === "sweet" ? sweetPackages
+                    .filter((p) => p.type_id === state.selectedProduct?.id)
+                    .sort((a, b) => a.quantity - b.quantity) : [];
 
-                {/* 2.2 - Manual input for Salgados, Kit Festa etc */}
-                {isManualCategory && (
-                  <>
-                    <InlineSectionLabel>Descreva seu pedido *</InlineSectionLabel>
-                    <textarea
-                      rows={4}
-                      value={manualDescription}
-                      onChange={(e) => setManualDescription(e.target.value)}
-                      placeholder={`Descreva aqui como você gostaria do seu ${activeMainCatObj?.title}...`}
-                      className="w-full resize-none rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
-                    />
-                    <p className="text-xs text-muted-foreground mt-2">
-                      Para essa opção, o valor é 100% a consultar. Nossa equipe passará o orçamento pelo WhatsApp.
-                    </p>
-                  </>
-                )}
+                  const canAddDraft = computeDraftForCat(catId) !== null;
 
-                {/* 2.3 - Detail options (Round, Rectangular, Sweet) */}
-                {selectedProduct?.kind === "round" && (
-                  <>
-                    <InlineSectionLabel>Tamanho *</InlineSectionLabel>
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                      {sizes.map((s) => {
-                        const cat = categories.find((c) => c.id === selectedProduct.id);
-                        const p = cat?.type === "consult" ? null : priceOf(selectedProduct.id, s.id);
-                        return (
-                          <OptionChip
-                            key={s.id}
-                            active={sizeId === s.id}
-                            onClick={() => setSizeId(s.id)}
-                            meta={[
-                              s.ring_size ? `Aro ${s.ring_size}` : null,
-                              s.slices ? `${s.slices} fatias` : null,
-                            ].filter(Boolean).join(" · ")}
-                            price={p !== null ? formatPrice(p) : cat?.type === "consult" ? "A consultar" : undefined}
+                  return (
+                    <div key={catId} className="bg-white rounded-3xl p-5 border border-border/60 shadow-sm space-y-4">
+                      
+                      <h3 className="font-heading text-lg font-bold text-[#8c3a40] flex items-center gap-2 border-b border-border pb-3 mb-2">
+                         {catObj?.icon && <catObj.icon size={20} />}
+                         Opções para {catObj?.title}
+                      </h3>
+
+                      {/* 2.1 - Sub-categories selection (if bolo or doces) */}
+                      {subProducts.length > 0 && (
+                        <>
+                          <InlineSectionLabel>Selecione a linha *</InlineSectionLabel>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 mb-6">
+                            {subProducts.map((p) => (
+                              <OptionChip
+                                key={`${p.kind}-${p.id}`}
+                                active={state.selectedProduct?.id === p.id}
+                                onClick={() => handleSelectProduct(catId, p.id, p.kind)}
+                                meta={p.subtitle || undefined}
+                              >
+                                {p.title}
+                              </OptionChip>
+                            ))}
+                          </div>
+                        </>
+                      )}
+
+                      {/* 2.2 - Manual input for Salgados, Kit Festa etc */}
+                      {isManualCategory && (
+                        <>
+                          <InlineSectionLabel>Descreva seu pedido *</InlineSectionLabel>
+                          <textarea
+                            rows={4}
+                            value={state.manualDescription}
+                            onChange={(e) => updateCatState(catId, { manualDescription: e.target.value })}
+                            placeholder={`Descreva aqui como você gostaria do seu ${catObj?.title}...`}
+                            className="w-full resize-none rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                          />
+                          <p className="text-xs text-muted-foreground mt-2">
+                            Para essa opção, o valor é 100% a consultar. Nossa equipe passará o orçamento pelo WhatsApp.
+                          </p>
+                        </>
+                      )}
+
+                      {/* 2.3 - Detail options (Round, Rectangular, Sweet) */}
+                      {state.selectedProduct?.kind === "round" && (
+                        <>
+                          <InlineSectionLabel>Tamanho *</InlineSectionLabel>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            {sizes.map((s) => {
+                              const cat = categories.find((c) => c.id === state.selectedProduct?.id);
+                              const p = cat?.type === "consult" ? null : priceOf(state.selectedProduct!.id, s.id);
+                              return (
+                                <OptionChip
+                                  key={s.id}
+                                  active={state.sizeId === s.id}
+                                  onClick={() => updateCatState(catId, { sizeId: s.id })}
+                                  meta={[
+                                    s.ring_size ? `Aro ${s.ring_size}` : null,
+                                    s.slices ? `${s.slices} fatias` : null,
+                                  ].filter(Boolean).join(" · ")}
+                                  price={p !== null ? formatPrice(p) : cat?.type === "consult" ? "A consultar" : undefined}
+                                >
+                                  {s.name}
+                                </OptionChip>
+                              );
+                            })}
+                          </div>
+
+                          {modalCatFlavors.length > 0 && (
+                            <>
+                              <InlineSectionLabel>Sabor</InlineSectionLabel>
+                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                {modalCatFlavors.map((f) => (
+                                  <OptionChip
+                                    key={f.id}
+                                    active={state.flavorId === f.id}
+                                    onClick={() => updateCatState(catId, { flavorId: f.id })}
+                                    meta={f.description || undefined}
+                                  >
+                                    {f.name}
+                                </OptionChip>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {roundAddonList.length > 0 && (
+                            <>
+                              <InlineSectionLabel>Adicionais</InlineSectionLabel>
+                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                {roundAddonList.map((a) => {
+                                  const info = addonPriceInfo(a.id, state.sizeId);
+                                  return (
+                                    <OptionChip
+                                      key={a.id}
+                                      active={state.roundAddons.includes(a.id)}
+                                      onClick={() => updateCatState(catId, { roundAddons: toggleArr(state.roundAddons, a.id) })}
+                                      meta={a.description || undefined}
+                                      price={info.label}
+                                    >
+                                      {a.name}
+                                    </OptionChip>
+                                  );
+                                })}
+                              </div>
+                            </>
+                          )}
+                        </>
+                      )}
+
+                      {state.selectedProduct?.kind === "rectangular" && (
+                        <>
+                          {(() => {
+                            const r = rectangular.find((x) => x.id === state.selectedProduct?.id);
+                            return r ? (
+                              <div className="mb-3 flex flex-wrap gap-2 font-body text-xs text-muted-foreground">
+                                {r.dimensions && <span className="rounded-full bg-muted/40 px-2.5 py-1">{r.dimensions}</span>}
+                                {r.slices && <span className="rounded-full bg-muted/40 px-2.5 py-1">{r.slices} fatias</span>}
+                              </div>
+                            ) : null;
+                          })()}
+
+                          <InlineSectionLabel>Linha *</InlineSectionLabel>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            <OptionChip
+                              active={state.rectClass === "class1"}
+                              onClick={() => updateCatState(catId, { rectClass: "class1" })}
+                              price={formatPrice(rectangular.find((r) => r.id === state.selectedProduct?.id)?.class1_price)}
+                            >
+                              Tradicional
+                            </OptionChip>
+                            <OptionChip
+                              active={state.rectClass === "class2"}
+                              onClick={() => updateCatState(catId, { rectClass: "class2" })}
+                              price={formatPrice(rectangular.find((r) => r.id === state.selectedProduct?.id)?.class2_price)}
+                            >
+                              Premium
+                            </OptionChip>
+                          </div>
+
+                          {rectAddonList.length > 0 && (
+                            <>
+                              <InlineSectionLabel>Adicionais</InlineSectionLabel>
+                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                {rectAddonList.map((a) => {
+                                  const info = addonPriceInfo(a.id);
+                                  return (
+                                    <OptionChip
+                                      key={a.id}
+                                      active={state.rectAddons.includes(a.id)}
+                                      onClick={() => updateCatState(catId, { rectAddons: toggleArr(state.rectAddons, a.id) })}
+                                      meta={a.description || undefined}
+                                      price={info.label}
+                                    >
+                                      {a.name}
+                                    </OptionChip>
+                                  );
+                                })}
+                              </div>
+                            </>
+                          )}
+                        </>
+                      )}
+
+                      {state.selectedProduct?.kind === "sweet" && (
+                        <>
+                          {modalSweetFlavors.length > 0 && (
+                            <>
+                              <InlineSectionLabel>Sabor</InlineSectionLabel>
+                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                {modalSweetFlavors.map((f) => (
+                                  <OptionChip
+                                    key={f.id}
+                                    active={state.sweetFlavorId === f.id}
+                                    onClick={() => updateCatState(catId, { sweetFlavorId: f.id })}
+                                    meta={f.description || undefined}
+                                  >
+                                    {f.name}
+                                  </OptionChip>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          <InlineSectionLabel>Quantidade *</InlineSectionLabel>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            {modalSweetPackages.map((p) => (
+                              <OptionChip
+                                key={p.id}
+                                active={state.sweetPackageId === p.id}
+                                onClick={() => updateCatState(catId, { sweetPackageId: p.id })}
+                                price={formatPrice(p.price)}
+                              >
+                                {p.quantity} unidades
+                              </OptionChip>
+                            ))}
+                          </div>
+                        </>
+                      )}
+
+                      {/* Botão Adicionar (Apenas limpa o estado DESSA categoria) */}
+                      {((subProducts.length > 0 && state.selectedProduct) || isManualCategory) && (
+                        <div className="pt-4 border-t border-border mt-4">
+                          <button
+                            type="button"
+                            onClick={() => addItem(catId)}
+                            disabled={!canAddDraft}
+                            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#8c3a40] text-[#8c3a40] px-4 py-3 font-body text-sm font-semibold transition-all hover:bg-[#8c3a40] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                           >
-                            {s.name}
-                          </OptionChip>
-                        );
-                      })}
+                            <Plus size={16} />
+                            Adicionar mais {catObj?.title.toLowerCase()} (opcional)
+                          </button>
+                          <p className="text-center text-xs text-muted-foreground mt-2">
+                            Se quiser apenas um {catObj?.title.toLowerCase()}, não precisa clicar acima. Basta preencher e seguir para os dados abaixo.
+                          </p>
+                        </div>
+                      )}
                     </div>
-
-                    {modalCatFlavors.length > 0 && (
-                      <>
-                        <InlineSectionLabel>Sabor</InlineSectionLabel>
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                          {modalCatFlavors.map((f) => (
-                            <OptionChip
-                              key={f.id}
-                              active={flavorId === f.id}
-                              onClick={() => setFlavorId(f.id)}
-                              meta={f.description || undefined}
-                            >
-                              {f.name}
-                            </OptionChip>
-                          ))}
-                        </div>
-                      </>
-                    )}
-
-                    {roundAddonList.length > 0 && (
-                      <>
-                        <InlineSectionLabel>Adicionais</InlineSectionLabel>
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                          {roundAddonList.map((a) => {
-                            const info = addonPriceInfo(a.id, sizeId);
-                            return (
-                              <OptionChip
-                                key={a.id}
-                                active={roundAddons.includes(a.id)}
-                                onClick={() => toggle(roundAddons, setRoundAddons, a.id)}
-                                meta={a.description || undefined}
-                                price={info.label}
-                              >
-                                {a.name}
-                              </OptionChip>
-                            );
-                          })}
-                        </div>
-                      </>
-                    )}
-                  </>
-                )}
-
-                {selectedProduct?.kind === "rectangular" && (
-                  <>
-                    {(() => {
-                      const r = rectangular.find((x) => x.id === selectedProduct.id);
-                      return r ? (
-                        <div className="mb-3 flex flex-wrap gap-2 font-body text-xs text-muted-foreground">
-                          {r.dimensions && <span className="rounded-full bg-muted/40 px-2.5 py-1">{r.dimensions}</span>}
-                          {r.slices && <span className="rounded-full bg-muted/40 px-2.5 py-1">{r.slices} fatias</span>}
-                        </div>
-                      ) : null;
-                    })()}
-
-                    <InlineSectionLabel>Linha *</InlineSectionLabel>
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                      <OptionChip
-                        active={rectClass === "class1"}
-                        onClick={() => setRectClass("class1")}
-                        price={formatPrice(rectangular.find((r) => r.id === selectedProduct.id)?.class1_price)}
-                      >
-                        Tradicional
-                      </OptionChip>
-                      <OptionChip
-                        active={rectClass === "class2"}
-                        onClick={() => setRectClass("class2")}
-                        price={formatPrice(rectangular.find((r) => r.id === selectedProduct.id)?.class2_price)}
-                      >
-                        Premium
-                      </OptionChip>
-                    </div>
-
-                    {rectAddonList.length > 0 && (
-                      <>
-                        <InlineSectionLabel>Adicionais</InlineSectionLabel>
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                          {rectAddonList.map((a) => {
-                            const info = addonPriceInfo(a.id);
-                            return (
-                              <OptionChip
-                                key={a.id}
-                                active={rectAddons.includes(a.id)}
-                                onClick={() => toggle(rectAddons, setRectAddons, a.id)}
-                                meta={a.description || undefined}
-                                price={info.label}
-                              >
-                                {a.name}
-                              </OptionChip>
-                            );
-                          })}
-                        </div>
-                      </>
-                    )}
-                  </>
-                )}
-
-                {selectedProduct?.kind === "sweet" && (
-                  <>
-                    {modalSweetFlavors.length > 0 && (
-                      <>
-                        <InlineSectionLabel>Sabor</InlineSectionLabel>
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                          {modalSweetFlavors.map((f) => (
-                            <OptionChip
-                              key={f.id}
-                              active={sweetFlavorId === f.id}
-                              onClick={() => setSweetFlavorId(f.id)}
-                              meta={f.description || undefined}
-                            >
-                              {f.name}
-                            </OptionChip>
-                          ))}
-                        </div>
-                      </>
-                    )}
-
-                    <InlineSectionLabel>Quantidade *</InlineSectionLabel>
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                      {modalSweetPackages.map((p) => (
-                        <OptionChip
-                          key={p.id}
-                          active={sweetPackageId === p.id}
-                          onClick={() => setSweetPackageId(p.id)}
-                          price={formatPrice(p.price)}
-                        >
-                          {p.quantity} unidades
-                        </OptionChip>
-                      ))}
-                    </div>
-                  </>
-                )}
-
-                {/* Botão Adicionar */}
-                {((subProducts.length > 0 && selectedProduct) || isManualCategory) && (
-                  <div className="pt-4 border-t border-border mt-4">
-                    <button
-                      type="button"
-                      onClick={addItem}
-                      disabled={!canAddDraft}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#8c3a40] text-[#8c3a40] px-4 py-3 font-body text-sm font-semibold transition-all hover:bg-[#8c3a40] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      <Plus size={16} />
-                      Adicionar mais itens (opcional)
-                    </button>
-                    <p className="text-center text-xs text-muted-foreground mt-2">
-                      {items.length > 0 ? `Você tem ${items.length} item(s) adicionados.` : "Se quiser apenas este item, não precisa clicar acima, siga direto para os dados abaixo."}
-                    </p>
-                  </div>
-                )}
+                  );
+                })}
               </div>
             </motion.section>
           )}
         </AnimatePresence>
 
         {/* STEP 3: Formulario */}
-        <section id="step-3" ref={step3Ref} className={(itemCount === 0 && !selectedMainCat) ? "opacity-50 pointer-events-none" : ""}>
+        <section id="step-3" ref={step3Ref} className={(itemCount === 0 && selectedMainCats.length === 0) ? "opacity-50 pointer-events-none" : ""}>
           <StepHeader number={3} title="Seus dados e entrega" />
           
           <div className="bg-white rounded-3xl p-5 md:p-6 border border-border/60 shadow-sm space-y-4">
@@ -940,7 +986,7 @@ const MontarPedido = () => {
 
           {/* Items list */}
           <div className="mt-6 flex-1 space-y-4 overflow-y-auto pr-2">
-            {[...(items), ...(draftItem ? [draftItem] : [])].length === 0 ? (
+            {[...(items), ...draftItems].length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <ShoppingBag size={40} className="mb-3 text-muted-foreground/30" />
                 <p className="font-body text-sm text-muted-foreground">
@@ -948,8 +994,8 @@ const MontarPedido = () => {
                 </p>
               </div>
             ) : (
-              [...(items), ...(draftItem ? [draftItem] : [])].map((it, idx) => {
-                const isDraft = it.id === 'draft' || it.id === 'draft-sweet' || it.id === 'draft-manual';
+              [...(items), ...draftItems].map((it, idx) => {
+                const isDraft = it.id.startsWith('draft');
                 
                 return (
                   <div
@@ -1022,7 +1068,7 @@ const MontarPedido = () => {
             <button
               type="button"
               onClick={sendWhatsApp}
-              disabled={itemCount === 0 || !form.name.trim() || !form.phone.trim() || !form.date || (!canAddDraft && items.length === 0)}
+              disabled={itemCount === 0 || !form.name.trim() || !form.phone.trim() || !form.date}
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-4 font-body text-sm font-bold uppercase tracking-wider text-white shadow-lg shadow-[#25D366]/20 transition-all hover:shadow-xl hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none mt-4"
             >
               Enviar pelo WhatsApp <ArrowRight size={16} />
