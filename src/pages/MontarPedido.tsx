@@ -167,25 +167,35 @@ const InlineSectionLabel = ({ children }: { children: React.ReactNode }) => (
 type CatState = {
   selectedProduct: { id: string, kind: CategoryKind } | null;
   manualDescription: string;
+  boloTheme: string;
   sizeId: string;
   flavorId: string;
   roundAddons: string[];
   rectClass: "class1" | "class2";
   rectAddons: string[];
-  sweetFlavorId: string;
+  sweetFlavors: string[];
   sweetPackageId: string;
+  salgadosTypes: string[];
+  kitFestaSelections: string[];
+  pastaAmericanaSelections: string[];
+  presentearSelections: string[];
 };
 
 const defaultCatState: CatState = {
   selectedProduct: null,
   manualDescription: "",
+  boloTheme: "",
   sizeId: "",
   flavorId: "",
   roundAddons: [],
   rectClass: "class1",
   rectAddons: [],
-  sweetFlavorId: "",
-  sweetPackageId: ""
+  sweetFlavors: [""],
+  sweetPackageId: "",
+  salgadosTypes: [""],
+  kitFestaSelections: [],
+  pastaAmericanaSelections: [],
+  presentearSelections: []
 };
 
 const toggleArr = (list: string[], val: string) => list.includes(val) ? list.filter(x => x !== val) : [...list, val];
@@ -198,7 +208,29 @@ const MontarPedido = () => {
     customTitles: { bolo: "~100g/pessoa", doces: "3-4/pessoa", salgados: "10-15/pessoa", kit_festa: "", pasta_americana: "", presentear: "" },
     delivery: { acceptsDelivery: true, deliveryFee: "0", acceptsPickup: true },
     whatsappMsg: { greeting: "Olá {nome}! Aqui é {loja}", signoff: "Qualquer ajuste é só me avisar. Obrigada!" },
-    customCategories: []
+    customCategories: [],
+    salgadosOptions: [
+      { id: "coxinha", name: "Coxinha" },
+      { id: "bolinha_queijo", name: "Bolinha de Queijo" },
+      { id: "risolis", name: "Risólis" },
+      { id: "empadinha", name: "Empadinha" },
+    ],
+    kitFestaOptions: [
+      { id: "kit1", name: "Kit Festa I", price: 199, desc: "Serve 10 Pessoas" },
+      { id: "kit2", name: "Kit Festa II", price: 349, desc: "Serve 20 Pessoas" },
+      { id: "kit3", name: "Kit Festa III", price: 449, desc: "Serve 30 Pessoas" },
+    ],
+    pastaAmericanaOptions: [
+      { id: "pa_kit1", name: "Kit 1", price: 340, desc: "Inclui: 1x Bolo Bombom, 4x Pirulitos, 4x Cupcakes 3D, 8x Mini Trufas Planas" },
+      { id: "pa_kit2", name: "Kit 2", price: 440, desc: "Inclui: 1x Bolo Bombom 3D, 6x Pirulitos, 4x Cupcakes, 6x Bolo Bombom Pequeno, 10x Mini Trufas Planas, 6x Popscicle" },
+      { id: "pa_kit3", name: "Kit 3", price: 560, desc: "Inclui: 2x Bolo Bombom 3D, 6x Pirulitos, 4x Cupcakes, 8x Bolo Bombom Pequeno, 15x Mini Trufas Planas, 6x Popscicle" },
+    ],
+    presentearOptions: [
+      { id: "festa_caixa", name: "Festa na Caixa", price: 270, desc: "1 kg de Bolo + 10 Doces + 50 Salgados + 1 Xícara Personalizada" },
+      { id: "caixa_cenario", name: "Caixa Cenário", price: 170, desc: "1 kg de Bolo + 20 Doces" },
+      { id: "bolo_xicara", name: "Bolo na Xícara", price: null, desc: "170g de Bolo + Xícara" },
+      { id: "bento_cake", name: "Bento Cake", price: 70, desc: "400g de Bolo + 4 Doces" },
+    ]
   };
 
   const contactSettings = settings?.contact as any;
@@ -233,13 +265,13 @@ const MontarPedido = () => {
   // Main Category Hierarchy
   const mainCats = useMemo(() => {
     const defaultCats = [
-      { id: "bolo", title: "Bolo", subtitle: lojaConfig.customTitles.bolo, icon: Cake, isManual: false },
-      { id: "doces", title: "Doces", subtitle: lojaConfig.customTitles.doces, icon: Candy, isManual: false },
-      { id: "salgados", title: "Salgados", subtitle: lojaConfig.customTitles.salgados, icon: Croissant, isManual: true },
-      { id: "kit_festa", title: "Kit Festa", subtitle: lojaConfig.customTitles.kit_festa, icon: PartyPopper, isManual: true },
-      { id: "pasta_americana", title: "Pasta Americana", subtitle: lojaConfig.customTitles.pasta_americana, icon: Cake, isManual: true },
-      { id: "presentear", title: "Para Presentear", subtitle: lojaConfig.customTitles.presentear, icon: Gift, isManual: true },
-    ].filter(cat => lojaConfig.activeCategories[cat.id]);
+      { id: "bolo", title: "Bolo", subtitle: lojaConfig.customTitles?.bolo, icon: Cake, type: "bolo" },
+      { id: "doces", title: "Doces", subtitle: lojaConfig.customTitles?.doces, icon: Candy, type: "doces" },
+      { id: "salgados", title: "Salgados", subtitle: lojaConfig.customTitles?.salgados, icon: Croissant, type: "salgados" },
+      { id: "kit_festa", title: "Kit Festa", subtitle: lojaConfig.customTitles?.kit_festa, icon: PartyPopper, type: "kit_festa" },
+      { id: "pasta_americana", title: "Pasta Americana", subtitle: lojaConfig.customTitles?.pasta_americana, icon: Cake, type: "pasta_americana" },
+      { id: "presentear", title: "Para Presentear", subtitle: lojaConfig.customTitles?.presentear, icon: Gift, type: "presentear" },
+    ].filter(cat => lojaConfig.activeCategories && lojaConfig.activeCategories[cat.id]);
 
     const customCats = (lojaConfig.customCategories || [])
       .filter((c: any) => c.isActive)
@@ -248,7 +280,7 @@ const MontarPedido = () => {
         title: c.title,
         subtitle: c.subtitle,
         icon: Star,
-        isManual: true
+        type: "manual"
       }));
 
     return [...defaultCats, ...customCats];
@@ -268,7 +300,7 @@ const MontarPedido = () => {
     email: "",
     date: "", 
     details: "",
-    deliveryMethod: lojaConfig.delivery.acceptsPickup ? "pickup" : "delivery" as "pickup" | "delivery"
+    deliveryMethod: lojaConfig.delivery?.acceptsPickup ? "pickup" : "delivery" as "pickup" | "delivery"
   });
 
   const step2Ref = useRef<HTMLElement>(null);
@@ -287,9 +319,6 @@ const MontarPedido = () => {
       if (isSelected) {
         return prev.filter(c => c !== id);
       } else {
-        setTimeout(() => {
-          step2Ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 100);
         return [...prev, id];
       }
     });
@@ -303,7 +332,7 @@ const MontarPedido = () => {
       roundAddons: [],
       rectClass: "class1",
       rectAddons: [],
-      sweetFlavorId: "",
+      sweetFlavors: [""],
       sweetPackageId: ""
     });
   };
@@ -338,8 +367,43 @@ const MontarPedido = () => {
     const state = catStates[catId] || defaultCatState;
     const activeMainCatObj = mainCats.find(c => c.id === catId);
     if (!activeMainCatObj) return null;
+    const catType = activeMainCatObj.type;
 
-    if (activeMainCatObj.isManual) {
+    if (catType === "kit_festa" || catType === "pasta_americana" || catType === "presentear") {
+      let selections = state.kitFestaSelections;
+      let opts = lojaConfig.kitFestaOptions || [];
+      if (catType === "pasta_americana") {
+        selections = state.pastaAmericanaSelections;
+        opts = lojaConfig.pastaAmericanaOptions || [];
+      } else if (catType === "presentear") {
+        selections = state.presentearSelections;
+        opts = lojaConfig.presentearOptions || [];
+      }
+
+      if (selections.length === 0) return null;
+      let total = 0;
+      let consult = false;
+      const details = selections.map(id => {
+        const opt = opts.find((o: any) => o.id === id);
+        if (opt?.price === null || opt?.price === undefined) consult = true;
+        else total += opt.price;
+        return `${opt?.name} (${opt?.price === null || opt?.price === undefined ? 'A consultar' : formatPrice(opt?.price)})`;
+      });
+      return { id: `draft-${catId}`, kind: "manual", title: activeMainCatObj.title, details, price: consult ? null : total, consult, qty: 1 };
+    }
+
+    if (catType === "salgados") {
+      const validTypes = state.salgadosTypes.filter(t => t !== "");
+      if (validTypes.length === 0 && !state.manualDescription) return null;
+      const details = [];
+      if (validTypes.length > 0) {
+         validTypes.forEach((t, i) => details.push(`Sabor ${i+1}: ${t}`));
+      }
+      if (state.manualDescription) details.push(`Observações: ${state.manualDescription}`);
+      return { id: `draft-${catId}`, kind: "manual", title: activeMainCatObj.title, details, price: null, consult: true, qty: 1 };
+    }
+
+    if (catType === "manual") {
       if (!state.manualDescription.trim()) return null;
       return {
         id: `draft-manual-${catId}`,
@@ -367,6 +431,7 @@ const MontarPedido = () => {
         `Tamanho: ${size?.name}${size?.ring_size ? ` (${size.ring_size})` : ""}`,
         `Linha: ${cat.name}`,
       ];
+      if (state.boloTheme) details.push(`Tema: ${state.boloTheme}`);
       if (flavor) details.push(`Sabor: ${flavor.name}`);
       state.roundAddons.forEach((aid) => {
         const a = addons.find((x) => x.id === aid);
@@ -397,6 +462,7 @@ const MontarPedido = () => {
         `Modelo: ${r.name}${r.dimensions ? ` (${r.dimensions})` : ""}`,
         `Linha: ${state.rectClass === "class1" ? "Tradicional" : "Premium"}`,
       ];
+      if (state.boloTheme) details.push(`Tema: ${state.boloTheme}`);
       if (r.slices) details.push(`Fatias: ${r.slices}`);
       state.rectAddons.forEach((aid) => {
         const a = addons.find((x) => x.id === aid);
@@ -420,9 +486,15 @@ const MontarPedido = () => {
       if (!state.sweetPackageId) return null;
       const t = sweetTypes.find((x) => x.id === id);
       const pkg = sweetPackages.find((x) => x.id === state.sweetPackageId);
-      const fl = sweetFlavors.find((x) => x.id === state.sweetFlavorId);
+      const validFlavors = state.sweetFlavors.filter(f => f !== "");
+      
       const details = [`Quantidade: ${pkg?.quantity} unidades`];
-      if (fl) details.push(`Sabor: ${fl.name}`);
+      if (validFlavors.length > 0) {
+        validFlavors.forEach((fId, i) => {
+           const fl = sweetFlavors.find((x) => x.id === fId);
+           if (fl) details.push(`Sabor ${i+1}: ${fl.name}`);
+        });
+      }
       return {
         id: `draft-sweet-${catId}`,
         kind: "sweet" as const,
@@ -438,7 +510,7 @@ const MontarPedido = () => {
     return null;
   }, [
     catStates, mainCats, categories, sizes, flavors, prices, addons, addonPrices,
-    rectangular, sweetTypes, sweetFlavors, sweetPackages, addonPriceInfo
+    rectangular, sweetTypes, sweetFlavors, sweetPackages, addonPriceInfo, lojaConfig
   ]);
 
   const draftItems = useMemo(() => {
@@ -492,7 +564,7 @@ const MontarPedido = () => {
     if (form.deliveryMethod === "pickup") {
       deliveryStr = "Retirar no local";
     } else {
-      const fee = Number(lojaConfig.delivery.deliveryFee || 0);
+      const fee = Number(lojaConfig.delivery?.deliveryFee || 0);
       deliveryStr = `Entrega (${fee > 0 ? `Taxa: R$ ${fee.toFixed(2)}` : "A combinar"})`;
     }
 
@@ -508,8 +580,8 @@ const MontarPedido = () => {
       `Forma de Recebimento: ${deliveryStr}\n` +
       `Observações: ${form.details || "—"}\n\n`;
 
-    let greeting = lojaConfig.whatsappMsg.greeting.replace("{nome}", form.name).replace("{loja}", lojaName);
-    let signoff = lojaConfig.whatsappMsg.signoff;
+    let greeting = lojaConfig.whatsappMsg?.greeting?.replace("{nome}", form.name).replace("{loja}", lojaName) || "";
+    let signoff = lojaConfig.whatsappMsg?.signoff || "";
     
     const msg = greeting + orderText + signoff;
 
@@ -572,14 +644,16 @@ const MontarPedido = () => {
               transition={{ duration: 0.3 }}
               className="overflow-hidden space-y-6"
             >
-              <StepHeader number={2} title="Personalize seu pedido" />
+              <StepHeader number={2} title="Detalhes do pedido" />
               
               <div className="space-y-6">
                 {selectedMainCats.map(catId => {
                   const catObj = mainCats.find(c => c.id === catId);
                   const state = catStates[catId] || defaultCatState;
-                  const isManualCategory = catObj?.isManual;
-                  const subProducts = catId === "bolo" ? boloProducts : catId === "doces" ? doceProducts : [];
+                  const catType = catObj?.type;
+                  const isManualCategory = catType === "manual";
+                  
+                  const subProducts = catType === "bolo" ? boloProducts : catType === "doces" ? doceProducts : [];
                   
                   const modalCatFlavors = state.selectedProduct?.kind === "round" ? flavors.filter((f) => f.category_id === state.selectedProduct?.id) : [];
                   const modalSweetFlavors = state.selectedProduct?.kind === "sweet" ? sweetFlavors.filter((f) => f.type_id === state.selectedProduct?.id) : [];
@@ -592,12 +666,35 @@ const MontarPedido = () => {
                   return (
                     <div key={catId} className="bg-white rounded-3xl p-5 border border-border/60 shadow-sm space-y-4">
                       
-                      <h3 className="font-heading text-lg font-bold text-[#8c3a40] flex items-center gap-2 border-b border-border pb-3 mb-2">
-                         {catObj?.icon && <catObj.icon size={20} />}
-                         Opções para {catObj?.title}
+                      <h3 className="font-heading text-lg font-bold text-[#8c3a40] flex items-center justify-between border-b border-border pb-3 mb-2">
+                         <div className="flex items-center gap-2">
+                           {catObj?.icon && <catObj.icon size={20} />}
+                           {catObj?.title}
+                         </div>
+                         {catObj?.subtitle && (
+                           <span className="text-[10px] bg-[#fcf8f8] text-muted-foreground px-2 py-1 rounded-full font-body font-semibold">
+                             {catObj.subtitle}
+                           </span>
+                         )}
                       </h3>
 
-                      {/* 2.1 - Sub-categories selection (if bolo or doces) */}
+                      {/* --- FORMULÁRIO BOLO --- */}
+                      {catType === "bolo" && (
+                         <div className="space-y-4">
+                            <div className="space-y-1.5">
+                              <label className="text-xs uppercase font-bold text-muted-foreground tracking-wider">TEMA / DECORAÇÃO</label>
+                              <input
+                                type="text"
+                                value={state.boloTheme}
+                                onChange={(e) => updateCatState(catId, { boloTheme: e.target.value })}
+                                placeholder="Ex: Jardim encantado..."
+                                className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                              />
+                            </div>
+                         </div>
+                      )}
+
+                      {/* --- CATEGORIAS COM SUB-PRODUTOS (Bolo/Doces) --- */}
                       {subProducts.length > 0 && (
                         <>
                           <InlineSectionLabel>Selecione a linha *</InlineSectionLabel>
@@ -616,7 +713,7 @@ const MontarPedido = () => {
                         </>
                       )}
 
-                      {/* 2.2 - Manual input for Salgados, Kit Festa etc */}
+                      {/* --- OPÇÕES CUSTOMIZADAS MANUAIS --- */}
                       {isManualCategory && (
                         <>
                           <InlineSectionLabel>Descreva seu pedido *</InlineSectionLabel>
@@ -633,7 +730,101 @@ const MontarPedido = () => {
                         </>
                       )}
 
-                      {/* 2.3 - Detail options (Round, Rectangular, Sweet) */}
+                      {/* --- SALGADOS --- */}
+                      {catType === "salgados" && (
+                        <div className="space-y-4 pt-2">
+                           <div className="space-y-3">
+                             {state.salgadosTypes.map((t, idx) => (
+                               <div key={idx} className="space-y-1.5">
+                                 <label className="text-xs uppercase font-bold text-muted-foreground tracking-wider">TIPO {idx + 1}</label>
+                                 <select 
+                                   className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                                   value={t}
+                                   onChange={(e) => {
+                                     const arr = [...state.salgadosTypes];
+                                     arr[idx] = e.target.value;
+                                     updateCatState(catId, { salgadosTypes: arr });
+                                   }}
+                                 >
+                                   <option value="">Selecionar sabor (opcional)</option>
+                                   {lojaConfig.salgadosOptions?.map((opt: any) => (
+                                      <option key={opt.id} value={opt.name}>{opt.name}</option>
+                                   ))}
+                                 </select>
+                               </div>
+                             ))}
+                           </div>
+                           <button 
+                             type="button" 
+                             onClick={() => updateCatState(catId, { salgadosTypes: [...state.salgadosTypes, ""] })}
+                             className="text-xs font-bold text-[#8c3a40] flex items-center gap-1 hover:underline"
+                           >
+                             <Plus size={12} /> Outro salgado
+                           </button>
+
+                           <div className="pt-2">
+                              <label className="text-xs uppercase font-bold text-muted-foreground tracking-wider block mb-1.5">OBSERVAÇÕES (OPCIONAL)</label>
+                              <textarea
+                                rows={2}
+                                value={state.manualDescription}
+                                onChange={(e) => updateCatState(catId, { manualDescription: e.target.value })}
+                                placeholder="Descreva quantidades por tipo, detalhes..."
+                                className="w-full resize-none rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                              />
+                           </div>
+                        </div>
+                      )}
+
+                      {/* --- KITS, PASTA AMERICANA E PRESENTEAR --- */}
+                      {(catType === "kit_festa" || catType === "pasta_americana" || catType === "presentear") && (
+                        <div className="space-y-2 pt-2">
+                           {(() => {
+                             let opts = lojaConfig.kitFestaOptions || [];
+                             let selections = state.kitFestaSelections;
+                             if (catType === "pasta_americana") {
+                               opts = lojaConfig.pastaAmericanaOptions || [];
+                               selections = state.pastaAmericanaSelections;
+                             } else if (catType === "presentear") {
+                               opts = lojaConfig.presentearOptions || [];
+                               selections = state.presentearSelections;
+                             }
+
+                             return opts.map((opt: any) => (
+                               <label key={opt.id} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-transparent cursor-pointer hover:border-[#8c3a40]/30 transition-colors relative">
+                                  <div className="mt-0.5">
+                                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${selections.includes(opt.id) ? 'bg-[#8c3a40] border-[#8c3a40] text-white' : 'border-muted-foreground/30 bg-transparent'}`}>
+                                      {selections.includes(opt.id) && <Check size={14} strokeWidth={3} />}
+                                    </div>
+                                    <input 
+                                      type="checkbox"
+                                      className="sr-only"
+                                      checked={selections.includes(opt.id)}
+                                      onChange={() => {
+                                        let newSel = [...selections];
+                                        if (newSel.includes(opt.id)) newSel = newSel.filter(id => id !== opt.id);
+                                        else newSel.push(opt.id);
+
+                                        if (catType === "kit_festa") updateCatState(catId, { kitFestaSelections: newSel });
+                                        if (catType === "pasta_americana") updateCatState(catId, { pastaAmericanaSelections: newSel });
+                                        if (catType === "presentear") updateCatState(catId, { presentearSelections: newSel });
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="flex-1 min-w-0 pr-16">
+                                    <span className="block font-body text-sm font-bold text-foreground">{opt.name}</span>
+                                    {opt.desc && <span className="block text-xs text-muted-foreground mt-0.5">{opt.desc}</span>}
+                                  </div>
+                                  <span className="absolute top-4 right-4 text-xs font-bold text-foreground">
+                                    {opt.price === null || opt.price === undefined ? "a consultar" : formatPrice(opt.price)}
+                                  </span>
+                               </label>
+                             ));
+                           })()}
+                        </div>
+                      )}
+
+
+                      {/* --- ROUND CAKE OPTIONS --- */}
                       {state.selectedProduct?.kind === "round" && (
                         <>
                           <InlineSectionLabel>Tamanho *</InlineSectionLabel>
@@ -670,7 +861,7 @@ const MontarPedido = () => {
                                     meta={f.description || undefined}
                                   >
                                     {f.name}
-                                </OptionChip>
+                                  </OptionChip>
                                 ))}
                               </div>
                             </>
@@ -700,6 +891,7 @@ const MontarPedido = () => {
                         </>
                       )}
 
+                      {/* --- RECTANGULAR CAKE OPTIONS --- */}
                       {state.selectedProduct?.kind === "rectangular" && (
                         <>
                           {(() => {
@@ -754,26 +946,9 @@ const MontarPedido = () => {
                         </>
                       )}
 
+                      {/* --- SWEET OPTIONS --- */}
                       {state.selectedProduct?.kind === "sweet" && (
                         <>
-                          {modalSweetFlavors.length > 0 && (
-                            <>
-                              <InlineSectionLabel>Sabor</InlineSectionLabel>
-                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                                {modalSweetFlavors.map((f) => (
-                                  <OptionChip
-                                    key={f.id}
-                                    active={state.sweetFlavorId === f.id}
-                                    onClick={() => updateCatState(catId, { sweetFlavorId: f.id })}
-                                    meta={f.description || undefined}
-                                  >
-                                    {f.name}
-                                  </OptionChip>
-                                ))}
-                              </div>
-                            </>
-                          )}
-
                           <InlineSectionLabel>Quantidade *</InlineSectionLabel>
                           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             {modalSweetPackages.map((p) => (
@@ -787,10 +962,43 @@ const MontarPedido = () => {
                               </OptionChip>
                             ))}
                           </div>
+
+                          {modalSweetFlavors.length > 0 && (
+                            <div className="space-y-4 mt-6">
+                              <div className="space-y-3">
+                                {state.sweetFlavors.map((fl, idx) => (
+                                  <div key={idx} className="space-y-1.5">
+                                    <label className="text-xs uppercase font-bold text-muted-foreground tracking-wider">SABOR {idx + 1}</label>
+                                    <select 
+                                      className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                                      value={fl}
+                                      onChange={(e) => {
+                                        const arr = [...state.sweetFlavors];
+                                        arr[idx] = e.target.value;
+                                        updateCatState(catId, { sweetFlavors: arr });
+                                      }}
+                                    >
+                                      <option value="">Selecionar sabor (opcional)</option>
+                                      {modalSweetFlavors.map((f) => (
+                                          <option key={f.id} value={f.id}>{f.name}</option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                ))}
+                              </div>
+                              <button 
+                                type="button" 
+                                onClick={() => updateCatState(catId, { sweetFlavors: [...state.sweetFlavors, ""] })}
+                                className="text-xs font-bold text-[#8c3a40] flex items-center gap-1 hover:underline"
+                              >
+                                <Plus size={12} /> Outro sabor
+                              </button>
+                            </div>
+                          )}
                         </>
                       )}
 
-                      {/* Botão Adicionar (Apenas limpa o estado DESSA categoria) */}
+                      {/* Botão Adicionar (Apenas limpa o estado DESSA categoria se for Bolo/Doces) */}
                       {((subProducts.length > 0 && state.selectedProduct) || isManualCategory) && (
                         <div className="pt-4 border-t border-border mt-4">
                           <button
@@ -889,13 +1097,13 @@ const MontarPedido = () => {
             </div>
 
             {/* Delivery Methods dynamic rendering */}
-            {(lojaConfig.delivery.acceptsPickup || lojaConfig.delivery.acceptsDelivery) && (
+            {(lojaConfig.delivery?.acceptsPickup || lojaConfig.delivery?.acceptsDelivery) && (
               <div>
                 <label className="mb-2 mt-4 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Forma de recebimento *
                 </label>
-                <div className={`grid gap-3 ${lojaConfig.delivery.acceptsPickup && lojaConfig.delivery.acceptsDelivery ? 'grid-cols-2' : 'grid-cols-1'}`}>
-                  {lojaConfig.delivery.acceptsPickup && (
+                <div className={`grid gap-3 ${lojaConfig.delivery?.acceptsPickup && lojaConfig.delivery?.acceptsDelivery ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {lojaConfig.delivery?.acceptsPickup && (
                     <button
                       type="button"
                       onClick={() => setForm({...form, deliveryMethod: "pickup"})}
@@ -910,7 +1118,7 @@ const MontarPedido = () => {
                       </div>
                     </button>
                   )}
-                  {lojaConfig.delivery.acceptsDelivery && (
+                  {lojaConfig.delivery?.acceptsDelivery && (
                     <button
                       type="button"
                       onClick={() => setForm({...form, deliveryMethod: "delivery"})}
@@ -922,7 +1130,7 @@ const MontarPedido = () => {
                       <div className="text-center">
                         <span className="block font-bold text-sm">Entrega</span>
                         <span className="block text-[10px]">
-                          {Number(lojaConfig.delivery.deliveryFee || 0) > 0 ? `Taxa: R$ ${Number(lojaConfig.delivery.deliveryFee).toFixed(2)}` : 'A combinar'}
+                          {Number(lojaConfig.delivery?.deliveryFee || 0) > 0 ? `Taxa: R$ ${Number(lojaConfig.delivery.deliveryFee).toFixed(2)}` : 'A combinar'}
                         </span>
                       </div>
                     </button>

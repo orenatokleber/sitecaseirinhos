@@ -42,6 +42,11 @@ export type LojaConfig = {
     subtitle: string;
     isActive: boolean;
   }[];
+  // NEW OPTIONS
+  salgadosOptions: { id: string, name: string }[];
+  kitFestaOptions: { id: string, name: string, price: number | null, desc: string }[];
+  pastaAmericanaOptions: { id: string, name: string, price: number | null, desc: string }[];
+  presentearOptions: { id: string, name: string, price: number | null, desc: string }[];
 };
 
 const DEFAULT_LOJA_CONFIG: LojaConfig = {
@@ -57,9 +62,9 @@ const DEFAULT_LOJA_CONFIG: LojaConfig = {
     bolo: "~100g/pessoa",
     doces: "3-4/pessoa",
     salgados: "10-15/pessoa",
-    kit_festa: "",
-    pasta_americana: "",
-    presentear: "",
+    kit_festa: "pré-elaborado",
+    pasta_americana: "personalizado",
+    presentear: "personalizado",
   },
   delivery: {
     acceptsDelivery: true,
@@ -71,6 +76,28 @@ const DEFAULT_LOJA_CONFIG: LojaConfig = {
     signoff: "Qualquer ajuste é só me avisar. Obrigada!",
   },
   customCategories: [],
+  salgadosOptions: [
+    { id: "coxinha", name: "Coxinha" },
+    { id: "bolinha_queijo", name: "Bolinha de Queijo" },
+    { id: "risolis", name: "Risólis" },
+    { id: "empadinha", name: "Empadinha" },
+  ],
+  kitFestaOptions: [
+    { id: "kit1", name: "Kit Festa I", price: 199, desc: "Serve 10 Pessoas" },
+    { id: "kit2", name: "Kit Festa II", price: 349, desc: "Serve 20 Pessoas" },
+    { id: "kit3", name: "Kit Festa III", price: 449, desc: "Serve 30 Pessoas" },
+  ],
+  pastaAmericanaOptions: [
+    { id: "pa_kit1", name: "Kit 1", price: 340, desc: "Inclui: 1x Bolo Bombom, 4x Pirulitos, 4x Cupcakes 3D, 8x Mini Trufas Planas" },
+    { id: "pa_kit2", name: "Kit 2", price: 440, desc: "Inclui: 1x Bolo Bombom 3D, 6x Pirulitos, 4x Cupcakes, 6x Bolo Bombom Pequeno, 10x Mini Trufas Planas, 6x Popscicle" },
+    { id: "pa_kit3", name: "Kit 3", price: 560, desc: "Inclui: 2x Bolo Bombom 3D, 6x Pirulitos, 4x Cupcakes, 8x Bolo Bombom Pequeno, 15x Mini Trufas Planas, 6x Popscicle" },
+  ],
+  presentearOptions: [
+    { id: "festa_caixa", name: "Festa na Caixa", price: 270, desc: "1 kg de Bolo + 10 Doces + 50 Salgados + 1 Xícara Personalizada" },
+    { id: "caixa_cenario", name: "Caixa Cenário", price: 170, desc: "1 kg de Bolo + 20 Doces" },
+    { id: "bolo_xicara", name: "Bolo na Xícara", price: null, desc: "170g de Bolo + Xícara" },
+    { id: "bento_cake", name: "Bento Cake", price: 70, desc: "400g de Bolo + 4 Doces" },
+  ]
 };
 
 const AdminMontarPedido = () => {
@@ -79,7 +106,7 @@ const AdminMontarPedido = () => {
 
   const [lojaConfig, setLojaConfig] = useState<LojaConfig>(DEFAULT_LOJA_CONFIG);
   const [contact, setContact] = useState({
-    name: "Minha Loja", // Pseudo field se não houver
+    name: "Minha Loja", 
     whatsapp: "",
     email: "",
     address: "",
@@ -87,15 +114,19 @@ const AdminMontarPedido = () => {
 
   useEffect(() => {
     if (settings?.loja_config) {
-      // Merge with default to avoid undefined issues with new fields
+      const dbConfig = settings.loja_config as any;
       setLojaConfig((prev) => ({
         ...DEFAULT_LOJA_CONFIG,
-        ...(settings.loja_config as any),
-        activeCategories: { ...DEFAULT_LOJA_CONFIG.activeCategories, ...(settings.loja_config as any).activeCategories },
-        customTitles: { ...DEFAULT_LOJA_CONFIG.customTitles, ...(settings.loja_config as any).customTitles },
-        delivery: { ...DEFAULT_LOJA_CONFIG.delivery, ...(settings.loja_config as any).delivery },
-        whatsappMsg: { ...DEFAULT_LOJA_CONFIG.whatsappMsg, ...(settings.loja_config as any).whatsappMsg },
-        customCategories: (settings.loja_config as any).customCategories || [],
+        ...dbConfig,
+        activeCategories: { ...DEFAULT_LOJA_CONFIG.activeCategories, ...dbConfig.activeCategories },
+        customTitles: { ...DEFAULT_LOJA_CONFIG.customTitles, ...dbConfig.customTitles },
+        delivery: { ...DEFAULT_LOJA_CONFIG.delivery, ...dbConfig.delivery },
+        whatsappMsg: { ...DEFAULT_LOJA_CONFIG.whatsappMsg, ...dbConfig.whatsappMsg },
+        customCategories: dbConfig.customCategories || [],
+        salgadosOptions: dbConfig.salgadosOptions || DEFAULT_LOJA_CONFIG.salgadosOptions,
+        kitFestaOptions: dbConfig.kitFestaOptions || DEFAULT_LOJA_CONFIG.kitFestaOptions,
+        pastaAmericanaOptions: dbConfig.pastaAmericanaOptions || DEFAULT_LOJA_CONFIG.pastaAmericanaOptions,
+        presentearOptions: dbConfig.presentearOptions || DEFAULT_LOJA_CONFIG.presentearOptions,
       }));
     }
     if (settings?.contact) {
@@ -107,33 +138,9 @@ const AdminMontarPedido = () => {
   }, [settings]);
 
   const handleSave = async () => {
-    // We update two different setting keys
     await updateSetting.mutateAsync({ key: 'loja_config', value: lojaConfig as any });
     await updateSetting.mutateAsync({ key: 'contact', value: { ...settings?.contact, ...contact } as any });
     toast.success("Configurações da loja salvas com sucesso!");
-  };
-
-  const addCustomCategory = () => {
-    setLojaConfig({
-      ...lojaConfig,
-      customCategories: [
-        ...lojaConfig.customCategories,
-        { id: `custom_${Date.now()}`, title: "Nova Categoria", subtitle: "", isActive: true }
-      ]
-    });
-  };
-
-  const updateCustomCat = (idx: number, field: string, value: string | boolean) => {
-    const cats = [...lojaConfig.customCategories];
-    cats[idx] = { ...cats[idx], [field]: value };
-    setLojaConfig({ ...lojaConfig, customCategories: cats });
-  };
-
-  const removeCustomCat = (idx: number) => {
-    setLojaConfig({
-      ...lojaConfig,
-      customCategories: lojaConfig.customCategories.filter((_, i) => i !== idx)
-    });
   };
 
   if (isLoading) {
@@ -203,7 +210,7 @@ const AdminMontarPedido = () => {
           <CardContent className="space-y-4">
             <div className="bg-[#eaf4fe] text-[#2c73bd] p-3 rounded-lg text-xs flex gap-2 items-start">
               <HelpCircle size={16} className="shrink-0 mt-0.5" />
-              <p>O textinho que aparece abaixo de cada seção na sua loja (ex.: ~100g/pessoa). Deixe em branco para ocultar.</p>
+              <p>O textinho que aparece ao lado do título da categoria na sua loja (ex.: ~100g/pessoa). Deixe em branco para ocultar.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -226,32 +233,205 @@ const AdminMontarPedido = () => {
           </CardContent>
         </Card>
 
-        {/* Adicionais das seções */}
+        {/* --- OPÇÕES DE SALGADOS --- */}
         <Card>
-          <CardHeader>
-            <CardTitle>Adicionais das seções</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Tipos de Salgados</CardTitle>
+              <CardDescription>Opções que aparecem no dropdown de sabores.</CardDescription>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setLojaConfig({
+              ...lojaConfig,
+              salgadosOptions: [...lojaConfig.salgadosOptions, { id: `s_${Date.now()}`, name: "Novo Salgado" }]
+            })}>
+              <Plus size={14} className="mr-1" /> Adicionar
+            </Button>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="bg-[#eaf4fe] text-[#2c73bd] p-3 rounded-lg text-xs flex gap-2 items-start mb-2">
-              <HelpCircle size={16} className="shrink-0 mt-0.5" />
-              <p>Os adicionais (como topo de bolo, bombons extras) são criados centralizados no Painel do Cardápio para organizar melhor os preços.</p>
-            </div>
-            
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between rounded-xl border border-border p-4 bg-white">
-                <div>
-                  <p className="font-bold text-sm">Adicionais do Bolo</p>
-                  <p className="text-xs text-muted-foreground">Gerencie topos, recheios extras, etc.</p>
-                </div>
-                <Link to="/admin/cardapio?tab=addons">
-                  <Button variant="outline" size="sm" className="text-[#8c3a40]">
-                    <Plus size={14} className="mr-1" /> Gerenciar
-                  </Button>
-                </Link>
+          <CardContent className="space-y-3">
+            {lojaConfig.salgadosOptions.map((opt, idx) => (
+              <div key={opt.id} className="flex gap-2 items-center">
+                <Input 
+                  value={opt.name} 
+                  onChange={(e) => {
+                    const newArr = [...lojaConfig.salgadosOptions];
+                    newArr[idx].name = e.target.value;
+                    setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
+                  }}
+                  placeholder="Nome do salgado"
+                />
+                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500 shrink-0" onClick={() => {
+                  setLojaConfig({ ...lojaConfig, salgadosOptions: lojaConfig.salgadosOptions.filter((_, i) => i !== idx) });
+                }}>
+                  <Trash2 size={16} />
+                </Button>
               </div>
-            </div>
+            ))}
           </CardContent>
         </Card>
+
+        {/* --- OPÇÕES DE KIT FESTA --- */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Opções de Kit Festa</CardTitle>
+              <CardDescription>Opções fixas com preços ou sob consulta.</CardDescription>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setLojaConfig({
+              ...lojaConfig,
+              kitFestaOptions: [...lojaConfig.kitFestaOptions, { id: `k_${Date.now()}`, name: "Novo Kit", price: 0, desc: "" }]
+            })}>
+              <Plus size={14} className="mr-1" /> Adicionar
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {lojaConfig.kitFestaOptions.map((opt, idx) => (
+              <div key={opt.id} className="border border-border p-4 rounded-xl flex flex-col gap-3 relative bg-white">
+                <button 
+                  onClick={() => setLojaConfig({ ...lojaConfig, kitFestaOptions: lojaConfig.kitFestaOptions.filter((_, i) => i !== idx) })}
+                  className="absolute top-2 right-2 text-muted-foreground hover:text-red-500"
+                >
+                  <Trash2 size={16} />
+                </button>
+                <div className="grid grid-cols-2 gap-3 pr-6">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Nome</Label>
+                    <Input value={opt.name} onChange={(e) => {
+                      const newArr = [...lojaConfig.kitFestaOptions];
+                      newArr[idx].name = e.target.value;
+                      setLojaConfig({ ...lojaConfig, kitFestaOptions: newArr });
+                    }} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Preço (deixe vazio p/ consultar)</Label>
+                    <Input type="number" value={opt.price ?? ""} onChange={(e) => {
+                      const val = e.target.value;
+                      const newArr = [...lojaConfig.kitFestaOptions];
+                      newArr[idx].price = val === "" ? null : Number(val);
+                      setLojaConfig({ ...lojaConfig, kitFestaOptions: newArr });
+                    }} />
+                  </div>
+                  <div className="space-y-1.5 col-span-2">
+                    <Label className="text-xs">Descrição / Rendimento</Label>
+                    <Input value={opt.desc} onChange={(e) => {
+                      const newArr = [...lojaConfig.kitFestaOptions];
+                      newArr[idx].desc = e.target.value;
+                      setLojaConfig({ ...lojaConfig, kitFestaOptions: newArr });
+                    }} placeholder="Ex: Serve 10 Pessoas" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* --- OPÇÕES DE PASTA AMERICANA --- */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Opções de Pasta Americana</CardTitle>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setLojaConfig({
+              ...lojaConfig,
+              pastaAmericanaOptions: [...lojaConfig.pastaAmericanaOptions, { id: `pa_${Date.now()}`, name: "Novo Kit", price: 0, desc: "" }]
+            })}>
+              <Plus size={14} className="mr-1" /> Adicionar
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {lojaConfig.pastaAmericanaOptions.map((opt, idx) => (
+              <div key={opt.id} className="border border-border p-4 rounded-xl flex flex-col gap-3 relative bg-white">
+                <button 
+                  onClick={() => setLojaConfig({ ...lojaConfig, pastaAmericanaOptions: lojaConfig.pastaAmericanaOptions.filter((_, i) => i !== idx) })}
+                  className="absolute top-2 right-2 text-muted-foreground hover:text-red-500"
+                >
+                  <Trash2 size={16} />
+                </button>
+                <div className="grid grid-cols-2 gap-3 pr-6">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Nome</Label>
+                    <Input value={opt.name} onChange={(e) => {
+                      const newArr = [...lojaConfig.pastaAmericanaOptions];
+                      newArr[idx].name = e.target.value;
+                      setLojaConfig({ ...lojaConfig, pastaAmericanaOptions: newArr });
+                    }} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Preço</Label>
+                    <Input type="number" value={opt.price ?? ""} onChange={(e) => {
+                      const val = e.target.value;
+                      const newArr = [...lojaConfig.pastaAmericanaOptions];
+                      newArr[idx].price = val === "" ? null : Number(val);
+                      setLojaConfig({ ...lojaConfig, pastaAmericanaOptions: newArr });
+                    }} />
+                  </div>
+                  <div className="space-y-1.5 col-span-2">
+                    <Label className="text-xs">Itens Inclusos</Label>
+                    <Textarea rows={2} value={opt.desc} onChange={(e) => {
+                      const newArr = [...lojaConfig.pastaAmericanaOptions];
+                      newArr[idx].desc = e.target.value;
+                      setLojaConfig({ ...lojaConfig, pastaAmericanaOptions: newArr });
+                    }} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* --- OPÇÕES DE PRESENTEAR --- */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Para Presentear</CardTitle>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setLojaConfig({
+              ...lojaConfig,
+              presentearOptions: [...lojaConfig.presentearOptions, { id: `pr_${Date.now()}`, name: "Novo Item", price: 0, desc: "" }]
+            })}>
+              <Plus size={14} className="mr-1" /> Adicionar
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {lojaConfig.presentearOptions.map((opt, idx) => (
+              <div key={opt.id} className="border border-border p-4 rounded-xl flex flex-col gap-3 relative bg-white">
+                <button 
+                  onClick={() => setLojaConfig({ ...lojaConfig, presentearOptions: lojaConfig.presentearOptions.filter((_, i) => i !== idx) })}
+                  className="absolute top-2 right-2 text-muted-foreground hover:text-red-500"
+                >
+                  <Trash2 size={16} />
+                </button>
+                <div className="grid grid-cols-2 gap-3 pr-6">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Nome</Label>
+                    <Input value={opt.name} onChange={(e) => {
+                      const newArr = [...lojaConfig.presentearOptions];
+                      newArr[idx].name = e.target.value;
+                      setLojaConfig({ ...lojaConfig, presentearOptions: newArr });
+                    }} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Preço</Label>
+                    <Input type="number" value={opt.price ?? ""} onChange={(e) => {
+                      const val = e.target.value;
+                      const newArr = [...lojaConfig.presentearOptions];
+                      newArr[idx].price = val === "" ? null : Number(val);
+                      setLojaConfig({ ...lojaConfig, presentearOptions: newArr });
+                    }} />
+                  </div>
+                  <div className="space-y-1.5 col-span-2">
+                    <Label className="text-xs">Descrição</Label>
+                    <Input value={opt.desc} onChange={(e) => {
+                      const newArr = [...lojaConfig.presentearOptions];
+                      newArr[idx].desc = e.target.value;
+                      setLojaConfig({ ...lojaConfig, presentearOptions: newArr });
+                    }} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
 
         {/* Perfil & Entregas */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -353,70 +533,6 @@ const AdminMontarPedido = () => {
             </CardContent>
           </Card>
         </div>
-
-        {/* Categorias Personalizadas */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Categorias personalizadas</CardTitle>
-              <CardDescription>Crie categorias livres que serão enviadas por WhatsApp.</CardDescription>
-            </div>
-            <Button variant="outline" size="sm" onClick={addCustomCategory}>
-              <Plus size={14} className="mr-1" /> Categoria
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-4">
-             <div className="bg-[#eaf4fe] text-[#2c73bd] p-3 rounded-lg text-xs flex gap-2 items-start mb-2">
-              <HelpCircle size={16} className="shrink-0 mt-0.5" />
-              <p>Crie categorias próprias para sua loja. Elas aparecem como opção na loja, ao lado de Bolo/Doces.</p>
-            </div>
-
-            {lojaConfig.customCategories.length === 0 ? (
-               <div className="border border-dashed border-border rounded-xl p-6 text-center text-muted-foreground text-sm">
-                 Nenhuma categoria personalizada. Toque em "Categoria" para criar.
-               </div>
-            ) : (
-              <div className="space-y-3">
-                {lojaConfig.customCategories.map((cat, idx) => (
-                  <div key={cat.id} className="border border-border p-4 rounded-xl flex gap-3 relative bg-white">
-                    <button 
-                      onClick={() => removeCustomCat(idx)}
-                      className="absolute top-2 right-2 text-muted-foreground hover:text-red-500"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                    <div className="flex-1 space-y-3">
-                       <div className="flex items-center gap-3">
-                         <Switch 
-                           checked={cat.isActive}
-                           onCheckedChange={(val) => updateCustomCat(idx, "isActive", val)}
-                           className="data-[state=checked]:bg-[#8c3a40]"
-                         />
-                         <span className="text-xs font-bold">{cat.isActive ? "Visível na loja" : "Oculta"}</span>
-                       </div>
-                       <div className="grid grid-cols-2 gap-3">
-                         <div className="space-y-1.5">
-                           <Label className="text-xs">Título</Label>
-                           <Input 
-                             value={cat.title} 
-                             onChange={(e) => updateCustomCat(idx, "title", e.target.value)} 
-                           />
-                         </div>
-                         <div className="space-y-1.5">
-                           <Label className="text-xs">Referência (Ex: ~100g/pessoa)</Label>
-                           <Input 
-                             value={cat.subtitle} 
-                             onChange={(e) => updateCustomCat(idx, "subtitle", e.target.value)} 
-                           />
-                         </div>
-                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
 
         {/* Mensagem do WhatsApp */}
         <Card>
