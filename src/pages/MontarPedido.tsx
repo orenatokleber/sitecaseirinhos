@@ -66,11 +66,11 @@ type MainCategory = string;
 /* ─── UI Components ────────────────────────── */
 
 const StepHeader = ({ number, title, className = "" }: { number: number; title: string, className?: string }) => (
-  <div className={`flex items-center gap-3 mb-4 ${className}`}>
-    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#8c3a40] text-white font-bold text-xs shrink-0">
+  <div className={`flex items-center gap-4 mb-5 ${className}`}>
+    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-primary/70 text-white font-bold text-sm shadow-md shrink-0">
       {number}
     </div>
-    <h2 className="font-heading text-xl font-semibold text-foreground">{title}</h2>
+    <h2 className="font-heading text-2xl font-bold text-foreground">{title}</h2>
   </div>
 );
 
@@ -87,34 +87,36 @@ const RadioCard = ({
   title: string;
   subtitle?: string | null;
 }) => (
-  <button
+  <motion.button
     type="button"
     onClick={onClick}
-    className={`relative flex flex-col items-start justify-between rounded-2xl border p-4 text-left transition-all duration-300 min-h-[100px] ${
+    whileHover={{ y: -2 }}
+    whileTap={{ scale: 0.98 }}
+    className={`relative flex flex-col items-start justify-between rounded-2xl border p-5 text-left transition-all duration-300 min-h-[110px] backdrop-blur-sm ${
       active
-        ? "border-[#8c3a40] bg-[#f9f2f2] shadow-sm ring-1 ring-[#8c3a40]/20"
-        : "border-border bg-card hover:border-[#8c3a40]/40 hover:bg-[#f9f2f2]/40"
+        ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20"
+        : "border-border/60 bg-white/70 hover:border-primary/40 hover:bg-primary/5 hover:shadow-sm"
     }`}
   >
     <div className="flex w-full items-start justify-between">
-      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${active ? "bg-[#8c3a40]/10 text-[#8c3a40]" : "bg-muted text-muted-foreground"}`}>
-        {Icon ? <Icon size={20} /> : <Cake size={20} />}
+      <div className={`flex h-11 w-11 items-center justify-center rounded-xl transition-colors ${active ? "bg-primary/10 text-primary shadow-sm" : "bg-muted text-muted-foreground"}`}>
+        {Icon ? <Icon size={22} strokeWidth={2.5} /> : <Cake size={22} strokeWidth={2.5} />}
       </div>
       <div
-        className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition-colors ${
-          active ? "border-[#8c3a40] bg-[#8c3a40] text-white" : "border-muted-foreground/30 bg-transparent"
+        className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition-all ${
+          active ? "border-primary bg-primary text-white scale-110" : "border-muted-foreground/30 bg-transparent"
         }`}
       >
-        {active && <Check size={12} strokeWidth={3} />}
+        {active && <Check size={12} strokeWidth={4} />}
       </div>
     </div>
-    <div className="mt-3">
+    <div className="mt-4">
       <span className="block font-heading text-base font-bold text-foreground leading-tight">
         {title}
       </span>
-      {subtitle && <span className="block mt-0.5 font-body text-xs text-muted-foreground line-clamp-1">{subtitle}</span>}
+      {subtitle && <span className="block mt-1 font-body text-[11px] font-semibold tracking-wide uppercase text-muted-foreground line-clamp-1">{subtitle}</span>}
     </div>
-  </button>
+  </motion.button>
 );
 
 const OptionChip = ({
@@ -130,35 +132,37 @@ const OptionChip = ({
   meta?: string;
   price?: string;
 }) => (
-  <button
+  <motion.button
     type="button"
     onClick={onClick}
-    className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-left transition-all ${
+    whileHover={{ scale: 1.01 }}
+    whileTap={{ scale: 0.98 }}
+    className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-left transition-all backdrop-blur-sm ${
       active
-        ? "border-[#8c3a40] bg-[#f9f2f2] shadow-sm ring-1 ring-[#8c3a40]/30"
-        : "border-border bg-card hover:border-[#8c3a40]/40"
+        ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/30"
+        : "border-border/60 bg-white/60 hover:border-primary/40 hover:bg-white"
     }`}
   >
     <span
       className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-        active ? "border-[#8c3a40] bg-[#8c3a40] text-white" : "border-muted-foreground/30"
+        active ? "border-primary bg-primary text-white" : "border-muted-foreground/30 bg-white/50"
       }`}
     >
       {active && <Check size={12} strokeWidth={3} />}
     </span>
     <span className="min-w-0 flex-1">
-      <span className="block font-body text-sm font-semibold text-foreground">{children}</span>
-      {meta && <span className="mt-0.5 block font-body text-xs text-muted-foreground">{meta}</span>}
+      <span className="block font-body text-sm font-bold text-foreground">{children}</span>
+      {meta && <span className="mt-0.5 block font-body text-[11px] font-semibold text-muted-foreground/80">{meta}</span>}
       {price && <span className="mt-0.5 block font-body text-xs font-bold text-chocolate">{price}</span>}
     </span>
-  </button>
+  </motion.button>
 );
 
 const InlineSectionLabel = ({ children }: { children: React.ReactNode }) => (
-  <p className="mb-2 mt-4 flex items-center gap-2 font-body text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-    <span className="h-px flex-1 bg-border" />
+  <p className="mb-3 mt-5 flex items-center gap-3 font-body text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+    <span className="h-[1px] flex-1 bg-border/50" />
     {children}
-    <span className="h-px flex-1 bg-border" />
+    <span className="h-[1px] flex-1 bg-border/50" />
   </p>
 );
 
@@ -591,7 +595,12 @@ const MontarPedido = () => {
   
   /* ─── Render ────────────────────────────── */
   return (
-    <main className="min-h-screen bg-[#fcf8f8] pb-32 pt-20">
+    <main className="min-h-screen bg-gradient-to-b from-cream to-white pb-32 pt-24 font-body relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/10 to-transparent -z-10" />
+      <div className="absolute top-20 right-10 w-64 h-64 bg-rose/10 blur-[80px] rounded-full -z-10" />
+      <div className="absolute top-80 left-10 w-48 h-48 bg-gold/10 blur-[60px] rounded-full -z-10" />
+
       <Helmet>
         <title>Monte seu Pedido | Caseirinhos</title>
         <meta
@@ -601,23 +610,32 @@ const MontarPedido = () => {
       </Helmet>
 
       {/* Header Info */}
-      <div className="container mx-auto px-4 py-6 text-center max-w-2xl">
-        <div className="inline-flex items-center justify-center bg-[#8c3a40]/10 text-[#8c3a40] px-3 py-1 rounded-full text-xs font-bold mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#8c3a40] mr-2 animate-pulse"></span>
+      <div className="container mx-auto px-4 py-8 text-center max-w-2xl relative">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="inline-flex items-center justify-center bg-white/60 backdrop-blur-md border border-border/50 text-primary px-4 py-1.5 rounded-full text-xs font-bold mb-4 shadow-sm"
+        >
+          <span className="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse"></span>
           Encomendas abertas
-        </div>
-        <p className="font-body text-sm text-muted-foreground leading-relaxed">
-          Monte seu pedido com carinho. Calculamos o valor na hora e você finaliza pelo WhatsApp.
-        </p>
+        </motion.div>
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="font-body text-base text-muted-foreground leading-relaxed max-w-md mx-auto"
+        >
+          Monte seu pedido com carinho. Calculamos o valor na hora e você finaliza pelo WhatsApp com toda facilidade.
+        </motion.p>
       </div>
 
-      <div className="container mx-auto px-4 max-w-xl space-y-10">
+      <div className="container mx-auto px-4 max-w-2xl space-y-12">
         
         {/* STEP 1: Main Category */}
         <section id="step-1">
           <StepHeader number={1} title="O que você vai pedir?" />
-          <p className="text-sm text-muted-foreground mb-4">Você pode selecionar mais de uma opção para fazer todo o pedido de uma só vez.</p>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3">
+          <p className="text-sm text-muted-foreground/80 mb-5 ml-12">Você pode selecionar mais de uma opção para fazer todo o pedido de uma só vez.</p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 ml-0 sm:ml-12">
             {mainCats.map((cat) => (
               <RadioCard
                 key={cat.id}
@@ -646,7 +664,7 @@ const MontarPedido = () => {
             >
               <StepHeader number={2} title="Detalhes do pedido" />
               
-              <div className="space-y-6">
+              <div className="space-y-8 ml-0 sm:ml-12">
                 {selectedMainCats.map(catId => {
                   const catObj = mainCats.find(c => c.id === catId);
                   const state = catStates[catId] || defaultCatState;
@@ -664,15 +682,21 @@ const MontarPedido = () => {
                   const canAddDraft = computeDraftForCat(catId) !== null;
 
                   return (
-                    <div key={catId} className="bg-white rounded-3xl p-5 border border-border/60 shadow-sm space-y-4">
-                      
-                      <h3 className="font-heading text-lg font-bold text-[#8c3a40] flex items-center justify-between border-b border-border pb-3 mb-2">
-                         <div className="flex items-center gap-2">
-                           {catObj?.icon && <catObj.icon size={20} />}
+                    <motion.div 
+                      key={catId} 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-5"
+                    >
+                      <h3 className="font-heading text-xl font-bold text-chocolate flex items-center justify-between border-b border-border/40 pb-4 mb-2">
+                         <div className="flex items-center gap-3">
+                           <div className="bg-primary/10 p-2 rounded-xl text-primary">
+                             {catObj?.icon && <catObj.icon size={22} />}
+                           </div>
                            {catObj?.title}
                          </div>
                          {catObj?.subtitle && (
-                           <span className="text-[10px] bg-[#fcf8f8] text-muted-foreground px-2 py-1 rounded-full font-body font-semibold">
+                           <span className="text-[11px] bg-muted/50 text-muted-foreground px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-wider">
                              {catObj.subtitle}
                            </span>
                          )}
@@ -681,14 +705,14 @@ const MontarPedido = () => {
                       {/* --- FORMULÁRIO BOLO --- */}
                       {catType === "bolo" && (
                          <div className="space-y-4">
-                            <div className="space-y-1.5">
-                              <label className="text-xs uppercase font-bold text-muted-foreground tracking-wider">TEMA / DECORAÇÃO</label>
+                            <div className="space-y-2">
+                              <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-[0.15em] ml-1">Tema / Decoração</label>
                               <input
                                 type="text"
                                 value={state.boloTheme}
                                 onChange={(e) => updateCatState(catId, { boloTheme: e.target.value })}
-                                placeholder="Ex: Jardim encantado..."
-                                className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                                placeholder="Ex: Jardim encantado, flores, rústico..."
+                                className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
                               />
                             </div>
                          </div>
@@ -698,7 +722,7 @@ const MontarPedido = () => {
                       {subProducts.length > 0 && (
                         <>
                           <InlineSectionLabel>Selecione a linha *</InlineSectionLabel>
-                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 mb-6">
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 mb-6">
                             {subProducts.map((p) => (
                               <OptionChip
                                 key={`${p.kind}-${p.id}`}
@@ -722,9 +746,10 @@ const MontarPedido = () => {
                             value={state.manualDescription}
                             onChange={(e) => updateCatState(catId, { manualDescription: e.target.value })}
                             placeholder={`Descreva aqui como você gostaria do seu ${catObj?.title}...`}
-                            className="w-full resize-none rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                            className="w-full resize-none rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
                           />
-                          <p className="text-xs text-muted-foreground mt-2">
+                          <p className="text-[11px] text-muted-foreground/80 mt-3 flex items-start gap-2 bg-muted/30 p-3 rounded-xl">
+                            <Info size={14} className="shrink-0 mt-0.5 text-primary" />
                             Para essa opção, o valor é 100% a consultar. Nossa equipe passará o orçamento pelo WhatsApp.
                           </p>
                         </>
@@ -732,13 +757,13 @@ const MontarPedido = () => {
 
                       {/* --- SALGADOS --- */}
                       {catType === "salgados" && (
-                        <div className="space-y-4 pt-2">
-                           <div className="space-y-3">
+                        <div className="space-y-5 pt-2">
+                           <div className="space-y-4">
                              {state.salgadosTypes.map((t, idx) => (
-                               <div key={idx} className="space-y-1.5">
-                                 <label className="text-xs uppercase font-bold text-muted-foreground tracking-wider">TIPO {idx + 1}</label>
+                               <div key={idx} className="space-y-2">
+                                 <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-[0.15em] ml-1">TIPO {idx + 1}</label>
                                  <select 
-                                   className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                                   className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white appearance-none"
                                    value={t}
                                    onChange={(e) => {
                                      const arr = [...state.salgadosTypes];
@@ -757,19 +782,19 @@ const MontarPedido = () => {
                            <button 
                              type="button" 
                              onClick={() => updateCatState(catId, { salgadosTypes: [...state.salgadosTypes, ""] })}
-                             className="text-xs font-bold text-[#8c3a40] flex items-center gap-1 hover:underline"
+                             className="text-xs font-bold text-primary flex items-center gap-1.5 hover:opacity-80 transition-opacity bg-primary/5 px-3 py-2 rounded-lg"
                            >
-                             <Plus size={12} /> Outro salgado
+                             <Plus size={14} /> Adicionar outro salgado
                            </button>
 
-                           <div className="pt-2">
-                              <label className="text-xs uppercase font-bold text-muted-foreground tracking-wider block mb-1.5">OBSERVAÇÕES (OPCIONAL)</label>
+                           <div className="pt-4">
+                              <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-[0.15em] ml-1 block mb-2">OBSERVAÇÕES (OPCIONAL)</label>
                               <textarea
                                 rows={2}
                                 value={state.manualDescription}
                                 onChange={(e) => updateCatState(catId, { manualDescription: e.target.value })}
                                 placeholder="Descreva quantidades por tipo, detalhes..."
-                                className="w-full resize-none rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                                className="w-full resize-none rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
                               />
                            </div>
                         </div>
@@ -777,7 +802,7 @@ const MontarPedido = () => {
 
                       {/* --- KITS, PASTA AMERICANA E PRESENTEAR --- */}
                       {(catType === "kit_festa" || catType === "pasta_americana" || catType === "presentear") && (
-                        <div className="space-y-2 pt-2">
+                        <div className="space-y-3 pt-2">
                            {(() => {
                              let opts = lojaConfig.kitFestaOptions || [];
                              let selections = state.kitFestaSelections;
@@ -790,10 +815,10 @@ const MontarPedido = () => {
                              }
 
                              return opts.map((opt: any) => (
-                               <label key={opt.id} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-transparent cursor-pointer hover:border-[#8c3a40]/30 transition-colors relative">
+                               <label key={opt.id} className={`flex items-start gap-4 p-5 rounded-2xl border transition-all cursor-pointer relative backdrop-blur-sm ${selections.includes(opt.id) ? 'border-primary bg-primary/5 shadow-sm' : 'border-border/60 bg-white/60 hover:border-primary/40 hover:bg-white'}`}>
                                   <div className="mt-0.5">
-                                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${selections.includes(opt.id) ? 'bg-[#8c3a40] border-[#8c3a40] text-white' : 'border-muted-foreground/30 bg-transparent'}`}>
-                                      {selections.includes(opt.id) && <Check size={14} strokeWidth={3} />}
+                                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${selections.includes(opt.id) ? 'bg-primary border-primary text-white scale-110' : 'border-muted-foreground/30 bg-transparent'}`}>
+                                      {selections.includes(opt.id) && <Check size={12} strokeWidth={4} />}
                                     </div>
                                     <input 
                                       type="checkbox"
@@ -810,12 +835,12 @@ const MontarPedido = () => {
                                       }}
                                     />
                                   </div>
-                                  <div className="flex-1 min-w-0 pr-16">
-                                    <span className="block font-body text-sm font-bold text-foreground">{opt.name}</span>
-                                    {opt.desc && <span className="block text-xs text-muted-foreground mt-0.5">{opt.desc}</span>}
+                                  <div className="flex-1 min-w-0 pr-20">
+                                    <span className="block font-heading text-lg font-bold text-foreground leading-tight">{opt.name}</span>
+                                    {opt.desc && <span className="block font-body text-xs font-semibold text-muted-foreground/80 mt-1">{opt.desc}</span>}
                                   </div>
-                                  <span className="absolute top-4 right-4 text-xs font-bold text-foreground">
-                                    {opt.price === null || opt.price === undefined ? "a consultar" : formatPrice(opt.price)}
+                                  <span className="absolute top-5 right-5 text-sm font-bold text-chocolate bg-white px-3 py-1 rounded-full shadow-sm border border-border/40">
+                                    {opt.price === null || opt.price === undefined ? "A consultar" : formatPrice(opt.price)}
                                   </span>
                                </label>
                              ));
@@ -828,7 +853,7 @@ const MontarPedido = () => {
                       {state.selectedProduct?.kind === "round" && (
                         <>
                           <InlineSectionLabel>Tamanho *</InlineSectionLabel>
-                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             {sizes.map((s) => {
                               const cat = categories.find((c) => c.id === state.selectedProduct?.id);
                               const p = cat?.type === "consult" ? null : priceOf(state.selectedProduct!.id, s.id);
@@ -852,7 +877,7 @@ const MontarPedido = () => {
                           {modalCatFlavors.length > 0 && (
                             <>
                               <InlineSectionLabel>Sabor</InlineSectionLabel>
-                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                 {modalCatFlavors.map((f) => (
                                   <OptionChip
                                     key={f.id}
@@ -870,7 +895,7 @@ const MontarPedido = () => {
                           {roundAddonList.length > 0 && (
                             <>
                               <InlineSectionLabel>Adicionais</InlineSectionLabel>
-                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                 {roundAddonList.map((a) => {
                                   const info = addonPriceInfo(a.id, state.sizeId);
                                   return (
@@ -897,15 +922,15 @@ const MontarPedido = () => {
                           {(() => {
                             const r = rectangular.find((x) => x.id === state.selectedProduct?.id);
                             return r ? (
-                              <div className="mb-3 flex flex-wrap gap-2 font-body text-xs text-muted-foreground">
-                                {r.dimensions && <span className="rounded-full bg-muted/40 px-2.5 py-1">{r.dimensions}</span>}
-                                {r.slices && <span className="rounded-full bg-muted/40 px-2.5 py-1">{r.slices} fatias</span>}
+                              <div className="mb-4 flex flex-wrap gap-2 font-body text-xs font-semibold text-muted-foreground/80">
+                                {r.dimensions && <span className="rounded-full bg-white border border-border/50 px-3 py-1.5 shadow-sm">{r.dimensions}</span>}
+                                {r.slices && <span className="rounded-full bg-white border border-border/50 px-3 py-1.5 shadow-sm">{r.slices} fatias</span>}
                               </div>
                             ) : null;
                           })()}
 
                           <InlineSectionLabel>Linha *</InlineSectionLabel>
-                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <OptionChip
                               active={state.rectClass === "class1"}
                               onClick={() => updateCatState(catId, { rectClass: "class1" })}
@@ -925,7 +950,7 @@ const MontarPedido = () => {
                           {rectAddonList.length > 0 && (
                             <>
                               <InlineSectionLabel>Adicionais</InlineSectionLabel>
-                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                 {rectAddonList.map((a) => {
                                   const info = addonPriceInfo(a.id);
                                   return (
@@ -950,7 +975,7 @@ const MontarPedido = () => {
                       {state.selectedProduct?.kind === "sweet" && (
                         <>
                           <InlineSectionLabel>Quantidade *</InlineSectionLabel>
-                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             {modalSweetPackages.map((p) => (
                               <OptionChip
                                 key={p.id}
@@ -964,13 +989,13 @@ const MontarPedido = () => {
                           </div>
 
                           {modalSweetFlavors.length > 0 && (
-                            <div className="space-y-4 mt-6">
-                              <div className="space-y-3">
+                            <div className="space-y-5 mt-8">
+                              <div className="space-y-4">
                                 {state.sweetFlavors.map((fl, idx) => (
-                                  <div key={idx} className="space-y-1.5">
-                                    <label className="text-xs uppercase font-bold text-muted-foreground tracking-wider">SABOR {idx + 1}</label>
+                                  <div key={idx} className="space-y-2">
+                                    <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-[0.15em] ml-1">SABOR {idx + 1}</label>
                                     <select 
-                                      className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                                      className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white appearance-none"
                                       value={fl}
                                       onChange={(e) => {
                                         const arr = [...state.sweetFlavors];
@@ -989,9 +1014,9 @@ const MontarPedido = () => {
                               <button 
                                 type="button" 
                                 onClick={() => updateCatState(catId, { sweetFlavors: [...state.sweetFlavors, ""] })}
-                                className="text-xs font-bold text-[#8c3a40] flex items-center gap-1 hover:underline"
+                                className="text-xs font-bold text-primary flex items-center gap-1.5 hover:opacity-80 transition-opacity bg-primary/5 px-3 py-2 rounded-lg"
                               >
-                                <Plus size={12} /> Outro sabor
+                                <Plus size={14} /> Adicionar outro sabor
                               </button>
                             </div>
                           )}
@@ -1000,22 +1025,24 @@ const MontarPedido = () => {
 
                       {/* Botão Adicionar (Apenas limpa o estado DESSA categoria se for Bolo/Doces) */}
                       {((subProducts.length > 0 && state.selectedProduct) || isManualCategory) && (
-                        <div className="pt-4 border-t border-border mt-4">
-                          <button
+                        <div className="pt-6 border-t border-border/40 mt-6">
+                          <motion.button
+                            whileHover={{ scale: canAddDraft ? 1.01 : 1 }}
+                            whileTap={{ scale: canAddDraft ? 0.98 : 1 }}
                             type="button"
                             onClick={() => addItem(catId)}
                             disabled={!canAddDraft}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#8c3a40] text-[#8c3a40] px-4 py-3 font-body text-sm font-semibold transition-all hover:bg-[#8c3a40] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                            className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-primary text-primary px-5 py-4 font-body text-sm font-bold transition-all hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-primary shadow-sm"
                           >
-                            <Plus size={16} />
+                            <Plus size={18} strokeWidth={2.5} />
                             Adicionar mais {catObj?.title.toLowerCase()} (opcional)
-                          </button>
-                          <p className="text-center text-xs text-muted-foreground mt-2">
-                            Se quiser apenas um {catObj?.title.toLowerCase()}, não precisa clicar acima. Basta preencher e seguir para os dados abaixo.
+                          </motion.button>
+                          <p className="text-center text-[11px] font-semibold text-muted-foreground/70 mt-3 px-4 leading-relaxed">
+                            Se quiser apenas um item desta categoria, não precisa clicar acima. Basta preencher e seguir para os dados abaixo.
                           </p>
                         </div>
                       )}
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -1027,129 +1054,139 @@ const MontarPedido = () => {
         <section id="step-3" ref={step3Ref} className={(itemCount === 0 && selectedMainCats.length === 0) ? "opacity-50 pointer-events-none" : ""}>
           <StepHeader number={3} title="Seus dados e entrega" />
           
-          <div className="bg-white rounded-3xl p-5 md:p-6 border border-border/60 shadow-sm space-y-4">
+          <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6 ml-0 sm:ml-12">
             
-            <div>
-              <label className="mb-1.5 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                Nome completo *
-              </label>
-              <input
-                type="text"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Maria da Silva"
-                className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
-              />
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label className="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
+                  Nome completo *
+                </label>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="Ex: Maria da Silva"
+                  className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
+                  Telefone / WhatsApp *
+                </label>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  placeholder="(11) 99999-9999"
+                  className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label className="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
+                  E-mail (opcional)
+                </label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  placeholder="seu@email.com"
+                  className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
+                  Data desejada *
+                </label>
+                <p className="text-[10px] text-muted-foreground/70 mb-2 ml-1 font-semibold">
+                  Encomendas sujeitas à disponibilidade.
+                </p>
+                <input
+                  type="date"
+                  value={form.date}
+                  onChange={(e) => setForm({ ...form, date: e.target.value })}
+                  className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-3.5 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
+                />
+              </div>
             </div>
 
             <div>
-              <label className="mb-1.5 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                Telefone / WhatsApp *
-              </label>
-              <input
-                type="tel"
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                placeholder="(11) 99999-9999"
-                className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                E-mail (opcional)
-              </label>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                placeholder="seu@email.com"
-                className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                Data desejada *
-              </label>
-              <p className="text-[11px] text-muted-foreground mb-2 -mt-1 leading-tight">
-                Encomendas com antecedência.
-              </p>
-              <input
-                type="date"
-                value={form.date}
-                onChange={(e) => setForm({ ...form, date: e.target.value })}
-                className="w-full rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                Observações
+              <label className="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
+                Observações adicionais
               </label>
               <textarea
                 rows={3}
                 value={form.details}
                 onChange={(e) => setForm({ ...form, details: e.target.value })}
-                placeholder="Cores, restrições, mensagem no topo..."
-                className="w-full resize-none rounded-xl border border-border bg-transparent px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#8c3a40] focus:ring-1 focus:ring-[#8c3a40]"
+                placeholder="Ex: Restrições alimentares, mensagem no topo do bolo, detalhes das cores..."
+                className="w-full resize-none rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
               />
             </div>
 
             {/* Delivery Methods dynamic rendering */}
             {(lojaConfig.delivery?.acceptsPickup || lojaConfig.delivery?.acceptsDelivery) && (
-              <div>
-                <label className="mb-2 mt-4 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <div className="pt-2">
+                <label className="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
                   Forma de recebimento *
                 </label>
-                <div className={`grid gap-3 ${lojaConfig.delivery?.acceptsPickup && lojaConfig.delivery?.acceptsDelivery ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                <div className={`grid gap-4 ${lojaConfig.delivery?.acceptsPickup && lojaConfig.delivery?.acceptsDelivery ? 'grid-cols-2' : 'grid-cols-1'}`}>
                   {lojaConfig.delivery?.acceptsPickup && (
-                    <button
+                    <motion.button
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.98 }}
                       type="button"
                       onClick={() => setForm({...form, deliveryMethod: "pickup"})}
-                      className={`flex flex-col items-center justify-center gap-1.5 rounded-xl border p-3 transition-colors ${
-                        form.deliveryMethod === "pickup" ? "border-[#8c3a40] bg-[#f9f2f2] text-[#8c3a40]" : "border-border bg-transparent text-muted-foreground hover:bg-muted/50"
+                      className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 transition-all ${
+                        form.deliveryMethod === "pickup" ? "border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20" : "border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40"
                       }`}
                     >
-                      <Store size={20} />
+                      <Store size={24} strokeWidth={form.deliveryMethod === "pickup" ? 2.5 : 2} />
                       <div className="text-center">
                         <span className="block font-bold text-sm">Retirar no local</span>
-                        <span className="block text-[10px]">No ateliê</span>
+                        <span className={`block text-[10px] uppercase tracking-wider mt-1 ${form.deliveryMethod === "pickup" ? "text-primary/70" : "text-muted-foreground/60"}`}>No ateliê</span>
                       </div>
-                    </button>
+                    </motion.button>
                   )}
                   {lojaConfig.delivery?.acceptsDelivery && (
-                    <button
+                    <motion.button
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.98 }}
                       type="button"
                       onClick={() => setForm({...form, deliveryMethod: "delivery"})}
-                      className={`flex flex-col items-center justify-center gap-1.5 rounded-xl border p-3 transition-colors ${
-                        form.deliveryMethod === "delivery" ? "border-[#8c3a40] bg-[#f9f2f2] text-[#8c3a40]" : "border-border bg-transparent text-muted-foreground hover:bg-muted/50"
+                      className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 transition-all ${
+                        form.deliveryMethod === "delivery" ? "border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20" : "border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40"
                       }`}
                     >
-                      <MapPin size={20} />
+                      <MapPin size={24} strokeWidth={form.deliveryMethod === "delivery" ? 2.5 : 2} />
                       <div className="text-center">
                         <span className="block font-bold text-sm">Entrega</span>
-                        <span className="block text-[10px]">
+                        <span className={`block text-[10px] uppercase tracking-wider mt-1 ${form.deliveryMethod === "delivery" ? "text-primary/70" : "text-muted-foreground/60"}`}>
                           {Number(lojaConfig.delivery?.deliveryFee || 0) > 0 ? `Taxa: R$ ${Number(lojaConfig.delivery.deliveryFee).toFixed(2)}` : 'A combinar'}
                         </span>
                       </div>
-                    </button>
+                    </motion.button>
                   )}
                 </div>
               </div>
             )}
 
             {/* Reference Photo Upload Mockup */}
-            <div className="pt-2">
-              <label className="mb-2 block font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            <div className="pt-4">
+              <label className="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
                 Foto de referência (opcional)
               </label>
-              <button type="button" className="w-full border-2 border-dashed border-[#8c3a40]/30 rounded-2xl bg-[#f9f2f2]/50 p-6 flex flex-col items-center justify-center gap-2 text-center hover:bg-[#f9f2f2] transition-colors">
-                 <div className="bg-[#8c3a40]/10 text-[#8c3a40] p-3 rounded-2xl mb-1">
-                   <Camera size={24} />
+              <button type="button" className="w-full border-2 border-dashed border-primary/30 rounded-3xl bg-primary/5 p-8 flex flex-col items-center justify-center gap-3 text-center hover:bg-primary/10 transition-colors group">
+                 <div className="bg-white text-primary p-4 rounded-2xl shadow-sm group-hover:scale-110 transition-transform duration-300">
+                   <Camera size={26} strokeWidth={2.5} />
                  </div>
-                 <span className="font-heading font-bold text-sm text-[#8c3a40]">ADICIONAR FOTO</span>
-                 <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Toque para escolher ou tirar uma foto</span>
+                 <div>
+                   <span className="block font-heading font-bold text-base text-primary mb-1">ADICIONAR FOTO</span>
+                   <span className="block text-[11px] font-semibold text-muted-foreground/80 uppercase tracking-wider">Toque para escolher ou tirar uma foto</span>
+                 </div>
               </button>
             </div>
 
@@ -1159,46 +1196,51 @@ const MontarPedido = () => {
       </div>
 
       {/* ─── STICKY BOTTOM BAR ───────────── */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border/60 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-        <div className="container mx-auto px-5 py-4 max-w-xl flex items-center justify-between">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-t border-border/40 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+        <div className="container mx-auto px-5 py-4 max-w-2xl flex items-center justify-between">
           <div>
-            <p className="font-heading text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">
+            <p className="font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] leading-none mb-1.5">
               Total estimado
             </p>
-            <p className="font-heading text-xl font-bold text-foreground leading-none">
+            <p className="font-heading text-2xl font-bold text-chocolate leading-none">
               {formatPrice(displayTotal)}
             </p>
           </div>
-          <button
+          <motion.button
+            whileHover={{ scale: itemCount > 0 ? 1.05 : 1 }}
+            whileTap={{ scale: itemCount > 0 ? 0.95 : 1 }}
             type="button"
             onClick={() => setCartOpen(true)}
             disabled={itemCount === 0}
-            className="flex items-center gap-2 rounded-full bg-[#c28e8e] px-6 py-2.5 font-body text-sm font-bold text-white shadow-md transition-all hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary/80 px-8 py-3 font-body text-sm font-bold text-white shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
           >
-            Revisar <ArrowRight size={16} />
-          </button>
+            Revisar <ArrowRight size={18} strokeWidth={2.5} />
+          </motion.button>
         </div>
       </div>
 
       {/* ─── CART DRAWER (Revisar) ───────────────── */}
       <Sheet open={cartOpen} onOpenChange={setCartOpen}>
-        <SheetContent side="right" className="flex w-full flex-col overflow-y-auto sm:max-w-md bg-[#fcf8f8]">
-          <SheetHeader className="text-left">
-            <SheetTitle className="font-heading text-2xl text-[#8c3a40]">
-              Revisar Pedido
+        <SheetContent side="right" className="flex w-full flex-col overflow-y-auto sm:max-w-md bg-gradient-to-b from-cream to-white border-l border-border/30">
+          <SheetHeader className="text-left mt-2">
+            <SheetTitle className="font-heading text-3xl font-bold text-chocolate">
+              Seu Pedido
             </SheetTitle>
-            <SheetDescription className="text-muted-foreground">
-              Confirme seus itens e envie para o WhatsApp
+            <SheetDescription className="text-muted-foreground/80 font-body text-sm">
+              Revise os itens e confira seus dados antes de enviar.
             </SheetDescription>
           </SheetHeader>
 
           {/* Items list */}
-          <div className="mt-6 flex-1 space-y-4 overflow-y-auto pr-2">
+          <div className="mt-8 flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
             {[...(items), ...draftItems].length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <ShoppingBag size={40} className="mb-3 text-muted-foreground/30" />
-                <p className="font-body text-sm text-muted-foreground">
-                  Seu pedido está vazio.
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <div className="bg-primary/10 p-6 rounded-full mb-4">
+                  <ShoppingBag size={48} className="text-primary/40" />
+                </div>
+                <p className="font-heading text-lg font-bold text-foreground">Sua sacola está vazia</p>
+                <p className="font-body text-sm text-muted-foreground mt-1">
+                  Adicione algumas delícias para começar.
                 </p>
               </div>
             ) : (
@@ -1206,81 +1248,102 @@ const MontarPedido = () => {
                 const isDraft = it.id.startsWith('draft');
                 
                 return (
-                  <div
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
                     key={`${it.id}-${idx}`}
-                    className="rounded-2xl border border-border/70 bg-white p-4 shadow-sm"
+                    className="rounded-3xl border border-border/50 bg-white/80 backdrop-blur-sm p-5 shadow-sm relative overflow-hidden"
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="font-heading text-base font-bold text-foreground leading-tight pr-4">{it.title}</p>
+                    {isDraft && (
+                      <div className="absolute top-0 right-0 bg-gold text-white text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-bl-xl z-10 shadow-sm">
+                        Editando agora
+                      </div>
+                    )}
+                    <div className="flex items-start justify-between gap-3 relative z-10">
+                      <p className="font-heading text-lg font-bold text-chocolate leading-tight pr-6">{it.title}</p>
                       {!isDraft && (
                         <button
                           type="button"
                           aria-label="Remover item"
                           onClick={() => removeItem(it.id)}
-                          className="shrink-0 text-muted-foreground hover:text-red-500 transition-colors"
+                          className="shrink-0 text-muted-foreground/50 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={18} />
                         </button>
                       )}
                     </div>
-                    <ul className="mt-2 space-y-1 font-body text-xs text-muted-foreground">
+                    <ul className="mt-3 space-y-1.5 font-body text-xs font-semibold text-muted-foreground/80">
                       {it.details.map((d, i) => (
-                        <li key={i}>• {d}</li>
+                        <li key={i} className="flex items-start gap-2">
+                           <span className="text-primary mt-0.5">•</span>
+                           <span>{d}</span>
+                        </li>
                       ))}
                     </ul>
-                    <div className="mt-4 flex items-center justify-between border-t border-border/50 pt-3">
+                    <div className="mt-5 flex items-center justify-between border-t border-border/40 pt-4 relative z-10">
                       {!isDraft ? (
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 bg-muted/30 p-1 rounded-full border border-border/50">
                           <button
                             type="button"
                             onClick={() => changeQty(it.id, -1)}
-                            className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-foreground transition-colors hover:bg-muted/80"
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-foreground shadow-sm transition-all hover:bg-primary hover:text-white"
                           >
-                            <Minus size={12} strokeWidth={3} />
+                            <Minus size={14} strokeWidth={3} />
                           </button>
-                          <span className="font-body text-sm font-bold">{it.qty}</span>
+                          <span className="font-body text-sm font-bold w-4 text-center">{it.qty}</span>
                           <button
                             type="button"
                             onClick={() => changeQty(it.id, 1)}
-                            className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-foreground transition-colors hover:bg-muted/80"
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-foreground shadow-sm transition-all hover:bg-primary hover:text-white"
                           >
-                            <Plus size={12} strokeWidth={3} />
+                            <Plus size={14} strokeWidth={3} />
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs font-bold text-[#8c3a40] bg-[#8c3a40]/10 px-2 py-1 rounded-md">Editando agora</span>
+                        <div className="flex items-center gap-2 text-gold font-bold text-xs uppercase tracking-wider bg-gold/10 px-3 py-1.5 rounded-full">
+                           <Star size={14} className="fill-gold" /> Em configuração
+                        </div>
                       )}
-                      <span className="font-heading text-base font-bold text-foreground">
+                      <span className="font-heading text-lg font-bold text-foreground bg-white px-3 py-1 rounded-full shadow-sm border border-border/30">
                         {it.consult ? "A consultar" : formatPrice((it.price ?? 0) * it.qty)}
                       </span>
                     </div>
-                  </div>
+                  </motion.div>
                 )
               })
             )}
           </div>
 
-          <div className="mt-4 border-t border-border pt-4 pb-4">
-            <div className="flex items-center justify-between font-heading text-lg font-bold text-foreground mb-4">
-              <span>Total Estimado</span>
-              <span className="text-[#8c3a40]">{formatPrice(displayTotal)}</span>
+          <div className="mt-6 border-t border-border/40 pt-6 pb-6 bg-white/50 -mx-6 px-6 backdrop-blur-md">
+            <div className="flex items-center justify-between font-heading text-xl font-bold text-foreground mb-5">
+              <span className="uppercase tracking-widest text-[11px] text-muted-foreground">Total Estimado</span>
+              <span className="text-chocolate text-3xl">{formatPrice(displayTotal)}</span>
             </div>
             
             {!form.name.trim() || !form.phone.trim() || !form.date ? (
-              <div className="bg-orange-50 text-orange-800 p-3 rounded-xl text-xs font-bold flex gap-2 items-start">
-                <Info size={16} className="shrink-0 mt-0.5" />
-                Por favor, preencha seus dados (Nome, Telefone e Data) no Passo 3 da tela anterior para liberar o envio.
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-amber-50 border border-amber-100 text-amber-800 p-4 rounded-2xl text-xs font-bold flex gap-3 items-start mb-4 shadow-sm"
+              >
+                <Info size={20} className="shrink-0 mt-0.5 text-amber-500" />
+                <span className="leading-relaxed">Por favor, feche e preencha seus dados (Nome, Telefone e Data) no Passo 3 para liberar o envio.</span>
+              </motion.div>
             ) : null}
 
-            <button
+            <motion.button
+              whileHover={{ scale: (itemCount === 0 || !form.name.trim() || !form.phone.trim() || !form.date) ? 1 : 1.02 }}
+              whileTap={{ scale: (itemCount === 0 || !form.name.trim() || !form.phone.trim() || !form.date) ? 1 : 0.98 }}
               type="button"
               onClick={sendWhatsApp}
               disabled={itemCount === 0 || !form.name.trim() || !form.phone.trim() || !form.date}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-4 font-body text-sm font-bold uppercase tracking-wider text-white shadow-lg shadow-[#25D366]/20 transition-all hover:shadow-xl hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none mt-4"
+              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] px-5 py-5 font-body text-sm font-bold uppercase tracking-widest text-white shadow-lg shadow-[#25D366]/30 transition-all hover:shadow-xl hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
             >
-              Enviar pelo WhatsApp <ArrowRight size={16} />
-            </button>
+              Enviar Pedido <ArrowRight size={20} strokeWidth={2.5} />
+            </motion.button>
+            <p className="text-center text-[10px] uppercase tracking-widest text-muted-foreground/60 font-bold mt-4">
+               Você será redirecionado para o WhatsApp
+            </p>
           </div>
         </SheetContent>
       </Sheet>

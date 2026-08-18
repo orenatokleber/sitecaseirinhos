@@ -56,7 +56,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/painel-admin');
   const isBareRoute = location.pathname === '/links' || location.pathname.startsWith('/surpresa');
-  const hideWhatsApp = location.pathname === '/' || location.pathname.startsWith('/cardapio');
+  const hideWhatsApp = location.pathname === '/' || location.pathname.startsWith('/cardapio') || location.pathname.startsWith('/montar-pedido');
   useTrackPageView();
   const { data: settings } = useSiteSettings();
 
