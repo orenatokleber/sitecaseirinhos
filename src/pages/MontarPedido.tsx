@@ -90,31 +90,34 @@ const RadioCard = ({
   <motion.button
     type="button"
     onClick={onClick}
-    whileHover={{ y: -2 }}
-    whileTap={{ scale: 0.98 }}
-    className={`relative flex flex-col items-start justify-between rounded-2xl border p-5 text-left transition-all duration-300 min-h-[110px] backdrop-blur-sm ${
+    whileHover={{ y: -4, scale: 1.01 }}
+    whileTap={{ scale: 0.97 }}
+    className={`relative flex flex-col items-start justify-between rounded-3xl border p-6 text-left transition-all duration-300 min-h-[140px] shadow-sm overflow-hidden group ${
       active
-        ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20"
-        : "border-border/60 bg-white/70 hover:border-primary/40 hover:bg-primary/5 hover:shadow-sm"
+        ? "border-primary/50 bg-primary/10 ring-2 ring-primary/20 shadow-primary/10"
+        : "border-border/40 bg-white hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
     }`}
   >
-    <div className="flex w-full items-start justify-between">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-xl transition-colors ${active ? "bg-primary/10 text-primary shadow-sm" : "bg-muted text-muted-foreground"}`}>
-        {Icon ? <Icon size={22} strokeWidth={2.5} /> : <Cake size={22} strokeWidth={2.5} />}
+    {active && (
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
+    )}
+    <div className="flex w-full items-start justify-between relative z-10">
+      <div className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 ${active ? "bg-primary text-white shadow-md shadow-primary/30 scale-110" : "bg-primary/5 text-primary group-hover:bg-primary/10 group-hover:scale-110"}`}>
+        {Icon ? <Icon size={24} strokeWidth={2} /> : <Cake size={24} strokeWidth={2} />}
       </div>
       <div
-        className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition-all ${
-          active ? "border-primary bg-primary text-white scale-110" : "border-muted-foreground/30 bg-transparent"
+        className={`flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-300 ${
+          active ? "border-primary bg-primary text-white scale-110 shadow-sm" : "border-border/60 bg-white text-transparent group-hover:border-primary/40"
         }`}
       >
-        {active && <Check size={12} strokeWidth={4} />}
+        {active && <Check size={14} strokeWidth={3} />}
       </div>
     </div>
-    <div className="mt-4">
-      <span className="block font-heading text-base font-bold text-foreground leading-tight">
+    <div className="mt-5 relative z-10">
+      <span className="block font-heading text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">
         {title}
       </span>
-      {subtitle && <span className="block mt-1 font-body text-[11px] font-semibold tracking-wide uppercase text-muted-foreground line-clamp-1">{subtitle}</span>}
+      {subtitle && <span className="block mt-1 font-body text-xs font-medium tracking-wide text-muted-foreground/80 line-clamp-2">{subtitle}</span>}
     </div>
   </motion.button>
 );
@@ -135,26 +138,33 @@ const OptionChip = ({
   <motion.button
     type="button"
     onClick={onClick}
-    whileHover={{ scale: 1.01 }}
+    whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
-    className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-left transition-all backdrop-blur-sm ${
+    className={`flex items-center gap-4 rounded-2xl border p-4 text-left transition-all duration-300 group overflow-hidden relative ${
       active
-        ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/30"
-        : "border-border/60 bg-white/60 hover:border-primary/40 hover:bg-white"
+        ? "border-primary/50 bg-primary/5 ring-1 ring-primary/20 shadow-sm"
+        : "border-border/40 bg-white hover:border-primary/30 hover:shadow-md hover:shadow-primary/5"
     }`}
   >
+    {active && (
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none" />
+    )}
     <span
-      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-        active ? "border-primary bg-primary text-white" : "border-muted-foreground/30 bg-white/50"
+      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300 relative z-10 ${
+        active ? "border-primary bg-primary text-white shadow-sm scale-110" : "border-border/60 bg-white group-hover:border-primary/40"
       }`}
     >
-      {active && <Check size={12} strokeWidth={3} />}
+      {active && <Check size={14} strokeWidth={3} />}
     </span>
-    <span className="min-w-0 flex-1">
-      <span className="block font-body text-sm font-bold text-foreground">{children}</span>
-      {meta && <span className="mt-0.5 block font-body text-[11px] font-semibold text-muted-foreground/80">{meta}</span>}
-      {price && <span className="mt-0.5 block font-body text-xs font-bold text-chocolate">{price}</span>}
+    <span className="min-w-0 flex-1 relative z-10">
+      <span className={`block font-heading text-base font-bold transition-colors ${active ? "text-primary" : "text-foreground group-hover:text-primary/80"}`}>{children}</span>
+      {meta && <span className="mt-0.5 block font-body text-xs font-medium text-muted-foreground/70">{meta}</span>}
     </span>
+    {price && (
+      <span className="shrink-0 font-body text-sm font-bold text-chocolate bg-white border border-border/40 px-3 py-1 rounded-full shadow-sm relative z-10 group-hover:border-primary/20 transition-colors">
+        {price}
+      </span>
+    )}
   </motion.button>
 );
 
@@ -292,6 +302,7 @@ const MontarPedido = () => {
 
   // UI state
   const [selectedMainCats, setSelectedMainCats] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
   const [catStates, setCatStates] = useState<Record<string, CatState>>({});
   
   const [items, setItems] = useState<OrderItem[]>([]);
@@ -321,8 +332,11 @@ const MontarPedido = () => {
     setSelectedMainCats(prev => {
       const isSelected = prev.includes(id);
       if (isSelected) {
-        return prev.filter(c => c !== id);
+        const newCats = prev.filter(c => c !== id);
+        if (activeTab === id) setActiveTab(newCats[0] || null);
+        return newCats;
       } else {
+        if (!activeTab) setActiveTab(id);
         return [...prev, id];
       }
     });
@@ -629,7 +643,9 @@ const MontarPedido = () => {
         </motion.p>
       </div>
 
-      <div className="container mx-auto px-4 max-w-2xl space-y-12">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="flex flex-col lg:flex-row gap-10 items-start">
+          <div className="flex-1 space-y-12 max-w-2xl w-full">
         
         {/* STEP 1: Main Category */}
         <section id="step-1">
@@ -665,7 +681,29 @@ const MontarPedido = () => {
               <StepHeader number={2} title="Detalhes do pedido" />
               
               <div className="space-y-8 ml-0 sm:ml-12">
-                {selectedMainCats.map(catId => {
+                {selectedMainCats.length > 1 && (
+                  <div className="flex flex-wrap gap-2 mb-4 bg-white/40 p-2 rounded-2xl border border-border/50">
+                    {selectedMainCats.map(catId => {
+                      const catObj = mainCats.find(c => c.id === catId);
+                      return (
+                        <button
+                          key={catId}
+                          type="button"
+                          onClick={() => setActiveTab(catId)}
+                          className={`px-5 py-2.5 rounded-xl font-heading text-sm font-bold transition-all ${
+                            activeTab === catId 
+                              ? "bg-primary text-white shadow-sm" 
+                              : "text-muted-foreground hover:bg-white hover:text-foreground"
+                          }`}
+                        >
+                          {catObj?.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+                
+                {selectedMainCats.filter(catId => selectedMainCats.length === 1 ? true : catId === activeTab).map(catId => {
                   const catObj = mainCats.find(c => c.id === catId);
                   const state = catStates[catId] || defaultCatState;
                   const catType = catObj?.type;
@@ -1193,10 +1231,79 @@ const MontarPedido = () => {
           </div>
         </section>
 
+          </div>
+          
+          {/* ─── STICKY CART (DESKTOP) ───────────── */}
+          <div className="hidden lg:block w-[400px] shrink-0 sticky top-28">
+            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col max-h-[calc(100vh-140px)]">
+              <h3 className="font-heading text-2xl font-bold text-chocolate mb-6 border-b border-border/40 pb-4">
+                Seu Pedido
+              </h3>
+              
+              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4 min-h-[200px]">
+                {[...(items), ...draftItems].length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center h-full opacity-60">
+                    <ShoppingBag size={40} className="text-primary/40 mb-3" />
+                    <p className="font-heading text-base font-bold text-foreground">Sua sacola está vazia</p>
+                  </div>
+                ) : (
+                  [...(items), ...draftItems].map((it, idx) => {
+                    const isDraft = it.id.startsWith('draft');
+                    return (
+                      <motion.div
+                        key={`${it.id}-${idx}`}
+                        className="rounded-2xl border border-border/50 bg-white p-4 shadow-sm relative overflow-hidden"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <p className="font-heading text-base font-bold text-chocolate leading-tight pr-6">{it.title}</p>
+                          {!isDraft && (
+                            <button type="button" onClick={() => removeItem(it.id)} className="shrink-0 text-muted-foreground/50 hover:text-red-500 p-1">
+                              <Trash2 size={16} />
+                            </button>
+                          )}
+                        </div>
+                        <div className="mt-3 flex items-center justify-between border-t border-border/40 pt-3">
+                          {!isDraft ? (
+                            <div className="flex items-center gap-2 bg-muted/30 p-1 rounded-full">
+                              <button type="button" onClick={() => changeQty(it.id, -1)} className="w-6 h-6 flex items-center justify-center rounded-full bg-white shadow-sm"><Minus size={12} /></button>
+                              <span className="font-body text-xs font-bold w-4 text-center">{it.qty}</span>
+                              <button type="button" onClick={() => changeQty(it.id, 1)} className="w-6 h-6 flex items-center justify-center rounded-full bg-white shadow-sm"><Plus size={12} /></button>
+                            </div>
+                          ) : (
+                            <span className="text-[10px] uppercase font-bold text-gold">Editando...</span>
+                          )}
+                          <span className="font-heading text-sm font-bold text-foreground">
+                            {it.consult ? "A consultar" : formatPrice((it.price ?? 0) * it.qty)}
+                          </span>
+                        </div>
+                      </motion.div>
+                    )
+                  })
+                )}
+              </div>
+
+              <div className="mt-6 border-t border-border/40 pt-5">
+                <div className="flex items-center justify-between font-heading text-lg font-bold text-foreground mb-4">
+                  <span className="uppercase tracking-widest text-[10px] text-muted-foreground">Total Estimado</span>
+                  <span className="text-chocolate text-2xl">{formatPrice(displayTotal)}</span>
+                </div>
+                
+                <button
+                  type="button"
+                  onClick={sendWhatsApp}
+                  disabled={itemCount === 0 || !form.name.trim() || !form.phone.trim() || !form.date}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-5 py-4 font-body text-sm font-bold uppercase tracking-widest text-white shadow-lg shadow-[#25D366]/30 transition-all hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Enviar <ArrowRight size={18} strokeWidth={2.5} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* ─── STICKY BOTTOM BAR ───────────── */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-t border-border/40 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+      {/* ─── STICKY BOTTOM BAR (MOBILE ONLY) ───────────── */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-t border-border/40 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] lg:hidden">
         <div className="container mx-auto px-5 py-4 max-w-2xl flex items-center justify-between">
           <div>
             <p className="font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] leading-none mb-1.5">
