@@ -1064,8 +1064,6 @@ const MontarPedido = () => {
                               { id: "class2", name: "Premium", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class2_price }
                             ].map((cls) => {
                                const isActive = state.rectClass === cls.id;
-                               const cat = categories.find(c => c.name.toLowerCase().includes(cls.name.toLowerCase()));
-                               const catFlavors = cat ? flavors.filter(f => f.category_id === cat.id).map(f => f.name).join(", ") : "";
                                
                                return (
                                 <motion.button
@@ -1081,19 +1079,41 @@ const MontarPedido = () => {
                                       <Check size={16} strokeWidth={3} />
                                     </div>
                                   )}
-                                  <div className="flex-1 flex flex-col pr-4">
-                                    <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>{cls.name}</span>
-                                    {catFlavors && (
-                                      <span className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
-                                        <strong className="font-semibold">Sabores:</strong> {catFlavors}
-                                      </span>
-                                    )}
-                                  </div>
+                                  <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>{cls.name}</span>
                                   <span className="font-heading font-bold text-chocolate text-lg whitespace-nowrap">{formatPrice(cls.price)}</span>
                                 </motion.button>
                                );
                             })}
                           </div>
+
+                          {state.rectClass && (() => {
+                             const clsName = state.rectClass === "class1" ? "Tradicional" : "Premium";
+                             const cat = categories.find(c => c.name.toLowerCase().includes(clsName.toLowerCase()));
+                             const catFlavors = cat ? flavors.filter(f => f.category_id === cat.id).map(f => f.name) : [];
+                             
+                             if (catFlavors.length === 0) return null;
+                             
+                             return (
+                               <motion.div 
+                                 initial={{ opacity: 0, y: -10, height: 0 }} 
+                                 animate={{ opacity: 1, y: 0, height: "auto" }}
+                                 className="mt-2 overflow-hidden"
+                               >
+                                 <div className="p-4 rounded-xl bg-accent/5 border border-accent/20">
+                                   <div className="flex items-center gap-2 text-accent font-heading font-bold text-[11px] uppercase tracking-wider mb-3">
+                                     <Sparkles size={14} /> Sabores da Linha {clsName}
+                                   </div>
+                                   <div className="flex flex-wrap gap-2">
+                                     {catFlavors.map((f, i) => (
+                                       <span key={i} className="px-3 py-1.5 rounded-full bg-background border border-border/60 shadow-sm text-xs font-semibold text-foreground/80">
+                                         {f}
+                                       </span>
+                                     ))}
+                                   </div>
+                                 </div>
+                               </motion.div>
+                             );
+                          })()}
 
                           {rectAddonList.length > 0 && (
                             <>
