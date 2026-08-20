@@ -8,6 +8,7 @@ import { normalizeWhatsApp } from "@/lib/utils";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { getOrderedSectionKeys } from "@/lib/cardapioSections";
 import {
+import PageSEO from "@/components/PageSEO";
   useCakeSizes,
   useCakeCategories,
   useCakePrices,
@@ -782,6 +783,7 @@ const Cardapio = () => {
 
   return (
     <main className="pt-24 pb-8">
+      <PageSEO title="Cardápio e Preços de Bolos e Doces | Caseirinhos" description="Veja tamanhos, sabores, adicionais e preços de bolos redondos, retangulares e doces para festas da Caseirinhos." path="/cardapio" />
       {orderedKeys.map((k) => (
         <React.Fragment key={k}>{sectionElements[k]}</React.Fragment>
       ))}

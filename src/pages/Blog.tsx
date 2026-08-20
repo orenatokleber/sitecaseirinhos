@@ -8,6 +8,7 @@ import { Loader2, Clock, ArrowRight, User, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
+import PageSEO from "@/components/PageSEO";
 
 const Blog = () => {
   const { data: posts, isLoading } = useBlogPosts(true);
@@ -41,6 +42,7 @@ const Blog = () => {
 
   return (
     <main className="pt-24">
+      <PageSEO title="Blog de Confeitaria | Caseirinhos a Confeitaria" description="Dicas de confeitaria, ideias para festas e novidades sobre bolos e doces artesanais no blog da Caseirinhos." path="/blog" />
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4 max-w-6xl">
           <SectionTitle title="Blog" subtitle="Novidades, receitas e dicas do mundo da confeitaria" />

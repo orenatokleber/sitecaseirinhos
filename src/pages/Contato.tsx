@@ -3,6 +3,7 @@ import { MapPin, Clock, Phone, Instagram } from "lucide-react";
 import SectionTitle from "@/components/SectionTitle";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import { normalizeWhatsApp, formatPhoneDisplay, normalizeInstagramUrl, formatInstagramHandle } from "@/lib/utils";
+import PageSEO from "@/components/PageSEO";
 
 const Contato = () => {
   const { data: settings } = useSiteSettings();
@@ -19,6 +20,7 @@ const Contato = () => {
 
   return (
     <main className="pt-24">
+      <PageSEO title="Contato e Encomendas | Caseirinhos a Confeitaria" description="Fale com a Caseirinhos pelo WhatsApp ou Instagram para encomendas de bolos e doces. Veja endereço e horários de atendimento." path="/contato" />
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4">
           <SectionTitle script="Fale conosco" title="Contato" subtitle="Estamos prontos para atender você!" />
