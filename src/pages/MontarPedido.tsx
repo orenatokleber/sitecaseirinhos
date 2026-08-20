@@ -1321,11 +1321,6 @@ const MontarPedido = () => {
                         </div>
                       )}
 
-                              </div>
-                            </>
-                          )}
-                        </>
-                      )}
 
                       {/* --- SWEET OPTIONS --- */}
                       {state.selectedProduct?.kind === "sweet" && (
