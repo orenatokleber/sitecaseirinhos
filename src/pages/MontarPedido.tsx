@@ -1060,8 +1060,8 @@ const MontarPedido = () => {
                           <InlineSectionLabel>Linha *</InlineSectionLabel>
                           <div className="flex flex-col gap-3">
                             {[
-                              { id: "class1", name: "Tradicional", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class1_price },
-                              { id: "class2", name: "Premium", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class2_price }
+                              { id: "class1", name: standardCats[0]?.name || "Tradicional", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class1_price },
+                              { id: "class2", name: standardCats[1]?.name || "Premium", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class2_price }
                             ].map((cls) => {
                                const isActive = state.rectClass === cls.id;
                                
@@ -1087,8 +1087,8 @@ const MontarPedido = () => {
                           </div>
 
                           {state.rectClass && (() => {
-                             const clsName = state.rectClass === "class1" ? "Tradicional" : "Premium";
-                             const cat = categories.find(c => c.name.toLowerCase().includes(clsName.toLowerCase()));
+                             const clsName = state.rectClass === "class1" ? (standardCats[0]?.name || "Tradicional") : (standardCats[1]?.name || "Premium");
+                             const cat = categories.find(c => c.name.toLowerCase() === clsName.toLowerCase() || c.name.toLowerCase().includes(clsName.toLowerCase()));
                              const catFlavors = cat ? flavors.filter(f => f.category_id === cat.id).map(f => f.name) : [];
                              
                              if (catFlavors.length === 0) return null;

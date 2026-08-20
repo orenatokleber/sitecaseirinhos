@@ -366,15 +366,20 @@ const FlavorRow = ({ flavor, onSave, onDelete }: { flavor: CakeFlavor; onSave: (
 /* ─── RECTANGULAR ─── */
 const RectangularPanel = () => {
   const { data: items = [], isLoading } = useCakeRectangular();
+  const { data: categories = [] } = useCakeCategories();
   const upsert = useUpsertCakeRectangular();
   const del = useDeleteCakeRectangular();
   const [newRow, setNewRow] = useState<Partial<CakeRectangular>>({ name: "", dimensions: "", slices: 0, weight_kg: 0, class1_price: 0, class2_price: 0, note: "", sort_order: 0, is_active: true });
+
+  const standardCats = categories.filter((c) => c.type === "standard");
+  const class1Name = standardCats[0]?.name || "Tradicional";
+  const class2Name = standardCats[1]?.name || "Premium";
 
   if (isLoading) return <Loader2 className="animate-spin" />;
 
   return (
     <div className="space-y-4">
-      {items.map((r) => <RectangularRow key={r.id} row={r} onSave={(x) => upsert.mutate(x)} onDelete={() => del.mutate(r.id)} />)}
+      {items.map((r) => <RectangularRow key={r.id} row={r} class1Name={class1Name} class2Name={class2Name} onSave={(x) => upsert.mutate(x)} onDelete={() => del.mutate(r.id)} />)}
       <Card>
         <CardHeader><CardTitle className="text-base">Adicionar retangular</CardTitle></CardHeader>
         <CardContent className="space-y-2">
@@ -383,8 +388,8 @@ const RectangularPanel = () => {
             <div><Label className="text-xs">Dimensões</Label><Input value={newRow.dimensions || ""} onChange={(e) => setNewRow({ ...newRow, dimensions: e.target.value })} /></div>
             <div><Label className="text-xs">Fatias</Label><Input type="number" value={newRow.slices ?? 0} onChange={(e) => setNewRow({ ...newRow, slices: parseInt(e.target.value) || 0 })} /></div>
             <div><Label className="text-xs">Peso (kg)</Label><Input type="number" step="0.1" value={newRow.weight_kg ?? 0} onChange={(e) => setNewRow({ ...newRow, weight_kg: parseFloat(e.target.value) || 0 })} /></div>
-            <div><Label className="text-xs">Tradicional (R$)</Label><Input type="number" step="0.01" value={newRow.class1_price ?? 0} onChange={(e) => setNewRow({ ...newRow, class1_price: parseFloat(e.target.value) || 0 })} /></div>
-            <div><Label className="text-xs">Premium (R$)</Label><Input type="number" step="0.01" value={newRow.class2_price ?? 0} onChange={(e) => setNewRow({ ...newRow, class2_price: parseFloat(e.target.value) || 0 })} /></div>
+            <div><Label className="text-xs">{class1Name} (R$)</Label><Input type="number" step="0.01" value={newRow.class1_price ?? 0} onChange={(e) => setNewRow({ ...newRow, class1_price: parseFloat(e.target.value) || 0 })} /></div>
+            <div><Label className="text-xs">{class2Name} (R$)</Label><Input type="number" step="0.01" value={newRow.class2_price ?? 0} onChange={(e) => setNewRow({ ...newRow, class2_price: parseFloat(e.target.value) || 0 })} /></div>
             <div><Label className="text-xs">Ordem</Label><Input type="number" value={newRow.sort_order ?? 0} onChange={(e) => setNewRow({ ...newRow, sort_order: parseInt(e.target.value) || 0 })} /></div>
           </div>
           <Input placeholder="Observação (ex: O bolo retrô pode ser decorado bem retrô :))" value={newRow.note || ""} onChange={(e) => setNewRow({ ...newRow, note: e.target.value })} />
@@ -395,7 +400,7 @@ const RectangularPanel = () => {
   );
 };
 
-const RectangularRow = ({ row, onSave, onDelete }: { row: CakeRectangular; onSave: (r: any) => void; onDelete: () => void }) => {
+const RectangularRow = ({ row, class1Name, class2Name, onSave, onDelete }: { row: CakeRectangular; class1Name: string; class2Name: string; onSave: (r: any) => void; onDelete: () => void }) => {
   const [r, setR] = useState(row);
   return (
     <Card>
@@ -405,8 +410,8 @@ const RectangularRow = ({ row, onSave, onDelete }: { row: CakeRectangular; onSav
           <div><Label className="text-xs">Dimensões</Label><Input value={r.dimensions || ""} onChange={(e) => setR({ ...r, dimensions: e.target.value })} /></div>
           <div><Label className="text-xs">Fatias</Label><Input type="number" value={r.slices ?? 0} onChange={(e) => setR({ ...r, slices: parseInt(e.target.value) || 0 })} /></div>
           <div><Label className="text-xs">Peso (kg)</Label><Input type="number" step="0.1" value={r.weight_kg ?? 0} onChange={(e) => setR({ ...r, weight_kg: parseFloat(e.target.value) || 0 })} /></div>
-          <div><Label className="text-xs">Tradicional (R$)</Label><Input type="number" step="0.01" value={r.class1_price ?? 0} onChange={(e) => setR({ ...r, class1_price: parseFloat(e.target.value) || 0 })} /></div>
-          <div><Label className="text-xs">Premium (R$)</Label><Input type="number" step="0.01" value={r.class2_price ?? 0} onChange={(e) => setR({ ...r, class2_price: parseFloat(e.target.value) || 0 })} /></div>
+          <div><Label className="text-xs">{class1Name} (R$)</Label><Input type="number" step="0.01" value={r.class1_price ?? 0} onChange={(e) => setR({ ...r, class1_price: parseFloat(e.target.value) || 0 })} /></div>
+          <div><Label className="text-xs">{class2Name} (R$)</Label><Input type="number" step="0.01" value={r.class2_price ?? 0} onChange={(e) => setR({ ...r, class2_price: parseFloat(e.target.value) || 0 })} /></div>
           <div><Label className="text-xs">Ordem</Label><Input type="number" value={r.sort_order} onChange={(e) => setR({ ...r, sort_order: parseInt(e.target.value) || 0 })} /></div>
           <div className="flex items-center gap-1 pb-2"><input type="checkbox" checked={r.is_active} onChange={(e) => setR({ ...r, is_active: e.target.checked })} /> <Label className="text-xs">Ativo</Label></div>
         </div>
