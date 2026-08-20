@@ -211,6 +211,8 @@ const defaultCatState: CatState = {
   sweetFlavors: [""],
   sweetPackageId: "",
   salgadosTypes: [""],
+  salgadosPkgs: [""],
+
   kitFestaSelections: [],
   pastaAmericanaSelections: [],
   presentearSelections: []
