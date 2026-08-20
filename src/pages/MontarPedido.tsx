@@ -267,13 +267,13 @@ const MontarPedido = () => {
   
   const boloProducts = useMemo(() => {
     const arr = [];
-    standardCats.forEach(c => arr.push({ id: c.id, kind: "round" as const, title: c.name, subtitle: c.description || "Bolos redondos", icon: Cake }));
-    rectangular.forEach(r => arr.push({ id: r.id, kind: "rectangular" as const, title: r.name, subtitle: "Bolos retangulares", icon: RectangleHorizontal }));
+    standardCats.forEach(c => arr.push({ id: c.id, kind: "round" as const, title: c.name, subtitle: c.description || "Bolos redondos", icon: Cake, image: c.image_url }));
+    rectangular.forEach(r => arr.push({ id: r.id, kind: "rectangular" as const, title: r.name, subtitle: "Bolos retangulares", icon: RectangleHorizontal, image: null }));
     return arr;
   }, [standardCats, rectangular]);
 
   const doceProducts = useMemo(() => {
-    return sweetTypes.map(t => ({ id: t.id, kind: "sweet" as const, title: t.name, subtitle: t.description || "Docinhos", icon: Candy }));
+    return sweetTypes.map(t => ({ id: t.id, kind: "sweet" as const, title: t.name, subtitle: t.description || "Docinhos", icon: Candy, image: t.image_url }));
   }, [sweetTypes]);
 
   // Main Category Hierarchy
@@ -760,17 +760,35 @@ const MontarPedido = () => {
                       {subProducts.length > 0 && (
                         <>
                           <InlineSectionLabel>Selecione a linha *</InlineSectionLabel>
-                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 mb-6">
-                            {subProducts.map((p) => (
-                              <OptionChip
-                                key={`${p.kind}-${p.id}`}
-                                active={state.selectedProduct?.id === p.id}
-                                onClick={() => handleSelectProduct(catId, p.id, p.kind)}
-                                meta={p.subtitle || undefined}
-                              >
-                                {p.title}
-                              </OptionChip>
-                            ))}
+                          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 mb-8 mt-4">
+                            {subProducts.map((p) => {
+                              const pImg = p.image ? getPublicImageUrl(p.image) : null;
+                              const isActive = state.selectedProduct?.id === p.id;
+                              return (
+                                <motion.div
+                                  key={`${p.kind}-${p.id}`}
+                                  onClick={() => handleSelectProduct(catId, p.id, p.kind)}
+                                  whileHover={{ y: -4, scale: 1.01 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  className={`cursor-pointer rounded-3xl border overflow-hidden transition-all duration-300 shadow-sm flex flex-col h-full bg-white relative ${isActive ? "border-primary ring-2 ring-primary/20 shadow-md" : "border-border/60 hover:border-primary/40 hover:shadow-lg"}`}
+                                >
+                                  {isActive && (
+                                    <div className="absolute top-3 right-3 bg-primary text-white p-1 rounded-full z-10 shadow-sm">
+                                      <Check size={16} strokeWidth={3} />
+                                    </div>
+                                  )}
+                                  {pImg && (
+                                    <div className="h-40 w-full bg-muted/30 overflow-hidden relative border-b border-border/40">
+                                      <img src={pImg} alt={p.title} className="w-full h-full object-cover" />
+                                    </div>
+                                  )}
+                                  <div className="p-5 flex-1 flex flex-col justify-center text-center">
+                                    <h4 className={`font-heading text-lg font-bold transition-colors ${isActive ? "text-primary" : "text-foreground"}`}>{p.title}</h4>
+                                    {p.subtitle && <p className="text-sm font-body text-muted-foreground mt-1 line-clamp-2">{p.subtitle}</p>}
+                                  </div>
+                                </motion.div>
+                              );
+                            })}
                           </div>
                         </>
                       )}
@@ -891,23 +909,52 @@ const MontarPedido = () => {
                       {state.selectedProduct?.kind === "round" && (
                         <>
                           <InlineSectionLabel>Tamanho *</InlineSectionLabel>
-                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                          <div className="flex flex-col gap-3">
                             {sizes.map((s) => {
                               const cat = categories.find((c) => c.id === state.selectedProduct?.id);
                               const p = cat?.type === "consult" ? null : priceOf(state.selectedProduct!.id, s.id);
+                              const isActive = state.sizeId === s.id;
+                              
                               return (
-                                <OptionChip
+                                <motion.button
                                   key={s.id}
-                                  active={state.sizeId === s.id}
+                                  type="button"
                                   onClick={() => updateCatState(catId, { sizeId: s.id })}
-                                  meta={[
-                                    s.ring_size ? `Aro ${s.ring_size}` : null,
-                                    s.slices ? `${s.slices} fatias` : null,
-                                  ].filter(Boolean).join(" · ")}
-                                  price={p !== null ? formatPrice(p) : cat?.type === "consult" ? "A consultar" : undefined}
+                                  whileHover={{ scale: 1.01 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  className={`flex text-left w-full items-center gap-4 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
                                 >
-                                  {s.name}
-                                </OptionChip>
+                                  {isActive && (
+                                    <div className="absolute top-2 right-2 text-primary">
+                                      <Check size={16} strokeWidth={3} />
+                                    </div>
+                                  )}
+                                  <div className={`w-16 h-16 md:w-20 md:h-20 flex-shrink-0 flex items-center justify-center transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
+                                    <span className="font-heading text-2xl md:text-3xl font-bold">
+                                      {s.code}
+                                    </span>
+                                  </div>
+                                  <div className="flex-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 pr-8 text-sm md:text-base text-foreground font-body">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      {s.ring_size && <span className="font-bold">{s.ring_size}</span>}
+                                      {s.slices != null && (
+                                        <>
+                                          <span className="text-muted-foreground hidden sm:inline">|</span>
+                                          <span className="text-muted-foreground">{s.slices} fatias</span>
+                                        </>
+                                      )}
+                                      {s.weight_kg != null && (
+                                        <>
+                                          <span className="text-muted-foreground hidden sm:inline">|</span>
+                                          <span className="text-muted-foreground">{Number(s.weight_kg).toFixed(1)}kg</span>
+                                        </>
+                                      )}
+                                    </div>
+                                    <div className="font-heading font-bold text-chocolate text-lg">
+                                      {p !== null ? formatPrice(p) : cat?.type === "consult" ? "A consultar" : ""}
+                                    </div>
+                                  </div>
+                                </motion.button>
                               );
                             })}
                           </div>
@@ -915,16 +962,27 @@ const MontarPedido = () => {
                           {modalCatFlavors.length > 0 && (
                             <>
                               <InlineSectionLabel>Sabor</InlineSectionLabel>
-                              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                              <div className="flex flex-col gap-2">
                                 {modalCatFlavors.map((f) => (
-                                  <OptionChip
+                                  <motion.button
                                     key={f.id}
-                                    active={state.flavorId === f.id}
+                                    type="button"
                                     onClick={() => updateCatState(catId, { flavorId: f.id })}
-                                    meta={f.description || undefined}
+                                    whileHover={{ x: 4 }}
+                                    className={`flex text-left flex-col w-full border-l-4 pl-4 py-2 transition-all ${state.flavorId === f.id ? "border-primary bg-primary/5 rounded-r-xl pr-4" : "border-accent/30 hover:border-primary/50"}`}
                                   >
-                                    {f.name}
-                                  </OptionChip>
+                                    <div className="flex items-center justify-between">
+                                      <h4 className={`font-heading font-bold uppercase text-sm tracking-wide ${state.flavorId === f.id ? "text-primary" : "text-foreground"}`}>
+                                        {f.name}
+                                      </h4>
+                                      {state.flavorId === f.id && <Check size={14} className="text-primary" strokeWidth={3} />}
+                                    </div>
+                                    {f.description && (
+                                      <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                                        {f.description}
+                                      </p>
+                                    )}
+                                  </motion.button>
                                 ))}
                               </div>
                             </>
@@ -933,19 +991,39 @@ const MontarPedido = () => {
                           {roundAddonList.length > 0 && (
                             <>
                               <InlineSectionLabel>Adicionais</InlineSectionLabel>
-                              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                              <div className="flex flex-col gap-3">
                                 {roundAddonList.map((a) => {
                                   const info = addonPriceInfo(a.id, state.sizeId);
+                                  const isActive = state.roundAddons.includes(a.id);
                                   return (
-                                    <OptionChip
+                                    <motion.button
                                       key={a.id}
-                                      active={state.roundAddons.includes(a.id)}
+                                      type="button"
                                       onClick={() => updateCatState(catId, { roundAddons: toggleArr(state.roundAddons, a.id) })}
-                                      meta={a.description || undefined}
-                                      price={info.label}
+                                      whileHover={{ scale: 1.01 }}
+                                      whileTap={{ scale: 0.98 }}
+                                      className={`flex text-left w-full items-center gap-4 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
                                     >
-                                      {a.name}
-                                    </OptionChip>
+                                      {isActive && (
+                                        <div className="absolute top-2 right-2 text-primary">
+                                          <Check size={16} strokeWidth={3} />
+                                        </div>
+                                      )}
+                                      <div className={`w-12 h-full min-h-[4rem] flex-shrink-0 flex items-center justify-center transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
+                                        <Plus size={20} strokeWidth={isActive ? 3 : 2} />
+                                      </div>
+                                      <div className="flex-1 flex flex-col justify-center py-3 pr-8">
+                                        <div className="flex justify-between items-start gap-2">
+                                          <h4 className={`font-heading font-bold text-base leading-tight ${isActive ? "text-primary" : "text-foreground"}`}>{a.name}</h4>
+                                          <span className="font-heading font-bold text-chocolate whitespace-nowrap">
+                                            {info.price !== null ? formatAddon(info.price) : info.label}
+                                          </span>
+                                        </div>
+                                        {a.description && (
+                                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{a.description}</p>
+                                        )}
+                                      </div>
+                                    </motion.button>
                                   );
                                 })}
                               </div>
@@ -957,50 +1035,90 @@ const MontarPedido = () => {
                       {/* --- RECTANGULAR CAKE OPTIONS --- */}
                       {state.selectedProduct?.kind === "rectangular" && (
                         <>
-                          {(() => {
-                            const r = rectangular.find((x) => x.id === state.selectedProduct?.id);
-                            return r ? (
-                              <div className="mb-4 flex flex-wrap gap-2 font-body text-xs font-semibold text-muted-foreground/80">
-                                {r.dimensions && <span className="rounded-full bg-white border border-border/50 px-3 py-1.5 shadow-sm">{r.dimensions}</span>}
-                                {r.slices && <span className="rounded-full bg-white border border-border/50 px-3 py-1.5 shadow-sm">{r.slices} fatias</span>}
-                              </div>
-                            ) : null;
-                          })()}
+                          <div className="mb-4">
+                            {(() => {
+                              const r = rectangular.find((x) => x.id === state.selectedProduct?.id);
+                              return r ? (
+                                <div className="rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden mb-6 mt-4">
+                                  <div className="bg-accent/10 px-5 py-3 text-center">
+                                    <h3 className="font-heading font-bold text-foreground uppercase text-sm tracking-wider">
+                                      {r.name}
+                                    </h3>
+                                    <p className="text-xs text-muted-foreground mt-1 font-body">
+                                      {[r.dimensions, r.slices ? `${r.slices} fatias` : null, r.weight_kg ? `${Number(r.weight_kg).toFixed(1)} kg` : null]
+                                        .filter(Boolean)
+                                        .join(" | ")}
+                                    </p>
+                                  </div>
+                                </div>
+                              ) : null;
+                            })()}
+                          </div>
 
                           <InlineSectionLabel>Linha *</InlineSectionLabel>
-                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            <OptionChip
-                              active={state.rectClass === "class1"}
-                              onClick={() => updateCatState(catId, { rectClass: "class1" })}
-                              price={formatPrice(rectangular.find((r) => r.id === state.selectedProduct?.id)?.class1_price)}
-                            >
-                              Tradicional
-                            </OptionChip>
-                            <OptionChip
-                              active={state.rectClass === "class2"}
-                              onClick={() => updateCatState(catId, { rectClass: "class2" })}
-                              price={formatPrice(rectangular.find((r) => r.id === state.selectedProduct?.id)?.class2_price)}
-                            >
-                              Premium
-                            </OptionChip>
+                          <div className="flex flex-col gap-3">
+                            {[
+                              { id: "class1", name: "Tradicional", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class1_price },
+                              { id: "class2", name: "Premium", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class2_price }
+                            ].map((cls) => {
+                               const isActive = state.rectClass === cls.id;
+                               return (
+                                <motion.button
+                                  key={cls.id}
+                                  type="button"
+                                  onClick={() => updateCatState(catId, { rectClass: cls.id as "class1" | "class2" })}
+                                  whileHover={{ scale: 1.01 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  className={`flex text-left w-full items-center justify-between gap-4 p-5 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
+                                >
+                                  {isActive && (
+                                    <div className="absolute top-2 right-2 text-primary">
+                                      <Check size={16} strokeWidth={3} />
+                                    </div>
+                                  )}
+                                  <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>{cls.name}</span>
+                                  <span className="font-heading font-bold text-chocolate text-lg">{formatPrice(cls.price)}</span>
+                                </motion.button>
+                               );
+                            })}
                           </div>
 
                           {rectAddonList.length > 0 && (
                             <>
                               <InlineSectionLabel>Adicionais</InlineSectionLabel>
-                              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                              <div className="flex flex-col gap-3">
                                 {rectAddonList.map((a) => {
                                   const info = addonPriceInfo(a.id);
+                                  const isActive = state.rectAddons.includes(a.id);
                                   return (
-                                    <OptionChip
+                                    <motion.button
                                       key={a.id}
-                                      active={state.rectAddons.includes(a.id)}
+                                      type="button"
                                       onClick={() => updateCatState(catId, { rectAddons: toggleArr(state.rectAddons, a.id) })}
-                                      meta={a.description || undefined}
-                                      price={info.label}
+                                      whileHover={{ scale: 1.01 }}
+                                      whileTap={{ scale: 0.98 }}
+                                      className={`flex text-left w-full items-center gap-4 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
                                     >
-                                      {a.name}
-                                    </OptionChip>
+                                      {isActive && (
+                                        <div className="absolute top-2 right-2 text-primary">
+                                          <Check size={16} strokeWidth={3} />
+                                        </div>
+                                      )}
+                                      <div className={`w-12 h-full min-h-[4rem] flex-shrink-0 flex items-center justify-center transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
+                                        <Plus size={20} strokeWidth={isActive ? 3 : 2} />
+                                      </div>
+                                      <div className="flex-1 flex flex-col justify-center py-3 pr-8">
+                                        <div className="flex justify-between items-start gap-2">
+                                          <h4 className={`font-heading font-bold text-base leading-tight ${isActive ? "text-primary" : "text-foreground"}`}>{a.name}</h4>
+                                          <span className="font-heading font-bold text-chocolate whitespace-nowrap">
+                                            {info.price !== null ? formatAddon(info.price) : info.label}
+                                          </span>
+                                        </div>
+                                        {a.description && (
+                                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{a.description}</p>
+                                        )}
+                                      </div>
+                                    </motion.button>
                                   );
                                 })}
                               </div>
@@ -1013,17 +1131,33 @@ const MontarPedido = () => {
                       {state.selectedProduct?.kind === "sweet" && (
                         <>
                           <InlineSectionLabel>Quantidade *</InlineSectionLabel>
-                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            {modalSweetPackages.map((p) => (
-                              <OptionChip
-                                key={p.id}
-                                active={state.sweetPackageId === p.id}
-                                onClick={() => updateCatState(catId, { sweetPackageId: p.id })}
-                                price={formatPrice(p.price)}
-                              >
-                                {p.quantity} unidades
-                              </OptionChip>
-                            ))}
+                          <div className="flex flex-col gap-3">
+                            {modalSweetPackages.map((p) => {
+                              const isActive = state.sweetPackageId === p.id;
+                              return (
+                                <motion.button
+                                  key={p.id}
+                                  type="button"
+                                  onClick={() => updateCatState(catId, { sweetPackageId: p.id })}
+                                  whileHover={{ scale: 1.01 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  className={`flex text-left w-full items-center justify-between gap-4 p-5 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
+                                >
+                                  {isActive && (
+                                    <div className="absolute top-2 right-2 text-primary">
+                                      <Check size={16} strokeWidth={3} />
+                                    </div>
+                                  )}
+                                  <div className="flex items-center gap-3">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
+                                      {p.quantity}
+                                    </div>
+                                    <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>unidades</span>
+                                  </div>
+                                  <span className="font-heading font-bold text-chocolate text-lg">{formatPrice(p.price)}</span>
+                                </motion.button>
+                              );
+                            })}
                           </div>
 
                           {modalSweetFlavors.length > 0 && (
