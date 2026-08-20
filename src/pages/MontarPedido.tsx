@@ -1244,33 +1244,64 @@ const MontarPedido = () => {
                       {catType === "salgados" && (
                         <div className="space-y-5 pt-2">
                            <div className="space-y-4">
-                             {state.salgadosTypes.map((t, idx) => (
+                             {state.salgadosTypes.map((t, idx) => {
+                               const opt = (lojaConfig.salgadosOptions || []).find((o: any) => o.id === t || o.name === t);
+                               const pkgs = opt?.packages || [];
+                               return (
                                <div key={idx} className="space-y-2">
                                  <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-[0.15em] ml-1">TIPO {idx + 1}</label>
                                  <select 
                                    className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white appearance-none"
-                                   value={t}
+                                   value={opt?.id || t}
                                    onChange={(e) => {
                                      const arr = [...state.salgadosTypes];
                                      arr[idx] = e.target.value;
-                                     updateCatState(catId, { salgadosTypes: arr });
+                                     const pArr = [...(state.salgadosPkgs || [])];
+                                     pArr[idx] = "";
+                                     updateCatState(catId, { salgadosTypes: arr, salgadosPkgs: pArr });
                                    }}
                                  >
                                    <option value="">Selecionar sabor (opcional)</option>
-                                   {lojaConfig.salgadosOptions?.map((opt: any) => (
-                                      <option key={opt.id} value={opt.name}>{opt.name}</option>
+                                   {lojaConfig.salgadosOptions?.map((o: any) => (
+                                      <option key={o.id} value={o.id}>{o.name}</option>
                                    ))}
                                  </select>
+
+                                 {pkgs.length > 0 && (
+                                   <div className="grid grid-cols-2 gap-2 pt-1">
+                                     {pkgs.map((pkg: any, pIdx: number) => {
+                                       const isActive = String(state.salgadosPkgs?.[idx] ?? "") === String(pIdx);
+                                       return (
+                                         <button
+                                           key={pIdx}
+                                           type="button"
+                                           onClick={() => {
+                                             const pArr = [...(state.salgadosPkgs || [])];
+                                             pArr[idx] = isActive ? "" : String(pIdx);
+                                             updateCatState(catId, { salgadosPkgs: pArr });
+                                           }}
+                                           className={`rounded-2xl border px-4 py-3 text-left transition-all ${isActive ? "border-primary bg-primary/10 shadow-sm" : "border-border/60 bg-white/60 hover:bg-white"}`}
+                                         >
+                                           <span className="block font-body text-sm font-bold text-foreground">{pkg.quantity} unidades</span>
+                                           <span className="block text-xs text-muted-foreground">
+                                             {pkg.price === null || pkg.price === undefined ? "A consultar" : formatPrice(Number(pkg.price))}
+                                           </span>
+                                         </button>
+                                       );
+                                     })}
+                                   </div>
+                                 )}
                                </div>
-                             ))}
+                             );})}
                            </div>
                            <button 
                              type="button" 
-                             onClick={() => updateCatState(catId, { salgadosTypes: [...state.salgadosTypes, ""] })}
+                             onClick={() => updateCatState(catId, { salgadosTypes: [...state.salgadosTypes, ""], salgadosPkgs: [...(state.salgadosPkgs || []), ""] })}
                              className="text-xs font-bold text-primary flex items-center gap-1.5 hover:opacity-80 transition-opacity bg-primary/5 px-3 py-2 rounded-lg"
                            >
                              <Plus size={14} /> Adicionar outro salgado
                            </button>
+
 
                            <div className="pt-4">
                               <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-[0.15em] ml-1 block mb-2">OBSERVAÇÕES (OPCIONAL)</label>
