@@ -49,6 +49,8 @@ const formatPrice = (v: number | null | undefined) =>
     ? "—"
     : `R$ ${Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
+const formatAddon = (v: number) => (v === 0 ? "Grátis" : `+ ${formatPrice(v)}`);
+
 type OrderItem = {
   id: string;
   kind: "round" | "rectangular" | "sweet" | "manual";
