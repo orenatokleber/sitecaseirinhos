@@ -9,6 +9,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Save, Plus, Trash2, Settings2, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import {
+  useSweetTypes,
+  useSweetPackages,
+  useUpsertSweetType,
+  useUpsertSweetPackage,
+  useDeleteSweetPackage,
+} from "@/hooks/useCardapio";
+
 
 export type LojaConfig = {
   activeCategories: {
@@ -51,7 +59,7 @@ export type LojaConfig = {
     isActive: boolean;
   }[];
   // NEW OPTIONS
-  salgadosOptions: { id: string, name: string }[];
+  salgadosOptions: { id: string, name: string, packages?: { quantity: number, price: number | null }[] }[];
   kitFestaOptions: { id: string, name: string, price: number | null, desc: string }[];
   pastaAmericanaOptions: { id: string, name: string, price: number | null, desc: string }[];
   presentearOptions: { id: string, name: string, price: number | null, desc: string }[];
@@ -93,11 +101,12 @@ const DEFAULT_LOJA_CONFIG: LojaConfig = {
   },
   customCategories: [],
   salgadosOptions: [
-    { id: "coxinha", name: "Coxinha" },
-    { id: "bolinha_queijo", name: "Bolinha de Queijo" },
-    { id: "risolis", name: "Risólis" },
-    { id: "empadinha", name: "Empadinha" },
+    { id: "coxinha", name: "Coxinha", packages: [] },
+    { id: "bolinha_queijo", name: "Bolinha de Queijo", packages: [] },
+    { id: "risolis", name: "Risólis", packages: [] },
+    { id: "empadinha", name: "Empadinha", packages: [] },
   ],
+
   kitFestaOptions: [
     { id: "kit1", name: "Kit Festa I", price: 199, desc: "Serve 10 Pessoas" },
     { id: "kit2", name: "Kit Festa II", price: 349, desc: "Serve 20 Pessoas" },
@@ -343,36 +352,90 @@ const AdminMontarPedido = () => {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Tipos de Salgados</CardTitle>
-              <CardDescription>Opções que aparecem no dropdown de sabores.</CardDescription>
+              <CardDescription>Nomes e pacotes (quantidade e valor), como nos docinhos.</CardDescription>
             </div>
             <Button variant="outline" size="sm" onClick={() => setLojaConfig({
               ...lojaConfig,
-              salgadosOptions: [...lojaConfig.salgadosOptions, { id: `s_${Date.now()}`, name: "Novo Salgado" }]
+              salgadosOptions: [...lojaConfig.salgadosOptions, { id: `s_${Date.now()}`, name: "Novo Salgado", packages: [] }]
             })}>
               <Plus size={14} className="mr-1" /> Adicionar
             </Button>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
             {lojaConfig.salgadosOptions.map((opt, idx) => (
-              <div key={opt.id} className="flex gap-2 items-center">
-                <Input 
-                  value={opt.name} 
-                  onChange={(e) => {
+              <div key={opt.id} className="border border-border p-4 rounded-xl space-y-3 bg-white">
+                <div className="flex gap-2 items-center">
+                  <Input
+                    value={opt.name}
+                    onChange={(e) => {
+                      const newArr = [...lojaConfig.salgadosOptions];
+                      newArr[idx] = { ...newArr[idx], name: e.target.value };
+                      setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
+                    }}
+                    placeholder="Nome do salgado"
+                  />
+                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500 shrink-0" onClick={() => {
+                    setLojaConfig({ ...lojaConfig, salgadosOptions: lojaConfig.salgadosOptions.filter((_, i) => i !== idx) });
+                  }}>
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs uppercase font-bold text-muted-foreground">Pacotes (quantidade × valor)</Label>
+                  {(opt.packages || []).map((pkg, pIdx) => (
+                    <div key={pIdx} className="flex gap-2 items-center">
+                      <Input
+                        type="number"
+                        placeholder="Qtd."
+                        value={pkg.quantity ?? ""}
+                        onChange={(e) => {
+                          const newArr = [...lojaConfig.salgadosOptions];
+                          const pkgs = [...(newArr[idx].packages || [])];
+                          pkgs[pIdx] = { ...pkgs[pIdx], quantity: Number(e.target.value) || 0 };
+                          newArr[idx] = { ...newArr[idx], packages: pkgs };
+                          setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
+                        }}
+                      />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Preço (R$)"
+                        value={pkg.price ?? ""}
+                        onChange={(e) => {
+                          const newArr = [...lojaConfig.salgadosOptions];
+                          const pkgs = [...(newArr[idx].packages || [])];
+                          pkgs[pIdx] = { ...pkgs[pIdx], price: e.target.value === "" ? null : Number(e.target.value) };
+                          newArr[idx] = { ...newArr[idx], packages: pkgs };
+                          setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
+                        }}
+                      />
+                      <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500 shrink-0" onClick={() => {
+                        const newArr = [...lojaConfig.salgadosOptions];
+                        newArr[idx] = { ...newArr[idx], packages: (newArr[idx].packages || []).filter((_, i) => i !== pIdx) };
+                        setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
+                      }}>
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button variant="outline" size="sm" onClick={() => {
                     const newArr = [...lojaConfig.salgadosOptions];
-                    newArr[idx].name = e.target.value;
+                    newArr[idx] = { ...newArr[idx], packages: [...(newArr[idx].packages || []), { quantity: 50, price: 0 }] };
                     setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
-                  }}
-                  placeholder="Nome do salgado"
-                />
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500 shrink-0" onClick={() => {
-                  setLojaConfig({ ...lojaConfig, salgadosOptions: lojaConfig.salgadosOptions.filter((_, i) => i !== idx) });
-                }}>
-                  <Trash2 size={16} />
-                </Button>
+                  }}>
+                    <Plus size={14} className="mr-1" /> Adicionar pacote
+                  </Button>
+                  <p className="text-[10px] text-muted-foreground">Deixe o preço vazio para exibir "A consultar".</p>
+                </div>
               </div>
             ))}
           </CardContent>
         </Card>
+
+        {/* --- DOCINHOS (nomes e valores) --- */}
+        <DocinhosEditor />
+
 
         {/* --- OPÇÕES DE KIT FESTA --- */}
         <Card>
@@ -707,4 +770,127 @@ const AdminMontarPedido = () => {
   );
 };
 
+/* ─── Docinhos: nomes e valores (banco de dados do cardápio) ─── */
+const DocinhosEditor = () => {
+  const { data: types = [], isLoading } = useSweetTypes();
+  const { data: packages = [] } = useSweetPackages();
+  const upsertType = useUpsertSweetType();
+  const upsertPkg = useUpsertSweetPackage();
+  const delPkg = useDeleteSweetPackage();
+
+  const [names, setNames] = useState<Record<string, string>>({});
+  const [prices, setPrices] = useState<Record<string, string>>({});
+  const [newPkg, setNewPkg] = useState<Record<string, { quantity: string; price: string }>>({});
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Docinhos — nomes e valores</CardTitle>
+        <CardDescription>
+          Edite aqui os tipos de docinhos e o preço de cada pacote. Os mesmos dados aparecem no cardápio.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {isLoading && <Loader2 className="h-5 w-5 animate-spin text-[#8c3a40]" />}
+        {!isLoading && types.length === 0 && (
+          <p className="text-sm text-muted-foreground italic">Nenhum tipo de docinho cadastrado ainda.</p>
+        )}
+        {types.map((t) => {
+          const typePkgs = packages
+            .filter((p) => p.type_id === t.id)
+            .sort((a, b) => a.quantity - b.quantity);
+          return (
+            <div key={t.id} className="border border-border p-4 rounded-xl space-y-3 bg-white">
+              <div className="flex gap-2 items-end">
+                <div className="flex-1 space-y-1.5">
+                  <Label className="text-xs">Nome do docinho</Label>
+                  <Input
+                    value={names[t.id] ?? t.name}
+                    onChange={(e) => setNames({ ...names, [t.id]: e.target.value })}
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  className="bg-[#8c3a40] hover:bg-[#722f34] text-white"
+                  onClick={() => upsertType.mutate({ id: t.id, name: names[t.id] ?? t.name } as any)}
+                >
+                  <Save className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs uppercase font-bold text-muted-foreground">Pacotes (quantidade × valor)</Label>
+                {typePkgs.map((p) => {
+                  const key = p.id;
+                  return (
+                    <div key={key} className="flex gap-2 items-center">
+                      <Input className="w-24" value={`${p.quantity} un`} readOnly />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={prices[key] ?? String(p.price)}
+                        onChange={(e) => setPrices({ ...prices, [key]: e.target.value })}
+                        onBlur={() =>
+                          upsertPkg.mutate({
+                            id: p.id,
+                            type_id: p.type_id,
+                            quantity: p.quantity,
+                            price: parseFloat(prices[key] ?? String(p.price)) || 0,
+                            sort_order: p.sort_order ?? 0,
+                          } as any)
+                        }
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-muted-foreground hover:text-red-500 shrink-0"
+                        onClick={() => delPkg.mutate(p.id)}
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  );
+                })}
+                <div className="flex gap-2 items-center">
+                  <Input
+                    className="w-24"
+                    type="number"
+                    placeholder="Qtd."
+                    value={newPkg[t.id]?.quantity ?? ""}
+                    onChange={(e) => setNewPkg({ ...newPkg, [t.id]: { quantity: e.target.value, price: newPkg[t.id]?.price ?? "" } })}
+                  />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="Preço (R$)"
+                    value={newPkg[t.id]?.price ?? ""}
+                    onChange={(e) => setNewPkg({ ...newPkg, [t.id]: { quantity: newPkg[t.id]?.quantity ?? "", price: e.target.value } })}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={!newPkg[t.id]?.quantity}
+                    onClick={() => {
+                      upsertPkg.mutate({
+                        type_id: t.id,
+                        quantity: parseInt(newPkg[t.id].quantity) || 0,
+                        price: parseFloat(newPkg[t.id].price) || 0,
+                        sort_order: 0,
+                      } as any);
+                      setNewPkg({ ...newPkg, [t.id]: { quantity: "", price: "" } });
+                    }}
+                  >
+                    <Plus size={14} className="mr-1" /> Pacote
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+    </Card>
+  );
+};
+
 export default AdminMontarPedido;
+
