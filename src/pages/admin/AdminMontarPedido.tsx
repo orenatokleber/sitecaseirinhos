@@ -9,6 +9,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Save, Plus, Trash2, Settings2, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import {
+  useSweetTypes,
+  useSweetPackages,
+  useUpsertSweetType,
+  useUpsertSweetPackage,
+  useDeleteSweetPackage,
+} from "@/hooks/useCardapio";
+
 
 export type LojaConfig = {
   activeCategories: {
