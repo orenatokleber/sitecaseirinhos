@@ -1112,10 +1112,10 @@ const MontarPedido = () => {
                         </>
                       )}
 
-                      {/* --- CATEGORIAS COM SUB-PRODUTOS (Bolos / Doces) --- */}
-                      {subProducts.length > 0 && (
+                      {/* --- CATEGORIAS COM SUB-PRODUTOS (Doces) --- */}
+                      {catType !== "bolo" && subProducts.length > 0 && (
                         <>
-                          <InlineSectionLabel>{catType === "bolo" ? "Opções de Bolo *" : "Opções de Doces *"}</InlineSectionLabel>
+                          <InlineSectionLabel>Opções de Doces *</InlineSectionLabel>
                           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-6 mt-4">
                             {subProducts.map((p) => {
                               const pImg = p.image ? getPublicImageUrl(p.image) : null;
