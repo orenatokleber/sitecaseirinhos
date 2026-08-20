@@ -812,9 +812,6 @@ const MontarPedido = () => {
 
                       {/* --- FORMULÁRIO BOLO --- */}
                       {catType === "bolo" && (
-                         <div className="space-y-4">
-                            <div className="space-y-2">
-                              <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-[0.15em] ml-1">Tema / Decoração</label>
                         <>
                           <InlineSectionLabel>Formato do Bolo *</InlineSectionLabel>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
