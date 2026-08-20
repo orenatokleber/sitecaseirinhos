@@ -490,11 +490,11 @@ const MontarPedido = () => {
     const { id, kind } = state.selectedProduct;
 
     if (kind === "round") {
-      const cat = categories.find((c) => c.id === id);
+      const cat = categories.find((c) => c.id === state.rectClass);
       if (!cat || !state.sizeId) return null;
       const size = sizes.find((s) => s.id === state.sizeId);
       const flavor = flavors.find((f) => f.id === state.flavorId);
-      const base = cat.type === "consult" ? null : priceOf(id, state.sizeId);
+      const base = cat.type === "consult" ? null : priceOf(cat.id, state.sizeId);
       let total = base;
       let consult = cat.type === "consult" || base === null;
       const details = [
