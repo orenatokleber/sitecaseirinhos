@@ -310,12 +310,12 @@ const MontarPedido = () => {
   // Main Category Hierarchy
   const mainCats = useMemo(() => {
     const defaultCats = [
-      { id: "bolo", title: "Bolo", subtitle: lojaConfig.customTitles?.bolo, icon: Cake, type: "bolo" },
-      { id: "doces", title: "Doces", subtitle: lojaConfig.customTitles?.doces, icon: Candy, type: "doces" },
-      { id: "salgados", title: "Salgados", subtitle: lojaConfig.customTitles?.salgados, icon: Croissant, type: "salgados" },
-      { id: "kit_festa", title: "Kit Festa", subtitle: lojaConfig.customTitles?.kit_festa, icon: PartyPopper, type: "kit_festa" },
-      { id: "pasta_americana", title: "Pasta Americana", subtitle: lojaConfig.customTitles?.pasta_americana, icon: Cake, type: "pasta_americana" },
-      { id: "presentear", title: "Para Presentear", subtitle: lojaConfig.customTitles?.presentear, icon: Gift, type: "presentear" },
+      { id: "bolo", title: lojaConfig.customNames?.bolo || "Bolo", subtitle: lojaConfig.customTitles?.bolo, icon: Cake, type: "bolo" },
+      { id: "doces", title: lojaConfig.customNames?.doces || "Doces", subtitle: lojaConfig.customTitles?.doces, icon: Candy, type: "doces" },
+      { id: "salgados", title: lojaConfig.customNames?.salgados || "Salgados", subtitle: lojaConfig.customTitles?.salgados, icon: Croissant, type: "salgados" },
+      { id: "kit_festa", title: lojaConfig.customNames?.kit_festa || "Kit Festa", subtitle: lojaConfig.customTitles?.kit_festa, icon: PartyPopper, type: "kit_festa" },
+      { id: "pasta_americana", title: lojaConfig.customNames?.pasta_americana || "Pasta Americana", subtitle: lojaConfig.customTitles?.pasta_americana, icon: Cake, type: "pasta_americana" },
+      { id: "presentear", title: lojaConfig.customNames?.presentear || "Para Presentear", subtitle: lojaConfig.customTitles?.presentear, icon: Gift, type: "presentear" },
     ].filter(cat => lojaConfig.activeCategories && lojaConfig.activeCategories[cat.id]);
 
     const customCats = (lojaConfig.customCategories || [])
