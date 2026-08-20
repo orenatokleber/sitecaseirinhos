@@ -93,11 +93,12 @@ const DEFAULT_LOJA_CONFIG: LojaConfig = {
   },
   customCategories: [],
   salgadosOptions: [
-    { id: "coxinha", name: "Coxinha" },
-    { id: "bolinha_queijo", name: "Bolinha de Queijo" },
-    { id: "risolis", name: "Risólis" },
-    { id: "empadinha", name: "Empadinha" },
+    { id: "coxinha", name: "Coxinha", packages: [] },
+    { id: "bolinha_queijo", name: "Bolinha de Queijo", packages: [] },
+    { id: "risolis", name: "Risólis", packages: [] },
+    { id: "empadinha", name: "Empadinha", packages: [] },
   ],
+
   kitFestaOptions: [
     { id: "kit1", name: "Kit Festa I", price: 199, desc: "Serve 10 Pessoas" },
     { id: "kit2", name: "Kit Festa II", price: 349, desc: "Serve 20 Pessoas" },
