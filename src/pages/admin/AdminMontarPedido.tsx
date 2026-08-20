@@ -19,6 +19,14 @@ export type LojaConfig = {
     pasta_americana: boolean;
     presentear: boolean;
   };
+  customNames: {
+    bolo: string;
+    doces: string;
+    salgados: string;
+    kit_festa: string;
+    pasta_americana: string;
+    presentear: string;
+  };
   customTitles: {
     bolo: string;
     doces: string;
@@ -57,6 +65,14 @@ const DEFAULT_LOJA_CONFIG: LojaConfig = {
     kit_festa: true,
     pasta_americana: true,
     presentear: true,
+  },
+  customNames: {
+    bolo: "Bolo",
+    doces: "Doces",
+    salgados: "Salgados",
+    kit_festa: "Kit Festa",
+    pasta_americana: "Pasta Americana",
+    presentear: "Para Presentear",
   },
   customTitles: {
     bolo: "~100g/pessoa",
@@ -119,6 +135,7 @@ const AdminMontarPedido = () => {
         ...DEFAULT_LOJA_CONFIG,
         ...dbConfig,
         activeCategories: { ...DEFAULT_LOJA_CONFIG.activeCategories, ...dbConfig.activeCategories },
+        customNames: { ...DEFAULT_LOJA_CONFIG.customNames, ...dbConfig.customNames },
         customTitles: { ...DEFAULT_LOJA_CONFIG.customTitles, ...dbConfig.customTitles },
         delivery: { ...DEFAULT_LOJA_CONFIG.delivery, ...dbConfig.delivery },
         whatsappMsg: { ...DEFAULT_LOJA_CONFIG.whatsappMsg, ...dbConfig.whatsappMsg },
@@ -230,6 +247,94 @@ const AdminMontarPedido = () => {
                 </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Nomes das categorias */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Nomes das categorias</CardTitle>
+            <CardDescription>Renomeie como cada categoria aparece na página "Montar Pedido".</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {baseCategories.map((cat) => (
+                <div key={`name-${cat.id}`} className="space-y-1.5">
+                  <Label className="text-xs uppercase font-bold text-muted-foreground">{cat.label}</Label>
+                  <Input
+                    value={lojaConfig.customNames?.[cat.id as keyof typeof lojaConfig.customNames] ?? ""}
+                    onChange={(e) =>
+                      setLojaConfig({
+                        ...lojaConfig,
+                        customNames: { ...lojaConfig.customNames, [cat.id]: e.target.value },
+                      })
+                    }
+                    placeholder={cat.label}
+                  />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Categorias personalizadas */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Categorias personalizadas</CardTitle>
+              <CardDescription>Categorias livres, onde o cliente descreve o pedido (valor a consultar).</CardDescription>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setLojaConfig({
+              ...lojaConfig,
+              customCategories: [...(lojaConfig.customCategories || []), { id: `c_${Date.now()}`, title: "Nova categoria", subtitle: "", isActive: true }]
+            })}>
+              <Plus size={14} className="mr-1" /> Adicionar
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {(lojaConfig.customCategories || []).length === 0 && (
+              <p className="text-xs text-muted-foreground">Nenhuma categoria personalizada criada.</p>
+            )}
+            {(lojaConfig.customCategories || []).map((cat, idx) => (
+              <div key={cat.id} className="border border-border p-4 rounded-xl bg-white space-y-3 relative">
+                <button
+                  onClick={() => setLojaConfig({ ...lojaConfig, customCategories: lojaConfig.customCategories.filter((_, i) => i !== idx) })}
+                  className="absolute top-2 right-2 text-muted-foreground hover:text-red-500"
+                >
+                  <Trash2 size={16} />
+                </button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pr-6">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Nome</Label>
+                    <Input value={cat.title} onChange={(e) => {
+                      const arr = [...lojaConfig.customCategories];
+                      arr[idx] = { ...arr[idx], title: e.target.value };
+                      setLojaConfig({ ...lojaConfig, customCategories: arr });
+                    }} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Frase de referência</Label>
+                    <Input value={cat.subtitle} onChange={(e) => {
+                      const arr = [...lojaConfig.customCategories];
+                      arr[idx] = { ...arr[idx], subtitle: e.target.value };
+                      setLojaConfig({ ...lojaConfig, customCategories: arr });
+                    }} placeholder="Ex: personalizado" />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-muted-foreground uppercase">Ativa na página</span>
+                  <Switch
+                    checked={cat.isActive}
+                    onCheckedChange={(val) => {
+                      const arr = [...lojaConfig.customCategories];
+                      arr[idx] = { ...arr[idx], isActive: val };
+                      setLojaConfig({ ...lojaConfig, customCategories: arr });
+                    }}
+                    className="data-[state=checked]:bg-[#8c3a40]"
+                  />
+                </div>
+              </div>
+            ))}
           </CardContent>
         </Card>
 

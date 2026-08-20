@@ -310,12 +310,12 @@ const MontarPedido = () => {
   // Main Category Hierarchy
   const mainCats = useMemo(() => {
     const defaultCats = [
-      { id: "bolo", title: "Bolo", subtitle: lojaConfig.customTitles?.bolo, icon: Cake, type: "bolo" },
-      { id: "doces", title: "Doces", subtitle: lojaConfig.customTitles?.doces, icon: Candy, type: "doces" },
-      { id: "salgados", title: "Salgados", subtitle: lojaConfig.customTitles?.salgados, icon: Croissant, type: "salgados" },
-      { id: "kit_festa", title: "Kit Festa", subtitle: lojaConfig.customTitles?.kit_festa, icon: PartyPopper, type: "kit_festa" },
-      { id: "pasta_americana", title: "Pasta Americana", subtitle: lojaConfig.customTitles?.pasta_americana, icon: Cake, type: "pasta_americana" },
-      { id: "presentear", title: "Para Presentear", subtitle: lojaConfig.customTitles?.presentear, icon: Gift, type: "presentear" },
+      { id: "bolo", title: lojaConfig.customNames?.bolo || "Bolo", subtitle: lojaConfig.customTitles?.bolo, icon: Cake, type: "bolo" },
+      { id: "doces", title: lojaConfig.customNames?.doces || "Doces", subtitle: lojaConfig.customTitles?.doces, icon: Candy, type: "doces" },
+      { id: "salgados", title: lojaConfig.customNames?.salgados || "Salgados", subtitle: lojaConfig.customTitles?.salgados, icon: Croissant, type: "salgados" },
+      { id: "kit_festa", title: lojaConfig.customNames?.kit_festa || "Kit Festa", subtitle: lojaConfig.customTitles?.kit_festa, icon: PartyPopper, type: "kit_festa" },
+      { id: "pasta_americana", title: lojaConfig.customNames?.pasta_americana || "Pasta Americana", subtitle: lojaConfig.customTitles?.pasta_americana, icon: Cake, type: "pasta_americana" },
+      { id: "presentear", title: lojaConfig.customNames?.presentear || "Para Presentear", subtitle: lojaConfig.customTitles?.presentear, icon: Gift, type: "presentear" },
     ].filter(cat => lojaConfig.activeCategories && lojaConfig.activeCategories[cat.id]);
 
     const customCats = (lojaConfig.customCategories || [])
@@ -1323,73 +1323,6 @@ const MontarPedido = () => {
                       )}
 
 
-                      {/* --- SWEET OPTIONS --- */}
-                      {state.selectedProduct?.kind === "sweet" && (
-                        <>
-                          <InlineSectionLabel>Quantidade *</InlineSectionLabel>
-                          <div className="flex flex-col gap-3">
-                            {modalSweetPackages.map((p) => {
-                              const isActive = state.sweetPackageId === p.id;
-                              return (
-                                <motion.button
-                                  key={p.id}
-                                  type="button"
-                                  onClick={() => updateCatState(catId, { sweetPackageId: p.id })}
-                                  whileHover={{ scale: 1.01 }}
-                                  whileTap={{ scale: 0.98 }}
-                                  className={`flex text-left w-full items-center justify-between gap-4 p-5 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
-                                >
-                                  {isActive && (
-                                    <div className="absolute top-2 right-2 text-primary">
-                                      <Check size={16} strokeWidth={3} />
-                                    </div>
-                                  )}
-                                  <div className="flex items-center gap-3">
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
-                                      {p.quantity}
-                                    </div>
-                                    <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>unidades</span>
-                                  </div>
-                                  <span className="font-heading font-bold text-chocolate text-lg">{formatPrice(p.price)}</span>
-                                </motion.button>
-                              );
-                            })}
-                          </div>
-
-                          {modalSweetFlavors.length > 0 && (
-                            <div className="space-y-5 mt-8">
-                              <div className="space-y-4">
-                                {state.sweetFlavors.map((fl, idx) => (
-                                  <div key={idx} className="space-y-2">
-                                    <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-[0.15em] ml-1">SABOR {idx + 1}</label>
-                                    <select 
-                                      className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white appearance-none"
-                                      value={fl}
-                                      onChange={(e) => {
-                                        const arr = [...state.sweetFlavors];
-                                        arr[idx] = e.target.value;
-                                        updateCatState(catId, { sweetFlavors: arr });
-                                      }}
-                                    >
-                                      <option value="">Selecionar sabor (opcional)</option>
-                                      {modalSweetFlavors.map((f) => (
-                                          <option key={f.id} value={f.id}>{f.name}</option>
-                                      ))}
-                                    </select>
-                                  </div>
-                                ))}
-                              </div>
-                              <button 
-                                type="button" 
-                                onClick={() => updateCatState(catId, { sweetFlavors: [...state.sweetFlavors, ""] })}
-                                className="text-xs font-bold text-primary flex items-center gap-1.5 hover:opacity-80 transition-opacity bg-primary/5 px-3 py-2 rounded-lg"
-                              >
-                                <Plus size={14} /> Adicionar outro sabor
-                              </button>
-                            </div>
-                          )}
-                        </>
-                      )}
 
                       {/* Botão Adicionar (Apenas limpa o estado DESSA categoria se for Bolo/Doces) */}
                       {((subProducts.length > 0 && state.selectedProduct) || isManualCategory) && (
