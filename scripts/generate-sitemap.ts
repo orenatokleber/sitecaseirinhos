@@ -1,7 +1,19 @@
 // Runs before `vite dev` and `vite build` (predev/prebuild hooks); writes public/sitemap.xml.
 
 import { writeFileSync } from "fs";
+import { readFileSync } from "fs";
 import { resolve } from "path";
+
+function envValue(name: string): string | undefined {
+  if (process.env[name]) return process.env[name];
+  try {
+    const file = readFileSync(resolve(".env"), "utf8");
+    const match = file.match(new RegExp(`^${name}\\s*=\\s*"?([^"\\n]+)"?`, "m"));
+    return match?.[1];
+  } catch {
+    return undefined;
+  }
+}
 
 const BASE_URL = "https://caseirinhos.com";
 
@@ -24,8 +36,8 @@ const staticEntries: SitemapEntry[] = [
 ];
 
 async function fetchBlogEntries(): Promise<SitemapEntry[]> {
-  const url = process.env.VITE_SUPABASE_URL;
-  const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  const url = envValue("VITE_SUPABASE_URL");
+  const key = envValue("VITE_SUPABASE_PUBLISHABLE_KEY");
   if (!url || !key) return [];
   try {
     const res = await fetch(
