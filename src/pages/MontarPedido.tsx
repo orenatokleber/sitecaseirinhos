@@ -429,7 +429,7 @@ const MontarPedido = () => {
         else total += opt.price;
         return `${opt?.name} (${opt?.price === null || opt?.price === undefined ? 'A consultar' : formatPrice(opt?.price)})`;
       });
-      return { id: `draft-${catId}`, kind: "manual", title: activeMainCatObj.title, details, price: consult ? null : total, consult, qty: 1 };
+      return { id: `draft-${catId}`, kind: "manual", title: activeMainCatObj.title, details, price: total, consult, qty: 1 };
     }
 
     if (catType === "salgados") {
@@ -485,7 +485,7 @@ const MontarPedido = () => {
         kind: "round",
         title: `Bolo ${cat.name} — ${size?.name ?? ""}`,
         details,
-        price: consult ? null : total,
+        price: total,
         consult,
         qty: 1,
         image: cat.image_url ? getPublicImageUrl(cat.image_url) : null,
@@ -516,7 +516,7 @@ const MontarPedido = () => {
         kind: "rectangular",
         title: `Bolo retangular ${r.name}`,
         details,
-        price: consult ? null : total,
+        price: total,
         consult,
         qty: 1,
       };
