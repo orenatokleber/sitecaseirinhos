@@ -13,7 +13,6 @@ import {
   RectangleHorizontal,
   Store,
   MapPin,
-  Camera,
   PartyPopper,
   Croissant,
   Gift,
