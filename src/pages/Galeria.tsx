@@ -4,6 +4,7 @@ import SectionTitle from "@/components/SectionTitle";
 import { useGalleryImages } from "@/hooks/useGallery";
 import { Loader2 } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import PageSEO from "@/components/PageSEO";
 
 const Galeria = () => {
   const { data: images, isLoading } = useGalleryImages(true);
@@ -39,6 +40,7 @@ const Galeria = () => {
 
   return (
     <main className="pt-24">
+      <PageSEO title="Galeria de Bolos e Doces | Caseirinhos a Confeitaria" description="Fotos reais de bolos decorados, doces finos e mesas de festa criados pela Caseirinhos a Confeitaria." path="/galeria" />
       <section className="py-16 md:py-20 bg-background">
         <div className="container mx-auto px-4">
           <SectionTitle title="Galeria" subtitle="Conheça nossos trabalhos" />

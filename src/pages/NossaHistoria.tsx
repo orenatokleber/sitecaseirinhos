@@ -6,6 +6,7 @@ import { useFooterWaveBg } from "@/hooks/useFooterWaveBg";
 import nossaHistoriaImg from "@/assets/caseirinhos-103.webp";
 import confeiteiraSorrindo from "@/assets/caseirinhos-19.webp";
 import decorandoBolo from "@/assets/caseirinhos-83.webp";
+import PageSEO from "@/components/PageSEO";
 
 const NossaHistoria = () => {
   const { data: sections } = useSiteSections();
@@ -31,6 +32,7 @@ const NossaHistoria = () => {
 
   return (
     <main className="pt-24">
+      <PageSEO title="Nossa História | Caseirinhos a Confeitaria" description="Conheça a história da Caseirinhos: confeitaria artesanal feita à mão, com receitas de família e ingredientes selecionados." path="/nossa-historia" />
       <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
         <img src={heroImg} alt="Confeiteira da Caseirinhos" className="absolute inset-0 w-full h-full object-cover object-top" decoding="async" fetchPriority="high" />
         <div className="absolute inset-0 bg-chocolate/50" />

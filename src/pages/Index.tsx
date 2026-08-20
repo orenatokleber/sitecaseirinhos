@@ -14,6 +14,7 @@ import cakeSlice from "@/assets/caseirinhos-118.webp";
 import docesFinos from "@/assets/caseirinhos-40.webp";
 import sobremesaCopo from "@/assets/caseirinhos-2.webp";
 import boloPote from "@/assets/caseirinhos-4.webp";
+import PageSEO from "@/components/PageSEO";
 
 const fallbackProducts = [
   { img: cakeChocolate, name: "Bolos Caseiros", desc: "Receitas tradicionais feitas com amor e ingredientes selecionados" },
@@ -69,6 +70,7 @@ const Index = () => {
 
   return (
     <main className="overflow-hidden">
+      <PageSEO title="Bolos Artesanais e Doces Finos | Caseirinhos a Confeitaria" description="Confeitaria artesanal: bolos caseiros, doces finos e encomendas para festas, casamentos e eventos. Peça pelo WhatsApp." path="/" />
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center pt-16">
         <ConfettiDots />
