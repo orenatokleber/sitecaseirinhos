@@ -7,8 +7,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { normalizeWhatsApp } from "@/lib/utils";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { getOrderedSectionKeys } from "@/lib/cardapioSections";
-import {
 import PageSEO from "@/components/PageSEO";
+import {
   useCakeSizes,
   useCakeCategories,
   useCakePrices,
