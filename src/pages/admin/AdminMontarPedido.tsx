@@ -51,7 +51,7 @@ export type LojaConfig = {
     isActive: boolean;
   }[];
   // NEW OPTIONS
-  salgadosOptions: { id: string, name: string }[];
+  salgadosOptions: { id: string, name: string, packages?: { quantity: number, price: number | null }[] }[];
   kitFestaOptions: { id: string, name: string, price: number | null, desc: string }[];
   pastaAmericanaOptions: { id: string, name: string, price: number | null, desc: string }[];
   presentearOptions: { id: string, name: string, price: number | null, desc: string }[];
