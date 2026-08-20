@@ -20,7 +20,7 @@ import {
   Star
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import { useSiteSettings } from "@/hooks/useSiteContent";
+import { useSiteSettings, useSiteContent } from "@/hooks/useSiteContent";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { normalizeWhatsApp } from "@/lib/utils";
 import {
@@ -218,6 +218,34 @@ const toggleArr = (list: string[], val: string) => list.includes(val) ? list.fil
 
 const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
+  const { data: contentRows } = useSiteContent();
+  
+  const sec = React.useCallback(
+    (sectionKey: string) => {
+      const row = contentRows?.find((r) => r.section_key === sectionKey);
+      return {
+        title: row?.title_text || "",
+        subtitle: row?.subtitle_text || "",
+        content: row?.content_text || "",
+        image_url: row?.image_url ? getPublicImageUrl(row.image_url) : null,
+      };
+    },
+    [contentRows]
+  );
+  
+  const scriptOf = React.useCallback(
+    (sectionKey: string) => {
+      const row = contentRows?.find((r) => r.section_key === sectionKey);
+      return row?.script_text || "";
+    },
+    [contentRows]
+  );
+  
+  const isTransparentImage = (url: string | null) => {
+    if (!url) return false;
+    const lower = url.toLowerCase();
+    return lower.endsWith(".png") || lower.endsWith(".webp") || lower.endsWith(".svg") || lower.endsWith(".gif");
+  };
 
   const lojaConfig = settings?.loja_config as any || {
     activeCategories: { bolo: true, doces: true, salgados: true, kit_festa: true, pasta_americana: true, presentear: true },
@@ -315,6 +343,7 @@ const MontarPedido = () => {
     name: "", 
     phone: "", 
     email: "",
+    event: "",
     date: "", 
     details: "",
     deliveryMethod: lojaConfig.delivery?.acceptsPickup ? "pickup" : "delivery" as "pickup" | "delivery",
@@ -616,6 +645,7 @@ const MontarPedido = () => {
       `Nome: ${form.name}\n` +
       `Telefone: ${form.phone}\n` +
       (form.email ? `E-mail: ${form.email}\n` : "") +
+      (form.event ? `Evento: ${form.event}\n` : "") +
       `Data desejada: ${form.date}\n` +
       `Forma de Recebimento: ${deliveryStr}\n` +
       `Observações: ${form.details || "—"}\n` +
@@ -646,25 +676,63 @@ const MontarPedido = () => {
         />
       </Helmet>
 
-      {/* Header Info */}
-      <div className="container mx-auto px-4 py-8 text-center max-w-2xl relative">
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center justify-center bg-white/60 backdrop-blur-md border border-border/50 text-primary px-4 py-1.5 rounded-full text-xs font-bold mb-4 shadow-sm"
-        >
-          <span className="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-          Encomendas abertas
-        </motion.div>
-        <motion.p 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="font-body text-base text-muted-foreground leading-relaxed max-w-md mx-auto"
-        >
-          Monte seu pedido com carinho. Calculamos o valor na hora e você finaliza pelo WhatsApp com toda facilidade.
-        </motion.p>
-      </div>
+      {/* Header Info (Hero) */}
+      <section className="py-14 md:py-20 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-3xl" />
+          <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-accent/5 blur-3xl" />
+        </div>
+
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {scriptOf("cardapio_hero") && (
+              <span className="font-script text-2xl md:text-3xl text-primary">
+                {scriptOf("cardapio_hero")}
+              </span>
+            )}
+            {sec("cardapio_hero").title && (
+              <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mt-2 mb-4">
+                {sec("cardapio_hero").title}
+              </h1>
+            )}
+            <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mb-4" />
+            {sec("cardapio_hero").subtitle && (
+              <p className="text-muted-foreground max-w-lg mx-auto font-body leading-relaxed">
+                {sec("cardapio_hero").subtitle}
+              </p>
+            )}
+
+            {sec("cardapio_hero").image_url && (
+              <div className="mt-8 max-w-3xl mx-auto">
+                {isTransparentImage(sec("cardapio_hero").image_url) ? (
+                  <img
+                    src={sec("cardapio_hero").image_url}
+                    alt={sec("cardapio_hero").title || "Cardápio"}
+                    className="w-full h-auto max-h-[480px] object-contain mx-auto"
+                  />
+                ) : (
+                  <div className="rounded-2xl overflow-hidden border border-border/60 shadow-sm">
+                    <img
+                      src={sec("cardapio_hero").image_url}
+                      alt={sec("cardapio_hero").title || "Cardápio"}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+            {sec("cardapio_hero").content && (
+              <p className="text-sm text-muted-foreground max-w-2xl mx-auto mt-6 leading-relaxed whitespace-pre-line">
+                {sec("cardapio_hero").content}
+              </p>
+            )}
+          </motion.div>
+        </div>
+      </section>
 
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col lg:flex-row gap-10 items-start">
@@ -747,22 +815,310 @@ const MontarPedido = () => {
                          <div className="space-y-4">
                             <div className="space-y-2">
                               <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-[0.15em] ml-1">Tema / Decoração</label>
-                              <input
-                                type="text"
-                                value={state.boloTheme}
-                                onChange={(e) => updateCatState(catId, { boloTheme: e.target.value })}
-                                placeholder="Ex: Jardim encantado, flores, rústico..."
-                                className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
-                              />
+                        <>
+                          <InlineSectionLabel>Formato do Bolo *</InlineSectionLabel>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <motion.button
+                              type="button"
+                              onClick={() => updateCatState(catId, { 
+                                selectedProduct: state.selectedProduct?.kind === "round" ? null : { id: "round", kind: "round" },
+                                sizeId: "", flavorId: "", rectClass: "", rectAddons: [], roundAddons: []
+                              })}
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              className={`flex flex-col items-center justify-center p-6 rounded-2xl border transition-all ${
+                                state.selectedProduct?.kind === "round" ? "border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm" : "border-border/60 bg-white hover:border-primary/40 hover:shadow-md"
+                              }`}
+                            >
+                              <Cake size={40} className={`mb-3 transition-colors ${state.selectedProduct?.kind === "round" ? "text-primary" : "text-muted-foreground"}`} />
+                              <span className={`font-heading font-bold text-lg ${state.selectedProduct?.kind === "round" ? "text-primary" : "text-foreground"}`}>Bolo Redondo</span>
+                            </motion.button>
+                            
+                            {rectangular.length > 0 && (
+                              <motion.button
+                                type="button"
+                                onClick={() => updateCatState(catId, { 
+                                  selectedProduct: state.selectedProduct?.kind === "rectangular" ? null : { id: "rectangular", kind: "rectangular" },
+                                  sizeId: "", flavorId: "", rectClass: "", rectAddons: [], roundAddons: []
+                                })}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className={`flex flex-col items-center justify-center p-6 rounded-2xl border transition-all ${
+                                  state.selectedProduct?.kind === "rectangular" ? "border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm" : "border-border/60 bg-white hover:border-primary/40 hover:shadow-md"
+                                }`}
+                              >
+                                <RectangleHorizontal size={40} className={`mb-3 transition-colors ${state.selectedProduct?.kind === "rectangular" ? "text-primary" : "text-muted-foreground"}`} />
+                                <span className={`font-heading font-bold text-lg ${state.selectedProduct?.kind === "rectangular" ? "text-primary" : "text-foreground"}`}>Bolo Retangular</span>
+                              </motion.button>
+                            )}
+                          </div>
+
+                          {/* FLUXO BOLO REDONDO */}
+                          {state.selectedProduct?.kind === "round" && (
+                            <div className="mt-8 space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
+                              <div>
+                                <InlineSectionLabel>Tamanho *</InlineSectionLabel>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                  {sizes.map((s) => {
+                                    const isActive = state.sizeId === s.id;
+                                    return (
+                                      <motion.button
+                                        key={s.id}
+                                        type="button"
+                                        onClick={() => updateCatState(catId, { sizeId: isActive ? "" : s.id, flavorId: "", rectClass: "" })}
+                                        whileHover={{ scale: 1.01 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={`flex text-left w-full items-center gap-4 p-4 rounded-2xl border shadow-sm transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
+                                      >
+                                        {isActive && <div className="absolute top-2 right-2 text-primary"><Check size={16} strokeWidth={3} /></div>}
+                                        <div className={`w-14 h-14 shrink-0 flex items-center justify-center rounded-full transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
+                                          <span className="font-heading text-xl font-bold">{s.code}</span>
+                                        </div>
+                                        <div className="flex-1">
+                                          <div className="font-body text-sm font-bold text-foreground">
+                                            {s.ring_size && <span>{s.ring_size}</span>}
+                                          </div>
+                                          <div className="text-xs text-muted-foreground mt-0.5 space-x-1">
+                                            {s.slices != null && <span>{s.slices} fatias</span>}
+                                            {s.slices != null && s.weight_kg != null && <span>•</span>}
+                                            {s.weight_kg != null && <span>{Number(s.weight_kg).toFixed(1)}kg</span>}
+                                          </div>
+                                        </div>
+                                      </motion.button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+
+                              {state.sizeId && standardCats.length > 0 && (
+                                <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                                  <InlineSectionLabel>Linha *</InlineSectionLabel>
+                                  <div className="flex flex-col gap-3">
+                                    {standardCats.map((c) => {
+                                      const isActive = state.rectClass === c.id; // using rectClass to store the chosen category id to keep state clean
+                                      const price = prices.find((p) => p.category_id === c.id && p.size_id === state.sizeId)?.price;
+                                      if (price == null && c.type !== "consult") return null;
+                                      
+                                      return (
+                                        <motion.button
+                                          key={c.id}
+                                          type="button"
+                                          onClick={() => updateCatState(catId, { rectClass: isActive ? "" : c.id, flavorId: "" })}
+                                          whileHover={{ scale: 1.01 }}
+                                          whileTap={{ scale: 0.98 }}
+                                          className={`flex text-left w-full items-center justify-between gap-4 p-5 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
+                                        >
+                                          {isActive && <div className="absolute top-2 right-2 text-primary"><Check size={16} strokeWidth={3} /></div>}
+                                          <div className="flex-1 flex flex-col pr-4">
+                                            <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>{c.name}</span>
+                                            {c.description && <span className="text-xs text-muted-foreground mt-1 line-clamp-2">{c.description}</span>}
+                                          </div>
+                                          <span className="font-heading font-bold text-chocolate text-lg whitespace-nowrap">{price != null ? formatPrice(price) : "A consultar"}</span>
+                                        </motion.button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+
+                              {state.rectClass && (() => {
+                                 const catFlavors = flavors.filter(f => f.category_id === state.rectClass);
+                                 if (catFlavors.length === 0) return null;
+                                 return (
+                                   <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                                     <InlineSectionLabel>Sabor *</InlineSectionLabel>
+                                     <div className="flex flex-col gap-2">
+                                       {catFlavors.map((f) => (
+                                         <motion.button
+                                           key={f.id}
+                                           type="button"
+                                           onClick={() => updateCatState(catId, { flavorId: f.id })}
+                                           whileHover={{ x: 4 }}
+                                           className={`flex text-left flex-col w-full border-l-4 pl-4 py-2 transition-all ${state.flavorId === f.id ? "border-primary bg-primary/5 rounded-r-xl pr-4" : "border-accent/30 hover:border-primary/50"}`}
+                                         >
+                                           <div className="flex items-center justify-between">
+                                             <h4 className={`font-heading font-bold uppercase text-sm tracking-wide ${state.flavorId === f.id ? "text-primary" : "text-foreground"}`}>{f.name}</h4>
+                                             {state.flavorId === f.id && <Check size={14} className="text-primary" strokeWidth={3} />}
+                                           </div>
+                                           {f.description && <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{f.description}</p>}
+                                         </motion.button>
+                                       ))}
+                                     </div>
+                                   </div>
+                                 );
+                              })()}
+
+                              {state.flavorId && roundAddonList.length > 0 && (
+                                <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                                  <InlineSectionLabel>Decorações / Adicionais</InlineSectionLabel>
+                                  <div className="flex flex-col gap-3">
+                                    {roundAddonList.map((a) => {
+                                      const info = addonPriceInfo(a.id, state.sizeId);
+                                      const isActive = state.roundAddons.includes(a.id);
+                                      return (
+                                        <motion.button
+                                          key={a.id}
+                                          type="button"
+                                          onClick={() => updateCatState(catId, { roundAddons: toggleArr(state.roundAddons, a.id) })}
+                                          whileHover={{ scale: 1.01 }}
+                                          whileTap={{ scale: 0.98 }}
+                                          className={`flex text-left w-full items-center gap-4 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
+                                        >
+                                          {isActive && <div className="absolute top-2 right-2 text-primary"><Check size={16} strokeWidth={3} /></div>}
+                                          <div className={`w-12 h-full min-h-[4rem] flex-shrink-0 flex items-center justify-center transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
+                                            <Plus size={20} strokeWidth={isActive ? 3 : 2} />
+                                          </div>
+                                          <div className="flex-1 flex flex-col justify-center py-3 pr-8">
+                                            <div className="flex justify-between items-start gap-2">
+                                              <h4 className={`font-heading font-bold text-base leading-tight ${isActive ? "text-primary" : "text-foreground"}`}>{a.name}</h4>
+                                              <span className="font-heading font-bold text-chocolate whitespace-nowrap">{info.price !== null ? formatAddon(info.price) : info.label}</span>
+                                            </div>
+                                            {a.description && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{a.description}</p>}
+                                          </div>
+                                        </motion.button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
                             </div>
-                         </div>
+                          )}
+
+                          {/* FLUXO BOLO RETANGULAR */}
+                          {state.selectedProduct?.kind === "rectangular" && (
+                            <div className="mt-8 space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
+                              <div>
+                                <InlineSectionLabel>Tamanho *</InlineSectionLabel>
+                                <div className="flex flex-col gap-3">
+                                  {rectangular.map((r) => {
+                                    const isActive = state.selectedProduct?.id === r.id; // Using id to store which rectangular cake
+                                    return (
+                                      <motion.button
+                                        key={r.id}
+                                        type="button"
+                                        onClick={() => updateCatState(catId, { selectedProduct: isActive ? { id: "rectangular", kind: "rectangular" } : { id: r.id, kind: "rectangular" }, rectClass: "" })}
+                                        whileHover={{ scale: 1.01 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={`flex text-left w-full items-center gap-4 p-4 rounded-2xl border shadow-sm transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
+                                      >
+                                        {isActive && <div className="absolute top-2 right-2 text-primary"><Check size={16} strokeWidth={3} /></div>}
+                                        <div className="flex-1">
+                                          <div className="font-heading text-base font-bold text-foreground mb-1">{r.name}</div>
+                                          <div className="text-xs text-muted-foreground space-x-1">
+                                            {r.dimensions && <span>{r.dimensions}</span>}
+                                            {r.dimensions && r.slices != null && <span>•</span>}
+                                            {r.slices != null && <span>{r.slices} fatias</span>}
+                                            {r.slices != null && r.weight_kg != null && <span>•</span>}
+                                            {r.weight_kg != null && <span>{Number(r.weight_kg).toFixed(1)}kg</span>}
+                                          </div>
+                                        </div>
+                                      </motion.button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                              
+                              {state.selectedProduct?.id && state.selectedProduct.id !== "rectangular" && (
+                                <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                                  <InlineSectionLabel>Linha *</InlineSectionLabel>
+                                  <div className="flex flex-col gap-3">
+                                    {[
+                                      { id: "class1", name: standardCats[0]?.name || "Tradicional", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class1_price },
+                                      { id: "class2", name: standardCats[1]?.name || "Premium", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class2_price }
+                                    ].map((cls) => {
+                                      if (cls.price == null) return null;
+                                      const isActive = state.rectClass === cls.id;
+                                      return (
+                                        <motion.button
+                                          key={cls.id}
+                                          type="button"
+                                          onClick={() => updateCatState(catId, { rectClass: isActive ? "" : cls.id as "class1" | "class2" })}
+                                          whileHover={{ scale: 1.01 }}
+                                          whileTap={{ scale: 0.98 }}
+                                          className={`flex text-left w-full items-center justify-between gap-4 p-5 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
+                                        >
+                                          {isActive && <div className="absolute top-2 right-2 text-primary"><Check size={16} strokeWidth={3} /></div>}
+                                          <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>{cls.name}</span>
+                                          <span className="font-heading font-bold text-chocolate text-lg whitespace-nowrap">{formatPrice(cls.price)}</span>
+                                        </motion.button>
+                                      );
+                                    })}
+                                  </div>
+                                  
+                                  {state.rectClass && (() => {
+                                     const clsName = state.rectClass === "class1" ? (standardCats[0]?.name || "Tradicional") : (standardCats[1]?.name || "Premium");
+                                     const cat = categories.find(c => c.name.toLowerCase() === clsName.toLowerCase() || c.name.toLowerCase().includes(clsName.toLowerCase()));
+                                     const catFlavors = cat ? flavors.filter(f => f.category_id === cat.id).map(f => f.name) : [];
+                                     
+                                     if (catFlavors.length === 0) return null;
+                                     
+                                     return (
+                                       <motion.div 
+                                         initial={{ opacity: 0, y: -10, height: 0 }} 
+                                         animate={{ opacity: 1, y: 0, height: "auto" }}
+                                         className="mt-2 overflow-hidden"
+                                       >
+                                         <div className="p-4 rounded-xl bg-accent/5 border border-accent/20">
+                                           <div className="flex items-center gap-2 text-accent font-heading font-bold text-[11px] uppercase tracking-wider mb-3">
+                                             <Sparkles size={14} /> Sabores da Linha {clsName}
+                                           </div>
+                                           <div className="flex flex-wrap gap-2">
+                                             {catFlavors.map((f, i) => (
+                                               <span key={i} className="px-3 py-1.5 rounded-full bg-background border border-border/60 shadow-sm text-xs font-semibold text-foreground/80">
+                                                 {f}
+                                               </span>
+                                             ))}
+                                           </div>
+                                         </div>
+                                       </motion.div>
+                                     );
+                                  })()}
+                                </div>
+                              )}
+                              
+                              {state.rectClass && rectAddonList.length > 0 && (
+                                <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                                  <InlineSectionLabel>Decorações / Adicionais</InlineSectionLabel>
+                                  <div className="flex flex-col gap-3">
+                                    {rectAddonList.map((a) => {
+                                      const info = addonPriceInfo(a.id);
+                                      const isActive = state.rectAddons.includes(a.id);
+                                      return (
+                                        <motion.button
+                                          key={a.id}
+                                          type="button"
+                                          onClick={() => updateCatState(catId, { rectAddons: toggleArr(state.rectAddons, a.id) })}
+                                          whileHover={{ scale: 1.01 }}
+                                          whileTap={{ scale: 0.98 }}
+                                          className={`flex text-left w-full items-center gap-4 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
+                                        >
+                                          {isActive && <div className="absolute top-2 right-2 text-primary"><Check size={16} strokeWidth={3} /></div>}
+                                          <div className={`w-12 h-full min-h-[4rem] flex-shrink-0 flex items-center justify-center transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
+                                            <Plus size={20} strokeWidth={isActive ? 3 : 2} />
+                                          </div>
+                                          <div className="flex-1 flex flex-col justify-center py-3 pr-8">
+                                            <div className="flex justify-between items-start gap-2">
+                                              <h4 className={`font-heading font-bold text-base leading-tight ${isActive ? "text-primary" : "text-foreground"}`}>{a.name}</h4>
+                                              <span className="font-heading font-bold text-chocolate whitespace-nowrap">{info.price !== null ? formatAddon(info.price) : info.label}</span>
+                                            </div>
+                                            {a.description && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{a.description}</p>}
+                                          </div>
+                                        </motion.button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </>
                       )}
 
-                      {/* --- CATEGORIAS COM SUB-PRODUTOS (Bolo/Doces) --- */}
+                      {/* --- CATEGORIAS COM SUB-PRODUTOS (Doces) --- */}
                       {subProducts.length > 0 && (
                         <>
-                          <InlineSectionLabel>Selecione a linha *</InlineSectionLabel>
-                          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 mb-8 mt-4">
+                          <InlineSectionLabel>Opções de Doces *</InlineSectionLabel>
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-6 mt-4">
                             {subProducts.map((p) => {
                               const pImg = p.image ? getPublicImageUrl(p.image) : null;
                               const isActive = state.selectedProduct?.id === p.id;
@@ -792,6 +1148,68 @@ const MontarPedido = () => {
                               );
                             })}
                           </div>
+                          
+                          {state.selectedProduct?.kind === "sweet" && (() => {
+                            const selectedTypePackages = sweetPackages.filter(pkg => pkg.type_id === state.selectedProduct?.id).sort((a, b) => a.quantity - b.quantity);
+                            const selectedTypeFlavors = sweetFlavors.filter(f => f.type_id === state.selectedProduct?.id);
+                            
+                            return (
+                              <div className="animate-in fade-in slide-in-from-top-4 duration-500 mb-8 space-y-8">
+                                <div>
+                                  <InlineSectionLabel>Pacote (Quantidade) *</InlineSectionLabel>
+                                  <div className="flex flex-col gap-3 mt-4">
+                                    {selectedTypePackages.map(pkg => {
+                                      const isActive = state.sweetPackageId === pkg.id;
+                                      return (
+                                        <motion.button
+                                          key={pkg.id}
+                                          type="button"
+                                          onClick={() => updateCatState(catId, { sweetPackageId: isActive ? "" : pkg.id })}
+                                          whileHover={{ scale: 1.01 }}
+                                          whileTap={{ scale: 0.98 }}
+                                          className={`flex text-left w-full items-center justify-between gap-4 p-5 rounded-2xl border shadow-sm transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
+                                        >
+                                          {isActive && <div className="absolute top-2 right-2 text-primary"><Check size={16} strokeWidth={3} /></div>}
+                                          <div className="flex items-center gap-4">
+                                            <div className={`w-14 h-14 shrink-0 flex items-center justify-center rounded-full transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
+                                              <span className="font-heading text-xl font-bold">{pkg.quantity}</span>
+                                            </div>
+                                            <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>unidades</span>
+                                          </div>
+                                          <span className="font-heading font-bold text-chocolate text-lg whitespace-nowrap">{formatPrice(pkg.price)}</span>
+                                        </motion.button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                                
+                                {state.sweetPackageId && selectedTypeFlavors.length > 0 && (
+                                  <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                                    <InlineSectionLabel>Sabores (Opcional)</InlineSectionLabel>
+                                    <p className="text-xs text-muted-foreground mb-3 font-body">Selecione um ou mais sabores que deseja incluir no seu cento/pacote.</p>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                      {selectedTypeFlavors.map((f) => {
+                                        const isActive = state.sweetFlavors.includes(f.id);
+                                        return (
+                                          <motion.button
+                                            key={f.id}
+                                            type="button"
+                                            onClick={() => updateCatState(catId, { sweetFlavors: toggleArr(state.sweetFlavors.filter(Boolean), f.id) })}
+                                            className={`flex text-left flex-col w-full border-l-4 pl-4 py-3 transition-all rounded-r-xl pr-4 ${isActive ? "border-primary bg-primary/5" : "border-border/60 bg-white hover:border-primary/40"}`}
+                                          >
+                                            <div className="flex items-center justify-between w-full">
+                                              <h4 className={`font-heading font-bold uppercase text-sm tracking-wide ${isActive ? "text-primary" : "text-foreground"}`}>{f.name}</h4>
+                                              {isActive && <Check size={14} className="text-primary" strokeWidth={3} />}
+                                            </div>
+                                          </motion.button>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })()}
                         </>
                       )}
 
@@ -906,253 +1324,6 @@ const MontarPedido = () => {
                         </div>
                       )}
 
-
-                      {/* --- ROUND CAKE OPTIONS --- */}
-                      {state.selectedProduct?.kind === "round" && (
-                        <>
-                          <InlineSectionLabel>Tamanho *</InlineSectionLabel>
-                          <div className="flex flex-col gap-3">
-                            {sizes.map((s) => {
-                              const cat = categories.find((c) => c.id === state.selectedProduct?.id);
-                              const p = cat?.type === "consult" ? null : priceOf(state.selectedProduct!.id, s.id);
-                              const isActive = state.sizeId === s.id;
-                              
-                              return (
-                                <motion.button
-                                  key={s.id}
-                                  type="button"
-                                  onClick={() => updateCatState(catId, { sizeId: s.id })}
-                                  whileHover={{ scale: 1.01 }}
-                                  whileTap={{ scale: 0.98 }}
-                                  className={`flex text-left w-full items-center gap-4 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
-                                >
-                                  {isActive && (
-                                    <div className="absolute top-2 right-2 text-primary">
-                                      <Check size={16} strokeWidth={3} />
-                                    </div>
-                                  )}
-                                  <div className={`w-16 h-16 md:w-20 md:h-20 flex-shrink-0 flex items-center justify-center transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
-                                    <span className="font-heading text-2xl md:text-3xl font-bold">
-                                      {s.code}
-                                    </span>
-                                  </div>
-                                  <div className="flex-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 pr-8 text-sm md:text-base text-foreground font-body">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                      {s.ring_size && <span className="font-bold">{s.ring_size}</span>}
-                                      {s.slices != null && (
-                                        <>
-                                          <span className="text-muted-foreground hidden sm:inline">|</span>
-                                          <span className="text-muted-foreground">{s.slices} fatias</span>
-                                        </>
-                                      )}
-                                      {s.weight_kg != null && (
-                                        <>
-                                          <span className="text-muted-foreground hidden sm:inline">|</span>
-                                          <span className="text-muted-foreground">{Number(s.weight_kg).toFixed(1)}kg</span>
-                                        </>
-                                      )}
-                                    </div>
-                                    <div className="font-heading font-bold text-chocolate text-lg">
-                                      {p !== null ? formatPrice(p) : cat?.type === "consult" ? "A consultar" : ""}
-                                    </div>
-                                  </div>
-                                </motion.button>
-                              );
-                            })}
-                          </div>
-
-                          {modalCatFlavors.length > 0 && (
-                            <>
-                              <InlineSectionLabel>Sabor</InlineSectionLabel>
-                              <div className="flex flex-col gap-2">
-                                {modalCatFlavors.map((f) => (
-                                  <motion.button
-                                    key={f.id}
-                                    type="button"
-                                    onClick={() => updateCatState(catId, { flavorId: f.id })}
-                                    whileHover={{ x: 4 }}
-                                    className={`flex text-left flex-col w-full border-l-4 pl-4 py-2 transition-all ${state.flavorId === f.id ? "border-primary bg-primary/5 rounded-r-xl pr-4" : "border-accent/30 hover:border-primary/50"}`}
-                                  >
-                                    <div className="flex items-center justify-between">
-                                      <h4 className={`font-heading font-bold uppercase text-sm tracking-wide ${state.flavorId === f.id ? "text-primary" : "text-foreground"}`}>
-                                        {f.name}
-                                      </h4>
-                                      {state.flavorId === f.id && <Check size={14} className="text-primary" strokeWidth={3} />}
-                                    </div>
-                                    {f.description && (
-                                      <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                                        {f.description}
-                                      </p>
-                                    )}
-                                  </motion.button>
-                                ))}
-                              </div>
-                            </>
-                          )}
-
-                          {roundAddonList.length > 0 && (
-                            <>
-                              <InlineSectionLabel>Adicionais</InlineSectionLabel>
-                              <div className="flex flex-col gap-3">
-                                {roundAddonList.map((a) => {
-                                  const info = addonPriceInfo(a.id, state.sizeId);
-                                  const isActive = state.roundAddons.includes(a.id);
-                                  return (
-                                    <motion.button
-                                      key={a.id}
-                                      type="button"
-                                      onClick={() => updateCatState(catId, { roundAddons: toggleArr(state.roundAddons, a.id) })}
-                                      whileHover={{ scale: 1.01 }}
-                                      whileTap={{ scale: 0.98 }}
-                                      className={`flex text-left w-full items-center gap-4 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
-                                    >
-                                      {isActive && (
-                                        <div className="absolute top-2 right-2 text-primary">
-                                          <Check size={16} strokeWidth={3} />
-                                        </div>
-                                      )}
-                                      <div className={`w-12 h-full min-h-[4rem] flex-shrink-0 flex items-center justify-center transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
-                                        <Plus size={20} strokeWidth={isActive ? 3 : 2} />
-                                      </div>
-                                      <div className="flex-1 flex flex-col justify-center py-3 pr-8">
-                                        <div className="flex justify-between items-start gap-2">
-                                          <h4 className={`font-heading font-bold text-base leading-tight ${isActive ? "text-primary" : "text-foreground"}`}>{a.name}</h4>
-                                          <span className="font-heading font-bold text-chocolate whitespace-nowrap">
-                                            {info.price !== null ? formatAddon(info.price) : info.label}
-                                          </span>
-                                        </div>
-                                        {a.description && (
-                                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{a.description}</p>
-                                        )}
-                                      </div>
-                                    </motion.button>
-                                  );
-                                })}
-                              </div>
-                            </>
-                          )}
-                        </>
-                      )}
-
-                      {/* --- RECTANGULAR CAKE OPTIONS --- */}
-                      {state.selectedProduct?.kind === "rectangular" && (
-                        <>
-                          <div className="mb-4">
-                            {(() => {
-                              const r = rectangular.find((x) => x.id === state.selectedProduct?.id);
-                              return r ? (
-                                <div className="rounded-2xl bg-card border border-border/60 shadow-sm overflow-hidden mb-6 mt-4">
-                                  <div className="bg-accent/10 px-5 py-3 text-center">
-                                    <h3 className="font-heading font-bold text-foreground uppercase text-sm tracking-wider">
-                                      {r.name}
-                                    </h3>
-                                    <p className="text-xs text-muted-foreground mt-1 font-body">
-                                      {[r.dimensions, r.slices ? `${r.slices} fatias` : null, r.weight_kg ? `${Number(r.weight_kg).toFixed(1)} kg` : null]
-                                        .filter(Boolean)
-                                        .join(" | ")}
-                                    </p>
-                                  </div>
-                                </div>
-                              ) : null;
-                            })()}
-                          </div>
-
-                          <InlineSectionLabel>Linha *</InlineSectionLabel>
-                          <div className="flex flex-col gap-3">
-                            {[
-                              { id: "class1", name: standardCats[0]?.name || "Tradicional", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class1_price },
-                              { id: "class2", name: standardCats[1]?.name || "Premium", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class2_price }
-                            ].map((cls) => {
-                               const isActive = state.rectClass === cls.id;
-                               
-                               return (
-                                <motion.button
-                                  key={cls.id}
-                                  type="button"
-                                  onClick={() => updateCatState(catId, { rectClass: cls.id as "class1" | "class2" })}
-                                  whileHover={{ scale: 1.01 }}
-                                  whileTap={{ scale: 0.98 }}
-                                  className={`flex text-left w-full items-center justify-between gap-4 p-5 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
-                                >
-                                  {isActive && (
-                                    <div className="absolute top-2 right-2 text-primary">
-                                      <Check size={16} strokeWidth={3} />
-                                    </div>
-                                  )}
-                                  <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>{cls.name}</span>
-                                  <span className="font-heading font-bold text-chocolate text-lg whitespace-nowrap">{formatPrice(cls.price)}</span>
-                                </motion.button>
-                               );
-                            })}
-                          </div>
-
-                          {state.rectClass && (() => {
-                             const clsName = state.rectClass === "class1" ? (standardCats[0]?.name || "Tradicional") : (standardCats[1]?.name || "Premium");
-                             const cat = categories.find(c => c.name.toLowerCase() === clsName.toLowerCase() || c.name.toLowerCase().includes(clsName.toLowerCase()));
-                             const catFlavors = cat ? flavors.filter(f => f.category_id === cat.id).map(f => f.name) : [];
-                             
-                             if (catFlavors.length === 0) return null;
-                             
-                             return (
-                               <motion.div 
-                                 initial={{ opacity: 0, y: -10, height: 0 }} 
-                                 animate={{ opacity: 1, y: 0, height: "auto" }}
-                                 className="mt-2 overflow-hidden"
-                               >
-                                 <div className="p-4 rounded-xl bg-accent/5 border border-accent/20">
-                                   <div className="flex items-center gap-2 text-accent font-heading font-bold text-[11px] uppercase tracking-wider mb-3">
-                                     <Sparkles size={14} /> Sabores da Linha {clsName}
-                                   </div>
-                                   <div className="flex flex-wrap gap-2">
-                                     {catFlavors.map((f, i) => (
-                                       <span key={i} className="px-3 py-1.5 rounded-full bg-background border border-border/60 shadow-sm text-xs font-semibold text-foreground/80">
-                                         {f}
-                                       </span>
-                                     ))}
-                                   </div>
-                                 </div>
-                               </motion.div>
-                             );
-                          })()}
-
-                          {rectAddonList.length > 0 && (
-                            <>
-                              <InlineSectionLabel>Adicionais</InlineSectionLabel>
-                              <div className="flex flex-col gap-3">
-                                {rectAddonList.map((a) => {
-                                  const info = addonPriceInfo(a.id);
-                                  const isActive = state.rectAddons.includes(a.id);
-                                  return (
-                                    <motion.button
-                                      key={a.id}
-                                      type="button"
-                                      onClick={() => updateCatState(catId, { rectAddons: toggleArr(state.rectAddons, a.id) })}
-                                      whileHover={{ scale: 1.01 }}
-                                      whileTap={{ scale: 0.98 }}
-                                      className={`flex text-left w-full items-center gap-4 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}
-                                    >
-                                      {isActive && (
-                                        <div className="absolute top-2 right-2 text-primary">
-                                          <Check size={16} strokeWidth={3} />
-                                        </div>
-                                      )}
-                                      <div className={`w-12 h-full min-h-[4rem] flex-shrink-0 flex items-center justify-center transition-colors ${isActive ? "bg-primary text-white" : "bg-accent/10 text-accent"}`}>
-                                        <Plus size={20} strokeWidth={isActive ? 3 : 2} />
-                                      </div>
-                                      <div className="flex-1 flex flex-col justify-center py-3 pr-8">
-                                        <div className="flex justify-between items-start gap-2">
-                                          <h4 className={`font-heading font-bold text-base leading-tight ${isActive ? "text-primary" : "text-foreground"}`}>{a.name}</h4>
-                                          <span className="font-heading font-bold text-chocolate whitespace-nowrap">
-                                            {info.price !== null ? formatAddon(info.price) : info.label}
-                                          </span>
-                                        </div>
-                                        {a.description && (
-                                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{a.description}</p>
-                                        )}
-                                      </div>
-                                    </motion.button>
-                                  );
-                                })}
                               </div>
                             </>
                           )}
@@ -1302,6 +1473,21 @@ const MontarPedido = () => {
                 />
               </div>
 
+              <div>
+                <label className="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
+                  Tipo de Evento (opcional)
+                </label>
+                <input
+                  type="text"
+                  value={form.event}
+                  onChange={(e) => setForm({ ...form, event: e.target.value })}
+                  placeholder="Ex: Aniversário, Casamento..."
+                  className="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-1">
               <div>
                 <label className="mb-1 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
                   Data desejada *
