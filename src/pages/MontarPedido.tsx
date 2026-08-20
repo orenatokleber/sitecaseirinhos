@@ -192,6 +192,8 @@ type CatState = {
   sweetFlavors: string[];
   sweetPackageId: string;
   salgadosTypes: string[];
+  salgadosPkgs: string[];
+
   kitFestaSelections: string[];
   pastaAmericanaSelections: string[];
   presentearSelections: string[];
