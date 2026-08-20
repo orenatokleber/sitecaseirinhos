@@ -343,36 +343,90 @@ const AdminMontarPedido = () => {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Tipos de Salgados</CardTitle>
-              <CardDescription>Opções que aparecem no dropdown de sabores.</CardDescription>
+              <CardDescription>Nomes e pacotes (quantidade e valor), como nos docinhos.</CardDescription>
             </div>
             <Button variant="outline" size="sm" onClick={() => setLojaConfig({
               ...lojaConfig,
-              salgadosOptions: [...lojaConfig.salgadosOptions, { id: `s_${Date.now()}`, name: "Novo Salgado" }]
+              salgadosOptions: [...lojaConfig.salgadosOptions, { id: `s_${Date.now()}`, name: "Novo Salgado", packages: [] }]
             })}>
               <Plus size={14} className="mr-1" /> Adicionar
             </Button>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
             {lojaConfig.salgadosOptions.map((opt, idx) => (
-              <div key={opt.id} className="flex gap-2 items-center">
-                <Input 
-                  value={opt.name} 
-                  onChange={(e) => {
+              <div key={opt.id} className="border border-border p-4 rounded-xl space-y-3 bg-white">
+                <div className="flex gap-2 items-center">
+                  <Input
+                    value={opt.name}
+                    onChange={(e) => {
+                      const newArr = [...lojaConfig.salgadosOptions];
+                      newArr[idx] = { ...newArr[idx], name: e.target.value };
+                      setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
+                    }}
+                    placeholder="Nome do salgado"
+                  />
+                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500 shrink-0" onClick={() => {
+                    setLojaConfig({ ...lojaConfig, salgadosOptions: lojaConfig.salgadosOptions.filter((_, i) => i !== idx) });
+                  }}>
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs uppercase font-bold text-muted-foreground">Pacotes (quantidade × valor)</Label>
+                  {(opt.packages || []).map((pkg, pIdx) => (
+                    <div key={pIdx} className="flex gap-2 items-center">
+                      <Input
+                        type="number"
+                        placeholder="Qtd."
+                        value={pkg.quantity ?? ""}
+                        onChange={(e) => {
+                          const newArr = [...lojaConfig.salgadosOptions];
+                          const pkgs = [...(newArr[idx].packages || [])];
+                          pkgs[pIdx] = { ...pkgs[pIdx], quantity: Number(e.target.value) || 0 };
+                          newArr[idx] = { ...newArr[idx], packages: pkgs };
+                          setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
+                        }}
+                      />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Preço (R$)"
+                        value={pkg.price ?? ""}
+                        onChange={(e) => {
+                          const newArr = [...lojaConfig.salgadosOptions];
+                          const pkgs = [...(newArr[idx].packages || [])];
+                          pkgs[pIdx] = { ...pkgs[pIdx], price: e.target.value === "" ? null : Number(e.target.value) };
+                          newArr[idx] = { ...newArr[idx], packages: pkgs };
+                          setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
+                        }}
+                      />
+                      <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500 shrink-0" onClick={() => {
+                        const newArr = [...lojaConfig.salgadosOptions];
+                        newArr[idx] = { ...newArr[idx], packages: (newArr[idx].packages || []).filter((_, i) => i !== pIdx) };
+                        setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
+                      }}>
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button variant="outline" size="sm" onClick={() => {
                     const newArr = [...lojaConfig.salgadosOptions];
-                    newArr[idx].name = e.target.value;
+                    newArr[idx] = { ...newArr[idx], packages: [...(newArr[idx].packages || []), { quantity: 50, price: 0 }] };
                     setLojaConfig({ ...lojaConfig, salgadosOptions: newArr });
-                  }}
-                  placeholder="Nome do salgado"
-                />
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-red-500 shrink-0" onClick={() => {
-                  setLojaConfig({ ...lojaConfig, salgadosOptions: lojaConfig.salgadosOptions.filter((_, i) => i !== idx) });
-                }}>
-                  <Trash2 size={16} />
-                </Button>
+                  }}>
+                    <Plus size={14} className="mr-1" /> Adicionar pacote
+                  </Button>
+                  <p className="text-[10px] text-muted-foreground">Deixe o preço vazio para exibir "A consultar".</p>
+                </div>
               </div>
             ))}
           </CardContent>
         </Card>
+
+        {/* --- DOCINHOS (nomes e valores) --- */}
+        <DocinhosEditor />
+
 
         {/* --- OPÇÕES DE KIT FESTA --- */}
         <Card>
