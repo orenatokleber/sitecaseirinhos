@@ -446,15 +446,44 @@ const MontarPedido = () => {
     }
 
     if (catType === "salgados") {
-      const validTypes = state.salgadosTypes.filter(t => t !== "");
-      if (validTypes.length === 0 && !state.manualDescription) return null;
-      const details = [];
-      if (validTypes.length > 0) {
-         validTypes.forEach((t, i) => details.push(`Sabor ${i+1}: ${t}`));
-      }
+      const opts = lojaConfig.salgadosOptions || [];
+      const details: string[] = [];
+      let total = 0;
+      let consult = false;
+      let picked = 0;
+
+      state.salgadosTypes.forEach((val, i) => {
+        if (!val) return;
+        picked++;
+        const opt = opts.find((o: any) => o.id === val || o.name === val);
+        const name = opt?.name || val;
+        const pkgIdx = state.salgadosPkgs?.[i];
+        const pkg = pkgIdx !== "" && pkgIdx !== undefined ? (opt?.packages || [])[Number(pkgIdx)] : undefined;
+        if (pkg && pkg.price !== null && pkg.price !== undefined) {
+          total += Number(pkg.price);
+          details.push(`Sabor ${i + 1}: ${name} — ${pkg.quantity} un (${formatPrice(Number(pkg.price))})`);
+        } else if (pkg) {
+          consult = true;
+          details.push(`Sabor ${i + 1}: ${name} — ${pkg.quantity} un (A consultar)`);
+        } else {
+          consult = true;
+          details.push(`Sabor ${i + 1}: ${name}`);
+        }
+      });
+
+      if (picked === 0 && !state.manualDescription) return null;
       if (state.manualDescription) details.push(`Observações: ${state.manualDescription}`);
-      return { id: `draft-${catId}`, kind: "manual", title: activeMainCatObj.title, details, price: null, consult: true, qty: 1 };
+      return {
+        id: `draft-${catId}`,
+        kind: "manual",
+        title: activeMainCatObj.title,
+        details,
+        price: consult ? null : total,
+        consult,
+        qty: 1,
+      };
     }
+
 
     if (catType === "manual") {
       if (!state.manualDescription.trim()) return null;
