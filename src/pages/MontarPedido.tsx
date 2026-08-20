@@ -17,7 +17,8 @@ import {
   PartyPopper,
   Croissant,
   Gift,
-  Star
+  Star,
+  Sparkles
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { useSiteSettings, useSiteSectionsList } from "@/hooks/useSiteContent";
@@ -187,7 +188,7 @@ type CatState = {
   sizeId: string;
   flavorId: string;
   roundAddons: string[];
-  rectClass: "class1" | "class2";
+  rectClass: string;
   rectAddons: string[];
   sweetFlavors: string[];
   sweetPackageId: string;
@@ -220,23 +221,23 @@ const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
   const { data: contentRows } = useSiteSectionsList();
   
-  const sec = React.useCallback(
+  const sec = useCallback(
     (sectionKey: string) => {
       const row = contentRows?.find((r) => r.section_key === sectionKey);
       return {
-        title: row?.title_text || "",
-        subtitle: row?.subtitle_text || "",
-        content: row?.content_text || "",
+        title: row?.title || "",
+        subtitle: row?.subtitle || "",
+        content: row?.content || "",
         image_url: row?.image_url ? getPublicImageUrl(row.image_url) : null,
       };
     },
     [contentRows]
   );
   
-  const scriptOf = React.useCallback(
+  const scriptOf = useCallback(
     (sectionKey: string) => {
       const row = contentRows?.find((r) => r.section_key === sectionKey);
-      return row?.script_text || "";
+      return ((row?.metadata as any)?.script as string) || "";
     },
     [contentRows]
   );
@@ -1029,7 +1030,7 @@ const MontarPedido = () => {
                                         <motion.button
                                           key={cls.id}
                                           type="button"
-                                          onClick={() => updateCatState(catId, { rectClass: isActive ? "" : cls.id as "class1" | "class2" })}
+                                          onClick={() => updateCatState(catId, { rectClass: isActive ? "" : cls.id })}
                                           whileHover={{ scale: 1.01 }}
                                           whileTap={{ scale: 0.98 }}
                                           className={`flex text-left w-full items-center justify-between gap-4 p-5 rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 relative ${isActive ? "border-primary bg-primary/5 ring-1 ring-primary/30" : "bg-card border-border/60 hover:border-primary/40 hover:shadow-md"}`}

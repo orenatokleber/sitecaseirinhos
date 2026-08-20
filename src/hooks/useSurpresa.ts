@@ -111,7 +111,7 @@ export function useSurpresa() {
         sort_order: p.sort_order,
       }));
       setPrizes(mapped);
-      return campaignData;
+      return campaignData as any;
     } catch {
       setError("Erro de conexão.");
       return null;
@@ -174,7 +174,7 @@ export function useSurpresa() {
   const markShareCompleted = useCallback(async (participationId: string) => {
     try {
       // Use RPC to securely update states bypassing anon write restrictions
-      const { error: rpcErr } = await supabase.rpc("mark_share_completed", {
+      const { error: rpcErr } = await (supabase.rpc as any)("mark_share_completed", {
         p_participation_id: participationId,
       });
 

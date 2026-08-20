@@ -45,19 +45,19 @@ const Surpresa = () => {
     const initPage = async () => {
       const camp = await fetchPrizes(campaignSlug);
       if (camp) {
-        if (camp.require_access_token) {
+        if ((camp as any).require_access_token) {
           if (!token) {
             setTokenError("no_token");
             return;
           }
           setTokenValidating(true);
           try {
-            const { data, error: tokenErr } = await supabase
+            const { data, error: tokenErr } = await (supabase
               .from("campaign_access_tokens" as any)
               .select("used_at")
-              .eq("campaign_id", camp.id)
+              .eq("campaign_id", (camp as any).id)
               .eq("token", token)
-              .maybeSingle();
+              .maybeSingle() as any);
 
             if (tokenErr || !data) {
               setTokenError("invalid_token");
