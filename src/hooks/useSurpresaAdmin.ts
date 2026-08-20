@@ -15,6 +15,8 @@ export type Campaign = {
   rules: Record<string, any>;
   instagram: Record<string, any>;
   require_story_share: boolean;
+  require_access_token: boolean;
+  external_menu_url: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -36,6 +38,7 @@ export type CampaignPrize = {
   sort_order: number;
   is_active: boolean;
   color: string;
+  static_coupon_code?: string | null;
 };
 
 export type CampaignParticipation = {
