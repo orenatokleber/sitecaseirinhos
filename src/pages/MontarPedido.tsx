@@ -20,7 +20,7 @@ import {
   Star
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import { useSiteSettings, useSiteContent } from "@/hooks/useSiteContent";
+import { useSiteSettings, useSiteSectionsList } from "@/hooks/useSiteContent";
 import { getPublicImageUrl } from "@/lib/supabase";
 import { normalizeWhatsApp } from "@/lib/utils";
 import {
@@ -218,7 +218,7 @@ const toggleArr = (list: string[], val: string) => list.includes(val) ? list.fil
 
 const MontarPedido = () => {
   const { data: settings } = useSiteSettings();
-  const { data: contentRows } = useSiteContent();
+  const { data: contentRows } = useSiteSectionsList();
   
   const sec = React.useCallback(
     (sectionKey: string) => {
