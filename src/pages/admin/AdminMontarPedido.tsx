@@ -762,4 +762,127 @@ const AdminMontarPedido = () => {
   );
 };
 
+/* ─── Docinhos: nomes e valores (banco de dados do cardápio) ─── */
+const DocinhosEditor = () => {
+  const { data: types = [], isLoading } = useSweetTypes();
+  const { data: packages = [] } = useSweetPackages();
+  const upsertType = useUpsertSweetType();
+  const upsertPkg = useUpsertSweetPackage();
+  const delPkg = useDeleteSweetPackage();
+
+  const [names, setNames] = useState<Record<string, string>>({});
+  const [prices, setPrices] = useState<Record<string, string>>({});
+  const [newPkg, setNewPkg] = useState<Record<string, { quantity: string; price: string }>>({});
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Docinhos — nomes e valores</CardTitle>
+        <CardDescription>
+          Edite aqui os tipos de docinhos e o preço de cada pacote. Os mesmos dados aparecem no cardápio.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {isLoading && <Loader2 className="h-5 w-5 animate-spin text-[#8c3a40]" />}
+        {!isLoading && types.length === 0 && (
+          <p className="text-sm text-muted-foreground italic">Nenhum tipo de docinho cadastrado ainda.</p>
+        )}
+        {types.map((t) => {
+          const typePkgs = packages
+            .filter((p) => p.type_id === t.id)
+            .sort((a, b) => a.quantity - b.quantity);
+          return (
+            <div key={t.id} className="border border-border p-4 rounded-xl space-y-3 bg-white">
+              <div className="flex gap-2 items-end">
+                <div className="flex-1 space-y-1.5">
+                  <Label className="text-xs">Nome do docinho</Label>
+                  <Input
+                    value={names[t.id] ?? t.name}
+                    onChange={(e) => setNames({ ...names, [t.id]: e.target.value })}
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  className="bg-[#8c3a40] hover:bg-[#722f34] text-white"
+                  onClick={() => upsertType.mutate({ id: t.id, name: names[t.id] ?? t.name } as any)}
+                >
+                  <Save className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs uppercase font-bold text-muted-foreground">Pacotes (quantidade × valor)</Label>
+                {typePkgs.map((p) => {
+                  const key = p.id;
+                  return (
+                    <div key={key} className="flex gap-2 items-center">
+                      <Input className="w-24" value={`${p.quantity} un`} readOnly />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={prices[key] ?? String(p.price)}
+                        onChange={(e) => setPrices({ ...prices, [key]: e.target.value })}
+                        onBlur={() =>
+                          upsertPkg.mutate({
+                            id: p.id,
+                            type_id: p.type_id,
+                            quantity: p.quantity,
+                            price: parseFloat(prices[key] ?? String(p.price)) || 0,
+                            sort_order: p.sort_order ?? 0,
+                          } as any)
+                        }
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-muted-foreground hover:text-red-500 shrink-0"
+                        onClick={() => delPkg.mutate(p.id)}
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  );
+                })}
+                <div className="flex gap-2 items-center">
+                  <Input
+                    className="w-24"
+                    type="number"
+                    placeholder="Qtd."
+                    value={newPkg[t.id]?.quantity ?? ""}
+                    onChange={(e) => setNewPkg({ ...newPkg, [t.id]: { quantity: e.target.value, price: newPkg[t.id]?.price ?? "" } })}
+                  />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="Preço (R$)"
+                    value={newPkg[t.id]?.price ?? ""}
+                    onChange={(e) => setNewPkg({ ...newPkg, [t.id]: { quantity: newPkg[t.id]?.quantity ?? "", price: e.target.value } })}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={!newPkg[t.id]?.quantity}
+                    onClick={() => {
+                      upsertPkg.mutate({
+                        type_id: t.id,
+                        quantity: parseInt(newPkg[t.id].quantity) || 0,
+                        price: parseFloat(newPkg[t.id].price) || 0,
+                        sort_order: 0,
+                      } as any);
+                      setNewPkg({ ...newPkg, [t.id]: { quantity: "", price: "" } });
+                    }}
+                  >
+                    <Plus size={14} className="mr-1" /> Pacote
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+    </Card>
+  );
+};
+
 export default AdminMontarPedido;
+
