@@ -41,7 +41,7 @@ async function fetchBlogEntries(): Promise<SitemapEntry[]> {
   if (!url || !key) return [];
   try {
     const res = await fetch(
-      `${url}/rest/v1/blog_posts?select=slug,updated_at&published=eq.true`,
+      `${url}/rest/v1/blog_posts?select=slug,updated_at&is_published=eq.true`,
       { headers: { apikey: key, Authorization: `Bearer ${key}` } },
     );
     if (!res.ok) return [];
