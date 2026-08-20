@@ -1064,6 +1064,9 @@ const MontarPedido = () => {
                               { id: "class2", name: "Premium", price: rectangular.find((r) => r.id === state.selectedProduct?.id)?.class2_price }
                             ].map((cls) => {
                                const isActive = state.rectClass === cls.id;
+                               const cat = categories.find(c => c.name.toLowerCase().includes(cls.name.toLowerCase()));
+                               const catFlavors = cat ? flavors.filter(f => f.category_id === cat.id).map(f => f.name).join(", ") : "";
+                               
                                return (
                                 <motion.button
                                   key={cls.id}
@@ -1078,8 +1081,15 @@ const MontarPedido = () => {
                                       <Check size={16} strokeWidth={3} />
                                     </div>
                                   )}
-                                  <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>{cls.name}</span>
-                                  <span className="font-heading font-bold text-chocolate text-lg">{formatPrice(cls.price)}</span>
+                                  <div className="flex-1 flex flex-col pr-4">
+                                    <span className={`font-heading text-lg font-bold ${isActive ? 'text-primary' : 'text-foreground'}`}>{cls.name}</span>
+                                    {catFlavors && (
+                                      <span className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                                        <strong className="font-semibold">Sabores:</strong> {catFlavors}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="font-heading font-bold text-chocolate text-lg whitespace-nowrap">{formatPrice(cls.price)}</span>
                                 </motion.button>
                                );
                             })}
