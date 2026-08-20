@@ -13,7 +13,6 @@ import {
   RectangleHorizontal,
   Store,
   MapPin,
-  Camera,
   PartyPopper,
   Croissant,
   Gift,
@@ -348,30 +347,10 @@ const MontarPedido = () => {
     date: "", 
     details: "",
     deliveryMethod: lojaConfig.delivery?.acceptsPickup ? "pickup" : "delivery" as "pickup" | "delivery",
-    photo: null as string | null
   });
-  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const step2Ref = useRef<HTMLElement>(null);
   const step3Ref = useRef<HTMLElement>(null);
-
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      setIsUploadingPhoto(true);
-      const { uploadImage } = await import("@/lib/supabase");
-      const path = await uploadImage(file, 'orders');
-      if (path) {
-        setForm(prev => ({ ...prev, photo: path }));
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsUploadingPhoto(false);
-    }
-  };
 
   const updateCatState = (catId: string, updates: Partial<CatState>) => {
     setCatStates(prev => ({
@@ -649,8 +628,7 @@ const MontarPedido = () => {
       (form.event ? `Evento: ${form.event}\n` : "") +
       `Data desejada: ${form.date}\n` +
       `Forma de Recebimento: ${deliveryStr}\n` +
-      `Observações: ${form.details || "—"}\n` +
-      (form.photo ? `Foto de Referência: ${getPublicImageUrl(form.photo)}\n\n` : "\n");
+      `Observações: ${form.details || "—"}\n\n`;
 
     let greeting = lojaConfig.whatsappMsg?.greeting?.replace("{nome}", form.name).replace("{loja}", lojaName) || "";
     let signoff = lojaConfig.whatsappMsg?.signoff || "";
@@ -1489,59 +1467,6 @@ const MontarPedido = () => {
                 </div>
               </div>
             )}
-
-            {/* Reference Photo Upload */}
-            <div className="pt-4">
-              <label className="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">
-                Foto de referência (opcional)
-              </label>
-
-              <input 
-                type="file" 
-                accept="image/*" 
-                className="hidden" 
-                ref={fileInputRef} 
-                onChange={handlePhotoUpload} 
-              />
-              
-              {form.photo ? (
-                <div className="relative rounded-3xl overflow-hidden border-2 border-primary/30 w-full h-48 bg-black/5 flex items-center justify-center">
-                  <img src={getPublicImageUrl(form.photo)} alt="Referência" className="w-full h-full object-cover" />
-                  <button 
-                    type="button" 
-                    onClick={() => setForm(prev => ({ ...prev, photo: null }))} 
-                    className="absolute top-2 right-2 bg-white/90 text-red-500 p-2 rounded-full hover:bg-white shadow-sm"
-                  >
-                    <Trash2 size={20} />
-                  </button>
-                </div>
-              ) : (
-                <button 
-                  type="button" 
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploadingPhoto}
-                  className="w-full border-2 border-dashed border-primary/30 rounded-3xl bg-primary/5 p-8 flex flex-col items-center justify-center gap-3 text-center hover:bg-primary/10 transition-colors group disabled:opacity-50"
-                >
-                   {isUploadingPhoto ? (
-                     <div className="bg-white text-primary p-4 rounded-2xl shadow-sm">
-                       <span className="animate-spin block w-6 h-6 border-2 border-primary border-t-transparent rounded-full" />
-                     </div>
-                   ) : (
-                     <div className="bg-white text-primary p-4 rounded-2xl shadow-sm group-hover:scale-110 transition-transform duration-300">
-                       <Camera size={26} strokeWidth={2.5} />
-                     </div>
-                   )}
-                   <div>
-                     <span className="block font-heading font-bold text-base text-primary mb-1">
-                       {isUploadingPhoto ? "ENVIANDO..." : "ADICIONAR FOTO"}
-                     </span>
-                     <span className="block text-[11px] font-semibold text-muted-foreground/80 uppercase tracking-wider">
-                       {isUploadingPhoto ? "Aguarde um momento" : "Toque para escolher ou tirar uma foto"}
-                     </span>
-                   </div>
-                </button>
-              )}
-            </div>
 
           </div>
         </section>
