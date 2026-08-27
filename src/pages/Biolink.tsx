@@ -134,6 +134,26 @@ const Biolink = () => {
           ))}
         </div>
 
+        {cfg.map_enabled !== false && (cfg.map_address || "Rua Manucaia, 114") && (
+          <div className="mt-6 w-full">
+            <p className="mb-2 flex items-center gap-1 text-sm opacity-90">
+              <MapPin size={14} />
+              {cfg.map_address || "Rua Manucaia, 114"}
+            </p>
+            <div className="overflow-hidden rounded-2xl shadow-md">
+              <iframe
+                title="Nossa localização no mapa"
+                src={`https://www.google.com/maps?q=${encodeURIComponent(
+                  cfg.map_address || "Rua Manucaia, 114"
+                )}&output=embed`}
+                className="h-52 w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        )}
+
         <div className="mt-auto pt-10 text-center text-xs opacity-80">
           {cfg.footer_text && <p className="mb-3">{cfg.footer_text}</p>}
           <Link to="/" className="inline-flex items-center gap-1 hover:underline">
