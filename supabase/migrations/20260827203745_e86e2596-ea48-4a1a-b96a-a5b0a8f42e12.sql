@@ -1,0 +1,1 @@
+UPDATE public.bio_links SET url = 'https://caseirinhos.com/cardapio' WHERE title ILIKE '%encomendas%';
