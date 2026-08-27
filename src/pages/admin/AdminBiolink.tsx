@@ -264,6 +264,30 @@ const AdminBiolink = () => {
             </CardContent>
           </Card>
 
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Mapa / localização</CardTitle>
+              <CardDescription>Exibe um mapa com o endereço no final da página</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <Label>Mostrar mapa</Label>
+                <Switch
+                  checked={cfg.map_enabled !== false}
+                  onCheckedChange={(v) => set({ map_enabled: v })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Endereço</Label>
+                <Input
+                  value={cfg.map_address ?? ""}
+                  onChange={(e) => set({ map_address: e.target.value })}
+                  placeholder="Rua Manucaia, 114"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
           <Button onClick={saveSettings} disabled={updateSetting.isPending}>
             Salvar aparência
           </Button>
