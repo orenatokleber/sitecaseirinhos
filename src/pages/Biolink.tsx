@@ -98,9 +98,21 @@ const Biolink = () => {
           />
         )}
 
-        <h1 className="font-display text-center text-3xl leading-tight">
-          {cfg.title || "Caseirinhos a Confeitaria"}
-        </h1>
+        {cfg.title ? (
+          <h1 className="font-display text-center text-3xl leading-tight">
+            {cfg.title}
+          </h1>
+        ) : (
+          <a
+            href="https://instagram.com/caseirinhosaconfeitaria"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 font-display text-center text-3xl leading-tight hover:opacity-80 transition-opacity"
+          >
+            <Instagram className="w-7 h-7" />
+            @caseirinhosaconfeitaria
+          </a>
+        )}
         {cfg.subtitle && (
           <p className="mt-2 text-center text-sm opacity-90">{cfg.subtitle}</p>
         )}
