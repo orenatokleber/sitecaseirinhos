@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import { useBioLinks } from "@/hooks/useBioLinks";
 import { getPublicImageUrl } from "@/lib/supabase";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, MapPin } from "lucide-react";
 
 export interface BiolinkSettings {
   title?: string;
