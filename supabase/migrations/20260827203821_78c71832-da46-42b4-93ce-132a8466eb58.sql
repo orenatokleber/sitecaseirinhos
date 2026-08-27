@@ -1,0 +1,1 @@
+UPDATE public.bio_links SET url = 'https://wa.me/5511948598267?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento%20de%20encomenda.' WHERE title ILIKE 'WhatsApp Encomendas';
