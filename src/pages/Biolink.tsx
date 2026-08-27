@@ -4,7 +4,7 @@ import { useSiteSettings } from "@/hooks/useSiteContent";
 import { useBioLinks } from "@/hooks/useBioLinks";
 import { getPublicImageUrl } from "@/lib/supabase";
 import logoUrl from "@/assets/logo.png";
-import { ArrowLeft, ExternalLink, MapPin } from "lucide-react";
+import { ArrowLeft, ExternalLink, Instagram, MapPin } from "lucide-react";
 
 
 export interface BiolinkSettings {
