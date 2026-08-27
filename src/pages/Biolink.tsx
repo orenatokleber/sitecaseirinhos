@@ -17,6 +17,8 @@ export interface BiolinkSettings {
   button_style?: "solid" | "outline" | "glass";
   overlay_opacity?: number;
   footer_text?: string;
+  map_enabled?: boolean;
+  map_address?: string;
 }
 
 const Biolink = () => {
