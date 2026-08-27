@@ -93,7 +93,7 @@ const Biolink = () => {
           <img
             src={avatar}
             alt={cfg.title || "Logo"}
-            className="mb-5 h-28 w-28 rounded-full object-cover shadow-xl ring-4 ring-white/40"
+            className="mb-5 h-auto max-h-32 w-auto max-w-[220px] object-contain"
             loading="eager"
           />
         )}
