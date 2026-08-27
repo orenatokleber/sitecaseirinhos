@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { useSiteSettings } from "@/hooks/useSiteContent";
 import { useBioLinks } from "@/hooks/useBioLinks";
 import { getPublicImageUrl } from "@/lib/supabase";
+import logoUrl from "@/assets/logo.png";
 import { ArrowLeft, ExternalLink, MapPin } from "lucide-react";
+
 
 export interface BiolinkSettings {
   title?: string;
@@ -27,33 +29,38 @@ const Biolink = () => {
 
   const cfg: BiolinkSettings = settings?.biolink || {};
   const bgImage = cfg.bg_image_url ? getPublicImageUrl(cfg.bg_image_url) : "";
-  const avatar = cfg.avatar_url ? getPublicImageUrl(cfg.avatar_url) : "";
+  const storedAvatar = cfg.avatar_url ? getPublicImageUrl(cfg.avatar_url) : "";
+  const avatar = storedAvatar || logoUrl;
   const overlay = typeof cfg.overlay_opacity === "number" ? cfg.overlay_opacity : 0.45;
   const style = cfg.button_style || "solid";
+
+  const siteBg = cfg.bg_color || "#f7f5e2";
+  const siteText = cfg.text_color || "#5a3e2b";
+  const primaryBtn = cfg.button_color || "#40e0d0";
 
   const buttonStyle: React.CSSProperties =
     style === "outline"
       ? {
           backgroundColor: "transparent",
-          border: `2px solid ${cfg.button_color || "#40e0d0"}`,
-          color: cfg.button_text_color || cfg.button_color || "#40e0d0",
+          border: `2px solid ${primaryBtn}`,
+          color: cfg.button_text_color || primaryBtn,
         }
       : style === "glass"
       ? {
           backgroundColor: "rgba(255,255,255,0.14)",
           backdropFilter: "blur(10px)",
           border: "1px solid rgba(255,255,255,0.25)",
-          color: cfg.button_text_color || "#ffffff",
+          color: cfg.button_text_color || siteText,
         }
       : {
-          backgroundColor: cfg.button_color || "#40e0d0",
+          backgroundColor: primaryBtn,
           color: cfg.button_text_color || "#ffffff",
         };
 
   return (
     <div
       className="relative min-h-screen w-full"
-      style={{ backgroundColor: cfg.bg_color || "#936037" }}
+      style={{ backgroundColor: siteBg }}
     >
       <Helmet>
         <title>{cfg.title ? `${cfg.title} | Links` : "Links | Caseirinhos a Confeitaria"}</title>
@@ -80,7 +87,7 @@ const Biolink = () => {
 
       <main
         className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col items-center px-5 py-12"
-        style={{ color: cfg.text_color || "#ffffff" }}
+        style={{ color: siteText }}
       >
         {avatar && (
           <img

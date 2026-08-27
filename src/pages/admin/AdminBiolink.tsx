@@ -233,8 +233,8 @@ const AdminBiolink = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
-                <ColorPicker label="Cor de fundo" value={cfg.bg_color || "#936037"} onChange={(v) => set({ bg_color: v })} />
-                <ColorPicker label="Cor do texto" value={cfg.text_color || "#ffffff"} onChange={(v) => set({ text_color: v })} />
+                <ColorPicker label="Cor de fundo" value={cfg.bg_color || "#f7f5e2"} onChange={(v) => set({ bg_color: v })} />
+                <ColorPicker label="Cor do texto" value={cfg.text_color || "#5a3e2b"} onChange={(v) => set({ text_color: v })} />
                 <ColorPicker label="Cor dos botões" value={cfg.button_color || "#40e0d0"} onChange={(v) => set({ button_color: v })} />
                 <ColorPicker label="Cor do texto dos botões" value={cfg.button_text_color || "#ffffff"} onChange={(v) => set({ button_text_color: v })} />
               </div>
