@@ -3,7 +3,7 @@
 $host = 'localhost'; // Normalmente localhost na Hostinger
 $db   = 'u960702577_sitecase'; // Substitua pelo nome do seu banco criado no hPanel
 $user = 'u960702577_admin'; // Substitua pelo usuário do seu banco
-$pass = 'caseirinhos2024'; // Substitua pela senha
+$pass = 'Kleber23@23Kleber'; // Substitua pela senha
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -32,7 +32,10 @@ try {
     
     if ($isApiCall && !$isRedirector) {
         header('Content-Type: application/json');
-        echo json_encode(['error' => 'Falha de conexão com o banco de dados.']);
+        echo json_encode([
+            'error' => 'Falha de conexão com o banco de dados.', 
+            'detalhes' => $e->getMessage()
+        ]);
         exit;
     }
 }
