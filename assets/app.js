@@ -1,4 +1,4 @@
-// ==========================================================
+﻿// ==========================================================
 // CASEIRINHOS - MOTOR DE CONTEÚDO, PÁGINAS E SEÇÕES
 // ==========================================================
 
@@ -14,7 +14,7 @@ const DEFAULT_PAGE_SECTIONS = {
             content: '',
             image_url: 'images/caseirinhos-hero.webp',
             cta_text: 'Ver Cardápio Completo 🧁',
-            cta_link: 'cardapio.html',
+            cta_link: '/cardapio',
             sort_order: 0,
             is_visible: true,
             metadata: {
@@ -46,7 +46,7 @@ const DEFAULT_PAGE_SECTIONS = {
             content: 'A Caseirinhos nasceu do desejo de transformar momentos simples em memórias doces e inesquecíveis. Cada bolo e docinho é feito com ingredientes selecionados, receitas de família e o carinho que só o artesanal pode oferecer.',
             image_url: 'images/confeiteira-sorrindo.jpg',
             cta_text: 'Conheça nossa história →',
-            cta_link: 'nossa-historia.html',
+            cta_link: '/nossa-historia',
             sort_order: 2,
             is_visible: true,
             metadata: {
@@ -62,7 +62,7 @@ const DEFAULT_PAGE_SECTIONS = {
             content: '',
             image_url: '',
             cta_text: 'Ver Cardápio Completo 🍰',
-            cta_link: 'cardapio.html',
+            cta_link: '/cardapio',
             sort_order: 3,
             is_visible: true,
             metadata: {
@@ -94,7 +94,7 @@ const DEFAULT_PAGE_SECTIONS = {
             content: 'Bolos fresquinhos e doces artesanais entregues com carinho. Confira nosso cardápio de delivery e peça agora!',
             image_url: 'images/caseirinhos-58-Cqi9p00L.webp',
             cta_text: 'Fazer Pedido Online',
-            cta_link: 'montar-pedido.html',
+            cta_link: '/montar-pedido',
             sort_order: 5,
             is_visible: true,
             metadata: {
@@ -114,7 +114,7 @@ const DEFAULT_PAGE_SECTIONS = {
             content: 'Desde o início, nossa missão sempre foi levar alegria e sabor através da confeitaria artesanal.',
             image_url: 'https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/nossa-historia/1779822456701-4e2nzj.jpg',
             cta_text: 'Montar Encomenda',
-            cta_link: 'montar-pedido.html',
+            cta_link: '/montar-pedido',
             sort_order: 0,
             is_visible: true,
             metadata: { colors: { bg_color: '', title_color: '', text_color: '', accent_color: '' } }
@@ -126,7 +126,7 @@ const DEFAULT_PAGE_SECTIONS = {
             subtitle: 'Amor e carinho em cada fornada',
             script_text: 'Origem',
             content: 'Tudo começou na cozinha de casa, com o aroma de bolo fresco e receitas tradicionais passadas por gerações. Cada ingrediente era escolhido a dedo para criar momentos especiais com a família e amigos.',
-            image_url: 'images/hero-cake.webp',
+            image_url: 'https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/cardapio_hero/1781027412146-9hjvbm.jpg',
             cta_text: '',
             cta_link: '',
             sort_order: 1,
@@ -142,7 +142,7 @@ const DEFAULT_PAGE_SECTIONS = {
             content: 'Hoje a Caseirinhos cresceu, mas o compromisso continua o mesmo: qualidade sem atalhos, ingredientes nobres e atendimento carinhoso que faz você se sentir em casa.',
             image_url: 'images/caseirinhos-hero.webp',
             cta_text: 'Ver Nosso Cardápio',
-            cta_link: 'cardapio.html',
+            cta_link: '/cardapio',
             sort_order: 2,
             is_visible: true,
             metadata: { colors: { bg_color: '', title_color: '', text_color: '', accent_color: '' } }
@@ -172,9 +172,9 @@ const DEFAULT_PAGE_SECTIONS = {
             subtitle: 'Bolos, doces finos, sobremesas e kits comemorativos sob medida para a sua celebração.',
             script_text: 'Tornando sua vida mais doce!',
             content: 'Selecione seu bolo favorito ou monte seu pedido online.',
-            image_url: 'images/hero-cake.webp',
+            image_url: 'https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/cardapio_hero/1781027412146-9hjvbm.jpg',
             cta_text: 'Montar Pedido Passo a Passo 🎂',
-            cta_link: 'montar-pedido.html',
+            cta_link: '/montar-pedido',
             sort_order: 0,
             is_visible: true,
             metadata: { colors: { bg_color: '', title_color: '', text_color: '', accent_color: '' } }
@@ -589,7 +589,7 @@ const SectionManager = {
 // Execução automática na inicialização da página
 document.addEventListener('DOMContentLoaded', () => {
     // Não executa no painel admin para não interferir na interface administrativa
-    if (!window.location.pathname.includes('admin.html')) {
+    if (!window.location.pathname.includes('/admin')) {
         SectionManager.applyToDom();
     }
 });

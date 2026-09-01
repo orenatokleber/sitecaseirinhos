@@ -34,8 +34,8 @@ try {
     if ($check == 0) {
         $pdo->exec("
             INSERT INTO `biolinks` (`title`, `url`, `icon`, `sort_order`) VALUES
-            ('Cardápio Completo', 'cardapio.html', 'fa-cake-candles', 0),
-            ('Fazer Encomenda', 'montar-pedido.html', 'fa-whatsapp', 1),
+            ('Cardápio Completo', '/cardapio', 'fa-cake-candles', 0),
+            ('Fazer Encomenda', '/montar-pedido', 'fa-whatsapp', 1),
             ('Nosso Instagram', 'https://instagram.com/caseirinhosaconfeitaria', 'fa-instagram', 2);
         ");
     }

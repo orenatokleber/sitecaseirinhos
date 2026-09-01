@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -690,7 +690,7 @@
         </nav>
 
         <div class="sidebar-bottom">
-            <a href="index.html" target="_blank" class="btn-live-site">
+            <a href="/" target="_blank" class="btn-live-site">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Site ao Vivo
             </a>
             <a href="admin.php?logout=1" class="btn-live-site" style="background: rgba(217, 79, 79, 0.08); color: var(--red); margin-top: 0.5rem;">
@@ -707,7 +707,7 @@
             <div style="display:flex; gap:0.5rem;">
                 <a href="admin.php?logout=1" class="btn-luxury btn-danger-subtle" style="padding:0.4rem 0.8rem; font-size:0.75rem; text-decoration:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
                 <button class="btn-luxury btn-subtle" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="switchMainTab('pages')">Páginas</button>
-                <a href="index.html" target="_blank" class="btn-luxury btn-gold" style="padding:0.4rem 0.8rem; font-size:0.75rem;"><i class="fa-solid fa-eye"></i></a>
+                <a href="/" target="_blank" class="btn-luxury btn-gold" style="padding:0.4rem 0.8rem; font-size:0.75rem;"><i class="fa-solid fa-eye"></i></a>
             </div>
         </div>
 
@@ -839,7 +839,7 @@
                         <button type="button" class="btn-luxury btn-subtle" onclick="resetCurrentPageSections()">
                             <i class="fa-solid fa-rotate-left"></i> Restaurar Padrões
                         </button>
-                        <a id="btnLivePagePreview" href="index.html" target="_blank" class="btn-luxury btn-gold">
+                        <a id="btnLivePagePreview" href="/" target="_blank" class="btn-luxury btn-gold">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Página
                         </a>
                     </div>
@@ -1123,7 +1123,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Link do Botão</label>
-                    <input type="text" id="newSecCtaLink" class="form-input" placeholder="Ex: montar-pedido.html">
+                    <input type="text" id="newSecCtaLink" class="form-input" placeholder="Ex: /montar-pedido">
                 </div>
             </div>
 
@@ -1147,11 +1147,11 @@
         let currentEditingPageKey = 'index';
 
         const PAGE_DESTINATIONS = {
-            'index': 'index.html',
-            'nossa_historia': 'nossa-historia.html',
-            'cardapio': 'cardapio.html',
-            'montar_pedido': 'montar-pedido.html',
-            'contato': 'contato.html'
+            'index': '/',
+            'nossa_historia': '/nossa-historia',
+            'cardapio': '/cardapio',
+            'montar_pedido': '/montar-pedido',
+            'contato': '/contato'
         };
 
         function switchMainTab(tabKey) {
@@ -1222,7 +1222,7 @@
                     id: 4,
                     slug: 'encomendas',
                     title: 'Montador de Pedido Passo a Passo',
-                    target_url: 'montar-pedido.html',
+                    target_url: '/montar-pedido',
                     redirect_type: 301,
                     clicks: 35,
                     is_active: true,
@@ -1523,7 +1523,7 @@
             document.getElementById('editorPageDesc').innerText = pageDesc;
 
             const liveBtn = document.getElementById('btnLivePagePreview');
-            if (liveBtn) liveBtn.href = PAGE_DESTINATIONS[pageKey] || 'index.html';
+            if (liveBtn) liveBtn.href = PAGE_DESTINATIONS[pageKey] || '/';
 
             renderPageSectionsStack();
         }
@@ -1643,7 +1643,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Link do Botão</label>
-                                    <input type="text" class="form-input" value="${sec.cta_link || ''}" id="in-cta-link-${sec.section_key}" placeholder="Ex: cardapio.html">
+                                    <input type="text" class="form-input" value="${sec.cta_link || ''}" id="in-cta-link-${sec.section_key}" placeholder="Ex: /cardapio">
                                 </div>
                             </div>
 
