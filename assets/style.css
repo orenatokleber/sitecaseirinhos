@@ -83,10 +83,11 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   left: 0;
   right: 0;
   z-index: 100;
-  background: hsla(45, 35%, 98%, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid hsla(var(--border), 0.7);
+  background: hsla(45, 35%, 98%, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid hsla(var(--border), 0.4);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
@@ -123,23 +124,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   transition: all 0.2s ease;
   position: relative;
   padding: 0.25rem 0;
-}
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: hsl(var(--primary));
-  transition: width 0.3s ease;
-  border-radius: 2px;
-}
-
-.nav-links a:hover::after,
-.nav-links a.active::after {
-  width: 100%;
 }
 
 .nav-links a:hover,

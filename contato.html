@@ -502,17 +502,8 @@ Delivery a partir das 12:30h</p>
             });
         }, { threshold: 0.12 });
         ctReveals.forEach(el => ctObserver.observe(el));
-
-        // Navbar scroll shadow
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.style.boxShadow = '0 4px 20px rgba(37, 24, 18, 0.08)';
-            } else {
-                navbar.style.boxShadow = 'none';
-            }
-        });
     </script>
 </body>
 </html>
+
 
