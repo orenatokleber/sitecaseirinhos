@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -40,7 +40,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding-top: 4rem;
+            padding-top: 6rem; /* Avoid overlap with navbar */
+            padding-bottom: 3rem; /* Space for badges */
             overflow: hidden;
         }
         .idx-hero-gradient {
@@ -379,6 +380,9 @@
             padding: 0 1rem;
         }
         @media (min-width: 768px) {
+            .idx-test-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1024px) {
             .idx-test-grid { grid-template-columns: repeat(3, 1fr); }
         }
         .idx-test-card {
