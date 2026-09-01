@@ -601,6 +601,29 @@ const DEFAULT_MENU_CONFIG = {
     ]
 };
 
+// Global safe mobile menu closer
+function closeMobileMenu() {
+    const mm = document.getElementById('mobileMenu');
+    if (mm) mm.classList.remove('active');
+}
+
+// Smart URL resolver so links work on clean URL servers, .html servers, and file:// protocols alike
+function resolveSmartUrl(url) {
+    if (!url) return '/';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('#') || url.startsWith('javascript:')) {
+        return url;
+    }
+    const isFileProtocol = window.location.protocol === 'file:';
+    const hasHtmlExt = window.location.pathname.endsWith('.html');
+    
+    if (isFileProtocol || hasHtmlExt) {
+        if (url === '/' || url === '' || url === 'index') return 'index.html';
+        const clean = url.replace(/^\//, '').replace(/\.html$/, '');
+        return clean + '.html';
+    }
+    return url;
+}
+
 const HeaderMenuManager = {
     STORAGE_KEY: 'caseirinhos_menu_config',
 
@@ -617,12 +640,36 @@ const HeaderMenuManager = {
 
     saveConfig: function(config) {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(config));
+        
+        // Sync with PHP backend
+        if (typeof fetch !== 'undefined') {
+            fetch('api/menu.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config)
+            }).catch(() => {});
+        }
         return config;
+    },
+
+    loadFromBackend: async function() {
+        try {
+            if (typeof fetch !== 'undefined') {
+                const res = await fetch('api/menu.php');
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json && json.data && Array.isArray(json.data.items)) {
+                        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(json.data));
+                        this.applyToDom();
+                    }
+                }
+            }
+        } catch(e) {}
     },
 
     resetToDefault: function() {
         const def = JSON.parse(JSON.stringify(DEFAULT_MENU_CONFIG));
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(def));
+        this.saveConfig(def);
         return def;
     },
 
@@ -643,9 +690,10 @@ const HeaderMenuManager = {
         let desktopHtml = '';
         config.items.forEach(item => {
             if (item.is_visible) {
+                const targetUrl = resolveSmartUrl(item.url);
                 const itemPath = item.url.replace(/\.html$/, '').replace(/\/$/, '') || '/';
                 const isActive = (currentPath === itemPath || (itemPath !== '/' && currentPath.startsWith(itemPath)));
-                desktopHtml += `<li><a href="${item.url}" class="${isActive ? 'active' : ''}">${item.label}</a></li>`;
+                desktopHtml += `<li><a href="${targetUrl}" class="${isActive ? 'active' : ''}">${item.label}</a></li>`;
             }
         });
         navLinksEl.innerHTML = desktopHtml;
@@ -660,8 +708,9 @@ const HeaderMenuManager = {
             `;
             config.items.forEach(item => {
                 if (item.is_visible) {
+                    const targetUrl = resolveSmartUrl(item.url);
                     const iconClass = item.icon || 'fa-link';
-                    mobileHtml += `<a href="${item.url}" onclick="closeMobileMenu()"><i class="fa-solid ${iconClass}"></i> ${item.label}</a>`;
+                    mobileHtml += `<a href="${targetUrl}" onclick="closeMobileMenu()"><i class="fa-solid ${iconClass}"></i> ${item.label}</a>`;
                 }
             });
             mobilePanelEl.innerHTML = mobileHtml;
@@ -675,5 +724,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!window.location.pathname.includes('/admin')) {
         SectionManager.applyToDom();
         HeaderMenuManager.applyToDom();
+        HeaderMenuManager.loadFromBackend();
     }
 });

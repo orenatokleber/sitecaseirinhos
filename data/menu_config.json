@@ -1,0 +1,11 @@
+{
+  "position": "right",
+  "style_theme": "elegant",
+  "items": [
+    { "id": "m1", "label": "Início", "url": "/", "is_visible": true, "icon": "fa-house" },
+    { "id": "m2", "label": "Nossa História", "url": "/nossa-historia", "is_visible": true, "icon": "fa-heart" },
+    { "id": "m3", "label": "Cardápio", "url": "/cardapio", "is_visible": true, "icon": "fa-cake-candles" },
+    { "id": "m4", "label": "Montar Pedido", "url": "/montar-pedido", "is_visible": true, "icon": "fa-shopping-bag" },
+    { "id": "m5", "label": "Contato", "url": "/contato", "is_visible": true, "icon": "fa-envelope" }
+  ]
+}

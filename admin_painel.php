@@ -1387,7 +1387,9 @@
         }
 
         function saveAdminMenuConfig() {
-            if (!tempMenuConfig) return;
+            if (!tempMenuConfig) tempMenuConfig = HeaderMenuManager.getConfig();
+            tempMenuConfig.style_theme = document.getElementById('menuStyleThemeSelect')?.value || 'elegant';
+            tempMenuConfig.position = document.getElementById('menuPositionSelect')?.value || 'right';
             HeaderMenuManager.saveConfig(tempMenuConfig);
             showToast('Configurações do menu salvas com sucesso!');
         }
