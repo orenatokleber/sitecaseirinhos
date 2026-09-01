@@ -1,15 +1,16 @@
 <?php
 session_start();
 
-// Define a senha de acesso (mude para a senha que desejar!)
+// Define os dados de acesso (mude para o que desejar!)
+$usuario_correto = 'admin';
 $senha_correta = 'caseirinhos2024';
 
 // Processa o login
-if (isset($_POST['senha'])) {
-    if ($_POST['senha'] === $senha_correta) {
+if (isset($_POST['usuario']) && isset($_POST['senha'])) {
+    if ($_POST['usuario'] === $usuario_correto && $_POST['senha'] === $senha_correta) {
         $_SESSION['admin_logado'] = true;
     } else {
-        $erro = "Senha incorreta!";
+        $erro = "Usuário ou senha incorretos!";
     }
 }
 
@@ -63,7 +64,7 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
             margin-bottom: 1.5rem;
             text-align: left;
         }
-        input[type="password"] {
+        input[type="text"], input[type="password"] {
             width: 100%;
             padding: 0.8rem;
             border: 1px solid #efe5d5;
@@ -73,7 +74,7 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
             outline: none;
             font-size: 1rem;
         }
-        input[type="password"]:focus {
+        input[type="text"]:focus, input[type="password"]:focus {
             border-color: #c3996b;
         }
         button {
@@ -108,7 +109,10 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
 
         <form method="POST">
             <div class="form-group">
-                <input type="password" name="senha" placeholder="Digite a senha de acesso" required autofocus>
+                <input type="text" name="usuario" placeholder="Digite o usuário" required autofocus>
+            </div>
+            <div class="form-group">
+                <input type="password" name="senha" placeholder="Digite a senha" required>
             </div>
             <button type="submit">Entrar no Painel</button>
         </form>
