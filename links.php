@@ -176,8 +176,11 @@ if ($pdo) {
     <div class="links-container">
         <?php foreach ($links as $link): ?>
             <a href="<?= htmlspecialchars($link['url']) ?>" class="link-btn" target="_blank" rel="noopener noreferrer">
-                <?php if($link['icon']): ?>
-                    <i class="fa-brands <?= htmlspecialchars($link['icon']) ?> link-icon"></i>
+                <?php if($link['icon']): 
+                    $isBrand = in_array($link['icon'], ['fa-whatsapp', 'fa-instagram', 'fa-facebook', 'fa-tiktok', 'fa-youtube', 'fa-twitter']);
+                    $iconClass = ($isBrand ? 'fa-brands ' : 'fa-solid ') . htmlspecialchars($link['icon']);
+                ?>
+                    <i class="<?= $iconClass ?> link-icon"></i>
                 <?php endif; ?>
                 <span><?= htmlspecialchars($link['title']) ?></span>
             </a>

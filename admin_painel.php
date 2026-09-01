@@ -1881,10 +1881,12 @@
                         const div = document.createElement("div");
                         div.className = "section-item-card";
                         if(link.is_active != 1) div.classList.add("is-hidden");
+                        const isBrand = ['fa-whatsapp', 'fa-instagram', 'fa-facebook', 'fa-tiktok', 'fa-youtube', 'fa-twitter'].includes(link.icon);
+                        const iconClass = (isBrand ? 'fa-brands ' : 'fa-solid ') + (link.icon || 'fa-link');
                         div.innerHTML = `
                             <div class="section-header-bar">
                                 <div class="sec-left">
-                                    <div class="page-card-icon" style="width:36px; height:36px; font-size:1rem;"><i class="fa-brands ${link.icon || 'fa-link'}"></i></div>
+                                    <div class="page-card-icon" style="width:36px; height:36px; font-size:1rem;"><i class="${iconClass}"></i></div>
                                     <div class="sec-title-group">
                                         <h4>${link.title}</h4>
                                         <p>${link.url}</p>
