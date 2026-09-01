@@ -31,11 +31,11 @@ $FALLBACK_LINKS = [
         'type' => 302
     ],
     'encomendas' => [
-        'url' => $baseUrl . '/montar-pedido.html',
+        'url' => $baseUrl . '/montar-pedido',
         'type' => 301
     ],
     'cardapio' => [
-        'url' => $baseUrl . '/cardapio.html',
+        'url' => $baseUrl . '/cardapio',
         'type' => 301
     ]
 ];

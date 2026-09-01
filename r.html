@@ -45,7 +45,7 @@
         <div class="spinner"></div>
         <h2>Redirecionando...</h2>
         <p id="redirectMsg">Aguarde um instante enquanto abrimos o seu link.</p>
-        <a id="manualLink" href="index.html">Clique aqui se não for redirecionado</a>
+        <a id="manualLink" href="/">Clique aqui se não for redirecionado</a>
     </div>
 
     <script src="assets/app.js"></script>
@@ -65,8 +65,8 @@
                 'whatsapp': 'https://wa.me/5511948598267?text=Ol%C3%A1!%20Vim%20pelo%20link%20do%20site%20da%20Caseirinhos.',
                 'instagram': 'https://instagram.com/caseirinhosaconfeitaria',
                 'delivery': 'https://instadelivery.com.br/caseirinhosaconfeitaria',
-                'encomendas': 'montar-pedido.html',
-                'cardapio': 'cardapio.html'
+                'encomendas': '/montar-pedido',
+                'cardapio': '/cardapio'
             };
 
             // Lê do localStorage se disponível
@@ -83,7 +83,7 @@
                 }
             } catch(e) {}
 
-            const targetUrl = storedLinks[slug] || DEFAULT_LINKS[slug] || 'index.html';
+            const targetUrl = storedLinks[slug] || DEFAULT_LINKS[slug] || '/';
 
             // Registra clique no localStorage
             try {

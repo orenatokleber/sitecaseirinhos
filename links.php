@@ -13,8 +13,8 @@ $config = [
 ];
 
 $links = [
-    ['title' => 'Cardápio Completo', 'url' => 'cardapio.html', 'icon' => 'fa-cake-candles'],
-    ['title' => 'Fazer Encomenda', 'url' => 'montar-pedido.html', 'icon' => 'fa-whatsapp'],
+    ['title' => 'Cardápio Completo', 'url' => '/cardapio', 'icon' => 'fa-cake-candles'],
+    ['title' => 'Fazer Encomenda', 'url' => '/montar-pedido', 'icon' => 'fa-whatsapp'],
     ['title' => 'Nosso Instagram', 'url' => 'https://instagram.com/caseirinhosaconfeitaria', 'icon' => 'fa-instagram'],
     ['title' => 'Delivery', 'url' => 'https://instadelivery.com.br/caseirinhosaconfeitaria', 'icon' => 'fa-motorcycle'],
     ['title' => 'Fale no WhatsApp', 'url' => 'https://wa.me/5511948598267?text=Ol%C3%A1!%20Vim%20pelo%20link%20do%20site%20da%20Caseirinhos.', 'icon' => 'fa-whatsapp'],
@@ -185,7 +185,7 @@ if ($pdo) {
     </div>
 
     <div class="footer">
-        Feito com <i class="fa-solid fa-heart" style="color:var(--btn-bg); font-size:0.75rem;"></i> por <a href="index.html"><?= htmlspecialchars($config['profile_name']) ?></a>
+        Feito com <i class="fa-solid fa-heart" style="color:var(--btn-bg); font-size:0.75rem;"></i> por <a href="/"><?= htmlspecialchars($config['profile_name']) ?></a>
     </div>
 
 </body>
