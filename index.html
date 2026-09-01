@@ -704,10 +704,6 @@
                 <li><a href="/contato">Contato</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <a href="/montar-pedido" class="nav-cta" style="background: hsla(var(--primary), 0.1); color: hsl(var(--primary)); border: 1px solid hsla(var(--primary), 0.3);">
-                    <i class="fa-solid fa-cake-candles"></i>
-                    <span>Bolos & Encomendas</span>
-                </a>
                 <button class="nav-toggle" id="navToggle" aria-label="Menu">
                     <span></span><span></span><span></span>
                 </button>
@@ -719,12 +715,17 @@
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-overlay" id="mobileOverlay"></div>
         <div class="mobile-menu-panel">
-            <a href="/" onclick="closeMobileMenu()">Início</a>
-            <a href="/nossa-historia" onclick="closeMobileMenu()">Nossa História</a>
-            <a href="/cardapio" onclick="closeMobileMenu()">Cardápio</a>
-            <a href="/montar-pedido" onclick="closeMobileMenu()">Montar Pedido 🎂</a>
-            <a href="/contato" onclick="closeMobileMenu()">Contato</a>
-            <a href="/admin" onclick="closeMobileMenu()">Painel Admin</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos" style="height: 40px; width: auto;">
+                <button onclick="closeMobileMenu()" style="background:none; border:none; font-size:1.5rem; color:hsl(var(--foreground)); cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house" style="width:24px; color:hsl(var(--primary));"></i> Início</a>
+            <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart" style="width:24px; color:hsl(var(--primary));"></i> Nossa História</a>
+            <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles" style="width:24px; color:hsl(var(--primary));"></i> Cardápio</a>
+            <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag" style="width:24px; color:hsl(var(--primary));"></i> Montar Pedido</a>
+            <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope" style="width:24px; color:hsl(var(--primary));"></i> Contato</a>
+            <div style="flex-grow: 1;"></div>
+            <a href="/admin" onclick="closeMobileMenu()" style="border-top: 1px solid hsl(var(--border)); border-bottom: none; padding-top: 1.5rem; font-size:0.9rem; color:hsl(var(--muted-foreground));"><i class="fa-solid fa-lock" style="width:24px;"></i> Painel Admin</a>
         </div>
     </div>
 
