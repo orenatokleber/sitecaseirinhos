@@ -52,7 +52,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const slug = (urlParams.get('slug') || urlParams.get('l') || window.location.hash.replace('#', '')).toLowerCase().trim();
+            // Tenta extrair o slug de múltiplas fontes:
+            // 1. Parâmetro ?slug= na query string
+            // 2. Parâmetro ?l= na query string
+            // 3. Hash #slug na URL
+            // 4. Último segmento do path (para URLs limpas como /delivery)
+            const pathSlug = window.location.pathname.replace(/^\//, '').replace(/\/$/, '').split('/').pop() || '';
+            const rawSlug = urlParams.get('slug') || urlParams.get('l') || window.location.hash.replace('#', '') || pathSlug;
+            const slug = (rawSlug || '').toLowerCase().trim();
 
             const DEFAULT_LINKS = {
                 'whatsapp': 'https://wa.me/5511948598267?text=Ol%C3%A1!%20Vim%20pelo%20link%20do%20site%20da%20Caseirinhos.',

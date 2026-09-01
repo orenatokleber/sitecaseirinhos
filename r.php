@@ -7,9 +7,14 @@ $slug = $_GET['slug'] ?? '';
 $slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9_-]/', '', $slug)));
 
 if (empty($slug)) {
-    header("Location: index.html");
+    header("Location: /");
     exit;
 }
+
+// Detecta a URL base do site para construir redirecionamentos absolutos
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'caseirinhos.com';
+$baseUrl = $protocol . '://' . $host;
 
 // Links padrão de fallback (caso o banco não esteja configurado)
 $FALLBACK_LINKS = [
@@ -26,48 +31,62 @@ $FALLBACK_LINKS = [
         'type' => 302
     ],
     'encomendas' => [
-        'url' => 'montar-pedido.html',
+        'url' => $baseUrl . '/montar-pedido.html',
         'type' => 301
     ],
     'cardapio' => [
-        'url' => 'cardapio.html',
+        'url' => $baseUrl . '/cardapio.html',
         'type' => 301
     ]
 ];
 
-// Tenta consultar no banco de dados MySQL
-if (file_exists('api/db.php')) {
+// Função auxiliar para fazer o redirecionamento
+function doRedirect($url, $code = 301) {
+    header("Location: " . $url, true, $code);
+    exit;
+}
+
+// 1. Tenta consultar no banco de dados MySQL
+if (file_exists(__DIR__ . '/api/db.php')) {
     try {
-        require_once 'api/db.php';
-        if (isset($pdo)) {
+        require_once __DIR__ . '/api/db.php';
+        if ($pdo) {
             $stmt = $pdo->prepare("SELECT * FROM short_links WHERE slug = ? AND is_active = 1 LIMIT 1");
             $stmt->execute([$slug]);
             $link = $stmt->fetch();
 
             if ($link) {
                 // Incrementa contador de cliques
-                $upStmt = $pdo->prepare("UPDATE short_links SET clicks = clicks + 1 WHERE id = ?");
-                $upStmt->execute([$link['id']]);
+                try {
+                    $upStmt = $pdo->prepare("UPDATE short_links SET clicks = clicks + 1 WHERE id = ?");
+                    $upStmt->execute([$link['id']]);
+                } catch (\Exception $e) {
+                    // Falha no contador não impede o redirecionamento
+                }
 
                 $targetUrl = $link['target_url'];
                 $code = (int)($link['redirect_type'] ?? 301);
                 
-                header("Location: " . $targetUrl, true, $code);
-                exit;
+                // Se a URL de destino for relativa, converte para absoluta
+                if (!preg_match('#^https?://#i', $targetUrl)) {
+                    $targetUrl = $baseUrl . '/' . ltrim($targetUrl, '/');
+                }
+                
+                doRedirect($targetUrl, $code);
             }
         }
     } catch (\Exception $e) {
-        // Fallback silencioso
+        // Fallback silencioso — continua para os links padrão
     }
 }
 
-// Se não encontrou no banco, verifica os fallbacks
+// 2. Se não encontrou no banco, verifica os fallbacks
 if (isset($FALLBACK_LINKS[$slug])) {
     $item = $FALLBACK_LINKS[$slug];
-    header("Location: " . $item['url'], true, $item['type']);
-    exit;
+    doRedirect($item['url'], $item['type']);
 }
 
-// Se o slug não existir, redireciona para a home
-header("Location: index.html");
+// 3. Se o slug não existir em nenhum lugar, redireciona para a home
+header("Location: /");
 exit;
+

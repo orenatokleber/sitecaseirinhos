@@ -1,20 +1,30 @@
+# Desativa MultiViews para evitar que o Apache intercepte URLs "bonitas"
+# antes das regras de rewrite (causa comum de erro 404 em /delivery, etc.)
+Options -MultiViews +FollowSymLinks
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
 
-    # Ignora arquivos e diretórios reais
+    # Ignora arquivos e diretórios reais (se o arquivo existe, serve normalmente)
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
     # 1. Tenta carregar a versão .php do arquivo se existir
-    RewriteCond %{REQUEST_FILENAME}.php -f
+    #    Ex: /admin → admin.php, /links → links.php
+    RewriteCond %{DOCUMENT_ROOT}/$1.php -f
     RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.php [L]
 
     # 2. Tenta carregar a versão .html do arquivo se existir
-    RewriteCond %{REQUEST_FILENAME}.html -f
+    #    Ex: /cardapio → cardapio.html, /contato → contato.html
+    RewriteCond %{DOCUMENT_ROOT}/$1.html -f
     RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.html [L]
 
-    # 3. Se não for arquivo real, joga para o sistema de links curtos
+    # 3. Se não for arquivo real nem .php/.html, joga para o sistema de links curtos
+    #    Ex: /delivery → r.php?slug=delivery, /whatsapp → r.php?slug=whatsapp
     RewriteRule ^([a-zA-Z0-9_-]+)/?$ r.php?slug=$1 [L,QSA]
 </IfModule>
+
+# Página de erro 404 personalizada (fallback final)
+ErrorDocument 404 /index.html
