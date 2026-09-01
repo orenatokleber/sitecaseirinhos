@@ -718,9 +718,6 @@ const HeaderMenuManager = {
             });
             mobileHtml += `
                 </div>
-                <div class="mobile-menu-cta">
-                    <a href="${resolveSmartUrl('/montar-pedido')}" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles"></i> Montar Pedido 🎂</a>
-                </div>
             `;
             mobilePanelEl.innerHTML = mobileHtml;
         }
