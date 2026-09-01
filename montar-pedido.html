@@ -15,6 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/style.css">
 
     <!-- Tailwind CSS with Official Caseirinhos Theme -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -112,137 +113,9 @@
 </head>
 <body class="bg-background text-foreground font-body antialiased selection:bg-primary/20 selection:text-foreground">
 
-    <!-- ====== NAVIGATION (Standard – matches all pages) ====== -->
-    <style>
-        /* Nav styles inlined to match site-wide style.css without conflicting with Tailwind content */
-        .nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            background: hsla(45, 35%, 98%, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid hsla(34, 22%, 84%, 0.4);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        .nav .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-        .nav-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            min-height: 72px;
-        }
-        .nav-logo img {
-            height: 48px;
-            width: auto;
-            transition: transform 0.3s ease;
-        }
-        .nav-logo:hover img {
-            transform: scale(1.03);
-        }
-        .nav-links {
-            display: none;
-            gap: 2.25rem;
-            list-style: none;
-            align-items: center;
-            margin: 0;
-            padding: 0;
-        }
-        .nav-links a {
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.875rem;
-            font-family: 'Nunito', -apple-system, sans-serif;
-            color: hsla(25, 40%, 18%, 0.7);
-            transition: all 0.2s ease;
-            position: relative;
-            padding: 0.25rem 0;
-        }
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: hsl(174, 72%, 50%);
-        }
-        .nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: hsl(174, 72%, 50%);
-            border-radius: 2px;
-        }
-        .nav-toggle {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 6px;
-        }
-        .nav-toggle span {
-            display: block;
-            width: 24px;
-            height: 2px;
-            background: hsl(25, 40%, 18%);
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 150;
-        }
-        .mobile-menu.active { display: block; }
-        .mobile-menu-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(30, 20, 15, 0.45);
-            backdrop-filter: blur(6px);
-        }
-        .mobile-menu-panel {
-            position: absolute;
-            right: 0; top: 0; bottom: 0;
-            width: 290px;
-            background: hsl(45, 35%, 98%);
-            padding: 2.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.15);
-            animation: navSlideIn 0.3s ease;
-        }
-        .mobile-menu-panel a {
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            font-family: 'Nunito', -apple-system, sans-serif;
-            color: hsl(25, 40%, 18%);
-            padding: 0.75rem 0;
-            border-bottom: 1px solid hsl(34, 22%, 84%);
-            transition: color 0.2s ease;
-        }
-        .mobile-menu-panel a:hover { color: hsl(174, 72%, 50%); }
-        @keyframes navSlideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-        @media (min-width: 768px) {
-            .nav-links { display: flex; }
-            .nav-toggle { display: none; }
-        }
-    </style>
-
+    <!-- ====== NAVIGATION ====== -->
     <nav class="nav" id="navbar">
-        <div class="nav-container nav-inner">
+        <div class="container nav-inner">
             <a href="/" class="nav-logo">
                 <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria">
             </a>
@@ -250,7 +123,7 @@
                 <li><a href="/">Início</a></li>
                 <li><a href="/nossa-historia">Nossa História</a></li>
                 <li><a href="/cardapio">Cardápio</a></li>
-                <li><a href="/montar-pedido" class="active">Montar Pedido</a></li>
+                <li><a href="/montar-pedido">Montar Pedido</a></li>
                 <li><a href="/contato">Contato</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -265,15 +138,15 @@
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-overlay" id="mobileOverlay"></div>
         <div class="mobile-menu-panel">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos" style="height: 40px; width: auto;">
-                <button onclick="closeMobileMenu()" style="background:none; border:none; font-size:1.5rem; color:hsl(25, 40%, 18%); cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            <div class="mobile-menu-header">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos">
+                <button class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house" style="width:24px; color:hsl(174, 72%, 50%);"></i> Início</a>
-            <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart" style="width:24px; color:hsl(174, 72%, 50%);"></i> Nossa História</a>
-            <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles" style="width:24px; color:hsl(174, 72%, 50%);"></i> Cardápio</a>
-            <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag" style="width:24px; color:hsl(174, 72%, 50%);"></i> Montar Pedido</a>
-            <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope" style="width:24px; color:hsl(174, 72%, 50%);"></i> Contato</a>
+            <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house"></i> Início</a>
+            <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart"></i> Nossa História</a>
+            <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles"></i> Cardápio</a>
+            <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag"></i> Montar Pedido</a>
+            <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope"></i> Contato</a>
         </div>
     </div>
 
@@ -814,6 +687,23 @@
             const dateInput = document.getElementById('custDate');
             if (dateInput) dateInput.min = tomorrow.toISOString().split('T')[0];
         });
+
+        // ===== Navbar: Auto-detect active link =====
+        (function() {
+            const path = window.location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+            document.querySelectorAll('.nav-links a').forEach(function(a) {
+                const href = a.getAttribute('href').replace(/\/$/, '') || '/';
+                if (path === href || (href !== '/' && path.startsWith(href))) {
+                    a.classList.add('active');
+                }
+            });
+        })();
+
+        // ===== Navbar: Scroll shadow =====
+        window.addEventListener('scroll', function() {
+            var nav = document.getElementById('navbar');
+            if (nav) nav.classList.toggle('scrolled', window.scrollY > 10);
+        }, { passive: true });
 
         // Mobile Menu (Standard)
         const navToggle = document.getElementById('navToggle');

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -418,7 +418,7 @@
             </a>
             <ul class="nav-links">
                 <li><a href="/">Início</a></li>
-                <li><a href="/nossa-historia" class="active">Nossa História</a></li>
+                <li><a href="/nossa-historia">Nossa História</a></li>
                 <li><a href="/cardapio">Cardápio</a></li>
                 <li><a href="/montar-pedido">Montar Pedido</a></li>
                 <li><a href="/contato">Contato</a></li>
@@ -435,15 +435,15 @@
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-overlay" id="mobileOverlay"></div>
         <div class="mobile-menu-panel">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos" style="height: 40px; width: auto;">
-                <button onclick="closeMobileMenu()" style="background:none; border:none; font-size:1.5rem; color:hsl(var(--foreground)); cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            <div class="mobile-menu-header">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos">
+                <button class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house" style="width:24px; color:hsl(var(--primary));"></i> Início</a>
-            <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart" style="width:24px; color:hsl(var(--primary));"></i> Nossa História</a>
-            <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles" style="width:24px; color:hsl(var(--primary));"></i> Cardápio</a>
-            <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag" style="width:24px; color:hsl(var(--primary));"></i> Montar Pedido</a>
-            <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope" style="width:24px; color:hsl(var(--primary));"></i> Contato</a>
+            <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house"></i> Início</a>
+            <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart"></i> Nossa História</a>
+            <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles"></i> Cardápio</a>
+            <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag"></i> Montar Pedido</a>
+            <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope"></i> Contato</a>
         </div>
     </div>
 
@@ -583,7 +583,24 @@
     <!-- ====== SCRIPTS ====== -->
     <script src="assets/app.js"></script>
     <script>
-        // Mobile Menu
+        // ===== Navbar: Auto-detect active link =====
+        (function() {
+            const path = window.location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+            document.querySelectorAll('.nav-links a').forEach(function(a) {
+                const href = a.getAttribute('href').replace(/\/$/, '') || '/';
+                if (path === href || (href !== '/' && path.startsWith(href))) {
+                    a.classList.add('active');
+                }
+            });
+        })();
+
+        // ===== Navbar: Scroll shadow =====
+        window.addEventListener('scroll', function() {
+            var nav = document.getElementById('navbar');
+            if (nav) nav.classList.toggle('scrolled', window.scrollY > 10);
+        }, { passive: true });
+
+        // ===== Mobile Menu =====
         const navToggle = document.getElementById('navToggle');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileOverlay = document.getElementById('mobileOverlay');
