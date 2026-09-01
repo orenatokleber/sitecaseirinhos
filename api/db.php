@@ -3,7 +3,7 @@
 $host = 'localhost'; // Normalmente localhost na Hostinger
 $db   = 'u960702577_sitecase'; // Substitua pelo nome do seu banco criado no hPanel
 $user = 'u960702577_admin'; // Substitua pelo usuário do seu banco
-$pass = 'SuaSenhaForteAqui123!'; // Substitua pela senha
+$pass = 'caseirinhos2024'; // Substitua pela senha
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
