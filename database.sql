@@ -146,3 +146,37 @@ INSERT INTO `short_links` (`slug`, `title`, `target_url`, `redirect_type`, `clic
 ('encomendas', 'Montador de Pedido Passo a Passo', 'montar-pedido.html', 301, 35, 1)
 ON DUPLICATE KEY UPDATE `title`=VALUES(`title`);
 
+
+ - -   = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+ - -   T a b e l a   d e   B i o l i n k s 
+ - -   = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+ C R E A T E   T A B L E   I F   N O T   E X I S T S   \  i o l i n k s _ c o n f i g \   ( 
+     \ i d \   i n t ( 1 1 )   N O T   N U L L   A U T O _ I N C R E M E N T , 
+     \ p r o f i l e _ n a m e \   v a r c h a r ( 1 0 0 )   N O T   N U L L   D E F A U L T   ' C a s e i r i n h o s ' , 
+     \ p r o f i l e _ d e s c \   v a r c h a r ( 2 5 5 )   D E F A U L T   ' A d o ç a n d o   s e u s   m o m e n t o s   e s p e c i a i s ! ' , 
+     \ p r o f i l e _ i m a g e \   v a r c h a r ( 2 5 5 )   D E F A U L T   ' i m a g e s / c o n f e i t e i r a - s o r r i n d o . j p g ' , 
+     \  g _ c o l o r \   v a r c h a r ( 2 0 )   D E F A U L T   ' # f b f 7 e e ' , 
+     \ 	 e x t _ c o l o r \   v a r c h a r ( 2 0 )   D E F A U L T   ' # 2 d 2 3 1 b ' , 
+     \  t n _ b g _ c o l o r \   v a r c h a r ( 2 0 )   D E F A U L T   ' # c 3 9 9 6 b ' , 
+     \  t n _ t e x t _ c o l o r \   v a r c h a r ( 2 0 )   D E F A U L T   ' # f f f f f f ' , 
+     P R I M A R Y   K E Y   ( \ i d \ ) 
+ )   E N G I N E = I n n o D B   D E F A U L T   C H A R S E T = u t f 8 m b 4 ; 
+ 
+ I N S E R T   I N T O   \  i o l i n k s _ c o n f i g \   ( \ p r o f i l e _ n a m e \ )   V A L U E S   ( ' C a s e i r i n h o s ' )   O N   D U P L I C A T E   K E Y   U P D A T E   \ p r o f i l e _ n a m e \ = \ p r o f i l e _ n a m e \ ; 
+ 
+ C R E A T E   T A B L E   I F   N O T   E X I S T S   \  i o l i n k s \   ( 
+     \ i d \   i n t ( 1 1 )   N O T   N U L L   A U T O _ I N C R E M E N T , 
+     \ 	 i t l e \   v a r c h a r ( 1 0 0 )   N O T   N U L L , 
+     \ u r l \   t e x t   N O T   N U L L , 
+     \ i c o n \   v a r c h a r ( 5 0 )   D E F A U L T   ' f a - l i n k ' , 
+     \ s o r t _ o r d e r \   i n t ( 1 1 )   N O T   N U L L   D E F A U L T   0 , 
+     \ i s _ a c t i v e \   t i n y i n t ( 1 )   N O T   N U L L   D E F A U L T   1 , 
+     P R I M A R Y   K E Y   ( \ i d \ ) 
+ )   E N G I N E = I n n o D B   D E F A U L T   C H A R S E T = u t f 8 m b 4 ; 
+ 
+ I N S E R T   I N T O   \  i o l i n k s \   ( \ 	 i t l e \ ,   \ u r l \ ,   \ i c o n \ ,   \ s o r t _ o r d e r \ )   V A L U E S 
+ ( ' C a r d á p i o   C o m p l e t o ' ,   ' c a r d a p i o . h t m l ' ,   ' f a - c a k e - c a n d l e s ' ,   0 ) , 
+ ( ' F a z e r   E n c o m e n d a ' ,   ' m o n t a r - p e d i d o . h t m l ' ,   ' f a - w h a t s a p p ' ,   1 ) , 
+ ( ' N o s s o   I n s t a g r a m ' ,   ' h t t p s : / / i n s t a g r a m . c o m / c a s e i r i n h o s a c o n f e i t a r i a ' ,   ' f a - i n s t a g r a m ' ,   2 ) ; 
+  
+ 

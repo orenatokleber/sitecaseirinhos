@@ -684,6 +684,9 @@
             <button class="menu-item" onclick="switchMainTab('links')" id="menu-links">
                 <i class="fa-solid fa-link"></i> Links
             </button>
+            <button class="menu-item" onclick="switchMainTab('biolinks')" id="menu-biolinks">
+                <i class="fa-brands fa-instagram"></i> Biolinks
+            </button>
         </nav>
 
         <div class="sidebar-bottom">
@@ -888,6 +891,110 @@
             </div>
 
             <!-- ============================================== -->
+            <!-- ABA: BIOLINKS                                  -->
+            <!-- ============================================== -->
+            <div id="view-biolinks" style="display:none; max-width:1100px;">
+                <div class="editor-top-actions">
+                    <div class="page-intro" style="margin-bottom:0;">
+                        <h1>Página de Biolinks</h1>
+                        <p>Gerencie sua página pública de links (Linktree)</p>
+                        <a href="links.php" target="_blank" style="display:inline-block; margin-top:0.5rem; color:var(--accent-gold); font-weight:bold; font-size:0.9rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Página Pública</a>
+                    </div>
+                    <button type="button" class="btn-luxury btn-gold" onclick="openBiolinkModal()">
+                        <i class="fa-solid fa-plus"></i> Novo Botão de Link
+                    </button>
+                </div>
+
+                <div style="background:#fff; padding:1.5rem; border-radius:var(--radius-card); border:1px solid var(--border-color); margin-bottom:2rem;">
+                    <h3 style="margin-bottom:1rem; font-size:1.1rem;"><i class="fa-solid fa-palette"></i> Configurações do Perfil</h3>
+                    <form id="biolinksConfigForm" onsubmit="saveBiolinksConfig(event)" class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Nome do Perfil</label>
+                            <input type="text" id="bio_name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">URL da Foto de Perfil</label>
+                            <input type="text" id="bio_image" class="form-input">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">Descrição Breve</label>
+                            <input type="text" id="bio_desc" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cor de Fundo da Página</label>
+                            <div class="color-box">
+                                <input type="color" id="bio_bg_color">
+                                <input type="text" id="bio_bg_color_text" oninput="document.getElementById('bio_bg_color').value=this.value">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cor do Texto da Página</label>
+                            <div class="color-box">
+                                <input type="color" id="bio_text_color">
+                                <input type="text" id="bio_text_color_text" oninput="document.getElementById('bio_text_color').value=this.value">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cor de Fundo dos Botões</label>
+                            <div class="color-box">
+                                <input type="color" id="bio_btn_bg">
+                                <input type="text" id="bio_btn_bg_text" oninput="document.getElementById('bio_btn_bg').value=this.value">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cor do Texto dos Botões</label>
+                            <div class="color-box">
+                                <input type="color" id="bio_btn_text">
+                                <input type="text" id="bio_btn_text_text" oninput="document.getElementById('bio_btn_text').value=this.value">
+                            </div>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1; margin-top:1rem;">
+                            <button type="submit" class="btn-luxury btn-gold">Salvar Configurações</button>
+                        </div>
+                    </form>
+                </div>
+
+                <h3 style="margin-bottom:1rem; font-size:1.1rem;"><i class="fa-solid fa-list-ul"></i> Seus Botões (Arraste para ordenar)</h3>
+                <div class="sections-stack" id="biolinksListContainer">
+                    <!-- JS vai preencher -->
+                </div>
+            </div>
+
+            <!-- MODAL DE BIOLINK -->
+            <div class="modal-wrap" id="modalBiolink">
+                <div class="modal-box">
+                    <h3 style="font-size:1.5rem; color:var(--accent-gold);"><i class="fa-solid fa-link"></i> Editar Botão</h3>
+                    <form id="formBiolink" onsubmit="saveBiolink(event)" style="display:flex; flex-direction:column; gap:1.25rem;">
+                        <input type="hidden" id="biolink_id" value="0">
+                        <div class="form-group">
+                            <label class="form-label">Título do Botão</label>
+                            <input type="text" id="biolink_title" class="form-input" required placeholder="Ex: Fazer Pedido">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">URL de Destino</label>
+                            <input type="text" id="biolink_url" class="form-input" required placeholder="https://...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Classe do Ícone (FontAwesome)</label>
+                            <input type="text" id="biolink_icon" class="form-input" placeholder="fa-whatsapp">
+                            <small style="color:var(--text-light); margin-top:0.3rem;">Ex: fa-whatsapp, fa-instagram, fa-cake-candles</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Visibilidade</label>
+                            <label class="switch">
+                                <input type="checkbox" id="biolink_active" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="display:flex; gap:1rem; justify-content:flex-end; margin-top:1rem;">
+                            <button type="button" class="btn-luxury btn-subtle" onclick="document.getElementById('modalBiolink').classList.remove('open')">Cancelar</button>
+                            <button type="submit" class="btn-luxury btn-gold">Salvar Botão</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
             <!-- OUTRAS ABAS (Dashboard, etc.)                  -->
             <!-- ============================================== -->
             <div id="view-dashboard" style="display:none;">
@@ -1057,11 +1164,16 @@
             document.getElementById('view-page-editor').classList.remove('active');
             document.getElementById('view-dashboard').style.display = 'none';
             document.getElementById('view-links').style.display = 'none';
+            if(document.getElementById('view-biolinks')) document.getElementById('view-biolinks').style.display = 'none';
 
             if (tabKey === 'pages') {
                 document.getElementById('view-pages-grid').style.display = 'block';
             } else if (tabKey === 'dashboard') {
                 document.getElementById('view-dashboard').style.display = 'block';
+            } else if (tabKey === 'biolinks') {
+                document.getElementById('view-biolinks').style.display = 'block';
+                loadBiolinksConfig();
+                loadBiolinksList();
             } else if (tabKey === 'links') {
                 document.getElementById('view-links').style.display = 'block';
                 renderLinksList();
@@ -1705,6 +1817,131 @@
             closeNewSectionModal();
             renderPageSectionsStack();
             showToast('Nova seção criada com sucesso!');
+        }
+        // ==========================================================
+        // BIOLINKS MANAGER
+        // ==========================================================
+        function loadBiolinksConfig() {
+            fetch("api/biolinks.php?action=get_config")
+                .then(r => r.json())
+                .then(data => {
+                    if(!data) return;
+                    document.getElementById("bio_name").value = data.profile_name || "";
+                    document.getElementById("bio_desc").value = data.profile_desc || "";
+                    document.getElementById("bio_image").value = data.profile_image || "";
+                    
+                    document.getElementById("bio_bg_color").value = data.bg_color || "#fbf7ee";
+                    document.getElementById("bio_bg_color_text").value = data.bg_color || "#fbf7ee";
+                    
+                    document.getElementById("bio_text_color").value = data.text_color || "#2d231b";
+                    document.getElementById("bio_text_color_text").value = data.text_color || "#2d231b";
+                    
+                    document.getElementById("bio_btn_bg").value = data.btn_bg_color || "#c3996b";
+                    document.getElementById("bio_btn_bg_text").value = data.btn_bg_color || "#c3996b";
+                    
+                    document.getElementById("bio_btn_text").value = data.btn_text_color || "#ffffff";
+                    document.getElementById("bio_btn_text_text").value = data.btn_text_color || "#ffffff";
+                });
+        }
+
+        function saveBiolinksConfig(e) {
+            e.preventDefault();
+            const data = {
+                profile_name: document.getElementById("bio_name").value,
+                profile_desc: document.getElementById("bio_desc").value,
+                profile_image: document.getElementById("bio_image").value,
+                bg_color: document.getElementById("bio_bg_color").value,
+                text_color: document.getElementById("bio_text_color").value,
+                btn_bg_color: document.getElementById("bio_btn_bg").value,
+                btn_text_color: document.getElementById("bio_btn_text").value
+            };
+            fetch("api/biolinks.php?action=save_config", {
+                method: "POST",
+                body: JSON.stringify(data)
+            }).then(() => showToast("Configurações salvas!"));
+        }
+
+        function loadBiolinksList() {
+            fetch("api/biolinks.php?action=get_links")
+                .then(r => r.json())
+                .then(links => {
+                    const container = document.getElementById("biolinksListContainer");
+                    container.innerHTML = "";
+                    if(links.length === 0) {
+                        container.innerHTML = "<p style='color:var(--text-muted);'>Nenhum botão cadastrado ainda.</p>";
+                        return;
+                    }
+                    links.forEach(link => {
+                        const div = document.createElement("div");
+                        div.className = "section-item-card";
+                        if(link.is_active != 1) div.classList.add("is-hidden");
+                        div.innerHTML = `
+                            <div class="section-header-bar">
+                                <div class="sec-left">
+                                    <div class="page-card-icon" style="width:36px; height:36px; font-size:1rem;"><i class="fa-brands ${link.icon || 'fa-link'}"></i></div>
+                                    <div class="sec-title-group">
+                                        <h4>${link.title}</h4>
+                                        <p>${link.url}</p>
+                                    </div>
+                                </div>
+                                <div class="sec-right">
+                                    <button class="btn-luxury btn-subtle" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="editBiolink(${link.id}, '${link.title.replace(/'/g, "\\'")}', '${link.url.replace(/'/g, "\\'")}', '${link.icon || ""}', ${link.is_active})"><i class="fa-solid fa-pen"></i> Editar</button>
+                                    <button class="btn-luxury btn-danger-subtle" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="deleteBiolink(${link.id})"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                });
+        }
+
+        function openBiolinkModal() {
+            document.getElementById("biolink_id").value = "0";
+            document.getElementById("biolink_title").value = "";
+            document.getElementById("biolink_url").value = "";
+            document.getElementById("biolink_icon").value = "";
+            document.getElementById("biolink_active").checked = true;
+            document.getElementById("modalBiolink").classList.add("open");
+        }
+
+        function editBiolink(id, title, url, icon, active) {
+            document.getElementById("biolink_id").value = id;
+            document.getElementById("biolink_title").value = title;
+            document.getElementById("biolink_url").value = url;
+            document.getElementById("biolink_icon").value = icon;
+            document.getElementById("biolink_active").checked = (active == 1);
+            document.getElementById("modalBiolink").classList.add("open");
+        }
+
+        function saveBiolink(e) {
+            e.preventDefault();
+            const data = {
+                id: document.getElementById("biolink_id").value,
+                title: document.getElementById("biolink_title").value,
+                url: document.getElementById("biolink_url").value,
+                icon: document.getElementById("biolink_icon").value,
+                is_active: document.getElementById("biolink_active").checked ? 1 : 0
+            };
+            fetch("api/biolinks.php?action=save_link", {
+                method: "POST",
+                body: JSON.stringify(data)
+            }).then(() => {
+                document.getElementById("modalBiolink").classList.remove("open");
+                showToast("Botão salvo com sucesso!");
+                loadBiolinksList();
+            });
+        }
+
+        function deleteBiolink(id) {
+            if(confirm("Tem certeza que deseja excluir este botão?")) {
+                fetch("api/biolinks.php?action=delete_link", {
+                    method: "POST",
+                    body: JSON.stringify({id: id})
+                }).then(() => {
+                    showToast("Botão excluído!");
+                    loadBiolinksList();
+                });
+            }
         }
     </script>
 </body>
