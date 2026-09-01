@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio de Encomendas | Caseirinhos a Confeitaria</title>
+    <meta name="description" content="Confeitaria artesanal com bolos caseiros, doces finos, sobremesas e encomendas especiais para casamentos e eventos. Mais do que doces, criamos memórias.">
+    <meta name="keywords" content="cardapio caseirinhos, bolos artesanais, bolos de festa, docinhos finos, brigadeiro gourmet, bolos de corte">
+    <meta property="og:title" content="Cardápio de Encomendas | Caseirinhos a Confeitaria">
+    <meta property="og:description" content="Bolos redondos, bolos retangulares, doces finos e decorações personalizadas.">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&family=Great+Vibes&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/style.css">
+
+    <style>
+        /* ====== CARDÁPIO PAGE STYLES ====== */
+
+        /* --- Layout Utilities --- */
+        .cp-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .cp-container-md {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .cp-container-sm {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .cp-text-center { text-align: center; }
+
+        /* --- Hero Section --- */
+        .cp-hero {
+            padding: 7rem 0 3.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .cp-hero-bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(48px);
+        }
+        .cp-hero-bg-orb--1 {
+            top: 2.5rem; left: 2.5rem;
+            width: 8rem; height: 8rem;
+            background: hsla(var(--primary), 0.05);
+        }
+        .cp-hero-bg-orb--2 {
+            bottom: 2.5rem; right: 2.5rem;
+            width: 10rem; height: 10rem;
+            background: hsla(var(--accent), 0.05);
+        }
+        .cp-hero .font-script {
+            font-size: 1.75rem;
+            color: hsl(var(--primary));
+        }
+        .cp-hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .cp-hero-divider {
+            width: 5rem;
+            height: 2px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(to right, transparent, hsl(var(--accent)), transparent);
+        }
+        .cp-hero-subtitle {
+            color: hsl(var(--muted-foreground));
+            max-width: 28rem;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .cp-hero-img-wrap {
+            margin-top: 2rem;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cp-hero-img-wrap img {
+            width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            border: 1px solid hsla(var(--border), 0.6);
+            box-shadow: var(--shadow-sm);
+        }
+        .cp-hero-desc {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            max-width: 40rem;
+            margin: 1.5rem auto 0;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        @media (min-width: 768px) {
+            .cp-hero { padding: 9rem 0 5rem; }
+            .cp-hero .font-script { font-size: 2rem; }
+            .cp-hero h1 { font-size: 3rem; }
+        }
+
+        /* --- Section Headers --- */
+        .cp-section { padding-bottom: 3rem; }
+        .cp-section-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        .cp-section-header .font-script {
+            font-size: 1.5rem;
+            color: hsl(var(--primary));
+        }
+        .cp-section-header h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            color: hsl(var(--foreground));
+        }
+        .cp-section-header p {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            max-width: 32rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cp-dot-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .cp-dot-divider .line {
+            width: 2rem;
+            height: 2px;
+            background: hsla(var(--primary), 0.4);
+        }
+        .cp-dot-divider .dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            background: hsl(var(--primary));
+        }
+
+        @media (min-width: 768px) {
+            .cp-section-header h2 { font-size: 2.25rem; }
+            .cp-section-header .font-script { font-size: 1.75rem; }
+        }
+
+        /* --- Two-column Grid --- */
+        .cp-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        @media (min-width: 768px) {
+            .cp-grid-2 { grid-template-columns: 1fr 1fr; gap: 3rem; }
+        }
+        .cp-grid-2 .cp-img-col {
+            display: flex;
+            justify-content: center;
+        }
+        .cp-grid-2 .cp-img-col img {
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            max-height: 520px;
+            object-fit: contain;
+            border-radius: 0.5rem;
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.12));
+        }
+
+        /* --- Size Cards (Tamanhos) --- */
+        .cp-size-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .cp-size-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-radius: 1rem;
+            background: hsl(var(--card));
+            border: 1px solid hsla(var(--border), 0.6);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cp-size-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .cp-size-card .cp-size-label {
+            width: 4rem; height: 4rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: hsla(var(--accent), 0.1);
+        }
+        .cp-size-card .cp-size-label span {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: hsl(var(--accent));
+        }
+        .cp-size-card .cp-size-info {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.25rem 1rem;
+            padding: 0.75rem 1rem 0.75rem 0;
+            font-size: 0.875rem;
+            color: hsl(var(--foreground));
+        }
+        .cp-size-card .cp-size-info .sep {
+            color: hsl(var(--muted-foreground));
+        }
+        @media (min-width: 768px) {
+            .cp-size-card .cp-size-label { width: 5rem; height: 5rem; }
+            .cp-size-card .cp-size-label span { font-size: 1.875rem; }
+            .cp-size-card .cp-size-info { font-size: 1rem; }
+        }
+
+        /* --- Price Grid (Classe 1, 2) --- */
+        .cp-price-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        .cp-price-card {
+            border-radius: 1rem;
+            border: 1px solid hsla(var(--accent), 0.2);
+            background: hsl(var(--card));
+            box-shadow: var(--shadow-sm);
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cp-price-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .cp-price-card .size-name {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+        }
+        .cp-price-card .size-details {
+            margin-top: 0.25rem;
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+            line-height: 1.5;
+        }
+        .cp-price-card .size-price {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: hsl(var(--chocolate));
+        }
+
+        /* --- Flavor List --- */
+        .cp-flavor-list {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .cp-flavor-item {
+            border-left: 2px solid hsla(var(--accent), 0.3);
+            padding-left: 1rem;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+        .cp-flavor-item h4 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            color: hsl(var(--foreground));
+        }
+        .cp-flavor-item p {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-top: 0.25rem;
+            line-height: 1.6;
+        }
+
+        /* --- Decoration Cards --- */
+        .cp-deco-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        @media (min-width: 768px) {
+            .cp-deco-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .cp-deco-card {
+            border-radius: 1rem;
+            background: hsl(var(--card));
+            border: 1px solid hsla(var(--border), 0.6);
+            box-shadow: var(--shadow-sm);
+            padding: 1.25rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cp-deco-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .cp-deco-card h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-size: 0.875rem;
+            color: hsl(var(--foreground));
+        }
+        .cp-deco-card .deco-desc {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+            margin-top: 0.25rem;
+        }
+        .cp-deco-card .deco-price {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: hsl(var(--chocolate));
+        }
+        .cp-deco-card .deco-price--consult {
+            font-style: italic;
+            color: hsl(var(--muted-foreground));
+            font-weight: 400;
+        }
+
+        /* --- Drip Cake Sizes Mini Grid --- */
+        .cp-drip-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.25rem;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+        .cp-drip-item {
+            background: hsla(var(--accent), 0.05);
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.25rem;
+        }
+        .cp-drip-item .drip-size { font-weight: 600; }
+        .cp-drip-item .drip-price {
+            font-weight: 700;
+            color: hsl(var(--chocolate));
+        }
+
+        /* --- Rectangular Cakes --- */
+        .cp-rect-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .cp-rect-card {
+            border-radius: 1rem;
+            background: hsl(var(--card));
+            border: 1px solid hsla(var(--border), 0.6);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cp-rect-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .cp-rect-card .rect-header {
+            background: hsla(var(--accent), 0.1);
+            padding: 0.75rem 1.25rem;
+            text-align: center;
+        }
+        .cp-rect-card .rect-header h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.06em;
+            color: hsl(var(--foreground));
+        }
+        .cp-rect-card .rect-header p {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+            margin-top: 0.25rem;
+        }
+        .cp-rect-card .rect-body {
+            padding: 1.25rem;
+        }
+        .cp-rect-card .rect-serves {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.125rem;
+            color: hsl(var(--chocolate));
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+        .cp-rect-card .rect-price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            padding: 0.25rem 0;
+        }
+        .cp-rect-card .rect-price-row span:last-child {
+            font-weight: 700;
+            color: hsl(var(--chocolate));
+        }
+
+        /* --- Sweets Cards (Doces para Festas) --- */
+        .cp-sweets-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        @media (min-width: 768px) {
+            .cp-sweets-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .cp-sweet-card {
+            border-radius: 1rem;
+            background: hsl(var(--card));
+            border: 1px solid hsla(var(--border), 0.6);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cp-sweet-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        .cp-sweet-card .sweet-img {
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            background: hsl(var(--muted));
+        }
+        .cp-sweet-card .sweet-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .cp-sweet-card:hover .sweet-img img {
+            transform: scale(1.05);
+        }
+        .cp-sweet-card .sweet-header {
+            background: hsla(var(--accent), 0.1);
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+        .cp-sweet-card .sweet-header h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: hsl(var(--foreground));
+            font-size: 1rem;
+        }
+        .cp-sweet-card .sweet-header p {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+            margin-top: 0.25rem;
+        }
+        .cp-sweet-card .sweet-body {
+            padding: 1.25rem;
+        }
+        .cp-sweet-card .sweet-prices {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .cp-sweet-card .sweet-price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid hsla(var(--border), 0.4);
+        }
+        .cp-sweet-card .sweet-price-row:last-child { border-bottom: none; }
+        .cp-sweet-card .sweet-price-row span:last-child {
+            font-weight: 700;
+            color: hsl(var(--chocolate));
+        }
+        .cp-sweet-card .sweet-flavors {
+            margin-top: 1rem;
+        }
+        .cp-sweet-card .sweet-flavors-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 0.5rem;
+        }
+        .cp-sweet-card .sweet-flavors ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .cp-sweet-card .sweet-flavors li {
+            font-size: 0.875rem;
+            color: hsla(var(--foreground), 0.8);
+            display: flex;
+            align-items: center;
+        }
+        .cp-sweet-card .sweet-flavors li .bullet {
+            color: hsl(var(--accent));
+            margin-right: 0.5rem;
+            font-weight: 700;
+        }
+
+        /* --- Order Form --- */
+        .cp-form-section {
+            padding-bottom: 4rem;
+        }
+        .cp-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .cp-form label {
+            display: block;
+            font-size: 0.875rem;
+            color: hsl(var(--foreground));
+            margin-bottom: 0.25rem;
+        }
+        .cp-form input,
+        .cp-form textarea {
+            width: 100%;
+            padding: 0.8125rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid hsl(var(--border));
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .cp-form input:focus,
+        .cp-form textarea:focus {
+            border-color: hsl(var(--accent));
+            box-shadow: 0 0 0 3px hsla(var(--accent), 0.15);
+        }
+        .cp-form textarea { resize: none; }
+        .cp-form-submit {
+            width: 100%;
+            padding: 0.8125rem;
+            border-radius: var(--radius-full);
+            background: hsl(var(--accent));
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .cp-form-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px hsla(var(--accent), 0.3);
+        }
+
+        /* --- Footer (extended) --- */
+        .cp-footer-wave {
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            background: hsl(var(--background));
+        }
+        .cp-footer-wave svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .cp-footer-main {
+            background: hsl(var(--chocolate-deep));
+            color: hsl(var(--cream));
+        }
+        .cp-footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+        .cp-footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+        @media (min-width: 768px) {
+            .cp-footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+        }
+        .cp-footer-col { text-align: center; }
+        @media (min-width: 768px) {
+            .cp-footer-col:first-child { text-align: left; }
+            .cp-footer-col:last-child { text-align: right; }
+        }
+        .cp-footer-col img {
+            height: 3.5rem;
+            width: auto;
+            margin-bottom: 1rem;
+            filter: brightness(0) invert(1);
+        }
+        .cp-footer-col p {
+            font-size: 0.875rem;
+            opacity: 0.7;
+            line-height: 1.6;
+        }
+        .cp-footer-col h4 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: hsl(var(--accent));
+        }
+        .cp-footer-col ul {
+            list-style: none;
+        }
+        .cp-footer-col ul li { margin-bottom: 0.5rem; }
+        .cp-footer-col ul a {
+            text-decoration: none;
+            font-size: 0.875rem;
+            color: hsl(var(--cream));
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+        .cp-footer-col ul a:hover {
+            opacity: 1;
+            color: hsl(var(--accent));
+        }
+        .cp-footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+        .cp-footer-info p {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+        @media (min-width: 768px) {
+            .cp-footer-info p { justify-content: flex-end; }
+        }
+        .cp-footer-info p { justify-content: center; }
+        @media (min-width: 768px) {
+            .cp-footer-info p { justify-content: flex-end; }
+        }
+        .cp-footer-socials {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-top: 0.5rem;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            .cp-footer-socials { justify-content: flex-end; }
+        }
+        .cp-footer-socials a {
+            color: hsl(var(--cream));
+            font-size: 1.25rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .cp-footer-socials a:hover { color: hsl(var(--accent)); }
+        .cp-footer-copy {
+            border-top: 1px solid hsla(var(--cream), 0.1);
+            margin-top: 2.5rem;
+            padding-top: 1.25rem;
+            text-align: center;
+            font-size: 0.75rem;
+            opacity: 0.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+        .cp-footer-copy .heart {
+            color: hsl(var(--primary));
+        }
+
+        /* --- Animations --- */
+        .cp-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .cp-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .cp-reveal-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .cp-reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .cp-reveal-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .cp-reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* --- Grid order on desktop --- */
+        @media (min-width: 768px) {
+            .cp-order-1 { order: 1; }
+            .cp-order-2 { order: 2; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== NAVIGATION ====== -->
+    <nav class="nav" id="navbar">
+        <div class="container nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="nossa-historia.html">Nossa História</a></li>
+                <li><a href="cardapio.html" class="active">Cardápio</a></li>
+                <li><a href="montar-pedido.html">Montar Pedido</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <a href="montar-pedido.html" class="nav-cta" style="background: hsla(var(--primary), 0.1); color: hsl(var(--primary)); border: 1px solid hsla(var(--primary), 0.3);">
+                    <i class="fa-solid fa-cake-candles"></i>
+                    <span>Bolos & Encomendas</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+        <div class="mobile-menu-panel">
+            <a href="index.html" onclick="closeMobileMenu()">Início</a>
+            <a href="nossa-historia.html" onclick="closeMobileMenu()">Nossa História</a>
+            <a href="cardapio.html" onclick="closeMobileMenu()">Cardápio</a>
+            <a href="montar-pedido.html" onclick="closeMobileMenu()">Montar Pedido 🎂</a>
+            <a href="contato.html" onclick="closeMobileMenu()">Contato</a>
+            <a href="admin.html" onclick="closeMobileMenu()">Painel Admin</a>
+        </div>
+    </div>
+
+    <main>
+
+        <!-- ======================================= -->
+        <!-- 1. HERO                                 -->
+        <!-- ======================================= -->
+        <section class="cp-hero" id="menu_hero" data-section="menu_hero">
+            <div class="cp-hero-bg-orb cp-hero-bg-orb--1"></div>
+            <div class="cp-hero-bg-orb cp-hero-bg-orb--2"></div>
+            <div class="cp-container cp-text-center" style="position:relative; z-index:10;">
+                <div class="cp-reveal">
+                    <span class="font-script" data-field="script">Tornando sua vida mais doce!</span>
+                    <h1 class="font-heading" data-field="title">Cardápio de Encomendas</h1>
+                    <div class="cp-hero-divider"></div>
+                    <p class="cp-hero-subtitle font-body" data-field="subtitle">BEM-VINDO AO NOSSO CARDÁPIO DE DELÍCIAS!</p>
+
+                    <div class="cp-hero-img-wrap">
+                        <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/cardapio_hero/1781027412146-9hjvbm.jpg" alt="Cardápio de Encomendas" data-field="image">
+                    </div>
+
+                    <p class="cp-hero-desc font-body" data-field="content">Na Caseirinhos, cada doce é preparado com carinho para tornar seus momentos ainda mais especiais. 
+
+Somos apaixonados por criar bolos, sobremesas e doces que unem sabor, qualidade e aquele toque caseiro que faz toda a diferença. Utilizamos ingredientes selecionados e dedicação em cada receita, porque acreditamos que cada detalhe importa.
+
+Mais do que vender doces, queremos proporcionar experiências inesquecíveis, da primeira à última mordida. 
+
+Esperamos que você aproveite nossas delícias e volte sempre para experimentar nossas novidades!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 2. TAMANHO DOS BOLOS                    -->
+        <!-- ======================================= -->
+        <section class="cp-section">
+            <div class="cp-container" style="max-width:72rem;">
+                <div class="cp-section-header cp-reveal">
+                    <h2 class="font-heading">Tamanho dos nossos bolos</h2>
+                    <p>ESCOLHA O TAMANHO DO SEU BOLO!</p>
+                    <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+                </div>
+
+                <div class="cp-grid-2">
+                    <div class="cp-img-col cp-order-1 cp-reveal-left">
+                        <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/cardapio_sizes/1781027676864-pser3.jpg" alt="Tamanho dos nossos bolos" loading="lazy">
+                    </div>
+                    <div class="cp-order-2 cp-reveal">
+                        <div class="cp-size-list">
+                            <div class="cp-size-card">
+                                <div class="cp-size-label"><span>PP</span></div>
+                                <div class="cp-size-info font-body">
+                                    <span>aro 13</span><span class="sep">|</span>
+                                    <span>10 fatias</span><span class="sep">|</span>
+                                    <span>1.2kg</span>
+                                </div>
+                            </div>
+                            <div class="cp-size-card">
+                                <div class="cp-size-label"><span>P</span></div>
+                                <div class="cp-size-info font-body">
+                                    <span>aro 15</span><span class="sep">|</span>
+                                    <span>15 fatias</span><span class="sep">|</span>
+                                    <span>1.6kg</span>
+                                </div>
+                            </div>
+                            <div class="cp-size-card">
+                                <div class="cp-size-label"><span>M</span></div>
+                                <div class="cp-size-info font-body">
+                                    <span>aro 17</span><span class="sep">|</span>
+                                    <span>20 fatias</span><span class="sep">|</span>
+                                    <span>2.1kg</span>
+                                </div>
+                            </div>
+                            <div class="cp-size-card">
+                                <div class="cp-size-label"><span>G</span></div>
+                                <div class="cp-size-info font-body">
+                                    <span>aro 20</span><span class="sep">|</span>
+                                    <span>30 fatias</span><span class="sep">|</span>
+                                    <span>3.1kg</span>
+                                </div>
+                            </div>
+                            <div class="cp-size-card">
+                                <div class="cp-size-label"><span>XG</span></div>
+                                <div class="cp-size-info font-body">
+                                    <span>aro 25</span><span class="sep">|</span>
+                                    <span>40 fatias</span><span class="sep">|</span>
+                                    <span>4.1kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 3. CLASSE 1 – Bolos Clássicos           -->
+        <!-- ======================================= -->
+        <section class="cp-section">
+            <div class="cp-container" style="max-width:72rem;">
+                <div class="cp-section-header cp-reveal">
+                    <h2 class="font-heading">Classe 1</h2>
+                    <p>Bolos clássicos</p>
+                    <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+                </div>
+
+                <div class="cp-grid-2">
+                    <!-- Imagem à direita no desktop -->
+                    <div class="cp-img-col cp-order-2 cp-reveal-right">
+                        <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/categorias/1781027882386-6yyyf.jpg" alt="Classe 1" loading="lazy">
+                    </div>
+                    <!-- Conteúdo à esquerda no desktop -->
+                    <div class="cp-order-1 cp-reveal-left">
+                        <div class="cp-price-grid">
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">PP</div>
+                                <div class="size-details font-body"><div>10 fatias</div><div>1.2kg</div></div>
+                                <div class="size-price font-body">R$ 85</div>
+                            </div>
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">P</div>
+                                <div class="size-details font-body"><div>15 fatias</div><div>1.6kg</div></div>
+                                <div class="size-price font-body">R$ 130</div>
+                            </div>
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">M</div>
+                                <div class="size-details font-body"><div>20 fatias</div><div>2.1kg</div></div>
+                                <div class="size-price font-body">R$ 170</div>
+                            </div>
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">G</div>
+                                <div class="size-details font-body"><div>30 fatias</div><div>3.1kg</div></div>
+                                <div class="size-price font-body">R$ 255</div>
+                            </div>
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">XG</div>
+                                <div class="size-details font-body"><div>40 fatias</div><div>4.1kg</div></div>
+                                <div class="size-price font-body">R$ 340</div>
+                            </div>
+                        </div>
+
+                        <div class="cp-flavor-list">
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Chocolatudo</h4>
+                                <p class="font-body">Massa de chocolate com brigadeiro de chocolate 50% cremoso.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Dois Amores</h4>
+                                <p class="font-body">Massa branca com camadas intercaladas de ninho e cremoso de chocolate.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Choconinho</h4>
+                                <p class="font-body">Massa de chocolate com recheio cremoso de ninho.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Cocada Cremosa</h4>
+                                <p class="font-body">Massa de chocolate com recheio cremoso de coco.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Maracujá</h4>
+                                <p class="font-body">Massa branca com recheio de mousse de maracujá.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 4. CLASSE 2 – Bolos Premium              -->
+        <!-- ======================================= -->
+        <section class="cp-section">
+            <div class="cp-container" style="max-width:72rem;">
+                <div class="cp-section-header cp-reveal">
+                    <h2 class="font-heading">Classe 2</h2>
+                    <p>Bolos premium</p>
+                    <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+                </div>
+
+                <div class="cp-grid-2">
+                    <!-- Imagem à esquerda no desktop -->
+                    <div class="cp-img-col cp-order-1 cp-reveal-left">
+                        <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/categorias/1781027941477-7ok04m.jpg" alt="Classe 2" loading="lazy">
+                    </div>
+                    <!-- Conteúdo à direita no desktop -->
+                    <div class="cp-order-2 cp-reveal-right">
+                        <div class="cp-price-grid">
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">PP</div>
+                                <div class="size-details font-body"><div>10 fatias</div><div>1.2kg</div></div>
+                                <div class="size-price font-body">R$ 110</div>
+                            </div>
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">P</div>
+                                <div class="size-details font-body"><div>15 fatias</div><div>1.6kg</div></div>
+                                <div class="size-price font-body">R$ 165</div>
+                            </div>
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">M</div>
+                                <div class="size-details font-body"><div>20 fatias</div><div>2.1kg</div></div>
+                                <div class="size-price font-body">R$ 220</div>
+                            </div>
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">G</div>
+                                <div class="size-details font-body"><div>30 fatias</div><div>3.1kg</div></div>
+                                <div class="size-price font-body">R$ 330</div>
+                            </div>
+                            <div class="cp-price-card">
+                                <div class="size-name font-heading">XG</div>
+                                <div class="size-details font-body"><div>40 fatias</div><div>4.1kg</div></div>
+                                <div class="size-price font-body">R$ 440</div>
+                            </div>
+                        </div>
+
+                        <div class="cp-flavor-list">
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Prestígio</h4>
+                                <p class="font-body">Massa de chocolate com 2 camadas de recheio cremoso de coco e 1 camada de mousse de chocolate meio amargo.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Abacaxi com Coco</h4>
+                                <p class="font-body">Massa branca com recheio cremoso de coco e compota artesanal de abacaxi.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Ninho com Morangos</h4>
+                                <p class="font-body">Massa branca com recheio cremoso de ninho com morangos selecionados e frescos.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Chocolate com Morango</h4>
+                                <p class="font-body">Massa de chocolate com recheio cremoso de chocolate 50% e morangos selecionados e frescos.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Ninho com Nutella</h4>
+                                <p class="font-body">Massa branca com recheio cremoso de ninho com Nutella pura.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Doce de Leite com Ameixa</h4>
+                                <p class="font-body">Massa branca com recheio cremoso de doce de leite com compota de ameixa.</p>
+                            </div>
+                            <div class="cp-flavor-item">
+                                <h4 class="font-heading">Laka com Frutas Vermelhas</h4>
+                                <p class="font-body">Massa branca com recheio cremoso de Laka com compota de frutas vermelhas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 5. DECORAÇÕES (Bolos Redondos)          -->
+        <!-- ======================================= -->
+        <section class="cp-section">
+            <div class="cp-container-md">
+                <div class="cp-section-header cp-reveal">
+                    <span class="font-script">Galeria</span>
+                    <h2 class="font-heading">Decorações</h2>
+                    <p>Os valores das decorações são variáveis e podem ser consultados pelo site ou no nosso WhatsApp!</p>
+                    <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+                </div>
+
+                <div class="cp-deco-grid cp-reveal">
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Laços Pequenos Unitários</h3>
+                        <p class="deco-desc font-body">Laços decorativos em fita</p>
+                        <div class="deco-price font-body">+ R$ 1,50</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Vintage Cake</h3>
+                        <p class="deco-desc font-body">Decoração estilo vintage com bicos clássicos</p>
+                        <div class="deco-price font-body">+ R$ 25</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Flores Naturais</h3>
+                        <p class="deco-desc font-body">Decoração com flores naturais comestíveis</p>
+                        <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Topo Personalizado</h3>
+                        <p class="deco-desc font-body">Topo de bolo personalizado</p>
+                        <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Papel de Arroz</h3>
+                        <p class="deco-desc font-body">Impressão em papel de arroz comestível</p>
+                        <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Drip Cake</h3>
+                        <p class="deco-desc font-body">Efeito de calda escorrendo (preço por tamanho)</p>
+                        <div class="cp-drip-grid" style="margin-top:0.75rem;">
+                            <div class="cp-drip-item"><div class="drip-size">PP</div><div class="drip-price">+R$ 10</div></div>
+                            <div class="cp-drip-item"><div class="drip-size">P</div><div class="drip-price">+R$ 15</div></div>
+                            <div class="cp-drip-item"><div class="drip-size">M</div><div class="drip-price">+R$ 20</div></div>
+                            <div class="cp-drip-item"><div class="drip-size">G</div><div class="drip-price">+R$ 25</div></div>
+                            <div class="cp-drip-item"><div class="drip-size">XG</div><div class="drip-price">+R$ 30</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 6. BOLOS RETANGULARES                   -->
+        <!-- ======================================= -->
+        <section class="cp-section">
+            <div class="cp-container" style="max-width:72rem;">
+                <div class="cp-section-header cp-reveal">
+                    <span class="font-script">Especial</span>
+                    <h2 class="font-heading">Bolos Retangulares</h2>
+                    <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+                </div>
+
+                <div class="cp-grid-2">
+                    <!-- Imagem à direita no desktop -->
+                    <div class="cp-img-col cp-order-2 cp-reveal-right">
+                        <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/cardapio_rectangular/1781895085154-ubnmt.jpg" alt="Bolos Retangulares" loading="lazy">
+                    </div>
+                    <!-- Tamanhos à esquerda -->
+                    <div class="cp-order-1 cp-reveal-left">
+                        <div class="cp-rect-list">
+                            <div class="cp-rect-card">
+                                <div class="rect-header">
+                                    <h3 class="font-heading">P</h3>
+                                    <p class="font-body">20x15 | 25 fatias | 2.0 kg</p>
+                                </div>
+                                <div class="rect-body">
+                                    <p class="rect-serves">Serve de 20 a 25 Fatias</p>
+                                    <div class="rect-price-row font-body"><span>Tradicional</span><span>R$ 170</span></div>
+                                    <div class="rect-price-row font-body"><span>Premium</span><span>R$ 230</span></div>
+                                </div>
+                            </div>
+                            <div class="cp-rect-card">
+                                <div class="rect-header">
+                                    <h3 class="font-heading">M</h3>
+                                    <p class="font-body">25x17 | 35 fatias | 3.0 kg</p>
+                                </div>
+                                <div class="rect-body">
+                                    <p class="rect-serves">Serve de 30 a 35 Fatias</p>
+                                    <div class="rect-price-row font-body"><span>Tradicional</span><span>R$ 265</span></div>
+                                    <div class="rect-price-row font-body"><span>Premium</span><span>R$ 340</span></div>
+                                </div>
+                            </div>
+                            <div class="cp-rect-card">
+                                <div class="rect-header">
+                                    <h3 class="font-heading">G</h3>
+                                    <p class="font-body">30x22 | 45 fatias | 4.0 kg</p>
+                                </div>
+                                <div class="rect-body">
+                                    <p class="rect-serves">Serve de 40 a 45 Fatias</p>
+                                    <div class="rect-price-row font-body"><span>Tradicional</span><span>R$ 350</span></div>
+                                    <div class="rect-price-row font-body"><span>Premium</span><span>R$ 450</span></div>
+                                </div>
+                            </div>
+                            <div class="cp-rect-card">
+                                <div class="rect-header">
+                                    <h3 class="font-heading">XG</h3>
+                                    <p class="font-body">36x26 | 65 fatias | 6.0 kg</p>
+                                </div>
+                                <div class="rect-body">
+                                    <p class="rect-serves">Serve de 60 a 65 Fatias</p>
+                                    <div class="rect-price-row font-body"><span>Tradicional</span><span>R$ 530</span></div>
+                                    <div class="rect-price-row font-body"><span>Premium</span><span>R$ 560</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 7. DECORAÇÕES – Bolos Retangulares      -->
+        <!-- ======================================= -->
+        <section class="cp-section">
+            <div class="cp-container-md">
+                <div class="cp-section-header cp-reveal">
+                    <span class="font-script">Toques especiais</span>
+                    <h2 class="font-heading">Decorações - Bolos Retangulares</h2>
+                    <p>Personalize ainda mais o seu bolo</p>
+                    <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+                </div>
+
+                <div class="cp-deco-grid cp-reveal">
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Vintage Cake Colorido</h3>
+                        <div class="deco-price font-body">+ R$ 40</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Vintage Cake Simples</h3>
+                        <p class="deco-desc font-body">Decoração estilo vintage com bicos clássicos</p>
+                        <div class="deco-price font-body">+ R$ 25</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Flores Naturais</h3>
+                        <p class="deco-desc font-body">Valor a Consultar</p>
+                        <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Laço Grande de Cetim</h3>
+                        <div class="deco-price font-body">+ R$ 20</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Laços Pequenos Unitários</h3>
+                        <div class="deco-price font-body">+ R$ 1,50</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Papel Arroz</h3>
+                        <p class="deco-desc font-body">Valor a Consultar</p>
+                        <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Topo Personalizado</h3>
+                        <p class="deco-desc font-body">Valor a Consultar</p>
+                        <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Doces Unitários</h3>
+                        <div class="deco-price font-body">+ R$ 1,50</div>
+                    </div>
+                    <div class="cp-deco-card">
+                        <h3 class="font-heading">Drip Cake</h3>
+                        <p class="deco-desc font-body">Efeito de calda escorrendo (preço por tamanho)</p>
+                        <div class="cp-drip-grid" style="margin-top:0.75rem;">
+                            <div class="cp-drip-item"><div class="drip-size">PP</div><div class="drip-price">+R$ 0</div></div>
+                            <div class="cp-drip-item"><div class="drip-size">P</div><div class="drip-price">+R$ 25</div></div>
+                            <div class="cp-drip-item"><div class="drip-size">M</div><div class="drip-price">+R$ 35</div></div>
+                            <div class="cp-drip-item"><div class="drip-size">G</div><div class="drip-price">+R$ 45</div></div>
+                            <div class="cp-drip-item"><div class="drip-size">XG</div><div class="drip-price">+R$ 55</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 8. DOCES PARA FESTAS                    -->
+        <!-- ======================================= -->
+        <section class="cp-section">
+            <div class="cp-container" style="max-width:64rem;">
+                <div class="cp-section-header cp-reveal">
+                    <span class="font-script">Doçuras</span>
+                    <h2 class="font-heading">Doces para Festas</h2>
+                    <p>Vendidos em pacotes de 25, 50 ou 100 unidades</p>
+                    <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+                </div>
+
+                <div class="cp-sweets-grid cp-reveal">
+                    <!-- Doces Tradicionais -->
+                    <div class="cp-sweet-card">
+                        <div class="sweet-img">
+                            <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/doces/1781031416098-2ad2j.jpg" alt="Doces Tradicionais" loading="lazy">
+                        </div>
+                        <div class="sweet-header">
+                            <h3 class="font-heading">Doces Tradicionais</h3>
+                            <p class="font-body">Aproximadamente 10g por unidade</p>
+                            <p class="font-body">Doces artesanais clássicos, 10g cada</p>
+                        </div>
+                        <div class="sweet-body">
+                            <div class="sweet-prices">
+                                <div class="sweet-price-row font-body"><span>Pacote com 25 unidades</span><span>R$ 40</span></div>
+                                <div class="sweet-price-row font-body"><span>Pacote com 50 unidades</span><span>R$ 60</span></div>
+                                <div class="sweet-price-row font-body"><span>Pacote com 100 unidades</span><span>R$ 120</span></div>
+                            </div>
+                            <div class="sweet-flavors">
+                                <p class="sweet-flavors-title">Sabores</p>
+                                <ul>
+                                    <li><span class="bullet">•</span> Brigadeiro</li>
+                                    <li><span class="bullet">•</span> Beijinho</li>
+                                    <li><span class="bullet">•</span> Cajuzinho</li>
+                                    <li><span class="bullet">•</span> Docinho de Morango</li>
+                                    <li><span class="bullet">•</span> Ninho</li>
+                                    <li><span class="bullet">•</span> Amendoim</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doces Gourmet -->
+                    <div class="cp-sweet-card">
+                        <div class="sweet-img">
+                            <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/doces/1781031588720-28btc.jpg" alt="Doces Gourmet" loading="lazy">
+                        </div>
+                        <div class="sweet-header">
+                            <h3 class="font-heading">Doces Gourmet</h3>
+                            <p class="font-body">Aproximadamente 15g por unidade</p>
+                            <p class="font-body">Doces finos e cremosos, 15g cada</p>
+                        </div>
+                        <div class="sweet-body">
+                            <div class="sweet-prices">
+                                <div class="sweet-price-row font-body"><span>Pacote com 25 unidades</span><span>R$ 70</span></div>
+                                <div class="sweet-price-row font-body"><span>Pacote com 50 unidades</span><span>R$ 130</span></div>
+                                <div class="sweet-price-row font-body"><span>Pacote com 100 unidades</span><span>R$ 250</span></div>
+                            </div>
+                            <div class="sweet-flavors">
+                                <p class="sweet-flavors-title">Sabores</p>
+                                <ul>
+                                    <li><span class="bullet">•</span> Brigadeiro Meio Amargo</li>
+                                    <li><span class="bullet">•</span> Ninho com Nutella</li>
+                                    <li><span class="bullet">•</span> Churros</li>
+                                    <li><span class="bullet">•</span> Óreo</li>
+                                    <li><span class="bullet">•</span> Surpresa de Uva</li>
+                                    <li><span class="bullet">•</span> Ferrero Roscher</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 9. FORMULÁRIO DE ORÇAMENTO              -->
+        <!-- ======================================= -->
+        <section class="cp-form-section" id="encomenda">
+            <div class="cp-container-sm">
+                <div class="cp-section-header cp-reveal">
+                    <span class="font-script">Orçamento</span>
+                    <h2 class="font-heading">Solicite seu orçamento</h2>
+                    <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+                </div>
+
+                <form class="cp-form cp-reveal" id="orderForm">
+                    <div>
+                        <label class="font-body">Nome</label>
+                        <input type="text" id="cp-name" required>
+                    </div>
+                    <div>
+                        <label class="font-body">Telefone</label>
+                        <input type="tel" id="cp-phone" required>
+                    </div>
+                    <div>
+                        <label class="font-body">Tipo de Evento</label>
+                        <input type="text" id="cp-event" required>
+                    </div>
+                    <div>
+                        <label class="font-body">Data do Evento</label>
+                        <input type="date" id="cp-date" required>
+                    </div>
+                    <div>
+                        <label class="font-body">Detalhes do pedido</label>
+                        <textarea id="cp-details" rows="4" placeholder="Tamanho, sabor, decoração, data da entrega..."></textarea>
+                    </div>
+                    <button type="submit" class="cp-form-submit">
+                        <i class="fa-brands fa-whatsapp"></i> Enviar via WhatsApp
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <div class="cp-footer-wave">
+            <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path d="M0 40C360 80 720 0 1080 40C1260 60 1380 50 1440 40V80H0V40Z" fill="hsl(25, 45%, 18%)"></path>
+            </svg>
+        </div>
+        <div class="cp-footer-main">
+            <div class="cp-footer-inner">
+                <div class="cp-footer-grid">
+                    <div class="cp-footer-col">
+                        <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria" loading="lazy">
+                        <p class="font-body">Mais do que doces, criamos memórias. Cada bolo é feito com amor, dedicação e ingredientes selecionados.</p>
+                    </div>
+                    <div class="cp-footer-col">
+                        <h4 class="font-heading">Navegação</h4>
+                        <ul>
+                            <li><a href="index.html">Início</a></li>
+                            <li><a href="nossa-historia.html">Nossa História</a></li>
+                            <li><a href="cardapio.html">Cardápio</a></li>
+                            <li><a href="contato.html">Contato</a></li>
+                        </ul>
+                    </div>
+                    <div class="cp-footer-col">
+                        <h4 class="font-heading">Informações</h4>
+                        <div class="cp-footer-info font-body">
+                            <p><i class="fa-regular fa-clock"></i> Ter a Sáb: 12h – 18h</p>
+                            <p><i class="fa-solid fa-phone"></i> Delivery a partir das 12:30h</p>
+                            <p><i class="fa-solid fa-map-pin"></i> R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP, 04883-020</p>
+                            <div class="cp-footer-socials">
+                                <a href="https://instagram.com/caseirinhosaconfeitaria" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="https://wa.me/5511948598267" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cp-footer-copy font-body">
+                    Feito com <i class="fa-solid fa-heart heart"></i> © 2026 Caseirinhos
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ====== SCRIPTS ====== -->
+    <script src="assets/cardapio.js"></script>
+    <script src="assets/app.js"></script>
+    <script>
+        // Mobile Menu
+        const navToggle = document.getElementById('navToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+        }
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+        }
+        function closeMobileMenu() {
+            if (mobileMenu) mobileMenu.classList.remove('active');
+        }
+
+        // Scroll Reveal
+        const cpReveals = document.querySelectorAll('.cp-reveal, .cp-reveal-left, .cp-reveal-right');
+        const cpObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.12 });
+        cpReveals.forEach(el => cpObserver.observe(el));
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 4px 20px rgba(37, 24, 18, 0.08)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // WhatsApp Form Submit
+        const orderForm = document.getElementById('orderForm');
+        if (orderForm) {
+            orderForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('cp-name').value;
+                const phone = document.getElementById('cp-phone').value;
+                const event = document.getElementById('cp-event').value;
+                const date = document.getElementById('cp-date').value;
+                const details = document.getElementById('cp-details').value;
+
+                const msg = `Olá! Gostaria de fazer um orçamento 🎂%0A%0A` +
+                    `*Nome:* ${name}%0A` +
+                    `*Telefone:* ${phone}%0A` +
+                    `*Tipo de Evento:* ${event}%0A` +
+                    `*Data:* ${date}%0A` +
+                    `*Detalhes:* ${details}`;
+
+                window.open(`https://wa.me/5511948598267?text=${msg}`, '_blank');
+            });
+        }
+    </script>
+</body>
+</html>

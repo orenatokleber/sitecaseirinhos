@@ -1,28 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&family=Great+Vibes&display=swap" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caseirinhos a Confeitaria | Bolos Artesanais e Doces Finos</title>
     <meta name="description" content="Confeitaria artesanal com bolos caseiros, doces finos, sobremesas e encomendas especiais para casamentos e eventos. Mais do que doces, criamos memórias.">
-    <meta name="keywords" content="confeitaria artesanal, bolos caseiros, bolo de aniversário, doces artesanais, bolo de casamento, doces finos" />
-    <meta name="author" content="Caseirinhos a Confeitaria" />
-
-    
-    
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://caseirinhos.com/" />
-    <meta property="og:site_name" content="Caseirinhos" />
-    <meta property="og:locale" content="pt_BR" />
-    <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/Bqs0wNLVODT4SlN8juMBFQ6hC2e2/social-images/social-1781887156361-Caseirinhos_A_Confeitaria_-_LOGOTIPO.webp">
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/Bqs0wNLVODT4SlN8juMBFQ6hC2e2/social-images/social-1781887156361-Caseirinhos_A_Confeitaria_-_LOGOTIPO.webp">
+    <meta name="keywords" content="confeitaria artesanal, bolos caseiros, bolo de aniversário, doces artesanais, bolo de casamento, doces finos">
+    <meta name="author" content="Caseirinhos a Confeitaria">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Caseirinhos a Confeitaria | Bolos Artesanais e Doces Finos">
+    <meta property="og:description" content="Confeitaria artesanal com bolos caseiros, doces finos, sobremesas e encomendas especiais.">
+    <meta property="og:locale" content="pt_BR">
 
     <script type="application/ld+json">
     {
@@ -35,18 +23,970 @@
       "priceRange": "$$"
     }
     </script>
-    
-  
-  
-  
-  <meta property="og:title" content="Caseirinhos a Confeitaria | Bolos Artesanais e Doces Finos">
-  <meta name="twitter:title" content="Caseirinhos a Confeitaria | Bolos Artesanais e Doces Finos">
-  <meta property="og:description" content="Confeitaria artesanal com bolos caseiros, doces finos, sobremesas e encomendas especiais para casamentos e eventos. Mais do que doces, criamos memórias.">
-  <meta name="twitter:description" content="Confeitaria artesanal com bolos caseiros, doces finos, sobremesas e encomendas especiais para casamentos e eventos. Mais do que doces, criamos memórias.">
-</head>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&family=Great+Vibes&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/style.css">
+
+    <style>
+        /* ====== INDEX PAGE – MATCHING LIVE SITE ====== */
+
+        /* --- Hero Section --- */
+        .idx-hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 4rem;
+            overflow: hidden;
+        }
+        .idx-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, hsl(var(--pink-light)), hsl(var(--background)), hsl(var(--background)));
+        }
+        /* Floating particles */
+        .idx-particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .idx-particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: idx-float-particle 4s ease-in-out infinite;
+        }
+        @keyframes idx-float-particle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .idx-hero-inner {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .idx-hero-inner {
+                flex-direction: row;
+                gap: 3rem;
+            }
+        }
+
+        /* Hero text */
+        .idx-hero-text {
+            width: 100%;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .idx-hero-text {
+                width: 50%;
+                text-align: left;
+            }
+        }
+        .idx-hero-text .font-script {
+            font-size: 1.875rem;
+            color: hsl(var(--primary));
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        @media (min-width: 768px) {
+            .idx-hero-text .font-script { font-size: 3rem; }
+        }
+        .idx-hero-text h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+            margin-bottom: 1rem;
+            line-height: 1.15;
+        }
+        @media (min-width: 768px) {
+            .idx-hero-text h1 { font-size: 3rem; }
+        }
+        @media (min-width: 1024px) {
+            .idx-hero-text h1 { font-size: 3.75rem; }
+        }
+        .idx-hero-text .idx-subtitle {
+            font-size: 1rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 2rem;
+            max-width: 28rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .idx-hero-text .idx-subtitle {
+                font-size: 1.125rem;
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+        .idx-hero-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+        @media (min-width: 640px) {
+            .idx-hero-actions { flex-direction: row; }
+        }
+        @media (min-width: 768px) {
+            .idx-hero-actions { justify-content: flex-start; }
+        }
+        .idx-hero-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.75rem;
+            border-radius: var(--radius-full);
+            background: hsl(var(--primary));
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 6px 20px hsla(var(--primary), 0.35);
+            transition: all 0.3s ease;
+        }
+        .idx-hero-btn:hover {
+            box-shadow: 0 10px 30px hsla(var(--primary), 0.45);
+            transform: scale(1.05);
+        }
+
+        /* Hero image (circle) */
+        .idx-hero-img-col {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            .idx-hero-img-col { width: 50%; }
+        }
+        .idx-hero-img-wrap {
+            position: relative;
+        }
+        .idx-hero-circle {
+            width: 16rem;
+            height: 16rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid hsl(var(--pink-medium));
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        @media (min-width: 768px) {
+            .idx-hero-circle { width: 20rem; height: 20rem; }
+        }
+        @media (min-width: 1024px) {
+            .idx-hero-circle { width: 24rem; height: 24rem; }
+        }
+        .idx-hero-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .idx-float-1 {
+            position: absolute;
+            top: -1rem; right: -1rem;
+            width: 4rem; height: 4rem;
+            border-radius: 50%;
+            background: hsl(var(--peach));
+            animation: float 3s ease-in-out infinite;
+        }
+        .idx-float-2 {
+            position: absolute;
+            bottom: -0.5rem; left: -1.5rem;
+            width: 3rem; height: 3rem;
+            border-radius: 50%;
+            background: hsl(var(--pink-medium));
+            animation: bounceSlow 2.5s ease-in-out infinite;
+        }
+
+        /* --- Feature Badges --- */
+        .idx-badges {
+            position: relative;
+            z-index: 10;
+            margin-top: -1rem;
+            padding-bottom: 2rem;
+        }
+        .idx-badges-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .idx-badges-inner { gap: 2rem; }
+        }
+        .idx-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: hsl(var(--card));
+            border-radius: var(--radius-full);
+            padding: 0.75rem 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid hsl(var(--border));
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .idx-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .idx-badge-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: hsla(var(--primary), 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: hsl(var(--primary));
+            font-size: 1.125rem;
+        }
+        .idx-badge-text p:first-child {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: hsl(var(--foreground));
+        }
+        .idx-badge-text p:last-child {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* --- About Section --- */
+        .idx-about {
+            position: relative;
+            padding: 4rem 0 4rem;
+            background: hsl(var(--pink-light));
+            overflow: hidden;
+        }
+        @media (min-width: 768px) {
+            .idx-about { padding: 6rem 0; }
+        }
+        .idx-about-inner {
+            max-width: 40rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        .idx-about-inner .font-script {
+            font-size: 1.5rem;
+            color: hsl(var(--primary));
+        }
+        @media (min-width: 768px) {
+            .idx-about-inner .font-script { font-size: 1.75rem; }
+        }
+        .idx-about-inner h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            color: hsl(var(--foreground));
+        }
+        @media (min-width: 768px) {
+            .idx-about-inner h2 { font-size: 2.25rem; }
+        }
+        .idx-about-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+            margin-bottom: 3rem;
+        }
+        .idx-about-divider .line {
+            width: 2rem;
+            height: 2px;
+            background: hsla(var(--primary), 0.4);
+        }
+        .idx-about-divider .dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            background: hsl(var(--primary));
+        }
+        .idx-about-inner > p {
+            color: hsl(var(--muted-foreground));
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+        .idx-about-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.625rem 1.5rem;
+            border-radius: var(--radius-full);
+            border: 2px solid hsl(var(--primary));
+            color: hsl(var(--primary));
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .idx-about-btn:hover {
+            background: hsl(var(--primary));
+            color: #fff;
+        }
+
+        /* --- Testimonials --- */
+        .idx-testimonials {
+            padding: 4rem 0 4rem;
+        }
+        @media (min-width: 768px) {
+            .idx-testimonials { padding: 6rem 0; }
+        }
+        .idx-testimonials-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .idx-testimonials-header .font-script {
+            font-size: 1.5rem;
+            color: hsl(var(--primary));
+        }
+        @media (min-width: 768px) {
+            .idx-testimonials-header .font-script { font-size: 1.75rem; }
+        }
+        .idx-testimonials-header h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            color: hsl(var(--foreground));
+        }
+        @media (min-width: 768px) {
+            .idx-testimonials-header h2 { font-size: 2.25rem; }
+        }
+        .idx-test-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        @media (min-width: 768px) {
+            .idx-test-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        .idx-test-card {
+            background: hsl(var(--card));
+            padding: 2rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid hsl(var(--border));
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .idx-test-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        .idx-test-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: hsla(var(--primary), 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        .idx-test-avatar span {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.25rem;
+            color: hsl(var(--primary));
+        }
+        .idx-test-stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.25rem;
+            margin-bottom: 0.75rem;
+            color: hsl(var(--gold));
+            font-size: 0.875rem;
+        }
+        .idx-test-card blockquote {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.875rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .idx-test-card cite {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 600;
+            font-style: normal;
+            color: hsl(var(--foreground));
+        }
+
+        /* --- Wave + CTA --- */
+        .idx-wave-wrap {
+            position: relative;
+        }
+        .idx-wave-svg {
+            position: relative;
+            line-height: 0;
+            margin-bottom: -1px;
+        }
+        .idx-wave-svg svg {
+            display: block;
+            width: 100%;
+            height: 4rem;
+        }
+        @media (min-width: 768px) {
+            .idx-wave-svg svg { height: 6rem; }
+        }
+        .idx-cta {
+            position: relative;
+            padding: 5rem 0 5rem;
+            text-align: center;
+            overflow: hidden;
+            background: hsl(var(--chocolate));
+        }
+        @media (min-width: 768px) {
+            .idx-cta { padding: 7rem 0; }
+        }
+        .idx-cta-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                hsla(var(--chocolate), 0.95),
+                hsla(var(--chocolate), 0.90),
+                hsla(var(--chocolate), 0.95));
+        }
+        .idx-cta-dots {
+            position: absolute;
+            inset: 0;
+            opacity: 0.07;
+            background-image: radial-gradient(circle at 2px 2px, hsl(var(--cream)) 1px, transparent 0);
+            background-size: 32px 32px;
+        }
+        .idx-cta-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, hsla(var(--chocolate), 0.5) 100%);
+        }
+        .idx-cta-content {
+            position: relative;
+            z-index: 10;
+            max-width: 40rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .idx-cta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            background: hsla(var(--cream), 0.1);
+            color: hsl(var(--cream));
+            margin-bottom: 1.5rem;
+            border: 1px solid hsla(var(--cream), 0.2);
+            backdrop-filter: blur(4px);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .idx-cta h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: hsl(var(--cream));
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        @media (min-width: 768px) {
+            .idx-cta h2 { font-size: 3rem; }
+        }
+        .idx-cta-desc {
+            max-width: 28rem;
+            margin: 0 auto 2.5rem;
+            color: hsla(var(--cream), 0.8);
+            line-height: 1.6;
+        }
+        .idx-cta-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+        @media (min-width: 640px) {
+            .idx-cta-actions { flex-direction: row; }
+        }
+        .idx-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-full);
+            background: hsl(var(--primary));
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 6px 20px hsla(var(--primary), 0.35);
+            transition: all 0.3s ease;
+        }
+        .idx-cta-btn:hover {
+            box-shadow: 0 10px 30px hsla(var(--primary), 0.45);
+            transform: scale(1.05);
+        }
+        .idx-cta-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+            color: hsla(var(--cream), 0.6);
+            font-size: 0.875rem;
+        }
+        .idx-cta-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        /* --- Footer (reused from cardapio) --- */
+        .idx-footer-wave {
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            background: hsl(var(--background));
+        }
+        .idx-footer-wave svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .idx-footer-main {
+            background: hsl(var(--chocolate-deep));
+            color: hsl(var(--cream));
+        }
+        .idx-footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+        .idx-footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+        @media (min-width: 768px) {
+            .idx-footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+        }
+        .idx-footer-col { text-align: center; }
+        @media (min-width: 768px) {
+            .idx-footer-col:first-child { text-align: left; }
+            .idx-footer-col:last-child { text-align: right; }
+        }
+        .idx-footer-col img {
+            height: 3.5rem;
+            width: auto;
+            margin-bottom: 1rem;
+            filter: brightness(0) invert(1);
+        }
+        .idx-footer-col > p {
+            font-size: 0.875rem;
+            opacity: 0.7;
+            line-height: 1.6;
+        }
+        .idx-footer-col h4 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: hsl(var(--accent));
+        }
+        .idx-footer-col ul { list-style: none; }
+        .idx-footer-col ul li { margin-bottom: 0.5rem; }
+        .idx-footer-col ul a {
+            text-decoration: none;
+            font-size: 0.875rem;
+            color: hsl(var(--cream));
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+        .idx-footer-col ul a:hover {
+            opacity: 1;
+            color: hsl(var(--accent));
+        }
+        .idx-footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+        .idx-footer-info p {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            .idx-footer-info p { justify-content: flex-end; }
+        }
+        .idx-footer-socials {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-top: 0.5rem;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            .idx-footer-socials { justify-content: flex-end; }
+        }
+        .idx-footer-socials a {
+            color: hsl(var(--cream));
+            font-size: 1.25rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .idx-footer-socials a:hover { color: hsl(var(--accent)); }
+        .idx-footer-copy {
+            border-top: 1px solid hsla(var(--cream), 0.1);
+            margin-top: 2.5rem;
+            padding-top: 1.25rem;
+            text-align: center;
+            font-size: 0.75rem;
+            opacity: 0.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+        .idx-footer-copy .heart { color: hsl(var(--primary)); }
+
+        /* --- Reveal Animations --- */
+        .idx-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .idx-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== NAVIGATION ====== -->
+    <nav class="nav" id="navbar">
+        <div class="container nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Início</a></li>
+                <li><a href="nossa-historia.html">Nossa História</a></li>
+                <li><a href="cardapio.html">Cardápio</a></li>
+                <li><a href="montar-pedido.html">Montar Pedido</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <a href="montar-pedido.html" class="nav-cta" style="background: hsla(var(--primary), 0.1); color: hsl(var(--primary)); border: 1px solid hsla(var(--primary), 0.3);">
+                    <i class="fa-solid fa-cake-candles"></i>
+                    <span>Bolos & Encomendas</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+        <div class="mobile-menu-panel">
+            <a href="index.html" onclick="closeMobileMenu()">Início</a>
+            <a href="nossa-historia.html" onclick="closeMobileMenu()">Nossa História</a>
+            <a href="cardapio.html" onclick="closeMobileMenu()">Cardápio</a>
+            <a href="montar-pedido.html" onclick="closeMobileMenu()">Montar Pedido 🎂</a>
+            <a href="contato.html" onclick="closeMobileMenu()">Contato</a>
+            <a href="admin.html" onclick="closeMobileMenu()">Painel Admin</a>
+        </div>
+    </div>
+
+    <main style="overflow:hidden;">
+
+        <!-- ======================================= -->
+        <!-- 1. HERO                                 -->
+        <!-- ======================================= -->
+        <section class="idx-hero" id="home_hero" data-section="home_hero">
+            <!-- Background gradient -->
+            <div class="idx-hero-gradient"></div>
+            <!-- Floating particles -->
+            <div class="idx-particles">
+                <div class="idx-particle" style="left:8%;top:15%;width:8px;height:8px;background:hsl(var(--primary));animation-delay:0s;"></div>
+                <div class="idx-particle" style="left:92%;top:20%;width:6px;height:6px;background:hsl(var(--gold));animation-delay:0.5s;"></div>
+                <div class="idx-particle" style="left:15%;top:80%;width:10px;height:10px;background:hsl(var(--peach));animation-delay:1s;"></div>
+                <div class="idx-particle" style="left:85%;top:75%;width:7px;height:7px;background:hsl(var(--pink-medium));animation-delay:1.5s;"></div>
+                <div class="idx-particle" style="left:50%;top:10%;width:5px;height:5px;background:hsl(var(--gold));animation-delay:2s;"></div>
+                <div class="idx-particle" style="left:75%;top:90%;width:9px;height:9px;background:hsl(var(--primary));animation-delay:0.8s;"></div>
+                <div class="idx-particle" style="left:25%;top:45%;width:6px;height:6px;background:hsl(var(--peach));animation-delay:1.2s;"></div>
+                <div class="idx-particle" style="left:65%;top:35%;width:4px;height:4px;background:hsl(var(--gold));animation-delay:1.8s;"></div>
+            </div>
+
+            <div class="idx-hero-inner">
+                <!-- Text -->
+                <div class="idx-hero-text">
+                    <span class="font-script" data-field="script">Caseirinhos</span>
+                    <h1 class="font-heading" data-field="title">Mais do que doces, criamos memórias.</h1>
+                    <p class="idx-subtitle font-body" data-field="subtitle">Confeitaria artesanal com amor em cada detalhe</p>
+                    <div class="idx-hero-actions">
+                        <a href="cardapio.html" class="idx-hero-btn" data-field="cta">Ver Cardápio 🧁</a>
+                    </div>
+                </div>
+
+                <!-- Circular Image -->
+                <div class="idx-hero-img-col">
+                    <div class="idx-hero-img-wrap">
+                        <div class="idx-hero-circle">
+                            <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/hero/1773024309318-h5q21g.jpg" alt="Bolo artesanal da Caseirinhos" data-field="image">
+                        </div>
+                        <div class="idx-float-1"></div>
+                        <div class="idx-float-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 2. FEATURE BADGES                       -->
+        <!-- ======================================= -->
+        <section class="idx-badges" id="home_features" data-section="home_features">
+            <div class="idx-badges-inner">
+                <div class="idx-badge idx-reveal">
+                    <div class="idx-badge-icon">
+                        <i class="fa-solid fa-cake-candles"></i>
+                    </div>
+                    <div class="idx-badge-text">
+                        <p class="font-heading">Artesanal</p>
+                        <p class="font-body">Feitos à mão com carinho</p>
+                    </div>
+                </div>
+                <div class="idx-badge idx-reveal">
+                    <div class="idx-badge-icon">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="idx-badge-text">
+                        <p class="font-heading">Com Amor</p>
+                        <p class="font-body">Ingredientes selecionados</p>
+                    </div>
+                </div>
+                <div class="idx-badge idx-reveal">
+                    <div class="idx-badge-icon">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div class="idx-badge-text">
+                        <p class="font-heading">Qualidade</p>
+                        <p class="font-body">Excelência em cada pedido</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 3. SOBRE NÓS                           -->
+        <!-- ======================================= -->
+        <section class="idx-about" id="home_about" data-section="home_about">
+            <div class="idx-about-inner">
+                <div class="idx-reveal">
+                    <span class="font-script" data-field="script">Sobre nós</span>
+                    <h2 class="font-heading" data-field="title">Uma História de Amor pela Confeitaria</h2>
+                    <div class="idx-about-divider">
+                        <div class="line"></div><div class="dot"></div><div class="line"></div>
+                    </div>
+                </div>
+                <p class="font-body idx-reveal" data-field="content">A Caseirinhos nasceu do desejo de transformar momentos simples em memórias doces e inesquecíveis. Com ingredientes selecionados e receitas desenvolvidas com carinho, cada criação é única — assim como cada cliente que nos escolhe para fazer parte dos seus momentos especiais.</p>
+                <div class="idx-reveal">
+                    <a href="nossa-historia.html" class="idx-about-btn font-body" data-field="cta">Conheça nossa história →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 4. DEPOIMENTOS                          -->
+        <!-- ======================================= -->
+        <section class="idx-testimonials" id="home_testimonials" data-section="home_testimonials">
+            <div class="container">
+                <div class="idx-testimonials-header idx-reveal">
+                    <span class="font-script" data-field="script">Amor em cada feedback</span>
+                    <h2 class="font-heading" data-field="title">O que nossos clientes dizem</h2>
+                    <div class="idx-about-divider">
+                        <div class="line"></div><div class="dot"></div><div class="line"></div>
+                    </div>
+                </div>
+
+                <div class="idx-test-grid">
+                    <div class="idx-test-card idx-reveal">
+                        <div class="idx-test-avatar"><span>M</span></div>
+                        <div class="idx-test-stars">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <blockquote>"Os bolos da Caseirinhos são os melhores que já provei! Cada pedido é uma experiência única."</blockquote>
+                        <cite class="font-heading">Maria Clara</cite>
+                    </div>
+                    <div class="idx-test-card idx-reveal">
+                        <div class="idx-test-avatar"><span>J</span></div>
+                        <div class="idx-test-stars">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <blockquote>"Encomendei o bolo de casamento e superou todas as expectativas. Lindo e delicioso!"</blockquote>
+                        <cite class="font-heading">João Pedro</cite>
+                    </div>
+                    <div class="idx-test-card idx-reveal">
+                        <div class="idx-test-avatar"><span>A</span></div>
+                        <div class="idx-test-stars">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <blockquote>"Os doces finos para o chá de bebê ficaram perfeitos. Todos elogiaram!"</blockquote>
+                        <cite class="font-heading">Ana Beatriz</cite>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 5. WAVE + CTA DELIVERY                  -->
+        <!-- ======================================= -->
+        <div class="idx-wave-wrap" id="home_cta" data-section="home_cta">
+            <div class="idx-wave-svg">
+                <svg viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0,80 C240,20 480,140 720,80 C960,20 1200,140 1440,80 L1440,140 L0,140 Z" fill="hsl(25,38%,38%)" opacity="0.35"></path>
+                    <path d="M0,100 C320,40 640,160 960,100 C1200,52 1320,132 1440,100 L1440,140 L0,140 Z" fill="hsl(25,38%,38%)" opacity="0.6"></path>
+                    <path d="M0,118 C360,70 720,170 1080,118 C1260,92 1380,128 1440,118 L1440,140 L0,140 Z" fill="hsl(25,38%,38%)"></path>
+                </svg>
+            </div>
+            <section class="idx-cta">
+                <div class="idx-cta-overlay"></div>
+                <div class="idx-cta-dots"></div>
+                <div class="idx-cta-vignette"></div>
+                <div class="idx-cta-content idx-reveal">
+                    <div class="idx-cta-badge font-body">
+                        <i class="fa-solid fa-truck"></i>
+                        <span>Entregamos na sua porta</span>
+                    </div>
+                    <h2 class="font-heading" data-field="title">Pronto para adoçar seu dia?</h2>
+                    <p class="idx-cta-desc font-body" data-field="content">Entre em contato e faça sua encomenda. Transformamos seus momentos em memórias doces.</p>
+                    <div class="idx-cta-actions">
+                        <a href="montar-pedido.html" class="idx-cta-btn" data-field="cta">
+                            <i class="fa-solid fa-cake-candles"></i> Fazer Pedido Online
+                        </a>
+                    </div>
+                    <div class="idx-cta-meta font-body">
+                        <span><i class="fa-regular fa-clock"></i> Entrega Rápida</span>
+                        <span><i class="fa-solid fa-map-pin"></i> Consulte sua região</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <div class="idx-footer-wave">
+            <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path d="M0 40C360 80 720 0 1080 40C1260 60 1380 50 1440 40V80H0V40Z" fill="hsl(25, 45%, 18%)"></path>
+            </svg>
+        </div>
+        <div class="idx-footer-main">
+            <div class="idx-footer-inner">
+                <div class="idx-footer-grid">
+                    <div class="idx-footer-col">
+                        <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria" loading="lazy">
+                        <p class="font-body">Mais do que doces, criamos memórias. Cada bolo é feito com amor, dedicação e ingredientes selecionados.</p>
+                    </div>
+                    <div class="idx-footer-col">
+                        <h4 class="font-heading">Navegação</h4>
+                        <ul>
+                            <li><a href="index.html">Início</a></li>
+                            <li><a href="nossa-historia.html">Nossa História</a></li>
+                            <li><a href="cardapio.html">Cardápio</a></li>
+                            <li><a href="montar-pedido.html">Montar Pedido</a></li>
+                            <li><a href="contato.html">Contato</a></li>
+                        </ul>
+                    </div>
+                    <div class="idx-footer-col">
+                        <h4 class="font-heading">Informações</h4>
+                        <div class="idx-footer-info font-body">
+                            <p><i class="fa-regular fa-clock"></i> Ter a Sáb: 12h – 18h</p>
+                            <p><i class="fa-solid fa-phone"></i> Delivery a partir das 12:30h</p>
+                            <p><i class="fa-solid fa-map-pin"></i> R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP, 04883-020</p>
+                            <div class="idx-footer-socials">
+                                <a href="https://instagram.com/caseirinhosaconfeitaria" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="https://wa.me/5511948598267" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="idx-footer-copy font-body">
+                    Feito com <i class="fa-solid fa-heart heart"></i> © 2026 Caseirinhos
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ====== SCRIPTS ====== -->
+    <script src="assets/app.js"></script>
+    <script>
+        // Mobile Menu
+        const navToggle = document.getElementById('navToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+        }
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+        }
+        function closeMobileMenu() {
+            if (mobileMenu) mobileMenu.classList.remove('active');
+        }
+
+        // Scroll Reveal
+        const reveals = document.querySelectorAll('.idx-reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.12 });
+        reveals.forEach(el => observer.observe(el));
+
+        // Navbar scroll shadow
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 4px 20px rgba(37, 24, 18, 0.08)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
 </html>

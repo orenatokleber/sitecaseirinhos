@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio de Encomendas | Caseirinhos a Confeitaria</title>
+    <meta name="description" content="Confeitaria artesanal com bolos caseiros, doces finos, sobremesas e encomendas especiais para casamentos e eventos. Mais do que doces, criamos memórias.">
+    <meta name="keywords" content="cardapio caseirinhos, montar pedido, bolos artesanais, doces finos, encomendas">
+    <meta property="og:title" content="Cardápio de Encomendas | Caseirinhos a Confeitaria">
+    <meta property="og:description" content="Monte seu pedido online passo a passo e envie direto para o WhatsApp.">
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS with Official Caseirinhos Theme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'hsl(50 56% 93%)',
+                        foreground: 'hsl(25 38% 20%)',
+                        card: 'hsl(50 40% 97%)',
+                        'card-foreground': 'hsl(25 38% 20%)',
+                        primary: {
+                            DEFAULT: 'hsl(174 72% 56%)',
+                            foreground: '#ffffff',
+                        },
+                        secondary: {
+                            DEFAULT: 'hsl(50 40% 90%)',
+                            foreground: 'hsl(25 38% 25%)',
+                        },
+                        muted: {
+                            DEFAULT: 'hsl(50 25% 88%)',
+                            foreground: 'hsl(25 15% 45%)',
+                        },
+                        accent: {
+                            DEFAULT: 'hsl(34 47% 60%)',
+                            foreground: '#ffffff',
+                        },
+                        border: 'hsl(34 25% 85%)',
+                        input: 'hsl(34 25% 82%)',
+                        cream: 'hsl(50 56% 93%)',
+                        chocolate: 'hsl(25 38% 40%)',
+                        'chocolate-deep': 'hsl(25 42% 22%)',
+                        gold: 'hsl(34 47% 60%)',
+                        rose: 'hsl(174 72% 56%)',
+                        peach: 'hsl(34 50% 85%)',
+                        'pink-light': 'hsl(50 40% 94%)',
+                    },
+                    fontFamily: {
+                        heading: ['"Playfair Display"', 'Georgia', 'serif'],
+                        script: ['"Dancing Script"', 'cursive'],
+                        body: ['"Nunito"', '-apple-system', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '3xl': '1.75rem',
+                        '2xl': '1.25rem',
+                        'xl': '1rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(43, 24, 16, 0.18);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(43, 24, 16, 0.35);
+        }
+
+        /* Animations */
+        @keyframes fadeInSlide {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-in {
+            animation: fadeInSlide 0.35s ease forwards;
+        }
+
+        /* Active Glow & Ring */
+        .category-card-active {
+            border-color: hsl(174 72% 56%) !important;
+            background-color: hsla(174, 72%, 56%, 0.05) !important;
+            box-shadow: 0 10px 25px -5px hsla(174, 72%, 56%, 0.15), 0 0 0 1.5px hsla(174, 72%, 56%, 0.3) !important;
+        }
+        .category-card-active .cat-checkbox {
+            background-color: hsl(174 72% 56%) !important;
+            border-color: hsl(174 72% 56%) !important;
+            color: #ffffff !important;
+        }
+        .category-card-active .cat-title {
+            color: hsl(174 72% 56%) !important;
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground font-body antialiased selection:bg-primary/20 selection:text-foreground">
+
+    <!-- ====== NAVBAR ====== -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md shadow-sm border-b border-border/40">
+        <div class="container mx-auto flex items-center justify-between py-3 px-4 max-w-6xl">
+            <a class="flex items-center gap-2" href="index.html">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria" class="h-10 md:h-12 w-auto" decoding="async" fetchpriority="high">
+            </a>
+
+            <ul class="hidden lg:flex items-center gap-6">
+                <li><a class="text-sm font-medium font-body transition-colors hover:text-primary text-foreground/70" href="index.html">Início</a></li>
+                <li><a class="text-sm font-medium font-body transition-colors hover:text-primary text-foreground/70" href="nossa-historia.html">Nossa História</a></li>
+                <li><a class="text-sm font-medium font-body transition-colors hover:text-primary text-foreground/70" href="cardapio.html">Cardápio</a></li>
+                <li><a class="text-sm font-semibold font-body text-primary" href="montar-pedido.html">Montar Pedido</a></li>
+                <li><a class="text-sm font-medium font-body transition-colors hover:text-primary text-foreground/70" href="contato.html">Contato</a></li>
+            </ul>
+
+            <div class="flex items-center gap-2">
+                <a class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-body transition-all duration-300 shadow-sm border bg-accent/10 text-accent border-accent/30 hover:bg-accent/20" href="montar-pedido.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cake"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2.5-2 4-2 2-1 2-1"></path><path d="M2 21h20"></path><path d="M7 8v3"></path><path d="M12 8v3"></path><path d="M17 8v3"></path><path d="M7 4h.01"></path><path d="M12 4h.01"></path><path d="M17 4h.01"></path></svg>
+                    Bolos &amp; Encomendas
+                </a>
+                <button class="lg:hidden text-foreground p-2 rounded-full hover:bg-muted transition-colors" id="navToggleBtn" aria-label="Menu" onclick="toggleMobileNav()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileNavMenu" class="fixed inset-x-0 top-[60px] z-40 bg-background/98 backdrop-blur-xl border-b border-border/50 shadow-xl p-5 flex flex-col gap-4 hidden lg:hidden animate-slide-in">
+        <a class="text-base font-semibold font-body text-foreground/80 py-2 border-b border-border/30 hover:text-primary" href="index.html" onclick="toggleMobileNav()">Início</a>
+        <a class="text-base font-semibold font-body text-foreground/80 py-2 border-b border-border/30 hover:text-primary" href="nossa-historia.html" onclick="toggleMobileNav()">Nossa História</a>
+        <a class="text-base font-semibold font-body text-foreground/80 py-2 border-b border-border/30 hover:text-primary" href="cardapio.html" onclick="toggleMobileNav()">Cardápio</a>
+        <a class="text-base font-bold font-body text-primary py-2 border-b border-border/30" href="montar-pedido.html" onclick="toggleMobileNav()">Montar Pedido 🎂</a>
+        <a class="text-base font-semibold font-body text-foreground/80 py-2 hover:text-primary" href="contato.html" onclick="toggleMobileNav()">Contato</a>
+        <a class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold font-body bg-primary text-white shadow-md mt-2" href="montar-pedido.html" onclick="toggleMobileNav()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cake"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"></path><path d="M2 21h20"></path><path d="M7 8v3"></path><path d="M12 8v3"></path><path d="M17 8v3"></path><path d="M7 4h.01"></path><path d="M12 4h.01"></path><path d="M17 4h.01"></path></svg>
+            Fazer Encomenda
+        </a>
+    </div>
+
+    <!-- ====== CONTEÚDO PRINCIPAL ====== -->
+    <main class="min-h-screen bg-gradient-to-b from-cream to-white pb-32 pt-24 font-body relative overflow-hidden">
+        <!-- Elementos Ambientais e Gradientes -->
+        <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/10 to-transparent -z-10"></div>
+        <div class="absolute top-20 right-10 w-64 h-64 bg-rose/10 blur-[80px] rounded-full -z-10"></div>
+        <div class="absolute top-80 left-10 w-48 h-48 bg-gold/10 blur-[60px] rounded-full -z-10"></div>
+
+        <!-- HERO SECTION -->
+        <section class="py-10 md:py-16 relative overflow-hidden" id="builder_hero" data-section="builder_hero">
+            <div class="absolute inset-0 pointer-events-none">
+                <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-3xl"></div>
+                <div class="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-accent/5 blur-3xl"></div>
+            </div>
+            <div class="container mx-auto px-4 text-center relative z-10 max-w-5xl">
+                <div>
+                    <span class="font-script text-3xl md:text-4xl text-primary block mb-1" data-field="script">Tornando sua vida mais doce!</span>
+                    <h1 class="font-heading text-3xl md:text-5xl font-bold text-foreground mt-1 mb-3" data-field="title">Cardápio de Encomendas</h1>
+                    <div class="w-20 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mb-3"></div>
+                    <p class="text-muted-foreground max-w-lg mx-auto font-body font-semibold tracking-wider text-xs md:text-sm uppercase mb-6" data-field="subtitle">BEM-VINDO AO NOSSO CARDÁPIO DE DELÍCIAS!</p>
+
+                    <div class="mt-4 max-w-3xl mx-auto">
+                        <div class="rounded-3xl overflow-hidden border border-border/60 shadow-md">
+                            <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/cardapio_hero/1781027412146-9hjvbm.jpg" onerror="this.src='images/hero-cake.webp'" alt="Cardápio de Encomendas" class="w-full h-auto object-cover max-h-[360px]" data-field="image">
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-muted-foreground max-w-2xl mx-auto mt-6 leading-relaxed whitespace-pre-line" data-field="content">
+                        Na Caseirinhos, cada doce é preparado com carinho para tornar seus momentos ainda mais especiais.
+
+                        Somos apaixonados por criar bolos, sobremesas e doces que unem sabor, qualidade e aquele toque caseiro que faz toda a diferença. Utilizamos ingredientes selecionados e dedicação em cada receita, porque acreditamos que cada detalhe importa.
+
+                        Esperamos que você aproveite nossas delícias e monte seu pedido abaixo!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTAINER DO MONTADOR DE PEDIDO -->
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="flex flex-col lg:flex-row gap-10 items-start">
+                
+                <!-- COLUNA ESQUERDA: ETAPAS -->
+                <div class="flex-1 space-y-12 max-w-2xl w-full">
+
+                    <!-- ============================================== -->
+                    <!-- ETAPA 1: SELEÇÃO DE CATEGORIAS                -->
+                    <!-- ============================================== -->
+                    <section id="step-1">
+                        <div class="flex items-center gap-4 mb-5">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-primary/70 text-white font-bold text-sm shadow-md shrink-0">1</div>
+                            <h2 class="font-heading text-2xl font-bold text-foreground">O que você vai pedir?</h2>
+                        </div>
+                        <p class="text-sm text-muted-foreground/80 mb-5 ml-0 sm:ml-12">Você pode selecionar mais de uma opção para fazer todo o pedido de uma só vez.</p>
+
+                        <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 ml-0 sm:ml-12">
+                            <!-- Card Bolo -->
+                            <button type="button" id="catBtn-bolo" onclick="toggleCategory('bolo')" class="relative flex flex-col items-start justify-between rounded-3xl border p-6 text-left transition-all duration-300 min-h-[140px] shadow-sm overflow-hidden group border-border/50 bg-white hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 cursor-pointer">
+                                <div class="flex w-full items-start justify-between relative z-10">
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 bg-primary/10 text-primary group-hover:scale-110">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cake"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2.5-2 4-2 2-1 2-1"></path><path d="M2 21h20"></path><path d="M7 8v3"></path><path d="M12 8v3"></path><path d="M17 8v3"></path><path d="M7 4h.01"></path><path d="M12 4h.01"></path><path d="M17 4h.01"></path></svg>
+                                    </div>
+                                    <div class="cat-checkbox flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-300 border-border/60 bg-white text-transparent group-hover:border-primary/40 text-xs">
+                                        <i class="fa-solid fa-check"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-5 relative z-10">
+                                    <span class="cat-title block font-heading text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">Bolo</span>
+                                    <span class="block text-[11px] text-muted-foreground mt-0.5">~100g / pessoa</span>
+                                </div>
+                            </button>
+
+                            <!-- Card Doces -->
+                            <button type="button" id="catBtn-doces" onclick="toggleCategory('doces')" class="relative flex flex-col items-start justify-between rounded-3xl border p-6 text-left transition-all duration-300 min-h-[140px] shadow-sm overflow-hidden group border-border/50 bg-white hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 cursor-pointer">
+                                <div class="flex w-full items-start justify-between relative z-10">
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 bg-primary/10 text-primary group-hover:scale-110">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-candy"><path d="m9.5 7.5-2 2a4.95 4.95 0 1 0 7 7l2-2a4.95 4.95 0 1 0-7-7Z"></path><path d="M14 6.5v10"></path><path d="M10 7.5v10"></path><path d="m16 7 1-5 1.37.68A3 3 0 0 0 19.7 3H21v1.3c0 .46.1.92.32 1.33L22 7l-5 1"></path><path d="m8 17-1 5-1.37-.68A3 3 0 0 0 4.3 21H3v-1.3a3 3 0 0 0-.32-1.33L2 17l5-1"></path></svg>
+                                    </div>
+                                    <div class="cat-checkbox flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-300 border-border/60 bg-white text-transparent group-hover:border-primary/40 text-xs">
+                                        <i class="fa-solid fa-check"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-5 relative z-10">
+                                    <span class="cat-title block font-heading text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">Doces</span>
+                                    <span class="block text-[11px] text-muted-foreground mt-0.5">3 a 4 / pessoa</span>
+                                </div>
+                            </button>
+
+                            <!-- Card Salgados -->
+                            <button type="button" id="catBtn-salgados" onclick="toggleCategory('salgados')" class="relative flex flex-col items-start justify-between rounded-3xl border p-6 text-left transition-all duration-300 min-h-[140px] shadow-sm overflow-hidden group border-border/50 bg-white hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 cursor-pointer">
+                                <div class="flex w-full items-start justify-between relative z-10">
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 bg-primary/10 text-primary group-hover:scale-110">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-croissant"><path d="m4.6 13.11 5.79-3.21c1.89-1.05 4.79 1.78 3.71 3.71l-3.22 5.81C8.8 23.16.79 15.23 4.6 13.11Z"></path><path d="m10.5 9.5-1-2.29C9.2 6.48 8.8 6 8 6H4.5C2.79 6 2 6.5 2 8.5a7.71 7.71 0 0 0 2 4.83"></path><path d="M8 6c0-1.55.24-4-2-4-2 0-2.5 2.17-2.5 4"></path><path d="m14.5 13.5 2.29 1c.73.3 1.21.7 1.21 1.5v3.5c0 1.71-.5 2.5-2.5 2.5a7.71 7.71 0 0 1-4.83-2"></path><path d="M18 16c1.55 0 4-.24 4 2 0 2-2.17 2.5-4 2.5"></path></svg>
+                                    </div>
+                                    <div class="cat-checkbox flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-300 border-border/60 bg-white text-transparent group-hover:border-primary/40 text-xs">
+                                        <i class="fa-solid fa-check"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-5 relative z-10">
+                                    <span class="cat-title block font-heading text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">Salgados</span>
+                                    <span class="block text-[11px] text-muted-foreground mt-0.5">10 a 15 / pessoa</span>
+                                </div>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- ============================================== -->
+                    <!-- ETAPA 2: DETALHES DO PEDIDO                    -->
+                    <!-- ============================================== -->
+                    <section id="step-2" class="space-y-8 hidden">
+                        <div class="flex items-center gap-4 mb-5">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-primary/70 text-white font-bold text-sm shadow-md shrink-0">2</div>
+                            <h2 class="font-heading text-2xl font-bold text-foreground">Detalhes do pedido</h2>
+                        </div>
+
+                        <div class="space-y-8 ml-0 sm:ml-12">
+                            
+                            <!-- SEÇÃO DINÂMICA: BOLO -->
+                            <div id="section-bolo" class="bg-white/80 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6 hidden">
+                                <div class="flex items-center justify-between border-b border-border/40 pb-4">
+                                    <h3 class="font-heading text-xl font-bold text-chocolate flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"></path><path d="M2 21h20"></path><path d="M7 8v3"></path><path d="M12 8v3"></path><path d="M17 8v3"></path><path d="M7 4h.01"></path><path d="M12 4h.01"></path><path d="M17 4h.01"></path></svg>
+                                        Personalize seu Bolo
+                                    </h3>
+                                    <span class="text-xs uppercase font-bold tracking-widest text-primary/80">3 camadas &amp; 2 recheios</span>
+                                </div>
+
+                                <!-- Formato do Bolo -->
+                                <div>
+                                    <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Formato do Bolo *</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <button type="button" id="fmt-round-btn" onclick="setBoloFormat('round')" class="flex flex-col items-center justify-center p-5 rounded-2xl border transition-all text-center border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm">
+                                            <span class="font-heading text-base font-bold text-primary">Bolo Redondo</span>
+                                            <span class="text-xs text-muted-foreground mt-1">Clássico alto decorado</span>
+                                        </button>
+                                        <button type="button" id="fmt-rect-btn" onclick="setBoloFormat('rect')" class="flex flex-col items-center justify-center p-5 rounded-2xl border transition-all text-center border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40">
+                                            <span class="font-heading text-base font-bold text-foreground">Bolo Retangular</span>
+                                            <span class="text-xs text-muted-foreground mt-1">Bolo de corte para muitas fatias</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- TAMANHO DO BOLO -->
+                                <div>
+                                    <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Tamanho *</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="cakeSizesContainer">
+                                        <!-- Injetado via JS -->
+                                    </div>
+                                </div>
+
+                                <!-- MASSA DO BOLO -->
+                                <div>
+                                    <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Massa do Bolo *</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="cakeDoughContainer">
+                                        <!-- Injetado via JS -->
+                                    </div>
+                                </div>
+
+                                <!-- RECHEIOS -->
+                                <div>
+                                    <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Sabor do Recheio *</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="cakeFillingContainer">
+                                        <!-- Injetado via JS -->
+                                    </div>
+                                </div>
+
+                                <!-- COBERTURA -->
+                                <div>
+                                    <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Cobertura *</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="cakeToppingContainer">
+                                        <!-- Injetado via JS -->
+                                    </div>
+                                </div>
+
+                                <!-- ADICIONAIS / DECORAÇÕES -->
+                                <div>
+                                    <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Decorações e Adicionais (Opcional)</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="cakeAddonsContainer">
+                                        <!-- Injetado via JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SEÇÃO DINÂMICA: DOCES -->
+                            <div id="section-doces" class="bg-white/80 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6 hidden">
+                                <div class="flex items-center justify-between border-b border-border/40 pb-4">
+                                    <h3 class="font-heading text-xl font-bold text-chocolate flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="m9.5 7.5-2 2a4.95 4.95 0 1 0 7 7l2-2a4.95 4.95 0 1 0-7-7Z"></path><path d="M14 6.5v10"></path><path d="M10 7.5v10"></path></svg>
+                                        Doces para Festas
+                                    </h3>
+                                    <span class="text-xs uppercase font-bold tracking-widest text-primary/80">Artesanais &amp; Finos</span>
+                                </div>
+
+                                <!-- Linha Tradicional vs Gourmet -->
+                                <div>
+                                    <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Linha de Doces *</label>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <button type="button" id="doces-trad-btn" onclick="setDocesLine('tradicional')" class="p-4 rounded-2xl border text-center transition-all border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm font-heading font-bold text-sm text-primary">
+                                            Doces Tradicionais (10g)
+                                        </button>
+                                        <button type="button" id="doces-gourmet-btn" onclick="setDocesLine('gourmet')" class="p-4 rounded-2xl border text-center transition-all border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40 font-heading font-bold text-sm">
+                                            Doces Gourmet (15g) ⭐
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Pacotes -->
+                                <div>
+                                    <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Pacote (Quantidade) *</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="docesPackagesContainer"></div>
+                                </div>
+
+                                <!-- Sabores -->
+                                <div>
+                                    <label class="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Sabores Selecionados</label>
+                                    <p class="text-xs text-muted-foreground/80 mb-3">Clique para selecionar os sabores do seu cento ou pacote:</p>
+                                    <div class="flex flex-wrap gap-2" id="docesFlavorsContainer"></div>
+                                </div>
+                            </div>
+
+                            <!-- SEÇÃO DINÂMICA: SALGADOS -->
+                            <div id="section-salgados" class="bg-white/80 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6 hidden">
+                                <div class="flex items-center justify-between border-b border-border/40 pb-4">
+                                    <h3 class="font-heading text-xl font-bold text-chocolate flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="m4.6 13.11 5.79-3.21c1.89-1.05 4.79 1.78 3.71 3.71l-3.22 5.81C8.8 23.16.79 15.23 4.6 13.11Z"></path><path d="m10.5 9.5-1-2.29C9.2 6.48 8.8 6 8 6H4.5C2.79 6 2 6.5 2 8.5a7.71 7.71 0 0 0 2 4.83"></path></svg>
+                                        Salgados para Festas
+                                    </h3>
+                                    <span class="text-xs uppercase font-bold tracking-widest text-primary/80">Fritos &amp; Assados</span>
+                                </div>
+
+                                <div>
+                                    <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Pacote de Salgados *</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="salgadosPackagesContainer"></div>
+                                </div>
+
+                                <div>
+                                    <label class="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em]">Sabores de Salgados</label>
+                                    <p class="text-xs text-muted-foreground/80 mb-3">Escolha as opções inclusas no seu pacote:</p>
+                                    <div class="flex flex-wrap gap-2" id="salgadosFlavorsContainer"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <!-- ============================================== -->
+                    <!-- ETAPA 3: SEUS DADOS E ENTREGA                 -->
+                    <!-- ============================================== -->
+                    <section id="step-3" class="opacity-50 pointer-events-none transition-all duration-300">
+                        <div class="flex items-center gap-4 mb-5">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-primary/70 text-white font-bold text-sm shadow-md shrink-0">3</div>
+                            <h2 class="font-heading text-2xl font-bold text-foreground">Seus dados e entrega</h2>
+                        </div>
+
+                        <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6 ml-0 sm:ml-12">
+                            
+                            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                <div>
+                                    <label class="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">Nome completo *</label>
+                                    <input type="text" id="custName" oninput="syncState()" placeholder="Ex: Maria da Silva" class="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">Telefone / WhatsApp *</label>
+                                    <input type="tel" id="custPhone" oninput="maskPhone(this); syncState();" placeholder="(11) 99999-9999" maxlength="15" class="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                <div>
+                                    <label class="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">E-mail (opcional)</label>
+                                    <input type="email" id="custEmail" placeholder="seu@email.com" class="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">Tipo de Evento (opcional)</label>
+                                    <input type="text" id="custEvent" placeholder="Ex: Aniversário, Casamento..." class="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="mb-1 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">Data desejada *</label>
+                                <p class="text-[10px] text-muted-foreground/70 mb-2 ml-1 font-semibold">Encomendas sujeitas à disponibilidade da agenda.</p>
+                                <input type="date" id="custDate" oninput="syncState()" class="w-full rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-3.5 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white">
+                            </div>
+
+                            <div>
+                                <label class="mb-2 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">Observações adicionais</label>
+                                <textarea id="custNotes" rows="3" placeholder="Ex: Restrições alimentares, mensagem no topo do bolo, detalhes das cores..." class="w-full resize-none rounded-2xl border border-border/60 bg-white/60 backdrop-blur-sm px-5 py-4 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm transition-all hover:bg-white"></textarea>
+                            </div>
+
+                            <div class="pt-2">
+                                <label class="mb-3 block font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] ml-1">Forma de recebimento *</label>
+                                <div class="grid gap-4 grid-cols-2">
+                                    <button type="button" id="btn-pickup" onclick="setDelivery('pickup')" class="flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 transition-all border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20 cursor-pointer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-store"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path><path d="M2 7h20"></path><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"></path></svg>
+                                        <div class="text-center">
+                                            <span class="block font-bold text-sm">Retirar no local</span>
+                                            <span class="block text-[10px] uppercase tracking-wider mt-1 text-primary/70">No ateliê</span>
+                                        </div>
+                                    </button>
+
+                                    <button type="button" id="btn-delivery" onclick="setDelivery('delivery')" class="flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 transition-all border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40 cursor-pointer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                        <div class="text-center">
+                                            <span class="block font-bold text-sm">Entrega</span>
+                                            <span class="block text-[10px] uppercase tracking-wider mt-1 text-muted-foreground/60">A combinar</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                </div>
+
+                <!-- COLUNA DIREITA: SEU PEDIDO (DESKTOP STICKY) -->
+                <div class="hidden lg:block w-[400px] shrink-0 sticky top-28">
+                    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col max-h-[calc(100vh-140px)]">
+                        <h3 class="font-heading text-2xl font-bold text-chocolate mb-6 border-b border-border/40 pb-4">Seu Pedido</h3>
+                        
+                        <div id="cartItemsList" class="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4 min-h-[200px]">
+                            <!-- Estado Vazio -->
+                            <div id="cartEmptyState" class="flex flex-col items-center justify-center py-12 text-center h-full opacity-60">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-bag text-primary/40 mb-3"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                <p class="font-heading text-base font-bold text-foreground">Sua sacola está vazia</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 border-t border-border/40 pt-5">
+                            <div class="flex items-center justify-between font-heading text-lg font-bold text-foreground mb-4">
+                                <span class="uppercase tracking-widest text-[10px] text-muted-foreground">Total Estimado</span>
+                                <span id="cartTotalPrice" class="text-chocolate text-2xl">R$ 0,00</span>
+                            </div>
+                            <button type="button" id="btnSendWhatsappDesktop" disabled onclick="sendToWhatsapp()" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-5 py-4 font-body text-sm font-bold uppercase tracking-widest text-white shadow-lg shadow-[#25D366]/30 transition-all hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+                                Enviar 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BARRA FIXA INFERIOR MOBILE -->
+        <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-t border-border/40 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] lg:hidden">
+            <div class="container mx-auto px-5 py-4 max-w-2xl flex items-center justify-between">
+                <div>
+                    <p class="font-heading text-[11px] font-bold text-muted-foreground uppercase tracking-[0.15em] leading-none mb-1.5">Total estimado</p>
+                    <p id="mobileTotalPrice" class="font-heading text-2xl font-bold text-chocolate leading-none">R$ 0,00</p>
+                </div>
+                <button type="button" id="mobileReviewBtn" disabled onclick="openReviewModal()" class="flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary/80 px-8 py-3 font-body text-sm font-bold text-white shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none cursor-pointer">
+                    Revisar 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL BOTTOM SHEET MOBILE -->
+        <div id="mobileReviewModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-end justify-center">
+            <div class="bg-white rounded-t-3xl w-full max-w-lg p-6 max-h-[85vh] flex flex-col shadow-2xl animate-slide-in">
+                <div class="w-12 h-1.5 bg-border/60 rounded-full mx-auto mb-4"></div>
+                <div class="flex items-center justify-between pb-4 border-b border-border/40">
+                    <h3 class="font-heading text-xl font-bold text-chocolate">Resumo do Pedido</h3>
+                    <button onclick="closeReviewModal()" class="text-muted-foreground hover:text-foreground text-lg p-1">✕</button>
+                </div>
+
+                <div id="modalCartItemsList" class="flex-1 overflow-y-auto pr-1 py-4 space-y-4"></div>
+
+                <div class="pt-4 border-t border-border/40">
+                    <div class="flex items-center justify-between font-heading text-lg font-bold text-foreground mb-4">
+                        <span class="uppercase tracking-widest text-[10px] text-muted-foreground">Total Estimado</span>
+                        <span id="modalTotalPrice" class="text-chocolate text-2xl">R$ 0,00</span>
+                    </div>
+                    <button type="button" id="btnSendWhatsappModal" disabled onclick="sendToWhatsapp()" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-5 py-4 font-body text-sm font-bold uppercase tracking-widest text-white shadow-lg shadow-[#25D366]/30 transition-all hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Enviar Pedido no WhatsApp
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="relative overflow-hidden">
+        <div class="w-full overflow-hidden leading-[0] -mb-px" style="background: hsl(var(--background));">
+            <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto block" preserveAspectRatio="none">
+                <path d="M0 40C360 80 720 0 1080 40C1260 60 1380 50 1440 40V80H0V40Z" fill="hsl(var(--chocolate-deep))"></path>
+            </svg>
+        </div>
+        <div class="bg-chocolate-deep text-primary-foreground">
+            <div class="container mx-auto px-4 py-12 max-w-6xl">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="text-center md:text-left flex flex-col items-center md:items-start">
+                        <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria" class="h-14 w-auto mb-4 brightness-0 invert" loading="lazy" decoding="async">
+                        <p class="text-sm opacity-70 leading-relaxed">Mais do que doces, criamos memórias. Cada bolo é feito com amor, dedicação e ingredientes selecionados.</p>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-heading text-lg mb-4 text-accent">Navegação</h4>
+                        <ul class="space-y-2">
+                            <li><a class="text-sm opacity-60 hover:opacity-100 hover:text-accent transition-all" href="index.html">Início</a></li>
+                            <li><a class="text-sm opacity-60 hover:opacity-100 hover:text-accent transition-all" href="nossa-historia.html">Nossa História</a></li>
+                            <li><a class="text-sm opacity-60 hover:opacity-100 hover:text-accent transition-all" href="cardapio.html">Cardápio</a></li>
+                            <li><a class="text-sm opacity-60 hover:opacity-100 hover:text-accent transition-all" href="montar-pedido.html">Montar Pedido</a></li>
+                            <li><a class="text-sm opacity-60 hover:opacity-100 hover:text-accent transition-all" href="contato.html">Contato</a></li>
+                        </ul>
+                    </div>
+                    <div class="text-center md:text-right">
+                        <h4 class="font-heading text-lg mb-4 text-accent">Informações</h4>
+                        <div class="space-y-3 text-sm opacity-70">
+                            <p class="flex items-center justify-center md:justify-end gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Ter a Sáb: 12h – 18h</p>
+                            <p class="flex items-center justify-center md:justify-end gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> Delivery a partir das 12:30h</p>
+                            <p class="flex items-center justify-center md:justify-end gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg> R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP</p>
+                            <div class="flex items-center justify-center md:justify-end gap-4 pt-2">
+                                <a href="https://instagram.com/caseirinhosaconfeitaria" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-primary-foreground/10 mt-10 pt-5 text-center text-xs opacity-40 flex items-center justify-center gap-1">
+                    Feito com <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart text-primary fill-primary"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg> © 2026 Caseirinhos
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ====== SCRIPT COMPLETO DO MOTOR DE PEDIDO ====== -->
+    <script src="assets/app.js"></script>
+    <script>
+        // DADOS DO CARDÁPIO
+        const DATA = {
+            roundSizes: [
+                { id: 'PP', name: 'PP (1.0 kg)', slices: '~10 fatias', desc: 'Aro 13 cm', priceTrad: 85, priceEsp: 110 },
+                { id: 'P', name: 'P (1.5 kg)', slices: '~15 fatias', desc: 'Aro 15 cm', priceTrad: 130, priceEsp: 165 },
+                { id: 'M', name: 'M (2.0 kg)', slices: '~20 fatias', desc: 'Aro 17 cm', priceTrad: 180, priceEsp: 220 },
+                { id: 'G', name: 'G (3.0 kg)', slices: '~30 fatias', desc: 'Aro 20 cm', priceTrad: 240, priceEsp: 285 },
+                { id: 'XG', name: 'XG (4.0 kg)', slices: '~40 fatias', desc: 'Aro 25 cm', priceTrad: 300, priceEsp: 350 },
+            ],
+            rectSizes: [
+                { id: 'P', name: 'Retangular P', slices: '20 a 25 fatias', desc: '20×15 cm (2.0 kg)', priceTrad: 170, priceEsp: 190 },
+                { id: 'M', name: 'Retangular M', slices: '30 a 35 fatias', desc: '25×17 cm (3.0 kg)', priceTrad: 255, priceEsp: 285 },
+                { id: 'G', name: 'Retangular G', slices: '40 a 45 fatias', desc: '30×22 cm (4.0 kg)', priceTrad: 340, priceEsp: 380 },
+                { id: 'GG', name: 'Retangular GG', slices: '60 a 65 fatias', desc: '36×26 cm (6.0 kg)', priceTrad: 510, priceEsp: 570 },
+            ],
+            doughs: [
+                { id: 'branca', name: 'Massa Branca', desc: 'Baunilha suave', addon: 0 },
+                { id: 'chocolate', name: 'Massa de Chocolate', desc: 'Cacau 50%', addon: 0 },
+                { id: 'redvelvet', name: 'Red Velvet', desc: 'Aveludada marcante', addon: 10 },
+            ],
+            fillings: [
+                { id: 'chocolatudo', name: 'Chocolatudo', desc: 'Brigadeiro 50% artesanal', type: 'trad' },
+                { id: 'dois_amores', name: 'Dois Amores', desc: 'Ninho e brigadeiro', type: 'trad' },
+                { id: 'choconinho', name: 'Choconinho', desc: 'Creme de Ninho', type: 'trad' },
+                { id: 'cocada', name: 'Cocada Cremosa', desc: 'Coco fresco cremoso', type: 'trad' },
+                { id: 'maracuja', name: 'Mousse de Maracujá', desc: 'Aerado e refrescante', type: 'trad' },
+                { id: 'ninho_morango', name: 'Ninho com Morangos Frescos', desc: 'Ninho com morangos', type: 'esp' },
+                { id: 'ninho_nutella', name: 'Ninho com Nutella Pura', desc: 'Creme Ninho e Nutella', type: 'esp' },
+                { id: 'choco_morango', name: 'Chocolate com Morango', desc: 'Brigadeiro 50% e morangos', type: 'esp' },
+                { id: 'prestigio', name: 'Prestígio Gourmet', desc: 'Coco cremoso e meio amargo', type: 'esp' },
+                { id: 'frutas_verm', name: 'Laka com Frutas Vermelhas', desc: 'Geleia artesanal e Laka', type: 'esp' },
+            ],
+            toppings: [
+                { id: 'chantininho', name: 'Chantininho Tradicional', desc: 'Creme suave', addon: 0 },
+                { id: 'chantininho_choc', name: 'Chantininho de Chocolate', desc: 'Sabor chocolate', addon: 0 },
+                { id: 'ganache', name: 'Ganache de Chocolate', desc: 'Nobre e brilhante', addon: 20 },
+                { id: 'naked', name: 'Naked Cake', desc: 'Sem cobertura lateral', addon: 0 },
+            ],
+            cakeAddons: [
+                { id: 'drip', name: 'Drip Cake (Calda Escorrendo)', price: 8 },
+                { id: 'vintage', name: 'Decoração Vintage Cake', price: 25 },
+                { id: 'topo', name: 'Topo de Bolo Personalizado', price: 35 },
+                { id: 'flores', name: 'Flores Naturais Selecionadas', price: 40 },
+                { id: 'laco', name: 'Laço de Cetim', price: 20 },
+                { id: 'doces_topo', name: 'Docinhos no Topo (6 un)', price: 12 },
+            ],
+            docesPackages: {
+                tradicional: [
+                    { id: 'doces_25', qtd: 25, label: 'Pacote 25 un', price: 50 },
+                    { id: 'doces_50', qtd: 50, label: 'Pacote 50 un', price: 60 },
+                    { id: 'doces_100', qtd: 100, label: 'Cento 100 un', price: 100 },
+                ],
+                gourmet: [
+                    { id: 'doces_25_g', qtd: 25, label: 'Pacote 25 un (Gourmet)', price: 75 },
+                    { id: 'doces_50_g', qtd: 50, label: 'Pacote 50 un (Gourmet)', price: 100 },
+                    { id: 'doces_100_g', qtd: 100, label: 'Cento 100 un (Gourmet)', price: 200 },
+                ]
+            },
+            docesFlavors: {
+                tradicional: ['Brigadeiro Tradicional 50%', 'Beijinho de Coco', 'Cajuzinho', 'Bicho de Pé (Morango)', 'Ninho Cremoso', 'Amendoim'],
+                gourmet: ['Ninho com Nutella', 'Mousse de Maracujá', 'Surpresa de Uva', 'Churros com Doce de Leite', 'Oreo Nobre', 'Ferrero Rocher']
+            },
+            salgadosPackages: [
+                { id: 'salgados_25', qtd: 25, label: 'Pacote 25 un', price: 35 },
+                { id: 'salgados_50', qtd: 50, label: 'Pacote 50 un', price: 65 },
+                { id: 'salgados_100', qtd: 100, label: 'Cento 100 un', price: 120 },
+            ],
+            salgadosFlavors: ['Coxinha de Frango', 'Bolinha de Queijo', 'Risólis de Carne', 'Risólis de Presunto e Queijo', 'Empadinha de Palmito', 'Kibe Frito']
+        };
+
+        // ESTADO GLOBAL DO PEDIDO
+        const STATE = {
+            categories: [], // 'bolo', 'doces', 'salgados'
+            delivery: 'pickup', // pickup | delivery
+            // Config do Bolo
+            bolo: {
+                format: 'round',
+                sizeId: 'M',
+                doughId: 'branca',
+                fillingId: 'chocolatudo',
+                toppingId: 'chantininho',
+                addons: []
+            },
+            // Config dos Doces
+            doces: {
+                line: 'tradicional',
+                packageId: 'doces_50',
+                flavors: ['Brigadeiro Tradicional 50%', 'Beijinho de Coco']
+            },
+            // Config dos Salgados
+            salgados: {
+                packageId: 'salgados_50',
+                flavors: ['Coxinha de Frango', 'Bolinha de Queijo']
+            }
+        };
+
+        // INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBoloControls();
+            renderDocesControls();
+            renderSalgadosControls();
+            syncState();
+
+            // Data mínima para amanhã
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dateInput = document.getElementById('custDate');
+            if (dateInput) dateInput.min = tomorrow.toISOString().split('T')[0];
+        });
+
+        function toggleMobileNav() {
+            const menu = document.getElementById('mobileNavMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // ALTERNAR CATEGORIAS NO PASSO 1
+        function toggleCategory(cat) {
+            const idx = STATE.categories.indexOf(cat);
+            const btn = document.getElementById(`catBtn-${cat}`);
+            
+            if (idx > -1) {
+                STATE.categories.splice(idx, 1);
+                if (btn) btn.classList.remove('category-card-active');
+            } else {
+                STATE.categories.push(cat);
+                if (btn) btn.classList.add('category-card-active');
+            }
+
+            // Exibição do Passo 2 e das seções
+            const step2 = document.getElementById('step-2');
+            if (STATE.categories.length > 0) {
+                step2.classList.remove('hidden');
+            } else {
+                step2.classList.add('hidden');
+            }
+
+            document.getElementById('section-bolo').classList.toggle('hidden', !STATE.categories.includes('bolo'));
+            document.getElementById('section-doces').classList.toggle('hidden', !STATE.categories.includes('doces'));
+            document.getElementById('section-salgados').classList.toggle('hidden', !STATE.categories.includes('salgados'));
+
+            syncState();
+        }
+
+        // ==========================================
+        // CONTROLES DO BOLO
+        // ==========================================
+        function setBoloFormat(fmt) {
+            STATE.bolo.format = fmt;
+            document.getElementById('fmt-round-btn').className = fmt === 'round' 
+                ? 'flex flex-col items-center justify-center p-5 rounded-2xl border transition-all text-center border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm'
+                : 'flex flex-col items-center justify-center p-5 rounded-2xl border transition-all text-center border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40';
+            
+            document.getElementById('fmt-rect-btn').className = fmt === 'rect'
+                ? 'flex flex-col items-center justify-center p-5 rounded-2xl border transition-all text-center border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm'
+                : 'flex flex-col items-center justify-center p-5 rounded-2xl border transition-all text-center border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40';
+
+            renderBoloControls();
+            syncState();
+        }
+
+        function renderBoloControls() {
+            // 1. Tamanhos
+            const sizes = STATE.bolo.format === 'round' ? DATA.roundSizes : DATA.rectSizes;
+            const sizeCont = document.getElementById('cakeSizesContainer');
+            sizeCont.innerHTML = sizes.map(s => {
+                const active = STATE.bolo.sizeId === s.id;
+                const filling = DATA.fillings.find(f => f.id === STATE.bolo.fillingId);
+                const isEsp = filling && filling.type === 'esp';
+                const price = isEsp ? s.priceEsp : s.priceTrad;
+                return `
+                    <button type="button" onclick="setBoloSize('${s.id}')" class="flex text-left items-center justify-between p-4 rounded-2xl border transition-all ${active ? 'border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm' : 'border-border/60 bg-white/60 hover:bg-white'}">
+                        <div>
+                            <span class="block font-heading font-bold text-sm text-foreground">${s.name}</span>
+                            <span class="block text-xs text-muted-foreground">${s.slices} • ${s.desc}</span>
+                        </div>
+                        <span class="font-heading font-bold text-sm text-chocolate">R$ ${price.toFixed(2).replace('.', ',')}</span>
+                    </button>
+                `;
+            }).join('');
+
+            // 2. Massas
+            const doughCont = document.getElementById('cakeDoughContainer');
+            doughCont.innerHTML = DATA.doughs.map(d => {
+                const active = STATE.bolo.doughId === d.id;
+                return `
+                    <button type="button" onclick="setBoloDough('${d.id}')" class="flex flex-col p-4 rounded-2xl border text-left transition-all ${active ? 'border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm' : 'border-border/60 bg-white/60 hover:bg-white'}">
+                        <span class="font-heading font-bold text-sm text-foreground">${d.name}</span>
+                        <span class="text-xs text-muted-foreground mt-0.5">${d.desc}</span>
+                        ${d.addon > 0 ? `<span class="text-xs font-bold text-primary mt-1">+R$ ${d.addon}</span>` : ''}
+                    </button>
+                `;
+            }).join('');
+
+            // 3. Recheios
+            const fillCont = document.getElementById('cakeFillingContainer');
+            fillCont.innerHTML = DATA.fillings.map(f => {
+                const active = STATE.bolo.fillingId === f.id;
+                const badge = f.type === 'esp' ? '<span class="text-[10px] uppercase font-bold text-accent bg-accent/10 px-2 py-0.5 rounded-full">Especial ⭐</span>' : '<span class="text-[10px] uppercase font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Tradicional</span>';
+                return `
+                    <button type="button" onclick="setBoloFilling('${f.id}')" class="flex flex-col p-4 rounded-2xl border text-left transition-all ${active ? 'border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm' : 'border-border/60 bg-white/60 hover:bg-white'}">
+                        <div class="flex items-center justify-between w-full mb-1">
+                            <span class="font-heading font-bold text-sm text-foreground">${f.name}</span>
+                            ${badge}
+                        </div>
+                        <span class="text-xs text-muted-foreground">${f.desc}</span>
+                    </button>
+                `;
+            }).join('');
+
+            // 4. Coberturas
+            const topCont = document.getElementById('cakeToppingContainer');
+            topCont.innerHTML = DATA.toppings.map(t => {
+                const active = STATE.bolo.toppingId === t.id;
+                return `
+                    <button type="button" onclick="setBoloTopping('${t.id}')" class="flex text-left items-center justify-between p-4 rounded-2xl border transition-all ${active ? 'border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm' : 'border-border/60 bg-white/60 hover:bg-white'}">
+                        <div>
+                            <span class="block font-heading font-bold text-sm text-foreground">${t.name}</span>
+                            <span class="block text-xs text-muted-foreground">${t.desc}</span>
+                        </div>
+                        ${t.addon > 0 ? `<span class="font-heading font-bold text-sm text-primary">+R$ ${t.addon}</span>` : ''}
+                    </button>
+                `;
+            }).join('');
+
+            // 5. Adicionais
+            const addonCont = document.getElementById('cakeAddonsContainer');
+            addonCont.innerHTML = DATA.cakeAddons.map(a => {
+                const active = STATE.bolo.addons.includes(a.id);
+                return `
+                    <button type="button" onclick="toggleBoloAddon('${a.id}')" class="flex text-left items-center justify-between p-4 rounded-2xl border transition-all ${active ? 'border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm' : 'border-border/60 bg-white/60 hover:bg-white'}">
+                        <span class="font-heading font-bold text-sm text-foreground">${a.name}</span>
+                        <span class="font-heading font-bold text-sm text-chocolate">+R$ ${a.price.toFixed(2).replace('.', ',')}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function setBoloSize(id) { STATE.bolo.sizeId = id; renderBoloControls(); syncState(); }
+        function setBoloDough(id) { STATE.bolo.doughId = id; renderBoloControls(); syncState(); }
+        function setBoloFilling(id) { STATE.bolo.fillingId = id; renderBoloControls(); syncState(); }
+        function setBoloTopping(id) { STATE.bolo.toppingId = id; renderBoloControls(); syncState(); }
+        function toggleBoloAddon(id) {
+            const idx = STATE.bolo.addons.indexOf(id);
+            if (idx > -1) STATE.bolo.addons.splice(idx, 1);
+            else STATE.bolo.addons.push(id);
+            renderBoloControls();
+            syncState();
+        }
+
+        // ==========================================
+        // CONTROLES DOS DOCES
+        // ==========================================
+        function setDocesLine(line) {
+            STATE.doces.line = line;
+            STATE.doces.packageId = line === 'gourmet' ? 'doces_50_g' : 'doces_50';
+            STATE.doces.flavors = DATA.docesFlavors[line].slice(0, 2);
+
+            document.getElementById('doces-trad-btn').className = line === 'tradicional'
+                ? 'p-4 rounded-2xl border text-center transition-all border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm font-heading font-bold text-sm text-primary'
+                : 'p-4 rounded-2xl border text-center transition-all border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40 font-heading font-bold text-sm';
+
+            document.getElementById('doces-gourmet-btn').className = line === 'gourmet'
+                ? 'p-4 rounded-2xl border text-center transition-all border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm font-heading font-bold text-sm text-primary'
+                : 'p-4 rounded-2xl border text-center transition-all border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40 font-heading font-bold text-sm';
+
+            renderDocesControls();
+            syncState();
+        }
+
+        function renderDocesControls() {
+            const pkgs = DATA.docesPackages[STATE.doces.line];
+            const pkgCont = document.getElementById('docesPackagesContainer');
+            pkgCont.innerHTML = pkgs.map(p => {
+                const active = STATE.doces.packageId === p.id;
+                return `
+                    <button type="button" onclick="setDocesPkg('${p.id}')" class="flex items-center justify-between p-4 rounded-2xl border transition-all ${active ? 'border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm' : 'border-border/60 bg-white/60 hover:bg-white'}">
+                        <span class="font-heading font-bold text-sm text-foreground">${p.label}</span>
+                        <span class="font-heading font-bold text-sm text-chocolate">R$ ${p.price.toFixed(2).replace('.', ',')}</span>
+                    </button>
+                `;
+            }).join('');
+
+            const flavs = DATA.docesFlavors[STATE.doces.line];
+            const flavCont = document.getElementById('docesFlavorsContainer');
+            flavCont.innerHTML = flavs.map(f => {
+                const active = STATE.doces.flavors.includes(f);
+                return `
+                    <button type="button" onclick="toggleDocesFlav('${f}')" class="px-4 py-2 rounded-full border text-xs font-bold transition-all ${active ? 'bg-primary text-white border-primary shadow-sm' : 'bg-white/60 text-foreground/80 border-border/60 hover:bg-white hover:border-primary/40'}">
+                        ${active ? '✓ ' : '+ '}${f}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function setDocesPkg(id) { STATE.doces.packageId = id; renderDocesControls(); syncState(); }
+        function toggleDocesFlav(f) {
+            const idx = STATE.doces.flavors.indexOf(f);
+            if (idx > -1) STATE.doces.flavors.splice(idx, 1);
+            else STATE.doces.flavors.push(f);
+            renderDocesControls();
+            syncState();
+        }
+
+        // ==========================================
+        // CONTROLES DOS SALGADOS
+        // ==========================================
+        function renderSalgadosControls() {
+            const pkgCont = document.getElementById('salgadosPackagesContainer');
+            pkgCont.innerHTML = DATA.salgadosPackages.map(p => {
+                const active = STATE.salgados.packageId === p.id;
+                return `
+                    <button type="button" onclick="setSalgadosPkg('${p.id}')" class="flex items-center justify-between p-4 rounded-2xl border transition-all ${active ? 'border-primary bg-primary/5 ring-1 ring-primary/20 shadow-sm' : 'border-border/60 bg-white/60 hover:bg-white'}">
+                        <span class="font-heading font-bold text-sm text-foreground">${p.label}</span>
+                        <span class="font-heading font-bold text-sm text-chocolate">R$ ${p.price.toFixed(2).replace('.', ',')}</span>
+                    </button>
+                `;
+            }).join('');
+
+            const flavCont = document.getElementById('salgadosFlavorsContainer');
+            flavCont.innerHTML = DATA.salgadosFlavors.map(f => {
+                const active = STATE.salgados.flavors.includes(f);
+                return `
+                    <button type="button" onclick="toggleSalgadosFlav('${f}')" class="px-4 py-2 rounded-full border text-xs font-bold transition-all ${active ? 'bg-primary text-white border-primary shadow-sm' : 'bg-white/60 text-foreground/80 border-border/60 hover:bg-white hover:border-primary/40'}">
+                        ${active ? '✓ ' : '+ '}${f}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function setSalgadosPkg(id) { STATE.salgados.packageId = id; renderSalgadosControls(); syncState(); }
+        function toggleSalgadosFlav(f) {
+            const idx = STATE.salgados.flavors.indexOf(f);
+            if (idx > -1) STATE.salgados.flavors.splice(idx, 1);
+            else STATE.salgados.flavors.push(f);
+            renderSalgadosControls();
+            syncState();
+        }
+
+        // ==========================================
+        // ENTREGA E MÁSCARA
+        // ==========================================
+        function setDelivery(type) {
+            STATE.delivery = type;
+            document.getElementById('btn-pickup').className = type === 'pickup'
+                ? 'flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 transition-all border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20 cursor-pointer'
+                : 'flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 transition-all border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40 cursor-pointer';
+
+            document.getElementById('btn-delivery').className = type === 'delivery'
+                ? 'flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 transition-all border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20 cursor-pointer'
+                : 'flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 transition-all border-border/60 bg-white/60 text-muted-foreground hover:bg-white hover:border-primary/40 cursor-pointer';
+        }
+
+        function maskPhone(input) {
+            let v = input.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.substring(0, 11);
+            if (v.length > 6) {
+                v = `(${v.substring(0, 2)}) ${v.substring(2, 7)}-${v.substring(7)}`;
+            } else if (v.length > 2) {
+                v = `(${v.substring(0, 2)}) ${v.substring(2)}`;
+            }
+            input.value = v;
+        }
+
+        // ==========================================
+        // CÁLCULO TOTAL E RESUMO DO PEDIDO
+        // ==========================================
+        function syncState() {
+            const hasCategories = STATE.categories.length > 0;
+            const step3 = document.getElementById('step-3');
+
+            if (hasCategories) {
+                step3.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                step3.classList.add('opacity-50', 'pointer-events-none');
+            }
+
+            let total = 0;
+            const items = [];
+
+            // 1. Bolo
+            if (STATE.categories.includes('bolo')) {
+                const isRound = STATE.bolo.format === 'round';
+                const sizes = isRound ? DATA.roundSizes : DATA.rectSizes;
+                const size = sizes.find(s => s.id === STATE.bolo.sizeId) || sizes[0];
+                const filling = DATA.fillings.find(f => f.id === STATE.bolo.fillingId);
+                const isEsp = filling && filling.type === 'esp';
+                
+                let boloPrice = isEsp ? size.priceEsp : size.priceTrad;
+                const dough = DATA.doughs.find(d => d.id === STATE.bolo.doughId);
+                if (dough && dough.addon) boloPrice += dough.addon;
+
+                const topping = DATA.toppings.find(t => t.id === STATE.bolo.toppingId);
+                if (topping && topping.addon) boloPrice += topping.addon;
+
+                const addonDetails = [];
+                STATE.bolo.addons.forEach(aid => {
+                    const a = DATA.cakeAddons.find(x => x.id === aid);
+                    if (a) {
+                        boloPrice += a.price;
+                        addonDetails.push(a.name);
+                    }
+                });
+
+                total += boloPrice;
+                items.push({
+                    title: isRound ? `Bolo Redondo — ${size.name}` : `Bolo Retangular — ${size.name}`,
+                    price: boloPrice,
+                    details: [
+                        `Massa: ${dough ? dough.name : ''}`,
+                        `Recheio: ${filling ? filling.name : ''} (${isEsp ? 'Especial' : 'Tradicional'})`,
+                        `Cobertura: ${topping ? topping.name : ''}`,
+                        addonDetails.length > 0 ? `Adicionais: ${addonDetails.join(', ')}` : null
+                    ].filter(Boolean)
+                });
+            }
+
+            // 2. Doces
+            if (STATE.categories.includes('doces')) {
+                const pkgs = DATA.docesPackages[STATE.doces.line];
+                const pkg = pkgs.find(p => p.id === STATE.doces.packageId) || pkgs[0];
+                total += pkg.price;
+                items.push({
+                    title: `Doces ${STATE.doces.line === 'gourmet' ? 'Gourmet' : 'Tradicionais'} — ${pkg.label}`,
+                    price: pkg.price,
+                    details: [
+                        STATE.doces.flavors.length > 0 ? `Sabores: ${STATE.doces.flavors.join(', ')}` : 'Sabores: Sortidos'
+                    ]
+                });
+            }
+
+            // 3. Salgados
+            if (STATE.categories.includes('salgados')) {
+                const pkg = DATA.salgadosPackages.find(p => p.id === STATE.salgados.packageId) || DATA.salgadosPackages[0];
+                total += pkg.price;
+                items.push({
+                    title: `Salgados para Festa — ${pkg.label}`,
+                    price: pkg.price,
+                    details: [
+                        STATE.salgados.flavors.length > 0 ? `Sabores: ${STATE.salgados.flavors.join(', ')}` : 'Sabores: Sortidos'
+                    ]
+                });
+            }
+
+            // Renderiza na barra lateral
+            const cartList = document.getElementById('cartItemsList');
+            const emptyState = document.getElementById('cartEmptyState');
+            const totalFmt = `R$ ${total.toFixed(2).replace('.', ',')}`;
+
+            document.getElementById('cartTotalPrice').innerText = totalFmt;
+            document.getElementById('mobileTotalPrice').innerText = totalFmt;
+            document.getElementById('modalTotalPrice').innerText = totalFmt;
+
+            if (items.length === 0) {
+                cartList.innerHTML = '';
+                cartList.appendChild(emptyState);
+            } else {
+                const html = items.map(it => `
+                    <div class="p-4 rounded-2xl bg-white border border-border/40 shadow-sm space-y-1.5 animate-slide-in">
+                        <div class="flex items-start justify-between gap-2">
+                            <h4 class="font-heading text-sm font-bold text-foreground">${it.title}</h4>
+                            <span class="font-heading text-sm font-bold text-chocolate whitespace-nowrap">R$ ${it.price.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <ul class="text-xs text-muted-foreground space-y-0.5">
+                            ${it.details.map(d => `<li>• ${d}</li>`).join('')}
+                        </ul>
+                    </div>
+                `).join('');
+
+                cartList.innerHTML = html;
+                document.getElementById('modalCartItemsList').innerHTML = html;
+            }
+
+            // Validação de formulário
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const date = document.getElementById('custDate').value;
+            const isValid = items.length > 0 && name.length >= 2 && phone.length >= 10 && date !== '';
+
+            document.getElementById('btnSendWhatsappDesktop').disabled = !isValid;
+            document.getElementById('btnSendWhatsappModal').disabled = !isValid;
+            document.getElementById('mobileReviewBtn').disabled = items.length === 0;
+        }
+
+        // ==========================================
+        // MODAL REVIEW MOBILE
+        // ==========================================
+        function openReviewModal() {
+            document.getElementById('mobileReviewModal').classList.remove('hidden');
+        }
+        function closeReviewModal() {
+            document.getElementById('mobileReviewModal').classList.add('hidden');
+        }
+
+        // ==========================================
+        // ENVIO DO PEDIDO PARA O WHATSAPP
+        // ==========================================
+        function sendToWhatsapp() {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const email = document.getElementById('custEmail').value.trim();
+            const eventType = document.getElementById('custEvent').value.trim();
+            const date = document.getElementById('custDate').value;
+            const notes = document.getElementById('custNotes').value.trim();
+
+            if (!name || !phone || !date || STATE.categories.length === 0) {
+                alert('Por favor, selecione seus itens e preencha seu nome, WhatsApp e data desejada.');
+                return;
+            }
+
+            const [y, m, d] = date.split('-');
+            const dateFormatted = `${d}/${m}/${y}`;
+
+            let msg = `🧁 *NOVO PEDIDO PERSONALIZADO - CASEIRINHOS* 🧁\n`;
+            msg += `--------------------------------------------------\n\n`;
+            msg += `*ITENS DO PEDIDO:*\n`;
+
+            let itemIdx = 1;
+            let total = 0;
+
+            // Bolo
+            if (STATE.categories.includes('bolo')) {
+                const isRound = STATE.bolo.format === 'round';
+                const sizes = isRound ? DATA.roundSizes : DATA.rectSizes;
+                const size = sizes.find(s => s.id === STATE.bolo.sizeId) || sizes[0];
+                const filling = DATA.fillings.find(f => f.id === STATE.bolo.fillingId);
+                const dough = DATA.doughs.find(d => d.id === STATE.bolo.doughId);
+                const topping = DATA.toppings.find(t => t.id === STATE.bolo.toppingId);
+                const isEsp = filling && filling.type === 'esp';
+                let price = isEsp ? size.priceEsp : size.priceTrad;
+                if (dough && dough.addon) price += dough.addon;
+                if (topping && topping.addon) price += topping.addon;
+
+                const addons = [];
+                STATE.bolo.addons.forEach(aid => {
+                    const a = DATA.cakeAddons.find(x => x.id === aid);
+                    if (a) { price += a.price; addons.push(a.name); }
+                });
+                total += price;
+
+                msg += `*${itemIdx}) ${isRound ? 'Bolo Redondo' : 'Bolo Retangular'} — ${size.name}* (R$ ${price.toFixed(2).replace('.', ',')})\n`;
+                msg += `   • Massa: ${dough ? dough.name : ''}\n`;
+                msg += `   • Recheio: ${filling ? filling.name : ''} (${isEsp ? 'Linha Especial' : 'Linha Tradicional'})\n`;
+                msg += `   • Cobertura: ${topping ? topping.name : ''}\n`;
+                if (addons.length > 0) msg += `   • Adicionais: ${addons.join(', ')}\n`;
+                msg += `\n`;
+                itemIdx++;
+            }
+
+            // Doces
+            if (STATE.categories.includes('doces')) {
+                const pkgs = DATA.docesPackages[STATE.doces.line];
+                const pkg = pkgs.find(p => p.id === STATE.doces.packageId) || pkgs[0];
+                total += pkg.price;
+
+                msg += `*${itemIdx}) Doces ${STATE.doces.line === 'gourmet' ? 'Gourmet' : 'Tradicionais'} — ${pkg.label}* (R$ ${pkg.price.toFixed(2).replace('.', ',')})\n`;
+                msg += `   • Sabores: ${STATE.doces.flavors.join(', ')}\n\n`;
+                itemIdx++;
+            }
+
+            // Salgados
+            if (STATE.categories.includes('salgados')) {
+                const pkg = DATA.salgadosPackages.find(p => p.id === STATE.salgados.packageId) || DATA.salgadosPackages[0];
+                total += pkg.price;
+
+                msg += `*${itemIdx}) Salgados para Festa — ${pkg.label}* (R$ ${pkg.price.toFixed(2).replace('.', ',')})\n`;
+                msg += `   • Sabores: ${STATE.salgados.flavors.join(', ')}\n\n`;
+                itemIdx++;
+            }
+
+            msg += `--------------------------------------------------\n`;
+            msg += `*TOTAL ESTIMADO:* R$ ${total.toFixed(2).replace('.', ',')}\n\n`;
+
+            msg += `*DADOS DO CLIENTE:*\n`;
+            msg += `• *Nome:* ${name}\n`;
+            msg += `• *WhatsApp:* ${phone}\n`;
+            if (email) msg += `• *E-mail:* ${email}\n`;
+            if (eventType) msg += `• *Evento:* ${eventType}\n`;
+            msg += `• *Data Desejada:* ${dateFormatted}\n`;
+            msg += `• *Forma de Recebimento:* ${STATE.delivery === 'pickup' ? 'Retirar no local (Ateliê)' : 'Entrega (A combinar)'}\n`;
+            if (notes) msg += `• *Observações:* ${notes}\n`;
+
+            msg += `\n_Pedido enviado através do Cardápio Online Caseirinhos._`;
+
+            const phoneStore = '5511948598267';
+            const waUrl = `https://wa.me/${phoneStore}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,830 @@
+{
+  "cake_sizes": [
+    {
+      "id": "2e80a5c6-5fb0-447b-a3c3-8c293842e2f0",
+      "code": "PP",
+      "name": "PP",
+      "ring_size": "aro 13",
+      "slices": 10,
+      "weight_kg": 1.2,
+      "sort_order": 0,
+      "is_active": true,
+      "created_at": "2026-05-27T02:20:01.649274+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "4a44851e-6e67-498d-aaed-f2b4a3d03b75",
+      "code": "P",
+      "name": "P",
+      "ring_size": "aro 15",
+      "slices": 15,
+      "weight_kg": 1.6,
+      "sort_order": 1,
+      "is_active": true,
+      "created_at": "2026-05-26T20:55:21.716844+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "2cf8a906-78b8-4dec-8ee5-5a40716522fd",
+      "code": "M",
+      "name": "M",
+      "ring_size": "aro 17",
+      "slices": 20,
+      "weight_kg": 2.1,
+      "sort_order": 2,
+      "is_active": true,
+      "created_at": "2026-05-26T20:55:21.716844+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "b0e86d1b-c3f0-4ed7-9075-76aa4db8de43",
+      "code": "G",
+      "name": "G",
+      "ring_size": "aro 20",
+      "slices": 30,
+      "weight_kg": 3.1,
+      "sort_order": 3,
+      "is_active": true,
+      "created_at": "2026-05-26T20:55:21.716844+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "c34eeaf0-8b61-4c23-bf3a-6b50447d9c69",
+      "code": "XG",
+      "name": "XG",
+      "ring_size": "aro 25",
+      "slices": 40,
+      "weight_kg": 4.1,
+      "sort_order": 4,
+      "is_active": true,
+      "created_at": "2026-05-26T20:55:21.716844+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    }
+  ],
+  "cake_flavors": [
+    {
+      "id": "a8d72d8a-a7f1-4dd0-b457-c477301cfc1c",
+      "category_id": "856ce79e-5628-40c7-ba50-1f6d6decd43c",
+      "name": "Chocolatudo",
+      "description": "Massa de chocolate com brigadeiro de chocolate 50% cremoso.",
+      "sort_order": 1,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "990438c1-1a97-49d4-a917-d571a1b95be0",
+      "category_id": "856ce79e-5628-40c7-ba50-1f6d6decd43c",
+      "name": "Dois Amores",
+      "description": "Massa branca com camadas intercaladas de ninho e cremoso de chocolate.",
+      "sort_order": 2,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "ceaa4cca-ea6f-4419-ab06-350f20d99428",
+      "category_id": "856ce79e-5628-40c7-ba50-1f6d6decd43c",
+      "name": "Choconinho",
+      "description": "Massa de chocolate com recheio cremoso de ninho.",
+      "sort_order": 3,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "21ed4992-dc56-4ec6-8709-a72aa152178f",
+      "category_id": "856ce79e-5628-40c7-ba50-1f6d6decd43c",
+      "name": "Cocada Cremosa",
+      "description": "Massa de chocolate com recheio cremoso de coco.",
+      "sort_order": 4,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "1d2578a8-3c5c-42b7-95ed-cd22a2c8ebc3",
+      "category_id": "856ce79e-5628-40c7-ba50-1f6d6decd43c",
+      "name": "Maracujá",
+      "description": "Massa branca com recheio de mousse de maracujá.",
+      "sort_order": 5,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "682b5056-406f-4ca0-97f9-3ff117511c9a",
+      "category_id": "22730f84-1228-4edd-b4b3-dab717cd42b4",
+      "name": "Prestígio",
+      "description": "Massa de chocolate com 2 camadas de recheio cremoso de coco e 1 camada de mousse de chocolate meio amargo.",
+      "sort_order": 1,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "3ec99d51-d64b-4e85-8b4c-51e185ea993d",
+      "category_id": "22730f84-1228-4edd-b4b3-dab717cd42b4",
+      "name": "Abacaxi com Coco",
+      "description": "Massa branca com recheio cremoso de coco e compota artesanal de abacaxi.",
+      "sort_order": 2,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "b0d1bc71-7d25-488f-981b-f8bb62a4c3eb",
+      "category_id": "22730f84-1228-4edd-b4b3-dab717cd42b4",
+      "name": "Ninho com Morangos",
+      "description": "Massa branca com recheio cremoso de ninho com morangos selecionados e frescos.",
+      "sort_order": 3,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "fba04d3b-dca7-4ae2-9fc1-2c670812e079",
+      "category_id": "22730f84-1228-4edd-b4b3-dab717cd42b4",
+      "name": "Chocolate com Morango",
+      "description": "Massa de chocolate com recheio cremoso de chocolate 50% e morangos selecionados e frescos.",
+      "sort_order": 4,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "48aa2369-aac4-4e3a-b46f-a82b5dbe20b1",
+      "category_id": "22730f84-1228-4edd-b4b3-dab717cd42b4",
+      "name": "Ninho com Nutella",
+      "description": "Massa branca com recheio cremoso de ninho com Nutella pura.",
+      "sort_order": 5,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "c955f416-d0cc-428b-8d93-1a6a7e77b197",
+      "category_id": "22730f84-1228-4edd-b4b3-dab717cd42b4",
+      "name": "Doce de Leite com Ameixa",
+      "description": "Massa branca com recheio cremoso de doce de leite com compota de ameixa.",
+      "sort_order": 6,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    },
+    {
+      "id": "11eef2a7-9474-4e14-b9c2-bc1f3e00e10e",
+      "category_id": "22730f84-1228-4edd-b4b3-dab717cd42b4",
+      "name": "Laka com Frutas Vermelhas",
+      "description": "Massa branca com recheio cremoso de Laka com compota de frutas vermelhas.",
+      "sort_order": 7,
+      "is_active": true,
+      "created_at": "2026-06-09T12:29:43.362923+00:00",
+      "updated_at": "2026-06-09T12:29:43.362923+00:00"
+    }
+  ],
+  "cake_decorations": [],
+  "testimonials": [
+    {
+      "id": "a9de51f7-ab29-4a12-bbc5-f09cefc11b32",
+      "name": "Maria Clara",
+      "content": "Os bolos da Caseirinhos são os melhores que já provei! Cada pedido é uma experiência única.",
+      "stars": 5,
+      "is_active": true,
+      "sort_order": 1,
+      "created_at": "2026-03-09T02:05:15.050816+00:00"
+    },
+    {
+      "id": "2ddecf71-5741-4315-b117-0546c2a47a1b",
+      "name": "João Pedro",
+      "content": "Encomendei o bolo de casamento e superou todas as expectativas. Lindo e delicioso!",
+      "stars": 5,
+      "is_active": true,
+      "sort_order": 2,
+      "created_at": "2026-03-09T02:05:15.050816+00:00"
+    },
+    {
+      "id": "fc718afb-dc01-4b9b-af3f-1e4076c10e03",
+      "name": "Ana Beatriz",
+      "content": "Os doces finos para o chá de bebê ficaram perfeitos. Todos elogiaram!",
+      "stars": 5,
+      "is_active": true,
+      "sort_order": 3,
+      "created_at": "2026-03-09T02:05:15.050816+00:00"
+    }
+  ],
+  "site_settings": [
+    {
+      "id": "2cfec266-6a52-4bab-b8ec-30446fcff9cf",
+      "key": "contact",
+      "value": {
+        "name": "Caseirinhos",
+        "email": "",
+        "phone": "11 94859-8267",
+        "address": "R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP, 04883-020",
+        "whatsapp": "(11)948598267",
+        "instagram": "@caseirinhosaconfeitaria",
+        "maps_iframe": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m19!1m8!1m3!1d912.5763414578164!2d-46.73792400000001!3d-23.807738!3m2!1i1024!2i768!4f13.1!4m8!3e0!4m0!4m5!1s0x94ce49c990a33cc9%3A0xb3648db96e0ac5ea!2sCaseirinhos%20a%20Confeitaria%2C%20R.%20Manucaia%2C%20114%20-%20Jardim%20dos%20Alamos%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2004883-020!3m2!1d-23.8077778!2d-46.7378438!5e0!3m2!1spt-BR!2sbr!4v1779818147592!5m2!1spt-BR!2sbr\" width=\"800\" height=\"600\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>"
+      },
+      "updated_at": "2026-08-20T15:59:04.642504+00:00"
+    },
+    {
+      "id": "ee73aa3b-46ed-4db3-9843-0ba2efb1dd9f",
+      "key": "encomendas_section",
+      "value": {
+        "cards": [],
+        "title": "Encomendas Especiais",
+        "script": "Sob medida",
+        "subtitle": "Bolos e doces personalizados para tornar seu evento inesquecível",
+        "is_active": true
+      },
+      "updated_at": "2026-05-26T17:56:56.793131+00:00"
+    },
+    {
+      "id": "cf7127b7-3a97-4305-a798-2de09d275c96",
+      "key": "menu_cardapio",
+      "value": {
+        "doces": {
+          "gourmet": {
+            "obs": "12 e 25 un: docinhos de 20g. 50 e 100 un: de 15g.",
+            "pacotes": [
+              {
+                "qtd": "12 unidades (1 tipo)",
+                "preco": 36
+              },
+              {
+                "qtd": "25 unidades (2 tipos)",
+                "preco": 75
+              },
+              {
+                "qtd": "50 unidades (2 tipos)",
+                "preco": 100
+              },
+              {
+                "qtd": "100 unidades (até 4 tipos)",
+                "preco": 200
+              }
+            ],
+            "sabores": [
+              "Ninho com Nutella",
+              "Maracujá",
+              "Surpresa de Uva",
+              "Sensação",
+              "Olho de Sogra",
+              "Chocolate Meio Amargo",
+              "Chocolate ao Leite",
+              "Chocolate Branco",
+              "Oreo"
+            ]
+          },
+          "especiais": [
+            {
+              "item": "Brigadeiro Colorido",
+              "preco": "R$ 2,50/un"
+            },
+            {
+              "item": "Carimbo Personalizado",
+              "preco": "R$ 3,00/un"
+            },
+            {
+              "item": "Detalhe em Pasta",
+              "preco": "R$ 3,80/un"
+            },
+            {
+              "item": "Confete Diferente",
+              "preco": "R$ 2,00/un"
+            },
+            {
+              "item": "Glitter",
+              "preco": "R$ 2,50/un"
+            }
+          ],
+          "tradicionais": {
+            "obs": "12 e 25 un: docinhos de 15g. 50 e 100 un: de 10g.",
+            "pacotes": [
+              {
+                "qtd": "12 unidades (1 tipo)",
+                "preco": 30
+              },
+              {
+                "qtd": "25 unidades (2 tipos)",
+                "preco": 50
+              },
+              {
+                "qtd": "50 unidades (2 tipos)",
+                "preco": 60
+              },
+              {
+                "qtd": "100 unidades (até 4 tipos)",
+                "preco": 100
+              }
+            ],
+            "sabores": [
+              "Brigadeiro",
+              "Beijinho",
+              "Amendoim",
+              "Cajuzinho",
+              "Bicho de Pé",
+              "Ninho"
+            ]
+          }
+        },
+        "decoracao": [
+          {
+            "item": "Brigadeiros",
+            "preco": "R$ 2,00/un"
+          },
+          {
+            "item": "Drip Cake",
+            "preco": "R$ 8,00"
+          },
+          {
+            "item": "Topo Simples",
+            "preco": "R$ 25,00"
+          },
+          {
+            "item": "Topo em Camadas",
+            "preco": "R$ 35,00"
+          },
+          {
+            "item": "Flores Naturais",
+            "preco": "R$ 40,00"
+          },
+          {
+            "item": "Flores Artificiais",
+            "preco": "R$ 30,00"
+          },
+          {
+            "item": "Flor de Morango",
+            "preco": "R$ 20,00"
+          },
+          {
+            "item": "Flores Manuais",
+            "preco": "R$ 20,00"
+          },
+          {
+            "item": "Andar Fake",
+            "preco": "a partir de R$ 15,00"
+          },
+          {
+            "item": "Glitter",
+            "preco": "R$ 5,00 / R$ 10,00"
+          },
+          {
+            "item": "Formato Coração",
+            "preco": "R$ 50,00"
+          },
+          {
+            "item": "Bento Cake",
+            "preco": "consultar"
+          },
+          {
+            "item": "Andar Verdadeiro",
+            "preco": "R$ 60,00"
+          }
+        ],
+        "complementos": {
+          "obs": "Pedido mínimo: 4 unidades. Tags e laços cobrados à parte (Laço: R$1,50 / Tag: R$3,50).",
+          "simples": [
+            {
+              "item": "Pirulito de Chocolate",
+              "preco": 9
+            },
+            {
+              "item": "Alfajor",
+              "preco": 8
+            },
+            {
+              "item": "Mini Cone Recheado",
+              "preco": 5
+            },
+            {
+              "item": "Brownie Simples",
+              "preco": 5
+            },
+            {
+              "item": "Sanduba Brownie",
+              "preco": 8
+            },
+            {
+              "item": "Mini Cupcake",
+              "preco": 5.5
+            },
+            {
+              "item": "Cupcake",
+              "preco": 8
+            },
+            {
+              "item": "Pão de Mel",
+              "preco": 9.5
+            },
+            {
+              "item": "Maçã no Chocolate",
+              "preco": 8
+            }
+          ],
+          "pasta_americana": [
+            {
+              "item": "Pirulito de Chocolate",
+              "preco": 18
+            },
+            {
+              "item": "Mini Bombom",
+              "preco": 13
+            },
+            {
+              "item": "Mini Cupcake",
+              "preco": 13
+            },
+            {
+              "item": "Cupcake",
+              "preco": 16
+            },
+            {
+              "item": "Pão de Mel",
+              "preco": 21
+            },
+            {
+              "item": "Maçã no Chocolate",
+              "preco": 15
+            },
+            {
+              "item": "Paleta Recheada",
+              "preco": 23
+            }
+          ]
+        },
+        "bolos_redondos": {
+          "massas": [
+            {
+              "nome": "Massa Branca",
+              "imagem": "cardapio/massas/1776286789746-vxf3zs.jpg",
+              "acrescimo": 0
+            },
+            {
+              "nome": "Massa Chocolate",
+              "imagem": "cardapio/massas/1776286799289-on4x.jpg",
+              "acrescimo": 0
+            },
+            {
+              "nome": "Red Velvet",
+              "imagem": "cardapio/massas/1776286806215-33n0n.jpg",
+              "acrescimo": 5
+            }
+          ],
+          "precos": {
+            "G": {
+              "premium": 285,
+              "supreme": 330,
+              "tradicional": 240
+            },
+            "M": {
+              "premium": 220,
+              "supreme": 255,
+              "tradicional": 180
+            },
+            "P": {
+              "premium": 165,
+              "supreme": 190,
+              "tradicional": 130
+            },
+            "GG": {
+              "premium": 350,
+              "supreme": 400,
+              "tradicional": 300
+            },
+            "PP": {
+              "premium": 110,
+              "supreme": 138,
+              "tradicional": 85
+            }
+          },
+          "estilos": [
+            {
+              "nome": "Naked / Acetato",
+              "imagem": "cardapio/1776285695126-kmzfqc.jpg",
+              "descricao": "Bolo sem cobertura, com camadas aparentes."
+            },
+            {
+              "nome": "Chantininho",
+              "imagem": "cardapio/1776285428313-qz1r7t.jpg",
+              "descricao": "Bolo coberto com uma camada generosa de chantininho, mistura cremosa de chantilly e ninho."
+            },
+            {
+              "nome": "Ganache",
+              "imagem": "cardapio/1776285334467-qc2ruh.jpg",
+              "descricao": "Bolo com cobertura de chocolate nobre meio amargo."
+            }
+          ],
+          "tamanhos": [
+            {
+              "sigla": "PP",
+              "porcoes": "8 a 10",
+              "dimensao": "13cm"
+            },
+            {
+              "sigla": "P",
+              "porcoes": "12 a 15",
+              "dimensao": "15cm"
+            },
+            {
+              "sigla": "M",
+              "porcoes": "17 a 20",
+              "dimensao": "17cm"
+            },
+            {
+              "sigla": "G",
+              "porcoes": "25 a 30",
+              "dimensao": "20cm"
+            },
+            {
+              "sigla": "GG",
+              "porcoes": "35 a 40",
+              "dimensao": "23cm"
+            }
+          ],
+          "sabores_premium": [
+            "Brigadeiro de Maracujá",
+            "Ninho com Abacaxi",
+            "Abacaxi com Coco",
+            "Olho de Sogra",
+            "Doce de Leite com Ameixa",
+            "Prestígio",
+            "Mousse de Chocolate Branco"
+          ],
+          "sabores_supreme": [
+            "Ninho com Morangos",
+            "Brigadeiro com Morango",
+            "Ferrero Rocher",
+            "Kinder Bueno",
+            "Quatro Leites com Geleia de Frutas",
+            "Ninho com Nutella",
+            "Laka com Frutas Vermelhas",
+            "Brigadeiro de Cream Cheese"
+          ],
+          "sabores_tradicionais": [
+            "Brigadeiro",
+            "Cocada Cremosa",
+            "Doce de Leite",
+            "Ninho",
+            "Dois Amores",
+            "Doce de Leite com Coco",
+            "Mousse Meio Amargo",
+            "Mousse Doce de Leite",
+            "Mousse Maracujá",
+            "Mousse Morango"
+          ]
+        },
+        "bolos_retangulares": {
+          "obs": "Valores para bolos de corte. Decorados têm acréscimo de R$15,00.",
+          "precos": {
+            "G": {
+              "premium": 380,
+              "supreme": 440,
+              "tradicional": 340
+            },
+            "M": {
+              "premium": 285,
+              "supreme": 330,
+              "tradicional": 255
+            },
+            "P": {
+              "premium": 190,
+              "supreme": 220,
+              "tradicional": 170
+            },
+            "GG": {
+              "premium": 570,
+              "supreme": 660,
+              "tradicional": 510
+            }
+          },
+          "estilos": [
+            {
+              "nome": "Bolo de Corte",
+              "descricao": "Bolo retangular com camadas de recheio, coberto com chantininho e decoração simples. Embalagem simples."
+            },
+            {
+              "nome": "Bolo Retangular Decorado",
+              "descricao": "Bolo retangular com 2 camadas de recheio e 3 de massa, coberto com chantininho e decoração personalizada. Vai no cakeboard."
+            },
+            {
+              "nome": "Bolo em Fatias",
+              "descricao": "Fatias cortadas em embalagem com etiqueta personalizada da festa."
+            }
+          ],
+          "tamanhos": [
+            {
+              "sigla": "P",
+              "porcoes": "20 a 25",
+              "dimensao": "20×15cm"
+            },
+            {
+              "sigla": "M",
+              "porcoes": "30 a 35",
+              "dimensao": "25×17cm"
+            },
+            {
+              "sigla": "G",
+              "porcoes": "40 a 45",
+              "dimensao": "30×22cm"
+            },
+            {
+              "sigla": "GG",
+              "porcoes": "60 a 65",
+              "dimensao": "36×26cm"
+            }
+          ]
+        }
+      },
+      "updated_at": "2026-04-15T21:00:09.483332+00:00"
+    },
+    {
+      "id": "285b0261-7eff-4181-a4c1-39c321117700",
+      "key": "maintenance",
+      "value": {
+        "title": "Página em Manutenção",
+        "message": "Estamos trabalhando para deixar tudo ainda mais saboroso. Voltamos em breve!",
+        "bg_color": "#f7f5e2",
+        "image_url": "",
+        "text_color": "#936037",
+        "enabled_paths": [],
+        "instagram_url": "https://instagram.com/caseirinhosaconfeitaria",
+        "show_whatsapp": true,
+        "show_instagram": true,
+        "expected_return": "",
+        "whatsapp_number": "5511948598267"
+      },
+      "updated_at": "2026-06-09T17:00:26.123598+00:00"
+    },
+    {
+      "id": "a00bb4b7-a8c3-4502-b691-e2558babd6b8",
+      "key": "cardapio_fab_enabled",
+      "value": false,
+      "updated_at": "2026-06-09T20:58:30.362051+00:00"
+    },
+    {
+      "id": "2b488582-991c-4bd4-8353-d73be92fe30d",
+      "key": "hours",
+      "value": {
+        "delivery": "Delivery a partir das 12:30h",
+        "weekdays": "Ter a Sáb: 12h – 18h"
+      },
+      "updated_at": "2026-04-17T17:09:25.458137+00:00"
+    },
+    {
+      "id": "9847cdca-5640-44d8-a5e4-efc1052c4a61",
+      "key": "instagram_posts",
+      "value": [
+        "https://www.instagram.com/p/DTyT75IkgBK/",
+        "https://www.instagram.com/p/DO68KUbDlSZ/",
+        "https://www.instagram.com/p/DGLFNBhNmY6/"
+      ],
+      "updated_at": "2026-04-17T17:27:22.218+00:00"
+    },
+    {
+      "id": "b1b64008-713d-4983-9283-de90acfc2880",
+      "key": "menu_items",
+      "value": [
+        {
+          "to": "/",
+          "label": "Início"
+        },
+        {
+          "to": "/nossa-historia",
+          "label": "Nossa História"
+        },
+        {
+          "to": "/cardapio",
+          "label": "Cardápio"
+        },
+        {
+          "to": "/contato",
+          "label": "Contato"
+        },
+        {
+          "to": "/blog",
+          "label": "Blog"
+        }
+      ],
+      "updated_at": "2026-04-17T17:46:19.738141+00:00"
+    },
+    {
+      "id": "497337c9-24aa-4ca1-ae50-fccc4056b092",
+      "key": "loja_config",
+      "value": {
+        "delivery": {
+          "deliveryFee": "0",
+          "acceptsPickup": true,
+          "acceptsDelivery": true
+        },
+        "whatsappMsg": {
+          "signoff": "Qualquer ajuste é só me avisar. Obrigada!",
+          "greeting": "Olá {loja}! Aqui é {nome}"
+        },
+        "customTitles": {
+          "bolo": "",
+          "doces": "",
+          "salgados": "",
+          "kit_festa": "",
+          "presentear": "",
+          "pasta_americana": ""
+        },
+        "kitFestaOptions": [
+          {
+            "id": "kit1",
+            "desc": "Serve 10 Pessoas",
+            "name": "Kit Festa I",
+            "price": 199
+          },
+          {
+            "id": "kit2",
+            "desc": "Serve 20 Pessoas",
+            "name": "Kit Festa II",
+            "price": 349
+          },
+          {
+            "id": "kit3",
+            "desc": "Serve 30 Pessoas",
+            "name": "Kit Festa III",
+            "price": 449
+          }
+        ],
+        "salgadosOptions": [
+          {
+            "id": "coxinha",
+            "name": "Coxinha"
+          },
+          {
+            "id": "bolinha_queijo",
+            "name": "Bolinha de Queijo"
+          },
+          {
+            "id": "risolis",
+            "name": "Risólis"
+          },
+          {
+            "id": "empadinha",
+            "name": "Empadinha"
+          }
+        ],
+        "activeCategories": {
+          "bolo": true,
+          "doces": true,
+          "salgados": true,
+          "kit_festa": false,
+          "presentear": false,
+          "pasta_americana": false
+        },
+        "customCategories": [],
+        "presentearOptions": [
+          {
+            "id": "festa_caixa",
+            "desc": "1 kg de Bolo + 10 Doces + 50 Salgados + 1 Xícara Personalizada",
+            "name": "Festa na Caixa",
+            "price": 270
+          },
+          {
+            "id": "caixa_cenario",
+            "desc": "1 kg de Bolo + 20 Doces",
+            "name": "Caixa Cenário",
+            "price": 170
+          },
+          {
+            "id": "bolo_xicara",
+            "desc": "170g de Bolo + Xícara",
+            "name": "Bolo na Xícara",
+            "price": null
+          },
+          {
+            "id": "bento_cake",
+            "desc": "400g de Bolo + 4 Doces",
+            "name": "Bento Cake",
+            "price": 70
+          }
+        ],
+        "pastaAmericanaOptions": [
+          {
+            "id": "pa_kit1",
+            "desc": "Inclui: 1x Bolo Bombom, 4x Pirulitos, 4x Cupcakes 3D, 8x Mini Trufas Planas",
+            "name": "Kit 1",
+            "price": 340
+          },
+          {
+            "id": "pa_kit2",
+            "desc": "Inclui: 1x Bolo Bombom 3D, 6x Pirulitos, 4x Cupcakes, 6x Bolo Bombom Pequeno, 10x Mini Trufas Planas, 6x Popscicle",
+            "name": "Kit 2",
+            "price": 440
+          },
+          {
+            "id": "pa_kit3",
+            "desc": "Inclui: 2x Bolo Bombom 3D, 6x Pirulitos, 4x Cupcakes, 8x Bolo Bombom Pequeno, 15x Mini Trufas Planas, 6x Popscicle",
+            "name": "Kit 3",
+            "price": 560
+          }
+        ]
+      },
+      "updated_at": "2026-08-20T15:59:04.42507+00:00"
+    }
+  ]
+}

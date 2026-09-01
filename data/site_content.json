@@ -1,0 +1,139 @@
+{
+  "montarPedido": {
+    "roundSizes": [
+      {
+        "code": "PP",
+        "name": "PP (Aro 13)",
+        "detail": "8 a 10 fatias • ~1.2 kg",
+        "prices": {
+          "tradicional": 85,
+          "premium": 110,
+          "supreme": 138
+        }
+      },
+      {
+        "code": "P",
+        "name": "P (Aro 15)",
+        "detail": "12 a 15 fatias • ~1.6 kg",
+        "prices": {
+          "tradicional": 130,
+          "premium": 165,
+          "supreme": 190
+        }
+      },
+      {
+        "code": "M",
+        "name": "M (Aro 17)",
+        "detail": "17 a 20 fatias • ~2.1 kg",
+        "prices": {
+          "tradicional": 180,
+          "premium": 220,
+          "supreme": 255
+        }
+      },
+      {
+        "code": "G",
+        "name": "G (Aro 20)",
+        "detail": "25 a 30 fatias • ~3.1 kg",
+        "prices": {
+          "tradicional": 240,
+          "premium": 285,
+          "supreme": 330
+        }
+      },
+      {
+        "code": "GG",
+        "name": "GG (Aro 23/25)",
+        "detail": "35 a 40 fatias • ~4.1 kg",
+        "prices": {
+          "tradicional": 300,
+          "premium": 350,
+          "supreme": 400
+        }
+      }
+    ],
+    "rectSizes": [
+      {
+        "code": "P",
+        "name": "Retangular P (20×15cm)",
+        "detail": "20 a 25 porções",
+        "prices": {
+          "tradicional": 170,
+          "premium": 190,
+          "supreme": 220
+        }
+      },
+      {
+        "code": "M",
+        "name": "Retangular M (25×17cm)",
+        "detail": "30 a 35 porções",
+        "prices": {
+          "tradicional": 255,
+          "premium": 285,
+          "supreme": 330
+        }
+      },
+      {
+        "code": "G",
+        "name": "Retangular G (30×22cm)",
+        "detail": "40 a 45 porções",
+        "prices": {
+          "tradicional": 340,
+          "premium": 380,
+          "supreme": 440
+        }
+      },
+      {
+        "code": "GG",
+        "name": "Retangular GG (36×26cm)",
+        "detail": "60 a 65 porções",
+        "prices": {
+          "tradicional": 510,
+          "premium": 570,
+          "supreme": 660
+        }
+      }
+    ],
+    "flavorsData": {
+      "tradicional": [
+        "Brigadeiro Gourmet",
+        "Cocada Cremosa",
+        "Doce de Leite Artesanal",
+        "Ninho Cremoso",
+        "Dois Amores (Ninho + Brigadeiro)",
+        "Doce de Leite com Coco",
+        "Mousse Meio Amargo",
+        "Mousse Doce de Leite",
+        "Mousse de Maracujá",
+        "Mousse de Morango"
+      ],
+      "premium": [
+        "Brigadeiro de Maracujá",
+        "Ninho com Abacaxi",
+        "Abacaxi com Coco",
+        "Olho de Sogra (Coco + Ameixa)",
+        "Doce de Leite com Ameixa",
+        "Prestígio Artesanal",
+        "Mousse de Chocolate Branco Nobre"
+      ],
+      "supreme": [
+        "Ninho com Morangos Frescos",
+        "Brigadeiro com Morango",
+        "Ferrero Rocher Crocante",
+        "Kinder Bueno",
+        "Quatro Leites com Geleia de Frutas Vermelhas",
+        "Ninho com Nutella Original",
+        "Laka com Frutas Vermelhas",
+        "Brigadeiro de Cream Cheese"
+      ]
+    }
+  },
+  "sections": {
+    "hero": {
+      "title": "Caseirinhos a Confeitaria",
+      "subtitle": "Transformando momentos especiais em doces memórias.",
+      "buttonText": "Fazer Orçamento",
+      "imageUrl": "images/hero-bg.jpg"
+    }
+  }
+}

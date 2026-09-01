@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato | Caseirinhos a Confeitaria</title>
+    <meta name="description" content="Entre em contato com a Caseirinhos a Confeitaria. Endereço, horário de funcionamento, WhatsApp e Instagram.">
+    <meta name="keywords" content="contato caseirinhos, confeitaria artesanal, whatsapp caseirinhos, endereço caseirinhos">
+    <meta property="og:title" content="Contato | Caseirinhos a Confeitaria">
+    <meta property="og:description" content="Entre em contato com a Caseirinhos. Endereço, horários e WhatsApp.">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&family=Great+Vibes&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/style.css">
+
+    <style>
+        /* ====== CONTATO PAGE ====== */
+
+        .ct-main {
+            padding-top: 6rem;
+        }
+
+        /* --- Section --- */
+        .ct-section {
+            padding: 4rem 0 4rem;
+        }
+        @media (min-width: 768px) {
+            .ct-section { padding: 5rem 0; }
+        }
+        .ct-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* --- Header --- */
+        .ct-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .ct-header .font-script {
+            font-size: 1.5rem;
+            color: hsl(var(--primary));
+        }
+        @media (min-width: 768px) {
+            .ct-header .font-script { font-size: 1.875rem; }
+        }
+        .ct-header h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            color: hsl(var(--foreground));
+        }
+        @media (min-width: 768px) {
+            .ct-header h2 { font-size: 2.25rem; }
+        }
+        .ct-header p {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            max-width: 36rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .ct-header p { font-size: 1rem; }
+        }
+        .ct-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .ct-divider .line {
+            width: 2rem;
+            height: 2px;
+            background: hsla(var(--primary), 0.4);
+        }
+        .ct-divider .dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            background: hsl(var(--primary));
+        }
+
+        /* --- Info Cards Grid --- */
+        .ct-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: 42rem;
+            margin: 0 auto;
+        }
+        @media (min-width: 640px) {
+            .ct-cards-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .ct-card {
+            background: hsl(var(--card));
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .ct-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .ct-card-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            color: hsl(var(--accent));
+            font-size: 1.75rem;
+        }
+        .ct-card h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+            margin-bottom: 0.5rem;
+        }
+        .ct-card p {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.875rem;
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+        .ct-card a {
+            color: hsl(var(--accent));
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: text-decoration 0.2s ease;
+        }
+        .ct-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Map --- */
+        .ct-map-wrap {
+            margin-top: 4rem;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .ct-map-frame {
+            width: 100%;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .ct-map-frame iframe {
+            width: 100%;
+            height: 400px;
+            border: 0;
+            display: block;
+        }
+        @media (min-width: 768px) {
+            .ct-map-frame iframe { height: 500px; }
+        }
+
+        /* --- Footer --- */
+        .ct-footer-wave-bg {
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            margin-bottom: -1px;
+            background: var(--footer-wave-bg, hsl(var(--background)));
+        }
+        .ct-footer-wave-bg svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .ct-footer-main {
+            background: hsl(var(--chocolate-deep));
+            color: hsl(var(--cream));
+        }
+        .ct-footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+        .ct-footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+        @media (min-width: 768px) {
+            .ct-footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+        }
+        .ct-footer-col {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        @media (min-width: 768px) {
+            .ct-footer-col:first-child {
+                text-align: left;
+                align-items: flex-start;
+            }
+            .ct-footer-col:last-child { text-align: right; }
+        }
+        .ct-footer-col img {
+            height: 3.5rem;
+            width: auto;
+            margin-bottom: 1rem;
+            filter: brightness(0) invert(1);
+        }
+        .ct-footer-col > p {
+            font-size: 0.875rem;
+            opacity: 0.7;
+            line-height: 1.625;
+        }
+        .ct-footer-col h4 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: hsl(var(--accent));
+        }
+        .ct-footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .ct-footer-col ul a {
+            text-decoration: none;
+            font-size: 0.875rem;
+            color: hsl(var(--cream));
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+        .ct-footer-col ul a:hover {
+            opacity: 1;
+            color: hsl(var(--accent));
+        }
+        .ct-footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+        .ct-footer-info p {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            .ct-footer-info p { justify-content: flex-end; }
+        }
+        .ct-footer-socials {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-top: 0.5rem;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            .ct-footer-socials { justify-content: flex-end; }
+        }
+        .ct-footer-socials a {
+            color: hsl(var(--cream));
+            font-size: 1.25rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .ct-footer-socials a:hover { color: hsl(var(--accent)); }
+        .ct-footer-copy {
+            border-top: 1px solid hsla(var(--cream), 0.1);
+            margin-top: 2.5rem;
+            padding-top: 1.25rem;
+            text-align: center;
+            font-size: 0.75rem;
+            opacity: 0.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+        .ct-footer-copy .heart { color: hsl(var(--primary)); }
+
+        /* --- WhatsApp FAB --- */
+        .ct-whatsapp-fab {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: hsl(142, 70%, 40%);
+            color: #fff;
+            font-size: 1.75rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .ct-whatsapp-fab:hover { transform: scale(1.1); }
+
+        /* --- Animations --- */
+        .ct-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .ct-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== NAVIGATION ====== -->
+    <nav class="nav" id="navbar">
+        <div class="container nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="nossa-historia.html">Nossa História</a></li>
+                <li><a href="cardapio.html">Cardápio</a></li>
+                <li><a href="montar-pedido.html">Montar Pedido</a></li>
+                <li><a href="contato.html" class="active">Contato</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <a href="montar-pedido.html" class="nav-cta" style="background: hsla(var(--primary), 0.1); color: hsl(var(--primary)); border: 1px solid hsla(var(--primary), 0.3);">
+                    <i class="fa-solid fa-cake-candles"></i>
+                    <span>Bolos & Encomendas</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+        <div class="mobile-menu-panel">
+            <a href="index.html" onclick="closeMobileMenu()">Início</a>
+            <a href="nossa-historia.html" onclick="closeMobileMenu()">Nossa História</a>
+            <a href="cardapio.html" onclick="closeMobileMenu()">Cardápio</a>
+            <a href="montar-pedido.html" onclick="closeMobileMenu()">Montar Pedido 🎂</a>
+            <a href="contato.html" onclick="closeMobileMenu()">Contato</a>
+            <a href="admin.html" onclick="closeMobileMenu()">Painel Admin</a>
+        </div>
+    </div>
+
+    <main class="ct-main">
+
+        <!-- ======================================= -->
+        <!-- CONTATO                                 -->
+        <!-- ======================================= -->
+        <section class="ct-section" id="contact_hero" data-section="contact_hero">
+            <div class="ct-container">
+
+                <div class="ct-header ct-reveal">
+                    <span class="font-script" data-field="script">Fale conosco</span>
+                    <h2 class="font-heading" data-field="title">Contato</h2>
+                    <p class="font-body" data-field="subtitle">Estamos prontos para atender você!</p>
+                    <div class="ct-divider">
+                        <div class="line"></div><div class="dot"></div><div class="line"></div>
+                    </div>
+                </div>
+
+                <!-- Info Cards -->
+                <div class="ct-cards-grid" id="contact_info" data-section="contact_info">
+                    <div class="ct-card ct-reveal">
+                        <div class="ct-card-icon">
+                            <i class="fa-solid fa-map-pin"></i>
+                        </div>
+                        <h3>Endereço</h3>
+                        <p class="font-body">R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP, 04883-020</p>
+                    </div>
+                    <div class="ct-card ct-reveal">
+                        <div class="ct-card-icon">
+                            <i class="fa-regular fa-clock"></i>
+                        </div>
+                        <h3>Horário</h3>
+                        <p class="font-body">Ter a Sáb: 12h – 18h
+Delivery a partir das 12:30h</p>
+                    </div>
+                    <div class="ct-card ct-reveal">
+                        <div class="ct-card-icon">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <h3>WhatsApp</h3>
+                        <a href="https://wa.me/5511948598267" target="_blank" rel="noopener noreferrer">(11) 94859-8267</a>
+                    </div>
+                    <div class="ct-card ct-reveal">
+                        <div class="ct-card-icon">
+                            <i class="fa-brands fa-instagram"></i>
+                        </div>
+                        <h3>Instagram</h3>
+                        <a href="https://instagram.com/caseirinhosaconfeitaria" target="_blank" rel="noopener noreferrer">@caseirinhosaconfeitaria</a>
+                    </div>
+                </div>
+
+                <!-- Google Maps -->
+                <div class="ct-map-wrap ct-reveal">
+                    <div class="ct-map-frame">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m19!1m8!1m3!1d912.5763414578164!2d-46.73792400000001!3d-23.807738!3m2!1i1024!2i768!4f13.1!4m8!3e0!4m0!4m5!1s0x94ce49c990a33cc9%3A0xb3648db96e0ac5ea!2sCaseirinhos%20a%20Confeitaria%2C%20R.%20Manucaia%2C%20114%20-%20Jardim%20dos%20Alamos%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2004883-020!3m2!1d-23.8077778!2d-46.7378438!5e0!3m2!1spt-BR!2sbr!4v1779818147592!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <div class="ct-footer-wave-bg">
+            <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path d="M0 40C360 80 720 0 1080 40C1260 60 1380 50 1440 40V80H0V40Z" fill="hsl(25, 45%, 18%)"></path>
+            </svg>
+        </div>
+        <div class="ct-footer-main">
+            <div class="ct-footer-inner">
+                <div class="ct-footer-grid">
+                    <div class="ct-footer-col">
+                        <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria" loading="lazy">
+                        <p class="font-body">Mais do que doces, criamos memórias. Cada bolo é feito com amor, dedicação e ingredientes selecionados.</p>
+                    </div>
+                    <div class="ct-footer-col">
+                        <h4 class="font-heading">Navegação</h4>
+                        <ul>
+                            <li><a href="index.html">Início</a></li>
+                            <li><a href="nossa-historia.html">Nossa História</a></li>
+                            <li><a href="cardapio.html">Cardápio</a></li>
+                            <li><a href="montar-pedido.html">Montar Pedido</a></li>
+                            <li><a href="contato.html">Contato</a></li>
+                        </ul>
+                    </div>
+                    <div class="ct-footer-col">
+                        <h4 class="font-heading">Informações</h4>
+                        <div class="ct-footer-info font-body">
+                            <p><i class="fa-regular fa-clock"></i> Ter a Sáb: 12h – 18h</p>
+                            <p><i class="fa-solid fa-phone"></i> Delivery a partir das 12:30h</p>
+                            <p><i class="fa-solid fa-map-pin"></i> R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP, 04883-020</p>
+                            <div class="ct-footer-socials">
+                                <a href="https://instagram.com/caseirinhosaconfeitaria" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="https://wa.me/5511948598267" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ct-footer-copy font-body">
+                    Feito com <i class="fa-solid fa-heart heart"></i> © 2026 Caseirinhos
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ====== WHATSAPP FAB ====== -->
+    <a href="https://wa.me/5511948598267?text=Olá! Gostaria de fazer um pedido." target="_blank" rel="noopener noreferrer" class="ct-whatsapp-fab" aria-label="Fale conosco no WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- ====== SCRIPTS ====== -->
+    <script src="assets/app.js"></script>
+    <script>
+        // Mobile Menu
+        const navToggle = document.getElementById('navToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+        }
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+        }
+        function closeMobileMenu() {
+            if (mobileMenu) mobileMenu.classList.remove('active');
+        }
+
+        // Scroll Reveal
+        const ctReveals = document.querySelectorAll('.ct-reveal');
+        const ctObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.12 });
+        ctReveals.forEach(el => ctObserver.observe(el));
+
+        // Navbar scroll shadow
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 4px 20px rgba(37, 24, 18, 0.08)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
