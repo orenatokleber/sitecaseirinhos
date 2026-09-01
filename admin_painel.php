@@ -690,6 +690,9 @@
             <a href="index.html" target="_blank" class="btn-live-site">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Site ao Vivo
             </a>
+            <a href="admin.php?logout=1" class="btn-live-site" style="background: rgba(217, 79, 79, 0.08); color: var(--red); margin-top: 0.5rem;">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair do Painel
+            </a>
         </div>
     </aside>
 
@@ -699,6 +702,7 @@
         <div class="mobile-topbar">
             <span class="mobile-brand">Caseirinhos</span>
             <div style="display:flex; gap:0.5rem;">
+                <a href="admin.php?logout=1" class="btn-luxury btn-danger-subtle" style="padding:0.4rem 0.8rem; font-size:0.75rem; text-decoration:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
                 <button class="btn-luxury btn-subtle" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="switchMainTab('pages')">Páginas</button>
                 <a href="index.html" target="_blank" class="btn-luxury btn-gold" style="padding:0.4rem 0.8rem; font-size:0.75rem;"><i class="fa-solid fa-eye"></i></a>
             </div>
