@@ -1,8 +1,8 @@
 <?php
 // Configurações do Banco de Dados (Hostinger)
 $host = 'localhost'; // Normalmente localhost na Hostinger
-$db   = 'u123456789_caseirinhos'; // Substitua pelo nome do seu banco criado no hPanel
-$user = 'u123456789_admin'; // Substitua pelo usuário do seu banco
+$db   = 'u960702577_sitecase'; // Substitua pelo nome do seu banco criado no hPanel
+$user = 'u960702577_admin'; // Substitua pelo usuário do seu banco
 $pass = 'SuaSenhaForteAqui123!'; // Substitua pela senha
 $charset = 'utf8mb4';
 
