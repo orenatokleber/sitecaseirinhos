@@ -16,9 +16,9 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    // Em produção, não exiba o erro na tela, apenas retorne erro JSON
+    // Em produção, não exiba o erro na tela, apenas retorne erro JSON genérico
     header('Content-Type: application/json');
-    echo json_encode(['error' => 'Connection failed: ' . $e->getMessage()]);
+    echo json_encode(['error' => 'Falha de conexão com o banco de dados.']);
     exit;
 }
 ?>

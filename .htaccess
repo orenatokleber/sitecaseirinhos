@@ -2,10 +2,19 @@
     RewriteEngine On
     RewriteBase /
 
-    # Ignora arquivos e diretórios reais existentes (HTML, CSS, JS, Imagens, API, etc.)
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # Ignora arquivos e diretórios reais
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
 
-    # Redirecionamento Pretty Links direto na raiz: caseirinhos.com/slug -> r.php?slug=slug
+    # 1. Tenta carregar a versão .php do arquivo se existir
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.php [L]
+
+    # 2. Tenta carregar a versão .html do arquivo se existir
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.html [L]
+
+    # 3. Se não for arquivo real, joga para o sistema de links curtos
     RewriteRule ^([a-zA-Z0-9_-]+)/?$ r.php?slug=$1 [L,QSA]
 </IfModule>
