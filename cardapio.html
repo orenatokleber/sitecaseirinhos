@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardápio de Encomendas | Caseirinhos a Confeitaria</title>
-    <meta name="description" content="Confeitaria artesanal com bolos caseiros, doces finos, sobremesas e encomendas especiais para casamentos e eventos. Mais do que doces, criamos memórias.">
+    <title>Card�pio de Encomendas | Caseirinhos a Confeitaria</title>
+    <meta name="description" content="Confeitaria artesanal com bolos caseiros, doces finos, sobremesas e encomendas especiais para casamentos e eventos. Mais do que doces, criamos mem�rias.">
     <meta name="keywords" content="cardapio caseirinhos, bolos artesanais, bolos de festa, docinhos finos, brigadeiro gourmet, bolos de corte">
-    <meta property="og:title" content="Cardápio de Encomendas | Caseirinhos a Confeitaria">
-    <meta property="og:description" content="Bolos redondos, bolos retangulares, doces finos e decorações personalizadas.">
+    <meta property="og:title" content="Card�pio de Encomendas | Caseirinhos a Confeitaria">
+    <meta property="og:description" content="Bolos redondos, bolos retangulares, doces finos e decora��es personalizadas.">
     <meta property="og:type" content="website">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="assets/style.css">
 
     <style>
-        /* ====== CARDÁPIO PAGE STYLES ====== */
+        /* ====== CARD�PIO PAGE STYLES ====== */
 
         /* --- Layout Utilities --- */
         .cp-container {
@@ -753,17 +753,13 @@
                 <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria">
             </a>
             <ul class="nav-links">
-                <li><a href="/">Início</a></li>
-                <li><a href="/nossa-historia">Nossa História</a></li>
-                <li><a href="/cardapio" class="active">Cardápio</a></li>
+                <li><a href="/">In�cio</a></li>
+                <li><a href="/nossa-historia">Nossa Hist�ria</a></li>
+                <li><a href="/cardapio" class="active">Card�pio</a></li>
                 <li><a href="/montar-pedido">Montar Pedido</a></li>
                 <li><a href="/contato">Contato</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <a href="/montar-pedido" class="nav-cta" style="background: hsla(var(--primary), 0.1); color: hsl(var(--primary)); border: 1px solid hsla(var(--primary), 0.3);">
-                    <i class="fa-solid fa-cake-candles"></i>
-                    <span>Bolos & Encomendas</span>
-                </a>
                 <button class="nav-toggle" id="navToggle" aria-label="Menu">
                     <span></span><span></span><span></span>
                 </button>
@@ -771,16 +767,19 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu -->
+        <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-overlay" id="mobileOverlay"></div>
         <div class="mobile-menu-panel">
-            <a href="/" onclick="closeMobileMenu()">Início</a>
-            <a href="/nossa-historia" onclick="closeMobileMenu()">Nossa História</a>
-            <a href="/cardapio" onclick="closeMobileMenu()">Cardápio</a>
-            <a href="/montar-pedido" onclick="closeMobileMenu()">Montar Pedido 🎂</a>
-            <a href="/contato" onclick="closeMobileMenu()">Contato</a>
-            <a href="/admin" onclick="closeMobileMenu()">Painel Admin</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos" style="height: 40px; width: auto;">
+                <button onclick="closeMobileMenu()" style="background:none; border:none; font-size:1.5rem; color:hsl(var(--foreground)); cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house" style="width:24px; color:hsl(var(--primary));"></i> Início</a>
+            <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart" style="width:24px; color:hsl(var(--primary));"></i> Nossa História</a>
+            <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles" style="width:24px; color:hsl(var(--primary));"></i> Cardápio</a>
+            <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag" style="width:24px; color:hsl(var(--primary));"></i> Montar Pedido</a>
+            <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope" style="width:24px; color:hsl(var(--primary));"></i> Contato</a>
         </div>
     </div>
 
@@ -795,21 +794,21 @@
             <div class="cp-container cp-text-center" style="position:relative; z-index:10;">
                 <div class="cp-reveal">
                     <span class="font-script" data-field="script">Tornando sua vida mais doce!</span>
-                    <h1 class="font-heading" data-field="title">Cardápio de Encomendas</h1>
+                    <h1 class="font-heading" data-field="title">Card�pio de Encomendas</h1>
                     <div class="cp-hero-divider"></div>
-                    <p class="cp-hero-subtitle font-body" data-field="subtitle">BEM-VINDO AO NOSSO CARDÁPIO DE DELÍCIAS!</p>
+                    <p class="cp-hero-subtitle font-body" data-field="subtitle">BEM-VINDO AO NOSSO CARD�PIO DE DEL�CIAS!</p>
 
                     <div class="cp-hero-img-wrap">
-                        <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/cardapio_hero/1781027412146-9hjvbm.jpg" alt="Cardápio de Encomendas" data-field="image">
+                        <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/cardapio_hero/1781027412146-9hjvbm.jpg" alt="Card�pio de Encomendas" data-field="image">
                     </div>
 
-                    <p class="cp-hero-desc font-body" data-field="content">Na Caseirinhos, cada doce é preparado com carinho para tornar seus momentos ainda mais especiais. 
+                    <p class="cp-hero-desc font-body" data-field="content">Na Caseirinhos, cada doce � preparado com carinho para tornar seus momentos ainda mais especiais. 
 
-Somos apaixonados por criar bolos, sobremesas e doces que unem sabor, qualidade e aquele toque caseiro que faz toda a diferença. Utilizamos ingredientes selecionados e dedicação em cada receita, porque acreditamos que cada detalhe importa.
+Somos apaixonados por criar bolos, sobremesas e doces que unem sabor, qualidade e aquele toque caseiro que faz toda a diferen�a. Utilizamos ingredientes selecionados e dedica��o em cada receita, porque acreditamos que cada detalhe importa.
 
-Mais do que vender doces, queremos proporcionar experiências inesquecíveis, da primeira à última mordida. 
+Mais do que vender doces, queremos proporcionar experi�ncias inesquec�veis, da primeira � �ltima mordida. 
 
-Esperamos que você aproveite nossas delícias e volte sempre para experimentar nossas novidades!</p>
+Esperamos que voc� aproveite nossas del�cias e volte sempre para experimentar nossas novidades!</p>
                 </div>
             </div>
         </section>
@@ -878,22 +877,22 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
         </section>
 
         <!-- ======================================= -->
-        <!-- 3. CLASSE 1 – Bolos Clássicos           -->
+        <!-- 3. CLASSE 1 � Bolos Cl�ssicos           -->
         <!-- ======================================= -->
         <section class="cp-section">
             <div class="cp-container" style="max-width:72rem;">
                 <div class="cp-section-header cp-reveal">
                     <h2 class="font-heading">Classe 1</h2>
-                    <p>Bolos clássicos</p>
+                    <p>Bolos cl�ssicos</p>
                     <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
                 </div>
 
                 <div class="cp-grid-2">
-                    <!-- Imagem à direita no desktop -->
+                    <!-- Imagem � direita no desktop -->
                     <div class="cp-img-col cp-order-2 cp-reveal-right">
                         <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/categorias/1781027882386-6yyyf.jpg" alt="Classe 1" loading="lazy">
                     </div>
-                    <!-- Conteúdo à esquerda no desktop -->
+                    <!-- Conte�do � esquerda no desktop -->
                     <div class="cp-order-1 cp-reveal-left">
                         <div class="cp-price-grid">
                             <div class="cp-price-card">
@@ -941,8 +940,8 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                                 <p class="font-body">Massa de chocolate com recheio cremoso de coco.</p>
                             </div>
                             <div class="cp-flavor-item">
-                                <h4 class="font-heading">Maracujá</h4>
-                                <p class="font-body">Massa branca com recheio de mousse de maracujá.</p>
+                                <h4 class="font-heading">Maracuj�</h4>
+                                <p class="font-body">Massa branca com recheio de mousse de maracuj�.</p>
                             </div>
                         </div>
                     </div>
@@ -951,7 +950,7 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
         </section>
 
         <!-- ======================================= -->
-        <!-- 4. CLASSE 2 – Bolos Premium              -->
+        <!-- 4. CLASSE 2 � Bolos Premium              -->
         <!-- ======================================= -->
         <section class="cp-section">
             <div class="cp-container" style="max-width:72rem;">
@@ -962,11 +961,11 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                 </div>
 
                 <div class="cp-grid-2">
-                    <!-- Imagem à esquerda no desktop -->
+                    <!-- Imagem � esquerda no desktop -->
                     <div class="cp-img-col cp-order-1 cp-reveal-left">
                         <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/categorias/1781027941477-7ok04m.jpg" alt="Classe 2" loading="lazy">
                     </div>
-                    <!-- Conteúdo à direita no desktop -->
+                    <!-- Conte�do � direita no desktop -->
                     <div class="cp-order-2 cp-reveal-right">
                         <div class="cp-price-grid">
                             <div class="cp-price-card">
@@ -998,7 +997,7 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
 
                         <div class="cp-flavor-list">
                             <div class="cp-flavor-item">
-                                <h4 class="font-heading">Prestígio</h4>
+                                <h4 class="font-heading">Prest�gio</h4>
                                 <p class="font-body">Massa de chocolate com 2 camadas de recheio cremoso de coco e 1 camada de mousse de chocolate meio amargo.</p>
                             </div>
                             <div class="cp-flavor-item">
@@ -1032,31 +1031,31 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
         </section>
 
         <!-- ======================================= -->
-        <!-- 5. DECORAÇÕES (Bolos Redondos)          -->
+        <!-- 5. DECORA��ES (Bolos Redondos)          -->
         <!-- ======================================= -->
         <section class="cp-section">
             <div class="cp-container-md">
                 <div class="cp-section-header cp-reveal">
                     <span class="font-script">Galeria</span>
-                    <h2 class="font-heading">Decorações</h2>
-                    <p>Os valores das decorações são variáveis e podem ser consultados pelo site ou no nosso WhatsApp!</p>
+                    <h2 class="font-heading">Decora��es</h2>
+                    <p>Os valores das decora��es s�o vari�veis e podem ser consultados pelo site ou no nosso WhatsApp!</p>
                     <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
                 </div>
 
                 <div class="cp-deco-grid cp-reveal">
                     <div class="cp-deco-card">
-                        <h3 class="font-heading">Laços Pequenos Unitários</h3>
-                        <p class="deco-desc font-body">Laços decorativos em fita</p>
+                        <h3 class="font-heading">La�os Pequenos Unit�rios</h3>
+                        <p class="deco-desc font-body">La�os decorativos em fita</p>
                         <div class="deco-price font-body">+ R$ 1,50</div>
                     </div>
                     <div class="cp-deco-card">
                         <h3 class="font-heading">Vintage Cake</h3>
-                        <p class="deco-desc font-body">Decoração estilo vintage com bicos clássicos</p>
+                        <p class="deco-desc font-body">Decora��o estilo vintage com bicos cl�ssicos</p>
                         <div class="deco-price font-body">+ R$ 25</div>
                     </div>
                     <div class="cp-deco-card">
                         <h3 class="font-heading">Flores Naturais</h3>
-                        <p class="deco-desc font-body">Decoração com flores naturais comestíveis</p>
+                        <p class="deco-desc font-body">Decora��o com flores naturais comest�veis</p>
                         <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
                     </div>
                     <div class="cp-deco-card">
@@ -1066,12 +1065,12 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                     </div>
                     <div class="cp-deco-card">
                         <h3 class="font-heading">Papel de Arroz</h3>
-                        <p class="deco-desc font-body">Impressão em papel de arroz comestível</p>
+                        <p class="deco-desc font-body">Impress�o em papel de arroz comest�vel</p>
                         <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
                     </div>
                     <div class="cp-deco-card">
                         <h3 class="font-heading">Drip Cake</h3>
-                        <p class="deco-desc font-body">Efeito de calda escorrendo (preço por tamanho)</p>
+                        <p class="deco-desc font-body">Efeito de calda escorrendo (pre�o por tamanho)</p>
                         <div class="cp-drip-grid" style="margin-top:0.75rem;">
                             <div class="cp-drip-item"><div class="drip-size">PP</div><div class="drip-price">+R$ 10</div></div>
                             <div class="cp-drip-item"><div class="drip-size">P</div><div class="drip-price">+R$ 15</div></div>
@@ -1096,11 +1095,11 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                 </div>
 
                 <div class="cp-grid-2">
-                    <!-- Imagem à direita no desktop -->
+                    <!-- Imagem � direita no desktop -->
                     <div class="cp-img-col cp-order-2 cp-reveal-right">
                         <img src="https://kmgiylrpkqtteyujiwpn.supabase.co/storage/v1/object/public/site-images/cardapio/cardapio_rectangular/1781895085154-ubnmt.jpg" alt="Bolos Retangulares" loading="lazy">
                     </div>
-                    <!-- Tamanhos à esquerda -->
+                    <!-- Tamanhos � esquerda -->
                     <div class="cp-order-1 cp-reveal-left">
                         <div class="cp-rect-list">
                             <div class="cp-rect-card">
@@ -1154,13 +1153,13 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
         </section>
 
         <!-- ======================================= -->
-        <!-- 7. DECORAÇÕES – Bolos Retangulares      -->
+        <!-- 7. DECORA��ES � Bolos Retangulares      -->
         <!-- ======================================= -->
         <section class="cp-section">
             <div class="cp-container-md">
                 <div class="cp-section-header cp-reveal">
                     <span class="font-script">Toques especiais</span>
-                    <h2 class="font-heading">Decorações - Bolos Retangulares</h2>
+                    <h2 class="font-heading">Decora��es - Bolos Retangulares</h2>
                     <p>Personalize ainda mais o seu bolo</p>
                     <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
                 </div>
@@ -1172,7 +1171,7 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                     </div>
                     <div class="cp-deco-card">
                         <h3 class="font-heading">Vintage Cake Simples</h3>
-                        <p class="deco-desc font-body">Decoração estilo vintage com bicos clássicos</p>
+                        <p class="deco-desc font-body">Decora��o estilo vintage com bicos cl�ssicos</p>
                         <div class="deco-price font-body">+ R$ 25</div>
                     </div>
                     <div class="cp-deco-card">
@@ -1181,11 +1180,11 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                         <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
                     </div>
                     <div class="cp-deco-card">
-                        <h3 class="font-heading">Laço Grande de Cetim</h3>
+                        <h3 class="font-heading">La�o Grande de Cetim</h3>
                         <div class="deco-price font-body">+ R$ 20</div>
                     </div>
                     <div class="cp-deco-card">
-                        <h3 class="font-heading">Laços Pequenos Unitários</h3>
+                        <h3 class="font-heading">La�os Pequenos Unit�rios</h3>
                         <div class="deco-price font-body">+ R$ 1,50</div>
                     </div>
                     <div class="cp-deco-card">
@@ -1199,12 +1198,12 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                         <div class="deco-price deco-price--consult font-body">Valor a consultar</div>
                     </div>
                     <div class="cp-deco-card">
-                        <h3 class="font-heading">Doces Unitários</h3>
+                        <h3 class="font-heading">Doces Unit�rios</h3>
                         <div class="deco-price font-body">+ R$ 1,50</div>
                     </div>
                     <div class="cp-deco-card">
                         <h3 class="font-heading">Drip Cake</h3>
-                        <p class="deco-desc font-body">Efeito de calda escorrendo (preço por tamanho)</p>
+                        <p class="deco-desc font-body">Efeito de calda escorrendo (pre�o por tamanho)</p>
                         <div class="cp-drip-grid" style="margin-top:0.75rem;">
                             <div class="cp-drip-item"><div class="drip-size">PP</div><div class="drip-price">+R$ 0</div></div>
                             <div class="cp-drip-item"><div class="drip-size">P</div><div class="drip-price">+R$ 25</div></div>
@@ -1223,7 +1222,7 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
         <section class="cp-section">
             <div class="cp-container" style="max-width:64rem;">
                 <div class="cp-section-header cp-reveal">
-                    <span class="font-script">Doçuras</span>
+                    <span class="font-script">Do�uras</span>
                     <h2 class="font-heading">Doces para Festas</h2>
                     <p>Vendidos em pacotes de 25, 50 ou 100 unidades</p>
                     <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
@@ -1238,7 +1237,7 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                         <div class="sweet-header">
                             <h3 class="font-heading">Doces Tradicionais</h3>
                             <p class="font-body">Aproximadamente 10g por unidade</p>
-                            <p class="font-body">Doces artesanais clássicos, 10g cada</p>
+                            <p class="font-body">Doces artesanais cl�ssicos, 10g cada</p>
                         </div>
                         <div class="sweet-body">
                             <div class="sweet-prices">
@@ -1249,12 +1248,12 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                             <div class="sweet-flavors">
                                 <p class="sweet-flavors-title">Sabores</p>
                                 <ul>
-                                    <li><span class="bullet">•</span> Brigadeiro</li>
-                                    <li><span class="bullet">•</span> Beijinho</li>
-                                    <li><span class="bullet">•</span> Cajuzinho</li>
-                                    <li><span class="bullet">•</span> Docinho de Morango</li>
-                                    <li><span class="bullet">•</span> Ninho</li>
-                                    <li><span class="bullet">•</span> Amendoim</li>
+                                    <li><span class="bullet">�</span> Brigadeiro</li>
+                                    <li><span class="bullet">�</span> Beijinho</li>
+                                    <li><span class="bullet">�</span> Cajuzinho</li>
+                                    <li><span class="bullet">�</span> Docinho de Morango</li>
+                                    <li><span class="bullet">�</span> Ninho</li>
+                                    <li><span class="bullet">�</span> Amendoim</li>
                                 </ul>
                             </div>
                         </div>
@@ -1279,12 +1278,12 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                             <div class="sweet-flavors">
                                 <p class="sweet-flavors-title">Sabores</p>
                                 <ul>
-                                    <li><span class="bullet">•</span> Brigadeiro Meio Amargo</li>
-                                    <li><span class="bullet">•</span> Ninho com Nutella</li>
-                                    <li><span class="bullet">•</span> Churros</li>
-                                    <li><span class="bullet">•</span> Óreo</li>
-                                    <li><span class="bullet">•</span> Surpresa de Uva</li>
-                                    <li><span class="bullet">•</span> Ferrero Roscher</li>
+                                    <li><span class="bullet">�</span> Brigadeiro Meio Amargo</li>
+                                    <li><span class="bullet">�</span> Ninho com Nutella</li>
+                                    <li><span class="bullet">�</span> Churros</li>
+                                    <li><span class="bullet">�</span> �reo</li>
+                                    <li><span class="bullet">�</span> Surpresa de Uva</li>
+                                    <li><span class="bullet">�</span> Ferrero Roscher</li>
                                 </ul>
                             </div>
                         </div>
@@ -1294,13 +1293,13 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
         </section>
 
         <!-- ======================================= -->
-        <!-- 9. FORMULÁRIO DE ORÇAMENTO              -->
+        <!-- 9. FORMUL�RIO DE OR�AMENTO              -->
         <!-- ======================================= -->
         <section class="cp-form-section" id="encomenda">
             <div class="cp-container-sm">
                 <div class="cp-section-header cp-reveal">
-                    <span class="font-script">Orçamento</span>
-                    <h2 class="font-heading">Solicite seu orçamento</h2>
+                    <span class="font-script">Or�amento</span>
+                    <h2 class="font-heading">Solicite seu or�amento</h2>
                     <div class="cp-dot-divider"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
                 </div>
 
@@ -1323,7 +1322,7 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                     </div>
                     <div>
                         <label class="font-body">Detalhes do pedido</label>
-                        <textarea id="cp-details" rows="4" placeholder="Tamanho, sabor, decoração, data da entrega..."></textarea>
+                        <textarea id="cp-details" rows="4" placeholder="Tamanho, sabor, decora��o, data da entrega..."></textarea>
                     </div>
                     <button type="submit" class="cp-form-submit">
                         <i class="fa-brands fa-whatsapp"></i> Enviar via WhatsApp
@@ -1346,23 +1345,23 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                 <div class="cp-footer-grid">
                     <div class="cp-footer-col">
                         <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria" loading="lazy">
-                        <p class="font-body">Mais do que doces, criamos memórias. Cada bolo é feito com amor, dedicação e ingredientes selecionados.</p>
+                        <p class="font-body">Mais do que doces, criamos mem�rias. Cada bolo � feito com amor, dedica��o e ingredientes selecionados.</p>
                     </div>
                     <div class="cp-footer-col">
-                        <h4 class="font-heading">Navegação</h4>
+                        <h4 class="font-heading">Navega��o</h4>
                         <ul>
-                            <li><a href="/">Início</a></li>
-                            <li><a href="/nossa-historia">Nossa História</a></li>
-                            <li><a href="/cardapio">Cardápio</a></li>
+                            <li><a href="/">In�cio</a></li>
+                            <li><a href="/nossa-historia">Nossa Hist�ria</a></li>
+                            <li><a href="/cardapio">Card�pio</a></li>
                             <li><a href="/contato">Contato</a></li>
                         </ul>
                     </div>
                     <div class="cp-footer-col">
-                        <h4 class="font-heading">Informações</h4>
+                        <h4 class="font-heading">Informa��es</h4>
                         <div class="cp-footer-info font-body">
-                            <p><i class="fa-regular fa-clock"></i> Ter a Sáb: 12h – 18h</p>
+                            <p><i class="fa-regular fa-clock"></i> Ter a S�b: 12h � 18h</p>
                             <p><i class="fa-solid fa-phone"></i> Delivery a partir das 12:30h</p>
-                            <p><i class="fa-solid fa-map-pin"></i> R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP, 04883-020</p>
+                            <p><i class="fa-solid fa-map-pin"></i> R. Manucaia, 114 - Jardim dos Alamos, S�o Paulo - SP, 04883-020</p>
                             <div class="cp-footer-socials">
                                 <a href="https://instagram.com/caseirinhosaconfeitaria" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                                 <a href="https://wa.me/5511948598267" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -1371,7 +1370,7 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                     </div>
                 </div>
                 <div class="cp-footer-copy font-body">
-                    Feito com <i class="fa-solid fa-heart heart"></i> © 2026 Caseirinhos
+                    Feito com <i class="fa-solid fa-heart heart"></i> � 2026 Caseirinhos
                 </div>
             </div>
         </div>
@@ -1432,7 +1431,7 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
                 const date = document.getElementById('cp-date').value;
                 const details = document.getElementById('cp-details').value;
 
-                const msg = `Olá! Gostaria de fazer um orçamento 🎂%0A%0A` +
+                const msg = `Ol�! Gostaria de fazer um or�amento ??%0A%0A` +
                     `*Nome:* ${name}%0A` +
                     `*Telefone:* ${phone}%0A` +
                     `*Tipo de Evento:* ${event}%0A` +
@@ -1445,3 +1444,5 @@ Esperamos que você aproveite nossas delícias e volte sempre para experimentar 
     </script>
 </body>
 </html>
+
+

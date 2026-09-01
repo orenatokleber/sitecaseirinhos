@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nossa História | Caseirinhos a Confeitaria</title>
-    <meta name="description" content="Conheça a história da Caseirinhos, uma confeitaria artesanal que nasceu do amor por fazer bolos que trazem sorrisos. Mais do que doces, criamos memórias.">
-    <meta name="keywords" content="caseirinhos história, confeitaria artesanal, bolos caseiros, história da confeitaria">
-    <meta property="og:title" content="Nossa História | Caseirinhos a Confeitaria">
-    <meta property="og:description" content="Conheça a história da Caseirinhos, uma confeitaria artesanal que nasceu do amor por fazer bolos que trazem sorrisos.">
+    <title>Nossa Hist�ria | Caseirinhos a Confeitaria</title>
+    <meta name="description" content="Conhe�a a hist�ria da Caseirinhos, uma confeitaria artesanal que nasceu do amor por fazer bolos que trazem sorrisos. Mais do que doces, criamos mem�rias.">
+    <meta name="keywords" content="caseirinhos hist�ria, confeitaria artesanal, bolos caseiros, hist�ria da confeitaria">
+    <meta property="og:title" content="Nossa Hist�ria | Caseirinhos a Confeitaria">
+    <meta property="og:description" content="Conhe�a a hist�ria da Caseirinhos, uma confeitaria artesanal que nasceu do amor por fazer bolos que trazem sorrisos.">
     <meta property="og:type" content="website">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="assets/style.css">
 
     <style>
-        /* ====== NOSSA HISTÓRIA PAGE ====== */
+        /* ====== NOSSA HIST�RIA PAGE ====== */
 
         /* --- Main offset for fixed nav --- */
         .nh-main {
@@ -417,17 +417,13 @@
                 <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria">
             </a>
             <ul class="nav-links">
-                <li><a href="/">Início</a></li>
-                <li><a href="/nossa-historia" class="active">Nossa História</a></li>
-                <li><a href="/cardapio">Cardápio</a></li>
+                <li><a href="/">In�cio</a></li>
+                <li><a href="/nossa-historia" class="active">Nossa Hist�ria</a></li>
+                <li><a href="/cardapio">Card�pio</a></li>
                 <li><a href="/montar-pedido">Montar Pedido</a></li>
                 <li><a href="/contato">Contato</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <a href="/montar-pedido" class="nav-cta" style="background: hsla(var(--primary), 0.1); color: hsl(var(--primary)); border: 1px solid hsla(var(--primary), 0.3);">
-                    <i class="fa-solid fa-cake-candles"></i>
-                    <span>Bolos & Encomendas</span>
-                </a>
                 <button class="nav-toggle" id="navToggle" aria-label="Menu">
                     <span></span><span></span><span></span>
                 </button>
@@ -435,16 +431,19 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu -->
+        <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-overlay" id="mobileOverlay"></div>
         <div class="mobile-menu-panel">
-            <a href="/" onclick="closeMobileMenu()">Início</a>
-            <a href="/nossa-historia" onclick="closeMobileMenu()">Nossa História</a>
-            <a href="/cardapio" onclick="closeMobileMenu()">Cardápio</a>
-            <a href="/montar-pedido" onclick="closeMobileMenu()">Montar Pedido 🎂</a>
-            <a href="/contato" onclick="closeMobileMenu()">Contato</a>
-            <a href="/admin" onclick="closeMobileMenu()">Painel Admin</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos" style="height: 40px; width: auto;">
+                <button onclick="closeMobileMenu()" style="background:none; border:none; font-size:1.5rem; color:hsl(var(--foreground)); cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house" style="width:24px; color:hsl(var(--primary));"></i> Início</a>
+            <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart" style="width:24px; color:hsl(var(--primary));"></i> Nossa História</a>
+            <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles" style="width:24px; color:hsl(var(--primary));"></i> Cardápio</a>
+            <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag" style="width:24px; color:hsl(var(--primary));"></i> Montar Pedido</a>
+            <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope" style="width:24px; color:hsl(var(--primary));"></i> Contato</a>
         </div>
     </div>
 
@@ -458,12 +457,12 @@
             <div class="nh-hero-overlay"></div>
             <div class="nh-hero-content">
                 <p class="font-script" data-field="script">Nossa</p>
-                <h1 class="font-heading" data-field="title">História</h1>
+                <h1 class="font-heading" data-field="title">Hist�ria</h1>
             </div>
         </section>
 
         <!-- ======================================= -->
-        <!-- 2. HISTÓRIA                             -->
+        <!-- 2. HIST�RIA                             -->
         <!-- ======================================= -->
         <section class="nh-story">
             <div class="nh-story-container">
@@ -475,22 +474,22 @@
                     </div>
                     <div class="nh-text-block nh-reveal-right">
                         <div class="nh-text-header nh-reveal">
-                            <span class="font-script" data-field="script">O começo</span>
-                            <h2 class="font-heading" data-field="title">De uma cozinha caseira para o seu coração</h2>
+                            <span class="font-script" data-field="script">O come�o</span>
+                            <h2 class="font-heading" data-field="title">De uma cozinha caseira para o seu cora��o</h2>
                             <div class="nh-divider">
                                 <div class="line"></div><div class="dot"></div><div class="line"></div>
                             </div>
                         </div>
-                        <p class="font-body" data-field="content">Tudo começou com uma paixão simples: a vontade de fazer bolos que trouxessem sorrisos. Em uma pequena cozinha, com receitas de família e muita dedicação, nasceu a Caseirinhos — uma confeitaria artesanal que acredita que cada doce conta uma história.</p>
-                        <p class="font-body">O que começou com bolos caseiros para amigos e familiares se transformou em algo maior: bolos de casamento que emocionam, sobremesas que surpreendem, doces finos que encantam. Cada encomenda é tratada com o mesmo carinho do primeiro bolo.</p>
+                        <p class="font-body" data-field="content">Tudo come�ou com uma paix�o simples: a vontade de fazer bolos que trouxessem sorrisos. Em uma pequena cozinha, com receitas de fam�lia e muita dedica��o, nasceu a Caseirinhos � uma confeitaria artesanal que acredita que cada doce conta uma hist�ria.</p>
+                        <p class="font-body">O que come�ou com bolos caseiros para amigos e familiares se transformou em algo maior: bolos de casamento que emocionam, sobremesas que surpreendem, doces finos que encantam. Cada encomenda � tratada com o mesmo carinho do primeiro bolo.</p>
                     </div>
                 </div>
 
                 <!-- Row 2: Texto esquerda, imagem direita -->
                 <div class="nh-row" id="nh_story_part2" data-section="nh_story_part2">
                     <div class="nh-text-block nh-mobile-order-1 nh-order-1 nh-reveal-left">
-                        <p class="font-body" data-field="content">Hoje, a Caseirinhos é mais do que uma confeitaria. É um pedaço de afeto em forma de doce. É a certeza de que cada ingrediente foi escolhido com cuidado, cada decoração foi pensada com atenção, e cada entrega é feita com orgulho.</p>
-                        <p class="font-body">Nosso propósito é claro: transformar momentos em memórias doces. Seja um aniversário, um casamento, um chá de bebê ou simplesmente uma terça-feira que merece um bolo especial — estamos aqui para fazer parte da sua história.</p>
+                        <p class="font-body" data-field="content">Hoje, a Caseirinhos � mais do que uma confeitaria. � um peda�o de afeto em forma de doce. � a certeza de que cada ingrediente foi escolhido com cuidado, cada decora��o foi pensada com aten��o, e cada entrega � feita com orgulho.</p>
+                        <p class="font-body">Nosso prop�sito � claro: transformar momentos em mem�rias doces. Seja um anivers�rio, um casamento, um ch� de beb� ou simplesmente uma ter�a-feira que merece um bolo especial � estamos aqui para fazer parte da sua hist�ria.</p>
                     </div>
                     <div class="nh-mobile-order-2 nh-order-2 nh-reveal-right">
                         <img src="images/caseirinhos-83-B2cGiIHk.webp" alt="Confeiteira decorando bolo artesanal" class="nh-story-img" loading="lazy" data-field="image">
@@ -516,15 +515,15 @@
                 <div class="nh-values-grid">
                     <div class="nh-value-card nh-reveal">
                         <h3>Artesanal</h3>
-                        <p class="font-body">Cada produto é feito à mão, com técnicas tradicionais e ingredientes frescos e de qualidade.</p>
+                        <p class="font-body">Cada produto � feito � m�o, com t�cnicas tradicionais e ingredientes frescos e de qualidade.</p>
                     </div>
                     <div class="nh-value-card nh-reveal">
                         <h3>Amor</h3>
-                        <p class="font-body">Colocamos carinho e dedicação em cada etapa, do preparo à entrega.</p>
+                        <p class="font-body">Colocamos carinho e dedica��o em cada etapa, do preparo � entrega.</p>
                     </div>
                     <div class="nh-value-card nh-reveal">
-                        <h3>Excelência</h3>
-                        <p class="font-body">Buscamos superar expectativas, criando sabores e apresentações que encantam.</p>
+                        <h3>Excel�ncia</h3>
+                        <p class="font-body">Buscamos superar expectativas, criando sabores e apresenta��es que encantam.</p>
                     </div>
                 </div>
             </div>
@@ -544,24 +543,24 @@
                 <div class="nh-footer-grid">
                     <div class="nh-footer-col">
                         <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria" loading="lazy">
-                        <p class="font-body">Mais do que doces, criamos memórias. Cada bolo é feito com amor, dedicação e ingredientes selecionados.</p>
+                        <p class="font-body">Mais do que doces, criamos mem�rias. Cada bolo � feito com amor, dedica��o e ingredientes selecionados.</p>
                     </div>
                     <div class="nh-footer-col">
-                        <h4 class="font-heading">Navegação</h4>
+                        <h4 class="font-heading">Navega��o</h4>
                         <ul>
-                            <li><a href="/">Início</a></li>
-                            <li><a href="/nossa-historia">Nossa História</a></li>
-                            <li><a href="/cardapio">Cardápio</a></li>
+                            <li><a href="/">In�cio</a></li>
+                            <li><a href="/nossa-historia">Nossa Hist�ria</a></li>
+                            <li><a href="/cardapio">Card�pio</a></li>
                             <li><a href="/montar-pedido">Montar Pedido</a></li>
                             <li><a href="/contato">Contato</a></li>
                         </ul>
                     </div>
                     <div class="nh-footer-col">
-                        <h4 class="font-heading">Informações</h4>
+                        <h4 class="font-heading">Informa��es</h4>
                         <div class="nh-footer-info font-body">
-                            <p><i class="fa-regular fa-clock"></i> Ter a Sáb: 12h – 18h</p>
+                            <p><i class="fa-regular fa-clock"></i> Ter a S�b: 12h � 18h</p>
                             <p><i class="fa-solid fa-phone"></i> Delivery a partir das 12:30h</p>
-                            <p><i class="fa-solid fa-map-pin"></i> R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP, 04883-020</p>
+                            <p><i class="fa-solid fa-map-pin"></i> R. Manucaia, 114 - Jardim dos Alamos, S�o Paulo - SP, 04883-020</p>
                             <div class="nh-footer-socials">
                                 <a href="https://instagram.com/caseirinhosaconfeitaria" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                                 <a href="https://wa.me/5511948598267" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -570,14 +569,14 @@
                     </div>
                 </div>
                 <div class="nh-footer-copy font-body">
-                    Feito com <i class="fa-solid fa-heart heart"></i> © 2026 Caseirinhos
+                    Feito com <i class="fa-solid fa-heart heart"></i> � 2026 Caseirinhos
                 </div>
             </div>
         </div>
     </footer>
 
     <!-- ====== WHATSAPP FAB ====== -->
-    <a href="https://wa.me/5511948598267?text=Olá! Gostaria de fazer um pedido." target="_blank" rel="noopener noreferrer" class="nh-whatsapp-fab" aria-label="Fale conosco no WhatsApp">
+    <a href="https://wa.me/5511948598267?text=Ol�! Gostaria de fazer um pedido." target="_blank" rel="noopener noreferrer" class="nh-whatsapp-fab" aria-label="Fale conosco no WhatsApp">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
@@ -626,3 +625,5 @@
     </script>
 </body>
 </html>
+
+

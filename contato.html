@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contato | Caseirinhos a Confeitaria</title>
-    <meta name="description" content="Entre em contato com a Caseirinhos a Confeitaria. Endereço, horário de funcionamento, WhatsApp e Instagram.">
-    <meta name="keywords" content="contato caseirinhos, confeitaria artesanal, whatsapp caseirinhos, endereço caseirinhos">
+    <meta name="description" content="Entre em contato com a Caseirinhos a Confeitaria. Endere�o, hor�rio de funcionamento, WhatsApp e Instagram.">
+    <meta name="keywords" content="contato caseirinhos, confeitaria artesanal, whatsapp caseirinhos, endere�o caseirinhos">
     <meta property="og:title" content="Contato | Caseirinhos a Confeitaria">
-    <meta property="og:description" content="Entre em contato com a Caseirinhos. Endereço, horários e WhatsApp.">
+    <meta property="og:description" content="Entre em contato com a Caseirinhos. Endere�o, hor�rios e WhatsApp.">
     <meta property="og:type" content="website">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -329,17 +329,13 @@
                 <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria">
             </a>
             <ul class="nav-links">
-                <li><a href="/">Início</a></li>
-                <li><a href="/nossa-historia">Nossa História</a></li>
-                <li><a href="/cardapio">Cardápio</a></li>
+                <li><a href="/">In�cio</a></li>
+                <li><a href="/nossa-historia">Nossa Hist�ria</a></li>
+                <li><a href="/cardapio">Card�pio</a></li>
                 <li><a href="/montar-pedido">Montar Pedido</a></li>
                 <li><a href="/contato" class="active">Contato</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <a href="/montar-pedido" class="nav-cta" style="background: hsla(var(--primary), 0.1); color: hsl(var(--primary)); border: 1px solid hsla(var(--primary), 0.3);">
-                    <i class="fa-solid fa-cake-candles"></i>
-                    <span>Bolos & Encomendas</span>
-                </a>
                 <button class="nav-toggle" id="navToggle" aria-label="Menu">
                     <span></span><span></span><span></span>
                 </button>
@@ -347,16 +343,19 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu -->
+        <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-overlay" id="mobileOverlay"></div>
         <div class="mobile-menu-panel">
-            <a href="/" onclick="closeMobileMenu()">Início</a>
-            <a href="/nossa-historia" onclick="closeMobileMenu()">Nossa História</a>
-            <a href="/cardapio" onclick="closeMobileMenu()">Cardápio</a>
-            <a href="/montar-pedido" onclick="closeMobileMenu()">Montar Pedido 🎂</a>
-            <a href="/contato" onclick="closeMobileMenu()">Contato</a>
-            <a href="/admin" onclick="closeMobileMenu()">Painel Admin</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos" style="height: 40px; width: auto;">
+                <button onclick="closeMobileMenu()" style="background:none; border:none; font-size:1.5rem; color:hsl(var(--foreground)); cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house" style="width:24px; color:hsl(var(--primary));"></i> Início</a>
+            <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart" style="width:24px; color:hsl(var(--primary));"></i> Nossa História</a>
+            <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles" style="width:24px; color:hsl(var(--primary));"></i> Cardápio</a>
+            <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag" style="width:24px; color:hsl(var(--primary));"></i> Montar Pedido</a>
+            <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope" style="width:24px; color:hsl(var(--primary));"></i> Contato</a>
         </div>
     </div>
 
@@ -371,7 +370,7 @@
                 <div class="ct-header ct-reveal">
                     <span class="font-script" data-field="script">Fale conosco</span>
                     <h2 class="font-heading" data-field="title">Contato</h2>
-                    <p class="font-body" data-field="subtitle">Estamos prontos para atender você!</p>
+                    <p class="font-body" data-field="subtitle">Estamos prontos para atender voc�!</p>
                     <div class="ct-divider">
                         <div class="line"></div><div class="dot"></div><div class="line"></div>
                     </div>
@@ -383,15 +382,15 @@
                         <div class="ct-card-icon">
                             <i class="fa-solid fa-map-pin"></i>
                         </div>
-                        <h3>Endereço</h3>
-                        <p class="font-body">R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP, 04883-020</p>
+                        <h3>Endere�o</h3>
+                        <p class="font-body">R. Manucaia, 114 - Jardim dos Alamos, S�o Paulo - SP, 04883-020</p>
                     </div>
                     <div class="ct-card ct-reveal">
                         <div class="ct-card-icon">
                             <i class="fa-regular fa-clock"></i>
                         </div>
-                        <h3>Horário</h3>
-                        <p class="font-body">Ter a Sáb: 12h – 18h
+                        <h3>Hor�rio</h3>
+                        <p class="font-body">Ter a S�b: 12h � 18h
 Delivery a partir das 12:30h</p>
                     </div>
                     <div class="ct-card ct-reveal">
@@ -434,24 +433,24 @@ Delivery a partir das 12:30h</p>
                 <div class="ct-footer-grid">
                     <div class="ct-footer-col">
                         <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos a Confeitaria" loading="lazy">
-                        <p class="font-body">Mais do que doces, criamos memórias. Cada bolo é feito com amor, dedicação e ingredientes selecionados.</p>
+                        <p class="font-body">Mais do que doces, criamos mem�rias. Cada bolo � feito com amor, dedica��o e ingredientes selecionados.</p>
                     </div>
                     <div class="ct-footer-col">
-                        <h4 class="font-heading">Navegação</h4>
+                        <h4 class="font-heading">Navega��o</h4>
                         <ul>
-                            <li><a href="/">Início</a></li>
-                            <li><a href="/nossa-historia">Nossa História</a></li>
-                            <li><a href="/cardapio">Cardápio</a></li>
+                            <li><a href="/">In�cio</a></li>
+                            <li><a href="/nossa-historia">Nossa Hist�ria</a></li>
+                            <li><a href="/cardapio">Card�pio</a></li>
                             <li><a href="/montar-pedido">Montar Pedido</a></li>
                             <li><a href="/contato">Contato</a></li>
                         </ul>
                     </div>
                     <div class="ct-footer-col">
-                        <h4 class="font-heading">Informações</h4>
+                        <h4 class="font-heading">Informa��es</h4>
                         <div class="ct-footer-info font-body">
-                            <p><i class="fa-regular fa-clock"></i> Ter a Sáb: 12h – 18h</p>
+                            <p><i class="fa-regular fa-clock"></i> Ter a S�b: 12h � 18h</p>
                             <p><i class="fa-solid fa-phone"></i> Delivery a partir das 12:30h</p>
-                            <p><i class="fa-solid fa-map-pin"></i> R. Manucaia, 114 - Jardim dos Alamos, São Paulo - SP, 04883-020</p>
+                            <p><i class="fa-solid fa-map-pin"></i> R. Manucaia, 114 - Jardim dos Alamos, S�o Paulo - SP, 04883-020</p>
                             <div class="ct-footer-socials">
                                 <a href="https://instagram.com/caseirinhosaconfeitaria" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                                 <a href="https://wa.me/5511948598267" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -460,14 +459,14 @@ Delivery a partir das 12:30h</p>
                     </div>
                 </div>
                 <div class="ct-footer-copy font-body">
-                    Feito com <i class="fa-solid fa-heart heart"></i> © 2026 Caseirinhos
+                    Feito com <i class="fa-solid fa-heart heart"></i> � 2026 Caseirinhos
                 </div>
             </div>
         </div>
     </footer>
 
     <!-- ====== WHATSAPP FAB ====== -->
-    <a href="https://wa.me/5511948598267?text=Olá! Gostaria de fazer um pedido." target="_blank" rel="noopener noreferrer" class="ct-whatsapp-fab" aria-label="Fale conosco no WhatsApp">
+    <a href="https://wa.me/5511948598267?text=Ol�! Gostaria de fazer um pedido." target="_blank" rel="noopener noreferrer" class="ct-whatsapp-fab" aria-label="Fale conosco no WhatsApp">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
@@ -516,3 +515,5 @@ Delivery a partir das 12:30h</p>
     </script>
 </body>
 </html>
+
+
