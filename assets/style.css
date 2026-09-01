@@ -70,10 +70,15 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 /* ===== CONTAINER ===== */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
+/* Enforces 1200px max width and auto margins even on pages loading Tailwind CSS */
+.nav-container {
+  max-width: 1200px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 /* ===== NAVBAR – PREMIUM ELEGANCE ===== */
@@ -123,7 +128,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   filter: brightness(1.05);
 }
 
-/* Nav Links – All links are visually identical in size, weight and layout */
+/* Nav Links – Base layout */
 .nav-links {
   display: none;
   gap: 0.5rem;
@@ -137,6 +142,13 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   list-style: none;
 }
 
+/* Layout Positions */
+.nav-links-right { justify-content: flex-end; }
+.nav-links-center { margin: 0 auto; justify-content: center; }
+.nav-links-left { margin-left: 2rem; justify-content: flex-start; }
+
+/* --- Design Theme 1: Elegante (Padrão) --- */
+.menu-style-elegant .nav-links a,
 .nav-links a {
   text-decoration: none;
   font-family: 'Nunito', -apple-system, sans-serif;
@@ -145,7 +157,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   letter-spacing: 0.025em;
   text-transform: uppercase;
   color: hsl(var(--foreground));
-  opacity: 0.55;
+  opacity: 0.6;
   transition: opacity 0.3s ease, color 0.3s ease;
   position: relative;
   padding: 0.5rem 0.875rem;
@@ -153,7 +165,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   white-space: nowrap;
 }
 
-/* Underline indicator – identical structure for all links, hidden by default */
+.menu-style-elegant .nav-links a::after,
 .nav-links a::after {
   content: '';
   position: absolute;
@@ -167,24 +179,106 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hover state – same size, just more visible */
+.menu-style-elegant .nav-links a:hover,
 .nav-links a:hover {
   opacity: 0.85;
   color: hsl(var(--foreground));
 }
 
+.menu-style-elegant .nav-links a:hover::after,
 .nav-links a:hover::after {
   width: 60%;
 }
 
-/* Active state – same size and weight as every other link, just highlighted */
+.menu-style-elegant .nav-links a.active,
 .nav-links a.active {
   opacity: 1;
   color: hsl(var(--primary));
 }
 
+.menu-style-elegant .nav-links a.active::after,
 .nav-links a.active::after {
   width: 70%;
+}
+
+/* --- Design Theme 2: Pills / Cápsulas (Destaque) --- */
+.menu-style-pills .nav-links a {
+  font-family: 'Nunito', -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: none;
+  padding: 0.5rem 1.125rem;
+  border-radius: 9999px;
+  color: hsl(var(--foreground));
+  background: transparent;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.85;
+}
+.menu-style-pills .nav-links a::after {
+  display: none !important;
+}
+.menu-style-pills .nav-links a:hover {
+  background: hsla(var(--primary), 0.12);
+  color: hsl(var(--primary-dark));
+  opacity: 1;
+}
+.menu-style-pills .nav-links a.active {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
+  color: #ffffff !important;
+  opacity: 1;
+  box-shadow: 0 4px 14px hsla(var(--primary), 0.35);
+}
+
+/* --- Design Theme 3: Minimalista --- */
+.menu-style-minimal .nav-links a {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  font-style: italic;
+  text-transform: none;
+  color: hsl(var(--foreground));
+  opacity: 0.65;
+  padding: 0.4rem 1rem;
+  transition: all 0.3s ease;
+}
+.menu-style-minimal .nav-links a::after {
+  height: 1px;
+  background: hsl(var(--accent));
+}
+.menu-style-minimal .nav-links a:hover,
+.menu-style-minimal .nav-links a.active {
+  opacity: 1;
+  color: hsl(var(--accent));
+}
+
+/* --- Design Theme 4: Vibrante Teal --- */
+.menu-style-vibrant .nav-links a {
+  font-family: 'Nunito', -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  color: hsl(var(--foreground));
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+  opacity: 0.8;
+}
+.menu-style-vibrant .nav-links a::after {
+  display: none !important;
+}
+.menu-style-vibrant .nav-links a:hover {
+  border-color: hsla(var(--primary), 0.3);
+  background: hsla(var(--primary), 0.08);
+  color: hsl(var(--primary-dark));
+  opacity: 1;
+}
+.menu-style-vibrant .nav-links a.active {
+  border-color: hsl(var(--primary));
+  background: hsla(var(--primary), 0.15);
+  color: hsl(var(--primary-dark));
+  opacity: 1;
+  box-shadow: 0 0 12px hsla(var(--primary), 0.25);
 }
 
 /* CTA Button (optional, kept for compatibility) */

@@ -675,6 +675,9 @@
             <button class="menu-item active" onclick="switchMainTab('pages')" id="menu-pages">
                 <i class="fa-solid fa-layer-group"></i> Páginas
             </button>
+            <button class="menu-item" onclick="switchMainTab('menu')" id="menu-menu">
+                <i class="fa-solid fa-compass"></i> Menu & Cabeçalho
+            </button>
             <button class="menu-item" onclick="switchMainTab('testimonials')" id="menu-testimonials">
                 <i class="fa-solid fa-comment-dots"></i> Depoimentos
             </button>
@@ -819,6 +822,86 @@
                             <h3>Contato</h3>
                             <p>Edite as informações de contato (via Configurações).</p>
                         </div>
+                    </div>
+
+                    <!-- 8. Menu & Cabeçalho -->
+                    <div class="page-card" onclick="switchMainTab('menu')">
+                        <div class="page-card-top">
+                            <div class="page-card-icon">
+                                <i class="fa-solid fa-compass"></i>
+                            </div>
+                            <i class="fa-solid fa-chevron-right page-card-chevron"></i>
+                        </div>
+                        <div class="page-card-body">
+                            <h3>Menu & Cabeçalho</h3>
+                            <p>Personalize os links, alinhamento e o estilo visual do menu do site.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- ABA: MENU & CABEÇALHO                          -->
+            <!-- ============================================== -->
+            <div id="view-menu-editor" style="display:none; max-width:1100px;">
+                <div class="editor-top-actions">
+                    <div class="page-intro" style="margin-bottom:0;">
+                        <h1>Menu & Cabeçalho</h1>
+                        <p>Personalize os itens de navegação, posição e estilo visual do menu do site</p>
+                    </div>
+
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <button type="button" class="btn-luxury btn-subtle" onclick="resetAdminMenuConfig()">
+                            <i class="fa-solid fa-rotate-left"></i> Restaurar Padrão
+                        </button>
+                        <button type="button" class="btn-luxury btn-gold" onclick="saveAdminMenuConfig()">
+                            <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Seção de Estilos e Layout -->
+                <div style="background:#fff; padding:1.75rem; border-radius:var(--radius-card); border:1px solid var(--border-color); margin-bottom:1.5rem;">
+                    <h3 style="margin-bottom:1rem; font-size:1.1rem; color:var(--text-main);"><i class="fa-solid fa-sliders" style="color:var(--accent-gold); margin-right:0.5rem;"></i> Aparência & Posicionamento do Menu</h3>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Estilo Visual do Menu</label>
+                            <select id="menuStyleThemeSelect" class="form-input" onchange="renderAdminMenuPreview()">
+                                <option value="elegant">Elegante (Padrão com Linha Animada)</option>
+                                <option value="pills">Cápsulas / Pills (Badges Arredondados com Destaque)</option>
+                                <option value="minimal">Minimalista (Tipografia Serifada Delicada)</option>
+                                <option value="vibrant">Vibrante Teal (Contorno e Fundo em Destaque)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Alinhamento do Menu</label>
+                            <select id="menuPositionSelect" class="form-input" onchange="renderAdminMenuPreview()">
+                                <option value="right">Direita (Alinhado à Direita da Logo)</option>
+                                <option value="center">Centralizado (Links ao Centro da Barra)</option>
+                                <option value="left">Esquerda (Junto à Logo)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Preview ao vivo -->
+                    <div style="margin-top:1.5rem; padding:1.25rem; background:hsl(45, 45%, 96%); border-radius:1rem; border:1px solid var(--border-color);">
+                        <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;">Pré-visualização do Menu em Tempo Real:</div>
+                        <div style="background:hsla(45, 40%, 98%, 0.95); padding:1rem 1.5rem; border-radius:0.75rem; border:1px solid rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:space-between;">
+                            <img src="images/logo-DZPmG4Qm.png" alt="Logo" style="height:38px;">
+                            <ul id="adminMenuPreviewList" class="nav-links" style="display:flex; margin:0; padding:0; list-style:none;"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gerenciador de Links -->
+                <div style="background:#fff; padding:1.75rem; border-radius:var(--radius-card); border:1px solid var(--border-color);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.5rem;">
+                        <h3 style="font-size:1.1rem; color:var(--text-main);"><i class="fa-solid fa-link" style="color:var(--accent-gold); margin-right:0.5rem;"></i> Links de Navegação</h3>
+                        <button type="button" class="btn-luxury btn-subtle" onclick="addAdminMenuItem()"><i class="fa-solid fa-plus"></i> Adicionar Item ao Menu</button>
+                    </div>
+
+                    <div id="adminMenuItemsContainer" style="display:flex; flex-direction:column; gap:1rem;">
+                        <!-- Renderizado dinamicamente via JS -->
                     </div>
                 </div>
             </div>
@@ -1165,11 +1248,15 @@
             document.getElementById('view-dashboard').style.display = 'none';
             document.getElementById('view-links').style.display = 'none';
             if(document.getElementById('view-biolinks')) document.getElementById('view-biolinks').style.display = 'none';
+            if(document.getElementById('view-menu-editor')) document.getElementById('view-menu-editor').style.display = 'none';
 
             if (tabKey === 'pages') {
                 document.getElementById('view-pages-grid').style.display = 'block';
             } else if (tabKey === 'dashboard') {
                 document.getElementById('view-dashboard').style.display = 'block';
+            } else if (tabKey === 'menu') {
+                document.getElementById('view-menu-editor').style.display = 'block';
+                loadAdminMenuConfig();
             } else if (tabKey === 'biolinks') {
                 document.getElementById('view-biolinks').style.display = 'block';
                 loadBiolinksConfig();
@@ -1179,6 +1266,137 @@
                 renderLinksList();
             } else {
                 showToast(`Módulo "${tabKey}" selecionado.`);
+            }
+        }
+
+        // ==========================================================
+        // GERENCIADOR DE MENU & CABEÇALHO (PAINEL ADMIN)
+        // ==========================================================
+        let tempMenuConfig = null;
+
+        function loadAdminMenuConfig() {
+            tempMenuConfig = HeaderMenuManager.getConfig();
+            document.getElementById('menuStyleThemeSelect').value = tempMenuConfig.style_theme || 'elegant';
+            document.getElementById('menuPositionSelect').value = tempMenuConfig.position || 'right';
+            renderAdminMenuItems();
+            renderAdminMenuPreview();
+        }
+
+        function renderAdminMenuItems() {
+            const container = document.getElementById('adminMenuItemsContainer');
+            if (!container || !tempMenuConfig || !Array.isArray(tempMenuConfig.items)) return;
+
+            container.innerHTML = tempMenuConfig.items.map((item, idx) => {
+                const isFirst = idx === 0;
+                const isLast = idx === tempMenuConfig.items.length - 1;
+                return `
+                    <div style="background:#fbf8f3; border:1px solid var(--border-color); border-radius:1rem; padding:1.25rem; display:flex; flex-direction:column; gap:0.875rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <div style="display:flex; gap:0.2rem;">
+                                    <button class="sec-arrow-btn" ${isFirst ? 'disabled' : ''} onclick="moveAdminMenuItem(${idx}, -1)"><i class="fa-solid fa-chevron-up"></i></button>
+                                    <button class="sec-arrow-btn" ${isLast ? 'disabled' : ''} onclick="moveAdminMenuItem(${idx}, 1)"><i class="fa-solid fa-chevron-down"></i></button>
+                                </div>
+                                <span style="font-weight:700; font-size:0.9rem; color:var(--text-main);">Item #${idx + 1}</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:0.875rem;">
+                                <label class="switch" title="Exibir ou ocultar este link no menu">
+                                    <input type="checkbox" ${item.is_visible !== false ? 'checked' : ''} onchange="updateAdminMenuItemField(${idx}, 'is_visible', this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                                <button type="button" class="btn-luxury btn-danger-subtle" style="padding:0.35rem 0.7rem; font-size:0.75rem;" onclick="deleteAdminMenuItem(${idx})">
+                                    <i class="fa-solid fa-trash"></i> Excluir
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label class="form-label">Rótulo do Link (Texto)</label>
+                                <input type="text" class="form-input" value="${item.label || ''}" oninput="updateAdminMenuItemField(${idx}, 'label', this.value)" placeholder="Ex: Promoções">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">URL de Destino</label>
+                                <input type="text" class="form-input" value="${item.url || ''}" oninput="updateAdminMenuItemField(${idx}, 'url', this.value)" placeholder="Ex: /cardapio ou https://...">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateAdminMenuItemField(index, field, value) {
+            if (tempMenuConfig && tempMenuConfig.items[index]) {
+                tempMenuConfig.items[index][field] = value;
+                renderAdminMenuPreview();
+            }
+        }
+
+        function moveAdminMenuItem(index, dir) {
+            if (!tempMenuConfig || !tempMenuConfig.items) return;
+            const target = index + dir;
+            if (target < 0 || target >= tempMenuConfig.items.length) return;
+            const temp = tempMenuConfig.items[index];
+            tempMenuConfig.items[index] = tempMenuConfig.items[target];
+            tempMenuConfig.items[target] = temp;
+            renderAdminMenuItems();
+            renderAdminMenuPreview();
+        }
+
+        function deleteAdminMenuItem(index) {
+            if (!tempMenuConfig || !tempMenuConfig.items) return;
+            if (confirm('Deseja realmente remover este item do menu?')) {
+                tempMenuConfig.items.splice(index, 1);
+                renderAdminMenuItems();
+                renderAdminMenuPreview();
+            }
+        }
+
+        function addAdminMenuItem() {
+            if (!tempMenuConfig) tempMenuConfig = HeaderMenuManager.getConfig();
+            const newId = 'm_' + Date.now();
+            tempMenuConfig.items.push({
+                id: newId,
+                label: 'Novo Link',
+                url: '/',
+                is_visible: true,
+                icon: 'fa-link'
+            });
+            renderAdminMenuItems();
+            renderAdminMenuPreview();
+        }
+
+        function renderAdminMenuPreview() {
+            const previewEl = document.getElementById('adminMenuPreviewList');
+            if (!previewEl || !tempMenuConfig) return;
+
+            const theme = document.getElementById('menuStyleThemeSelect')?.value || 'elegant';
+            const pos = document.getElementById('menuPositionSelect')?.value || 'right';
+
+            tempMenuConfig.style_theme = theme;
+            tempMenuConfig.position = pos;
+
+            previewEl.className = 'nav-links nav-links-' + pos + ' menu-style-' + theme;
+            let html = '';
+            tempMenuConfig.items.forEach((item, idx) => {
+                if (item.is_visible !== false) {
+                    html += `<li><a href="javascript:void(0)" class="${idx === 0 ? 'active' : ''}">${item.label || 'Sem Título'}</a></li>`;
+                }
+            });
+            previewEl.innerHTML = html;
+        }
+
+        function saveAdminMenuConfig() {
+            if (!tempMenuConfig) return;
+            HeaderMenuManager.saveConfig(tempMenuConfig);
+            showToast('Configurações do menu salvas com sucesso!');
+        }
+
+        function resetAdminMenuConfig() {
+            if (confirm('Restaurar o menu para a configuração padrão (Início, Nossa História, Cardápio, Montar Pedido, Contato)?')) {
+                tempMenuConfig = HeaderMenuManager.resetToDefault();
+                loadAdminMenuConfig();
+                showToast('Menu restaurado para os padrões!');
             }
         }
 

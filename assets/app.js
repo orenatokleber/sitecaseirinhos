@@ -1,4 +1,4 @@
-﻿// ==========================================================
+// ==========================================================
 // CASEIRINHOS - MOTOR DE CONTEÚDO, PÁGINAS E SEÇÕES
 // ==========================================================
 
@@ -586,10 +586,94 @@ const SectionManager = {
     }
 };
 
+// ==========================================================
+// GERENCIADOR DINÂMICO DE MENU E CABEÇALHO (HeaderMenuManager)
+// ==========================================================
+const DEFAULT_MENU_CONFIG = {
+    position: 'right', // 'left', 'center', 'right'
+    style_theme: 'elegant', // 'elegant', 'pills', 'minimal', 'vibrant'
+    items: [
+        { id: 'm1', label: 'Início', url: '/', is_visible: true, icon: 'fa-house' },
+        { id: 'm2', label: 'Nossa História', url: '/nossa-historia', is_visible: true, icon: 'fa-heart' },
+        { id: 'm3', label: 'Cardápio', url: '/cardapio', is_visible: true, icon: 'fa-cake-candles' },
+        { id: 'm4', label: 'Montar Pedido', url: '/montar-pedido', is_visible: true, icon: 'fa-shopping-bag' },
+        { id: 'm5', label: 'Contato', url: '/contato', is_visible: true, icon: 'fa-envelope' }
+    ]
+};
+
+const HeaderMenuManager = {
+    STORAGE_KEY: 'caseirinhos_menu_config',
+
+    getConfig: function() {
+        const stored = localStorage.getItem(this.STORAGE_KEY);
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                if (parsed && Array.isArray(parsed.items)) return parsed;
+            } catch(e) {}
+        }
+        return JSON.parse(JSON.stringify(DEFAULT_MENU_CONFIG));
+    },
+
+    saveConfig: function(config) {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(config));
+        return config;
+    },
+
+    resetToDefault: function() {
+        const def = JSON.parse(JSON.stringify(DEFAULT_MENU_CONFIG));
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(def));
+        return def;
+    },
+
+    applyToDom: function() {
+        const config = this.getConfig();
+        const navLinksEl = document.querySelector('.nav-links');
+        const mobilePanelEl = document.querySelector('.mobile-menu-panel');
+
+        if (!navLinksEl) return;
+
+        // Current page path for active link
+        const currentPath = window.location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+
+        // Apply theme and position classes to navLinksEl
+        navLinksEl.className = 'nav-links nav-links-' + (config.position || 'right') + ' menu-style-' + (config.style_theme || 'elegant');
+
+        // Render Desktop Items
+        let desktopHtml = '';
+        config.items.forEach(item => {
+            if (item.is_visible) {
+                const itemPath = item.url.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+                const isActive = (currentPath === itemPath || (itemPath !== '/' && currentPath.startsWith(itemPath)));
+                desktopHtml += `<li><a href="${item.url}" class="${isActive ? 'active' : ''}">${item.label}</a></li>`;
+            }
+        });
+        navLinksEl.innerHTML = desktopHtml;
+
+        // Render Mobile Items
+        if (mobilePanelEl) {
+            let mobileHtml = `
+                <div class="mobile-menu-header">
+                    <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos">
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            `;
+            config.items.forEach(item => {
+                if (item.is_visible) {
+                    const iconClass = item.icon || 'fa-link';
+                    mobileHtml += `<a href="${item.url}" onclick="closeMobileMenu()"><i class="fa-solid ${iconClass}"></i> ${item.label}</a>`;
+                }
+            });
+            mobilePanelEl.innerHTML = mobileHtml;
+        }
+    }
+};
+
 // Execução automática na inicialização da página
 document.addEventListener('DOMContentLoaded', () => {
     // Não executa no painel admin para não interferir na interface administrativa
     if (!window.location.pathname.includes('/admin')) {
         SectionManager.applyToDom();
+        HeaderMenuManager.applyToDom();
     }
 });
