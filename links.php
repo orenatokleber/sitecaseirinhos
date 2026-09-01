@@ -1,26 +1,45 @@
 <?php
 require_once 'api/db.php';
 
-// Busca configurações
-$stmtConfig = $pdo->query("SELECT * FROM biolinks_config WHERE id = 1");
-$config = $stmtConfig->fetch();
+// Valores padrão (fallback caso o banco não esteja disponível)
+$config = [
+    'profile_name' => 'Caseirinhos',
+    'profile_desc' => 'Adoçando seus momentos especiais!',
+    'profile_image' => 'images/confeiteira-sorrindo.jpg',
+    'bg_color' => '#fbf7ee',
+    'text_color' => '#2d231b',
+    'btn_bg_color' => '#c3996b',
+    'btn_text_color' => '#ffffff'
+];
 
-// Se não houver config, define padrões
-if (!$config) {
-    $config = [
-        'profile_name' => 'Caseirinhos',
-        'profile_desc' => 'Adoçando seus momentos especiais!',
-        'profile_image' => 'images/confeiteira-sorrindo.jpg',
-        'bg_color' => '#fbf7ee',
-        'text_color' => '#2d231b',
-        'btn_bg_color' => '#c3996b',
-        'btn_text_color' => '#ffffff'
-    ];
+$links = [
+    ['title' => 'Cardápio Completo', 'url' => 'cardapio.html', 'icon' => 'fa-cake-candles'],
+    ['title' => 'Fazer Encomenda', 'url' => 'montar-pedido.html', 'icon' => 'fa-whatsapp'],
+    ['title' => 'Nosso Instagram', 'url' => 'https://instagram.com/caseirinhosaconfeitaria', 'icon' => 'fa-instagram'],
+    ['title' => 'Delivery', 'url' => 'https://instadelivery.com.br/caseirinhosaconfeitaria', 'icon' => 'fa-motorcycle'],
+    ['title' => 'Fale no WhatsApp', 'url' => 'https://wa.me/5511948598267?text=Ol%C3%A1!%20Vim%20pelo%20link%20do%20site%20da%20Caseirinhos.', 'icon' => 'fa-whatsapp'],
+];
+
+// Se o banco estiver disponível, busca dados reais
+if ($pdo) {
+    try {
+        // Busca configurações do banco
+        $stmtConfig = $pdo->query("SELECT * FROM biolinks_config WHERE id = 1");
+        $dbConfig = $stmtConfig->fetch();
+        if ($dbConfig) {
+            $config = $dbConfig;
+        }
+
+        // Busca links ativos do banco
+        $stmtLinks = $pdo->query("SELECT * FROM biolinks WHERE is_active = 1 ORDER BY sort_order ASC");
+        $dbLinks = $stmtLinks->fetchAll();
+        if ($dbLinks && count($dbLinks) > 0) {
+            $links = $dbLinks;
+        }
+    } catch (\Exception $e) {
+        // Falha silenciosa — usa os valores padrão definidos acima
+    }
 }
-
-// Busca links ativos
-$stmtLinks = $pdo->query("SELECT * FROM biolinks WHERE is_active = 1 ORDER BY sort_order ASC");
-$links = $stmtLinks->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
