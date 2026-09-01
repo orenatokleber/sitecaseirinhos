@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -1825,7 +1825,7 @@
             fetch("api/biolinks.php?action=get_config")
                 .then(r => r.json())
                 .then(data => {
-                    if(!data) return;
+                    if(!data || data.error) return;
                     document.getElementById("bio_name").value = data.profile_name || "";
                     document.getElementById("bio_desc").value = data.profile_desc || "";
                     document.getElementById("bio_image").value = data.profile_image || "";
@@ -1867,7 +1867,13 @@
                 .then(links => {
                     const container = document.getElementById("biolinksListContainer");
                     container.innerHTML = "";
-                    if(links.length === 0) {
+                    
+                    if(links.error) {
+                        container.innerHTML = `<p style='color:var(--danger);'>Erro: ${links.error} (Verifique a configuração do banco de dados em api/db.php)</p>`;
+                        return;
+                    }
+                    
+                    if(!Array.isArray(links) || links.length === 0) {
                         container.innerHTML = "<p style='color:var(--text-muted);'>Nenhum botão cadastrado ainda.</p>";
                         return;
                     }
