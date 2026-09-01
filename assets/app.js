@@ -703,16 +703,25 @@ const HeaderMenuManager = {
             let mobileHtml = `
                 <div class="mobile-menu-header">
                     <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos">
-                    <button class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fa-solid fa-xmark"></i></button>
+                    <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Fechar Menu"><i class="fa-solid fa-xmark"></i></button>
                 </div>
+                <div class="mobile-menu-links-container">
             `;
             config.items.forEach(item => {
                 if (item.is_visible) {
                     const targetUrl = resolveSmartUrl(item.url);
+                    const itemPath = item.url.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+                    const isActive = (currentPath === itemPath || (itemPath !== '/' && currentPath.startsWith(itemPath)));
                     const iconClass = item.icon || 'fa-link';
-                    mobileHtml += `<a href="${targetUrl}" onclick="closeMobileMenu()"><i class="fa-solid ${iconClass}"></i> ${item.label}</a>`;
+                    mobileHtml += `<a href="${targetUrl}" onclick="closeMobileMenu()" class="${isActive ? 'active' : ''}"><i class="fa-solid ${iconClass}"></i> ${item.label}</a>`;
                 }
             });
+            mobileHtml += `
+                </div>
+                <div class="mobile-menu-cta">
+                    <a href="${resolveSmartUrl('/montar-pedido')}" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles"></i> Montar Pedido 🎂</a>
+                </div>
+            `;
             mobilePanelEl.innerHTML = mobileHtml;
         }
     }

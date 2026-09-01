@@ -437,13 +437,18 @@
         <div class="mobile-menu-panel">
             <div class="mobile-menu-header">
                 <img src="images/logo-DZPmG4Qm.png" alt="Caseirinhos">
-                <button class="mobile-menu-close" onclick="closeMobileMenu()"><i class="fa-solid fa-xmark"></i></button>
+                <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Fechar Menu"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house"></i> Início</a>
-            <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart"></i> Nossa História</a>
-            <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles"></i> Cardápio</a>
-            <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag"></i> Montar Pedido</a>
-            <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope"></i> Contato</a>
+            <div class="mobile-menu-links-container">
+                <a href="/" onclick="closeMobileMenu()"><i class="fa-solid fa-house"></i> Início</a>
+                <a href="/nossa-historia" onclick="closeMobileMenu()"><i class="fa-solid fa-heart"></i> Nossa História</a>
+                <a href="/cardapio" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles"></i> Cardápio</a>
+                <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-shopping-bag"></i> Montar Pedido</a>
+                <a href="/contato" onclick="closeMobileMenu()"><i class="fa-solid fa-envelope"></i> Contato</a>
+            </div>
+            <div class="mobile-menu-cta">
+                <a href="/montar-pedido" onclick="closeMobileMenu()"><i class="fa-solid fa-cake-candles"></i> Montar Pedido 🎂</a>
+            </div>
         </div>
     </div>
 
